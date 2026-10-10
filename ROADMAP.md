@@ -13,11 +13,8 @@
 
 ## Agora → VISUAL LOCK (antes de qualquer feature nova)
 
-- [ ] **Desktop de verdade** (hoje parece app esticado):
-  - tab bar só no mobile; no desktop volta nav no topo
-  - home em 2 colunas no desktop (hero + modos lado a lado)
-  - quiz continua coluna única (padrão Duolingo/Kahoot/Quizlet — isso NÃO muda)
-  - rodapé completo no desktop
+- [x] **Desktop de verdade**: tab bar só no mobile, nav no topo, home 2 colunas + cartão-resposta, rodapé completo; quiz em coluna única (padrão)
+- [x] **Direção própria**: papel de prova + caneta vermelha, Archivo Black, bolhas de cartão-resposta
 - [ ] Dono aprova o visual (mobile + desktop) — **trava aqui**
 
 ## Depois do lock
