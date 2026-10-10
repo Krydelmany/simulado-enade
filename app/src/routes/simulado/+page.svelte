@@ -16,6 +16,9 @@
 	});
 </script>
 
+<div class="mx-auto w-full max-w-3xl">
+
+
 <div class="mb-4 flex items-center gap-2">
 	<a href="/" class="flex items-center gap-1 rounded-lg px-2 py-2 text-sm font-bold text-ink-soft" aria-label="Voltar ao início">
 		<ArrowLeft size={18} weight="bold" aria-hidden="true" /> Início
@@ -59,4 +62,6 @@
 			<a href="/estudo/" class="font-bold text-accent-ink underline">estudo por níveis</a>.
 		</p>
 	</div>
+</div>
+
 </div>

@@ -57,6 +57,16 @@
 		if (letra === escolha) return base + 'border-bad-solid bg-bad-solid text-white';
 		return base + 'border-line bg-card opacity-50';
 	}
+
+	function classeBolha(letra) {
+		// bolha de cartão-resposta: preenche como caneta ao marcar
+		const base =
+			'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-[2.5px] text-sm font-extrabold transition-colors duration-150 ';
+		if (!respondida) return base + 'border-ink/30 text-ink';
+		if (letra === q.gabarito) return base + 'border-white bg-white/25 text-white';
+		if (letra === escolha) return base + 'border-white bg-white/25 text-white';
+		return base + 'border-line text-ink-soft';
+	}
 </script>
 
 <svelte:window onkeydown={fecharZoom} />
@@ -135,12 +145,7 @@
 				{#if q.alternativas[letra]}
 					<div class="rise" style="animation-delay: {k * 45}ms">
 						<button type="button" onclick={() => responder(letra)} disabled={respondida} class={classeAlt(letra)}>
-							<span
-								class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-sm font-extrabold {respondida &&
-								(letra === q.gabarito || letra === escolha)
-									? 'bg-white/25'
-									: 'bg-chip text-ink'}"
-							>
+							<span class={classeBolha(letra)}>
 								{letra}
 							</span>
 							<span class="enunciado">{q.alternativas[letra]}</span>

@@ -100,6 +100,7 @@
 	}
 </script>
 
+<div class="mx-auto w-full max-w-3xl">
 {#if !carregou}
 	<div class="space-y-3" role="status" aria-label="Carregando questões">
 		<div class="h-40 animate-pulse rounded-3xl bg-skel"></div>
@@ -229,3 +230,5 @@
 		{/if}
 	{/if}
 {/if}
+
+</div>

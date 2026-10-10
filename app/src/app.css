@@ -1,5 +1,6 @@
 @import '@fontsource-variable/outfit';
 @import '@fontsource-variable/plus-jakarta-sans';
+@import '@fontsource-variable/archivo';
 @import '@fontsource-variable/jetbrains-mono';
 @import 'tailwindcss';
 
@@ -33,28 +34,28 @@
 	--color-warn-fg: var(--warn-fg);
 	--color-warn-line: var(--warn-line);
 
-	--font-display: 'Outfit Variable', ui-sans-serif, system-ui, sans-serif;
+	--font-display: 'Archivo Variable', 'Outfit Variable', ui-sans-serif, system-ui, sans-serif;
 	--font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
 	--font-code: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, monospace;
 }
 
 :root {
-	--paper: #fbf8f3;
-	--card: #ffffff;
-	--tile: #f2ede5;
-	--panel: #f6f2ec;
-	--line: #e4ddd2;
+	--paper: #f6f1e7;
+	--card: #fffdf8;
+	--tile: #ece4d3;
+	--panel: #faf6ee;
+	--line: #ddd2bd;
 	--track: #c7d0dd;
 	--skel: #dde3ec;
 	--chip: #dde3ec;
-	--ink: #14213d;
-	--ink-soft: #33456b;
-	--bar: #14213d;
+	--ink: #1c2434;
+	--ink-soft: #4a5468;
+	--bar: #1a2340;
 	--bar-fg: #cbd5e1;
-	--accent: #c2410c;
-	--accent-ink: #7c2d12;
-	--accent-soft: #fbe3d2;
-	--btn: #14213d;
+	--accent: #b3271e;
+	--accent-ink: #8f1f1f;
+	--accent-soft: #f9e2d7;
+	--btn: #1c2434;
 	--btn-fg: #ffffff;
 	--ok-bg: #e7f7ef;
 	--ok-fg: #065f46;
@@ -68,23 +69,23 @@
 }
 
 .dark {
-	--paper: #0b1322;
-	--card: #16233c;
-	--tile: #0e1830;
-	--panel: #101b30;
+	--paper: #141118;
+	--card: #1e1a20;
+	--tile: #100d14;
+	--panel: #171320;
 	--line: rgba(255, 255, 255, 0.14);
 	--track: #2a3a58;
 	--skel: #1d2b47;
 	--chip: #24344f;
-	--ink: #edf2fa;
-	--ink-soft: #a9b6cf;
-	--bar: #080f1d;
+	--ink: #f2ede2;
+	--ink-soft: #b3a99b;
+	--bar: #0c0a10;
 	--bar-fg: #cbd5e1;
-	--accent: #c2410c;
-	--accent-ink: #f2ab7e;
+	--accent: #b3271e;
+	--accent-ink: #f0a08a;
 	--accent-soft: rgba(194, 65, 12, 0.25);
-	--btn: #e8eefb;
-	--btn-fg: #14213d;
+	--btn: #f2ede2;
+	--btn-fg: #1c2434;
 	--ok-bg: rgba(4, 120, 87, 0.2);
 	--ok-fg: #6ee7b7;
 	--ok-solid: #10b981;
@@ -147,7 +148,7 @@ html.dark {
 }
 .duo-accent {
 	background: var(--accent);
-	border-color: #7c2d12;
+	border-color: #7c1a1a;
 	color: #fff;
 }
 .duo-accent:hover {
@@ -273,8 +274,22 @@ html.dark {
 }
 
 .dotgrid {
-	background-image: radial-gradient(rgba(20, 33, 61, 0.14) 1px, transparent 1px);
+	background-image: radial-gradient(rgba(28, 36, 52, 0.13) 1px, transparent 1px);
 	background-size: 18px 18px;
+}
+.pauta {
+	background-image: repeating-linear-gradient(
+		to bottom,
+		transparent 0 30px,
+		rgba(28, 36, 52, 0.07) 30px 31px
+	);
+}
+.dark .pauta {
+	background-image: repeating-linear-gradient(
+		to bottom,
+		transparent 0 30px,
+		rgba(255, 255, 255, 0.05) 30px 31px
+	);
 }
 .dark .dotgrid {
 	background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);

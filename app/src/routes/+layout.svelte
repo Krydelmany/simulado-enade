@@ -12,7 +12,7 @@
 	];
 
 	// no fluxo de questão a tela é dona da parte de baixo (CTA fixo) —
-	// a tab bar só aparece fora do quiz
+	// a tab bar só aparece fora do quiz, e só no mobile
 	let emQuiz = $derived(
 		$page.url.pathname.startsWith('/treino/') || $page.url.pathname.startsWith('/estudo/')
 	);
@@ -33,7 +33,7 @@
 </a>
 
 <header class="bg-bar text-white">
-	<nav class="mx-auto flex h-16 max-w-3xl items-center gap-2 px-4" aria-label="Principal">
+	<nav class="mx-auto flex h-16 w-full max-w-3xl items-center gap-1 px-4 lg:max-w-5xl" aria-label="Principal">
 		<a href="/" class="mr-2 flex items-center gap-2">
 			<span class="flex h-9 w-9 items-center justify-center rounded-xl bg-accent" aria-hidden="true">
 				<GraduationCap size={22} weight="bold" color="#fff" aria-hidden="true" />
@@ -44,6 +44,18 @@
 			</span>
 		</a>
 		<span class="flex-1"></span>
+		{#each tabs as t (t.href)}
+			<a
+				href={t.href}
+				aria-current={$page.url.pathname === t.href ? 'page' : undefined}
+				class="hidden rounded-lg px-3 py-2 text-sm font-semibold transition-colors hover:bg-white/10 active:scale-[0.97] sm:block {$page.url.pathname ===
+				t.href
+					? 'bg-white/15 text-white'
+					: 'text-bar-fg'}"
+			>
+				{t.label}
+			</a>
+		{/each}
 		<button
 			type="button"
 			onclick={trocar}
@@ -60,19 +72,38 @@
 	</nav>
 </header>
 
-<main id="conteudo" class="mx-auto max-w-3xl px-4 pt-6 {emQuiz ? 'pb-32' : 'pb-28'}">
+<main id="conteudo" class="mx-auto w-full max-w-3xl px-4 pt-6 lg:max-w-5xl {emQuiz ? 'pb-32' : 'pb-10'}">
 	<slot />
 </main>
 
 {#if !emQuiz}
-	<footer class="border-t border-line pb-28">
-		<p class="mx-auto max-w-3xl px-4 py-5 text-xs text-ink-soft">
-			Questões oficiais do INEP (ENADE Engenharia de Computação) + simulado da turma. Feito para
-			estudar — sem conta, sem servidor, seu progresso fica no seu aparelho.
-		</p>
+	<footer class="border-t border-line">
+		<div class="mx-auto grid w-full max-w-3xl gap-6 px-4 py-8 sm:grid-cols-3 lg:max-w-5xl">
+			<div>
+				<p class="font-display text-sm font-extrabold tracking-tight">Simulado ENADE</p>
+				<p class="mt-1 text-xs leading-relaxed text-ink-soft">
+					Estudo para a prova com questões oficiais do INEP. Sem conta, sem servidor.
+				</p>
+			</div>
+			<nav aria-label="Modos">
+				<p class="text-xs font-bold tracking-wide text-ink-soft uppercase">Modos</p>
+				<ul class="mt-2 space-y-1 text-sm font-semibold">
+					<li><a href="/treino/" class="hover:text-accent-ink">Treino livre</a></li>
+					<li><a href="/estudo/" class="hover:text-accent-ink">Estudo por níveis</a></li>
+					<li><a href="/simulado/" class="hover:text-accent-ink">Simulado real</a></li>
+				</ul>
+			</nav>
+			<div>
+				<p class="text-xs font-bold tracking-wide text-ink-soft uppercase">Fonte</p>
+				<p class="mt-2 text-xs leading-relaxed text-ink-soft">
+					Provas ENADE Engenharia de Computação (INEP) + simulado da turma. Formato 2026:
+					Portaria INEP nº 161.
+				</p>
+			</div>
+		</div>
 	</footer>
 	<nav
-		class="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-card"
+		class="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-card sm:hidden"
 		style="padding-bottom: env(safe-area-inset-bottom);"
 		aria-label="Modos de estudo"
 	>
@@ -92,4 +123,5 @@
 			{/each}
 		</div>
 	</nav>
+	<div class="h-20 sm:hidden" aria-hidden="true"></div>
 {/if}
