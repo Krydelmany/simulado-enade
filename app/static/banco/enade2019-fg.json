@@ -68,7 +68,8 @@
   "materia_ava": "PRODUCAO DE TEXTOS CIENTIFICOS",
   "imagem": {
    "src": "/banco/img/2019-FG-Q02.png",
-   "alt": "Poema concreto de Augusto de Campos: letras formando explosão com as palavras poema e bomba"
+   "alt": "Poema concreto de Augusto de Campos: letras formando explosão com as palavras poema e bomba",
+   "legenda": "CAMPOS, A. Despoesia. São Paulo: Perspectiva, 1994."
   }
  },
  {
@@ -131,7 +132,8 @@
   "materia_ava": "HISTORIA E CULTURA AFRO-INDIGENA",
   "imagem": {
    "src": "/banco/img/2019-FG-Q05.jpg",
-   "alt": "Fotos aéreas das aldeias Watoriki (Yanomami) e Gavião Parkatejê"
+   "alt": "Fotos aéreas das aldeias Watoriki (Yanomami) e Gavião Parkatejê",
+   "legenda": "Fotos aéreas: aldeia Watoriki (AM/RR) e aldeia Gavião Parkatejê (PA)."
   }
  },
  {
@@ -154,7 +156,8 @@
   "materia_ava": "HISTORIA E CULTURA AFRO-INDIGENA",
   "imagem": {
    "src": "/banco/img/2019-FG-Q06.png",
-   "alt": "Gráfico de linhas: homicídios de mulheres negras e não negras por 100 mil habitantes, 2007 a 2017"
+   "alt": "Gráfico de linhas: homicídios de mulheres negras e não negras por 100 mil habitantes, 2007 a 2017",
+   "legenda": "Atlas da Violência 2019: homicídios de mulheres por 100 mil habitantes."
   }
  },
  {

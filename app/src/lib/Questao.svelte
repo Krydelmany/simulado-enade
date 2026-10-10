@@ -3,11 +3,12 @@
 	import { rotuloQuestao } from './banco.js';
 	import { DUR } from './motion.js';
 	import {
-		BookOpen,
+		Atom,
 		CheckCircle,
 		Image as ImageIcon,
 		Info,
 		MinusCircle,
+		SealCheck,
 		XCircle
 	} from 'phosphor-svelte';
 
@@ -51,8 +52,13 @@
 		</p>
 		{#if q.materia_ava}
 			<p class="flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-[11px] font-bold text-accent-ink">
-				<BookOpen size={12} weight="bold" aria-hidden="true" />
+				<Atom size={12} weight="bold" aria-hidden="true" />
 				{q.materia_ava}
+			</p>
+		{/if}
+		{#if q.parte}
+			<p class="rounded-full border border-line px-2.5 py-0.5 text-[11px] font-bold text-ink-soft">
+				{q.parte === 'FG' ? 'Formação Geral' : q.parte}
 			</p>
 		{/if}
 	</div>
@@ -61,6 +67,9 @@
 	{#if q.imagem}
 		<figure class="mt-3 overflow-hidden rounded-2xl border border-line bg-white">
 			<img src={q.imagem.src} alt={q.imagem.alt} loading="lazy" class="h-auto w-full" />
+			{#if q.imagem.legenda}
+				<figcaption class="px-3 py-2 text-xs text-ink-soft">{q.imagem.legenda}</figcaption>
+			{/if}
 		</figure>
 	{:else if q.figura}
 		<p class="mt-3 flex items-start gap-2 rounded-2xl border border-dashed border-warn-line bg-warn-bg p-3 text-sm text-warn-fg">
@@ -123,7 +132,8 @@
 				</button>
 			{:else}
 				<div in:fly={{ y: 8, duration: DUR }} class="rounded-2xl border border-line bg-panel p-4">
-					<p class="text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">
+					<p class="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">
+						<SealCheck size={15} weight="bold" aria-hidden="true" />
 						Padrão de resposta · INEP
 					</p>
 					<p class="enunciado mt-2 max-w-[65ch] text-sm leading-relaxed">{q.padrao}</p>
