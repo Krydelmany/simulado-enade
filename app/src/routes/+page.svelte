@@ -1,11 +1,10 @@
 <script>
 	import { onMount } from 'svelte';
 	import { carregarBanco } from '$lib/banco.js';
-	import { getXP, getStreak, getHistorico } from '$lib/stats.js';
+	import { getXP } from '$lib/stats.js';
 	import {
 		CaretRight,
 		Database,
-		Flame,
 		Infinity as InfinityIcon,
 		Lightning,
 		LockSimple,
@@ -15,9 +14,11 @@
 
 	const META = 160;
 	let total = $state(0);
+	let fg = $state(0);
+	let ce = $state(0);
+	let disc = $state(0);
+	let edicoes = $state([]);
 	let xp = $state(0);
-	let dias = $state(0);
-	let hist = $state([]);
 	let pronto = $state(false);
 
 	const modos = [
@@ -44,21 +45,14 @@
 		}
 	];
 
-	// motivo decorativo: cartão-resposta preenchido
-	const cartao = [
-		{ n: '01', ok: 'C' },
-		{ n: '02', ok: 'D' },
-		{ n: '03', ok: 'C' },
-		{ n: '04', ok: 'B' },
-		{ n: '05', ok: 'C' }
-	];
-	const letras = ['A', 'B', 'C', 'D', 'E'];
-
 	onMount(async () => {
-		total = (await carregarBanco()).length;
+		const b = await carregarBanco();
+		total = b.length;
+		fg = b.filter((q) => q.parte === 'FG' && q.tipo === 'objetiva').length;
+		ce = b.filter((q) => q.parte !== 'FG' && q.tipo === 'objetiva').length;
+		disc = b.filter((q) => q.tipo === 'discursiva').length;
+		edicoes = [...new Set(b.map((q) => q.edicao))].sort();
 		xp = getXP();
-		dias = getStreak().dias;
-		hist = getHistorico();
 		pronto = true;
 	});
 </script>
@@ -66,82 +60,75 @@
 <div class="lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:items-start lg:gap-10">
 	<section class="pauta -mx-4 -mt-6 bg-bar px-4 pt-8 pb-7 text-white lg:mx-0 lg:rounded-3xl lg:p-8" style="border-radius: 0 0 26px 26px;">
 		<div class="mx-auto w-full max-w-3xl lg:max-w-none">
-		<p class="rise inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold tracking-wide">
-			ENADE 2026 · ENGENHARIA DE COMPUTAÇÃO
-		</p>
-		<h1
-			class="rise mt-3 font-display text-[42px] leading-[0.95] font-black tracking-tight text-balance sm:text-5xl"
-			style="animation-delay: 60ms"
-		>
-			Treine no formato da prova.
-		</h1>
-		<p class="rise mt-3 max-w-[46ch] text-[15px] leading-relaxed text-bar-fg" style="animation-delay: 120ms">
-			Questões oficiais do INEP com correção na hora. Escolha um modo e comece.
-		</p>
-		<dl class="rise mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold" style="animation-delay: 180ms">
-			{#if !pronto}
-				<div class="flex gap-4" role="status" aria-label="Carregando estatísticas">
-					<div class="h-5 w-20 animate-pulse rounded-full bg-white/15"></div>
-					<div class="h-5 w-24 animate-pulse rounded-full bg-white/15"></div>
-					<div class="h-5 w-24 animate-pulse rounded-full bg-white/15"></div>
-				</div>
-			{:else}
-				<div class="flex items-center gap-1.5">
-					<Lightning size={17} weight="fill" class="text-accent" aria-hidden="true" />
-					<dt class="sr-only">XP</dt>
-					<dd class="nums">{xp} XP</dd>
-				</div>
-				<div class="flex items-center gap-1.5">
-					<Flame size={17} weight="fill" class={dias > 0 ? 'flame-on text-accent' : 'opacity-50'} aria-hidden="true" />
-					<dt class="sr-only">Dias seguidos</dt>
-					<dd class="nums">{dias} {dias === 1 ? 'dia seguido' : 'dias seguidos'}</dd>
-				</div>
-				<div class="flex items-center gap-1.5">
-					<Database size={17} weight="bold" class="text-accent" aria-hidden="true" />
-					<dt class="sr-only">Questões no banco</dt>
-					<dd class="nums">{total} questões</dd>
-				</div>
-			{/if}
-		</dl>
-		<div class="rise mt-5 hidden gap-3 lg:flex" style="animation-delay: 240ms">
-			<a href="/treino/" class="btn3d duo-accent rounded-[14px] px-6 py-3 font-display text-base font-bold">
-				Começar agora
-			</a>
-			<a href="/simulado/" class="rounded-[14px] border-2 border-white/25 px-6 py-3 font-display text-base font-bold transition-colors hover:bg-white/10">
-				Ver o formato
-			</a>
-		</div>
+			<p class="rise inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold tracking-wide">
+				ENADE 2026 · ENGENHARIA DE COMPUTAÇÃO
+			</p>
+			<h1
+				class="rise mt-3 font-display text-[42px] leading-[0.95] font-black tracking-tight text-balance sm:text-5xl"
+				style="animation-delay: 60ms"
+			>
+				Treine no formato da prova.
+			</h1>
+			<p class="rise mt-3 max-w-[46ch] text-[15px] leading-relaxed text-bar-fg" style="animation-delay: 120ms">
+				Questões oficiais do INEP com correção na hora. Escolha um modo e comece.
+			</p>
+			<dl class="rise mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold" style="animation-delay: 180ms">
+				{#if !pronto}
+					<div class="flex gap-4" role="status" aria-label="Carregando estatísticas">
+						<div class="h-5 w-20 animate-pulse rounded-full bg-white/15"></div>
+						<div class="h-5 w-24 animate-pulse rounded-full bg-white/15"></div>
+					</div>
+				{:else}
+					<div class="flex items-center gap-1.5">
+						<Lightning size={17} weight="fill" class="text-accent" aria-hidden="true" />
+						<dt class="sr-only">XP</dt>
+						<dd class="nums">{xp} XP</dd>
+					</div>
+					<div class="flex items-center gap-1.5">
+						<Database size={17} weight="bold" class="text-accent" aria-hidden="true" />
+						<dt class="sr-only">Questões no banco</dt>
+						<dd class="nums">{total} questões</dd>
+					</div>
+				{/if}
+			</dl>
+			<div class="rise mt-5 hidden gap-3 lg:flex" style="animation-delay: 240ms">
+				<a href="/treino/" class="btn3d duo-accent rounded-[14px] px-6 py-3 font-display text-base font-bold">
+					Começar agora
+				</a>
+				<a href="/simulado/" class="rounded-[14px] border-2 border-white/25 px-6 py-3 font-display text-base font-bold transition-colors hover:bg-white/10">
+					Ver o formato
+				</a>
+			</div>
 		</div>
 	</section>
 
-	<aside class="mt-6 lg:mt-0" aria-hidden="true">
+	<aside class="mt-6 lg:mt-0" aria-label="Estado do banco de questões">
 		<div class="rise rounded-3xl border border-line bg-card p-5 shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]" style="animation-delay: 150ms">
 			<div class="flex items-baseline justify-between gap-3">
-				<p class="font-display text-sm font-extrabold tracking-[0.12em] uppercase">Cartão-resposta</p>
-				<p class="nums text-xs font-bold text-ink-soft">2019 · FG</p>
+				<p class="font-display text-sm font-extrabold tracking-[0.12em] uppercase">Banco de questões</p>
+				<p class="nums text-sm font-bold text-ink-soft">{pronto ? `${total} / ${META}` : '…'}</p>
 			</div>
-			<div class="mt-4 space-y-2.5">
-				{#each cartao as q (q.n)}
-					<div class="flex items-center gap-2">
-						<span class="nums w-7 text-sm font-extrabold text-ink-soft">{q.n}</span>
-						<span class="flex gap-1.5">
-							{#each letras as l (l)}
-								<span
-									class="flex h-7 w-7 items-center justify-center rounded-full border-2 text-[11px] font-extrabold {l === q.ok
-										? 'border-accent bg-accent text-white'
-										: 'border-line text-ink-soft/60'}"
-								>
-									{l}
-								</span>
-							{/each}
-						</span>
-					</div>
-				{/each}
+			<div class="mt-3 h-2.5 overflow-hidden rounded-full bg-track" role="progressbar" aria-label="Questões no banco" aria-valuemin="0" aria-valuemax={META} aria-valuenow={total}>
+				<div class="h-full rounded-full bg-accent transition-[width] duration-700" style="width: {(total / META) * 100}%"></div>
 			</div>
-			<div class="mt-4 h-2 overflow-hidden rounded-full bg-track">
-				<div class="h-full w-3/5 rounded-full bg-accent"></div>
-			</div>
-			<p class="nums mt-1.5 text-right text-xs font-bold text-ink-soft">6/10 nesta sessão</p>
+			<dl class="mt-4 grid grid-cols-3 gap-2 text-center">
+				<div class="rounded-2xl bg-tile p-3">
+					<dd class="nums text-xl font-extrabold">{pronto ? fg : '—'}</dd>
+					<dt class="text-[11px] font-semibold text-ink-soft">FG objetivas</dt>
+				</div>
+				<div class="rounded-2xl bg-tile p-3">
+					<dd class="nums text-xl font-extrabold">{pronto ? ce : '—'}</dd>
+					<dt class="text-[11px] font-semibold text-ink-soft">CE objetivas</dt>
+				</div>
+				<div class="rounded-2xl bg-tile p-3">
+					<dd class="nums text-xl font-extrabold">{pronto ? disc : '—'}</dd>
+					<dt class="text-[11px] font-semibold text-ink-soft">Discursivas</dt>
+				</div>
+			</dl>
+			<p class="mt-3 text-xs text-ink-soft">
+				{pronto && edicoes.length ? `Edições no banco: ${edicoes.join(' · ')}.` : 'Carregando…'}
+				Cada questão aprovada entra aqui.
+			</p>
 		</div>
 	</aside>
 </div>
@@ -178,21 +165,6 @@
 		</a>
 	{/each}
 </nav>
-
-<section class="mt-3 flex items-center gap-4 rounded-3xl border border-line bg-card p-4 shadow-sm" aria-label="Sequência de estudos">
-	<div class="min-w-0 flex-1">
-		<p class="text-sm text-ink-soft">Sequência atual</p>
-		<p class="nums font-display text-2xl font-extrabold">{pronto ? dias : '—'} {dias === 1 ? 'dia' : 'dias'}</p>
-		<div class="mt-2 flex gap-1.5" aria-hidden="true">
-			{#each hist as on, k (k)}
-				<span class="h-2 flex-1 rounded-full {on ? 'bg-accent' : 'bg-track'}"></span>
-			{/each}
-		</div>
-	</div>
-	<span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-accent-soft" aria-hidden="true">
-		<Flame size={30} weight="fill" class="text-accent {dias > 0 && pronto ? 'flame-on' : ''}" aria-hidden="true" />
-	</span>
-</section>
 
 <p class="mt-5 text-sm leading-relaxed text-ink-soft">
 	Formação Geral e Componente Específico, objetivas com gabarito oficial e discursivas com

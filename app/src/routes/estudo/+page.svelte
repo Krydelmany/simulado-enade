@@ -8,14 +8,11 @@
 	import {
 		somarXP,
 		getXP,
-		getStreak,
-		getHistorico,
 		getErros,
-		registrarAtividade,
 		registrarErro,
 		removerErro
 	} from '$lib/stats.js';
-	import { ArrowsClockwise, Flame, Lightning, Target, Timer, Trophy } from 'phosphor-svelte';
+	import { ArrowsClockwise, Lightning, Target, Timer, Trophy } from 'phosphor-svelte';
 
 	const TOTAL = 10;
 	const NIVEIS = {
@@ -68,7 +65,6 @@
 	}
 
 	function aoResponder(r) {
-		registrarAtividade();
 		respondidaAqui = true;
 		const q = sessao.find((x) => x.id === r.id);
 		log = [...log, { materia: q?.materia_ava || q?.tema || '?', certa: !!r.certa }];
@@ -158,8 +154,6 @@
 		{/each}
 	</div>
 {:else if fim}
-	{@const dias = getStreak().dias}
-	{@const hist = getHistorico()}
 	<div class="-mx-4 -mt-6 bg-bar px-4 pt-8 pb-10 text-center text-white" style="border-radius: 0 0 26px 26px;">
 		<p class="text-sm font-medium text-bar-fg">Estudo · {NIVEIS[nivel].nome}</p>
 		<h2 class="mt-1 font-display text-3xl font-extrabold tracking-tight">Sessão concluída</h2>
@@ -203,21 +197,6 @@
 			</div>
 		</div>
 	{/if}
-	<div class="mt-3 flex items-center gap-3 rounded-3xl bg-card p-4 shadow-sm">
-		<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-soft" aria-hidden="true">
-			<Flame size={24} weight="fill" class="text-accent {dias > 0 ? 'flame-on' : ''}" aria-hidden="true" />
-		</span>
-		<div>
-			<p class="nums font-display text-[17px] font-bold">Sequência: {dias} {dias === 1 ? 'dia' : 'dias'}</p>
-			<p class="text-xs text-ink-soft">Volte amanhã para crescer a chama.</p>
-		</div>
-		<span class="flex-1"></span>
-		<div class="flex gap-1" aria-hidden="true">
-			{#each hist as on, k (k)}
-				<span class="h-5 w-1.5 rounded-full {on ? 'bg-accent' : 'bg-track'}"></span>
-			{/each}
-		</div>
-	</div>
 	<div class="mt-4 space-y-2">
 		<button type="button" onclick={() => (nivel = null)} class="btn3d duo-accent flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
 			<ArrowsClockwise size={20} weight="bold" aria-hidden="true" /> Outra sessão
