@@ -7,15 +7,18 @@
 		CheckCircle,
 		Image as ImageIcon,
 		Info,
+		MagnifyingGlassPlus,
 		MinusCircle,
 		SealCheck,
 		XCircle
 	} from 'phosphor-svelte';
+	import TextoRico from './TextoRico.svelte';
 
 	let { q, onResponder } = $props();
 	let escolha = $state(null);
 	let respondida = $state(false);
 	let mostrouPadrao = $state(false);
+	let ampliada = $state(false);
 
 	const LETRAS = ['A', 'B', 'C', 'D', 'E'];
 	const acertou = $derived(respondida && q.gabarito !== 'ANULADA' && escolha === q.gabarito);
@@ -34,6 +37,17 @@
 		onResponder?.({ id: q.id, certa: nivel === 1, parcial: nivel === 0.5 });
 	}
 
+	function fecharZoom(e) {
+		if (e.key === 'Escape') ampliada = false;
+	}
+
+	$effect(() => {
+		document.body.style.overflow = ampliada ? 'hidden' : '';
+		return () => {
+			document.body.style.overflow = '';
+		};
+	});
+
 	function classeAlt(letra) {
 		const base =
 			'flex w-full items-start gap-3 rounded-2xl border-2 p-3.5 text-left text-[15px] leading-relaxed transition-[border-color,background-color,color,transform] duration-150 active:scale-[0.99] disabled:cursor-default ';
@@ -44,6 +58,8 @@
 		return base + 'border-line bg-card opacity-50';
 	}
 </script>
+
+<svelte:window onkeydown={fecharZoom} />
 
 <article in:fly={{ x: 28, duration: DUR }} class="rounded-3xl bg-card p-4 shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)] sm:p-6">
 	<div class="flex flex-wrap items-center gap-2">
@@ -66,11 +82,44 @@
 
 	{#if q.imagem}
 		<figure class="mt-3 overflow-hidden rounded-2xl border border-line bg-white">
-			<img src={q.imagem.src} alt={q.imagem.alt} loading="lazy" class="h-auto w-full" />
-			{#if q.imagem.legenda}
-				<figcaption class="px-3 py-2 text-xs text-ink-soft">{q.imagem.legenda}</figcaption>
-			{/if}
+			<button
+				type="button"
+				onclick={() => (ampliada = true)}
+				aria-label="Ampliar figura: {q.imagem.alt}"
+				class="block w-full cursor-zoom-in"
+			>
+				<img
+					src={q.imagem.src}
+					alt={q.imagem.alt}
+					loading="lazy"
+					class="mx-auto h-auto max-h-[54vh] w-auto max-w-full"
+				/>
+			</button>
+			<figcaption class="flex items-start gap-2 px-3 py-2 text-xs text-ink-soft">
+				<MagnifyingGlassPlus size={14} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
+				<span>
+					Toque para ampliar
+					{#if q.imagem.legenda} · {q.imagem.legenda}{/if}
+				</span>
+			</figcaption>
 		</figure>
+		{#if ampliada}
+			<div
+				role="dialog"
+				aria-modal="true"
+				aria-label="Figura ampliada: {q.imagem.alt}"
+				class="fixed inset-0 z-50 flex flex-col bg-black/90 p-4"
+				style="padding-bottom: env(safe-area-inset-bottom);"
+				onclick={() => (ampliada = false)}
+			>
+				<img
+					src={q.imagem.src}
+					alt={q.imagem.alt}
+					class="m-auto max-h-full max-w-full cursor-zoom-out rounded-lg object-contain"
+				/>
+				<p class="pt-3 text-center text-sm font-semibold text-white/80">Toque para fechar</p>
+			</div>
+		{/if}
 	{:else if q.figura}
 		<p class="mt-3 flex items-start gap-2 rounded-2xl border border-dashed border-warn-line bg-warn-bg p-3 text-sm text-warn-fg">
 			<ImageIcon size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
@@ -78,7 +127,7 @@
 		</p>
 	{/if}
 
-	<div class="enunciado mt-3 max-w-[65ch] text-[15px] leading-relaxed">{q.enunciado}</div>
+	<div class="enunciado mt-3 max-w-[65ch] text-[15px] leading-relaxed"><TextoRico texto={q.enunciado} /></div>
 
 	{#if q.tipo === 'objetiva'}
 		<div class="mt-4 space-y-2" role="group" aria-label="Alternativas">
@@ -136,7 +185,7 @@
 						<SealCheck size={15} weight="bold" aria-hidden="true" />
 						Padrão de resposta · INEP
 					</p>
-					<p class="enunciado mt-2 max-w-[65ch] text-sm leading-relaxed">{q.padrao}</p>
+					<p class="enunciado mt-2 max-w-[65ch] text-sm leading-relaxed"><TextoRico texto={q.padrao} /></p>
 				</div>
 				{#if !respondida}
 					<p class="mt-3 text-sm font-bold">Compare com a sua. Como foi?</p>

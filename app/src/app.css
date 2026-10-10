@@ -102,6 +102,16 @@ body {
 
 .enunciado {
 	white-space: pre-line;
+	overflow-wrap: anywhere;
+}
+
+figcaption {
+	overflow-wrap: anywhere;
+}
+
+html,
+body {
+	overflow-x: clip;
 }
 
 .nums {
