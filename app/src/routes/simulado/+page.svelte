@@ -1,7 +1,9 @@
 <script>
 	import { onMount } from 'svelte';
 	import { carregarBanco } from '$lib/banco.js';
+	import { ArrowLeft, LockKey, Timer } from 'phosphor-svelte';
 
+	const META = 160;
 	let total = $state(0);
 	let obj = $state(0);
 	let disc = $state(0);
@@ -14,31 +16,47 @@
 	});
 </script>
 
-<div class="space-y-4">
-	<h1 class="text-xl font-bold">⏱️ Simulado real</h1>
+<div class="mb-4 flex items-center gap-2">
+	<a href="/" class="flex items-center gap-1 rounded-lg px-2 py-2 text-sm font-bold text-ink-soft" aria-label="Voltar ao início">
+		<ArrowLeft size={18} weight="bold" aria-hidden="true" /> Início
+	</a>
+	<span class="flex-1"></span>
+	<h1 class="text-sm font-bold tracking-wide text-ink-soft uppercase">Simulado real</h1>
+</div>
 
-	<div class="rounded-xl bg-white p-5 shadow-sm">
-		<p class="font-semibold">Formato ENADE 2026 (Portaria INEP nº 161)</p>
-		<ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-700">
-			<li>15 questões de Formação Geral (objetivas)</li>
-			<li>30 questões do Componente Específico (objetivas)</li>
-			<li>1 questão discursiva</li>
-			<li>4 horas de prova · peso 25% FG / 75% CE</li>
+<div class="space-y-4">
+	<div class="rise rounded-3xl bg-ink p-5 text-white shadow-[0_10px_30px_-12px_rgba(20,33,61,0.45)]">
+		<p class="flex items-center gap-2 text-[11px] font-bold tracking-[0.14em] text-slate-300 uppercase">
+			<Timer size={15} weight="bold" aria-hidden="true" /> Formato ENADE 2026
+		</p>
+		<ul class="nums mt-3 space-y-1.5 text-[15px] font-semibold">
+			<li class="flex justify-between gap-3"><span>Formação Geral</span><span>15 objetivas</span></li>
+			<li class="flex justify-between gap-3"><span>Componente Específico</span><span>30 objetivas</span></li>
+			<li class="flex justify-between gap-3"><span>Discursiva</span><span>1 questão</span></li>
+			<li class="flex justify-between gap-3 border-t border-white/20 pt-2"><span>Tempo</span><span>4 horas</span></li>
 		</ul>
 	</div>
 
-	<div class="rounded-xl bg-white p-5 shadow-sm">
-		<p class="font-semibold">Banco atual</p>
-		<p class="mt-1 text-sm text-slate-600">
-			{total} questões ({obj} objetivas + {disc} discursivas) de 160 mapeadas.
+	<div class="rise rounded-3xl bg-white p-5 shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]" style="animation-delay: 80ms">
+		<p class="text-sm font-bold">Banco atual</p>
+		<p class="nums mt-1 text-sm text-ink-soft">
+			{total} de {META} questões ({obj} objetivas + {disc} discursivas)
 		</p>
-		<div class="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
-			<div class="h-full bg-green-700" style="width: {(total / 160) * 100}%"></div>
+		<div class="mt-2 h-2.5 overflow-hidden rounded-full bg-slate-300/60" role="progressbar" aria-valuenow={total} aria-valuemin="0" aria-valuemax={META} aria-label="Progresso do banco de questões">
+			<div class="h-full rounded-full bg-accent transition-[width] duration-700 ease-out" style="width: {(total / META) * 100}%"></div>
 		</div>
-		<p class="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
-			🚧 O modo simulado cronometrado abre quando o banco estiver completo.
-			Enquanto isso, treine nos modos <a href="/treino" class="font-bold underline">Treino</a> e
-			<a href="/estudo" class="font-bold underline">Estudo</a>.
+		<button
+			type="button"
+			disabled
+			aria-disabled="true"
+			title="Disponível quando o banco estiver completo"
+			class="mt-4 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-2xl bg-slate-200 p-3.5 font-bold text-slate-500"
+		>
+			<LockKey size={18} weight="bold" aria-hidden="true" /> Cronometrado em breve
+		</button>
+		<p class="mt-2 text-center text-xs text-ink-soft">
+			Enquanto isso: <a href="/treino/" class="font-bold text-accent-deep underline">treino livre</a> e
+			<a href="/estudo/" class="font-bold text-accent-deep underline">estudo por níveis</a>.
 		</p>
 	</div>
 </div>

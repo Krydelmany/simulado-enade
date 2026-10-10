@@ -1,9 +1,69 @@
+@import '@fontsource-variable/outfit';
+@import '@fontsource-variable/jetbrains-mono';
 @import 'tailwindcss';
 
+@theme {
+	--color-paper: #edf0f5;
+	--color-ink: #14213d;
+	--color-ink-soft: #33456b;
+	--color-accent: #c2410c;
+	--color-accent-deep: #7c2d12;
+	--color-accent-soft: #fbe9dc;
+
+	--font-display: 'Outfit Variable', ui-sans-serif, system-ui, sans-serif;
+	--font-code: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, monospace;
+}
+
 body {
-	@apply bg-slate-100 text-slate-900 antialiased;
+	@apply bg-paper font-display text-ink antialiased;
 }
 
 .enunciado {
 	white-space: pre-line;
+}
+
+.nums {
+	font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 2px;
+}
+
+html {
+	touch-action: manipulation;
+	-webkit-tap-highlight-color: transparent;
+	color-scheme: light;
+}
+
+@keyframes rise {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+.rise {
+	animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.dotgrid {
+	background-image: radial-gradient(rgba(20, 33, 61, 0.14) 1px, transparent 1px);
+	background-size: 18px 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-delay: 0ms !important;
+		transition-duration: 0.01ms !important;
+		transition-delay: 0ms !important;
+	}
 }
