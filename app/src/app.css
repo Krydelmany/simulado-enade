@@ -2,16 +2,96 @@
 @import '@fontsource-variable/jetbrains-mono';
 @import 'tailwindcss';
 
-@theme {
-	--color-paper: #edf0f5;
-	--color-ink: #14213d;
-	--color-ink-soft: #33456b;
-	--color-accent: #c2410c;
-	--color-accent-deep: #7c2d12;
-	--color-accent-soft: #fbe9dc;
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+	--color-paper: var(--paper);
+	--color-card: var(--card);
+	--color-tile: var(--tile);
+	--color-panel: var(--panel);
+	--color-line: var(--line);
+	--color-track: var(--track);
+	--color-skel: var(--skel);
+	--color-chip: var(--chip);
+	--color-ink: var(--ink);
+	--color-ink-soft: var(--ink-soft);
+	--color-bar: var(--bar);
+	--color-bar-fg: var(--bar-fg);
+	--color-accent: var(--accent);
+	--color-accent-ink: var(--accent-ink);
+	--color-accent-soft: var(--accent-soft);
+	--color-btn: var(--btn);
+	--color-btn-fg: var(--btn-fg);
+	--color-ok-bg: var(--ok-bg);
+	--color-ok-fg: var(--ok-fg);
+	--color-ok-solid: var(--ok-solid);
+	--color-bad-bg: var(--bad-bg);
+	--color-bad-fg: var(--bad-fg);
+	--color-bad-solid: var(--bad-solid);
+	--color-warn-bg: var(--warn-bg);
+	--color-warn-fg: var(--warn-fg);
+	--color-warn-line: var(--warn-line);
 
 	--font-display: 'Outfit Variable', ui-sans-serif, system-ui, sans-serif;
 	--font-code: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+	--paper: #edf0f5;
+	--card: #ffffff;
+	--tile: #e3e8f0;
+	--panel: #f6f8fb;
+	--line: #c7d0dd;
+	--track: #c7d0dd;
+	--skel: #dde3ec;
+	--chip: #dde3ec;
+	--ink: #14213d;
+	--ink-soft: #33456b;
+	--bar: #14213d;
+	--bar-fg: #cbd5e1;
+	--accent: #c2410c;
+	--accent-ink: #7c2d12;
+	--accent-soft: #fbe3d2;
+	--btn: #14213d;
+	--btn-fg: #ffffff;
+	--ok-bg: #e7f7ef;
+	--ok-fg: #065f46;
+	--ok-solid: #047857;
+	--bad-bg: #fdeef1;
+	--bad-fg: #9f1239;
+	--bad-solid: #be123c;
+	--warn-bg: #fffaeb;
+	--warn-fg: #78350f;
+	--warn-line: #d97706;
+}
+
+.dark {
+	--paper: #0b1322;
+	--card: #16233c;
+	--tile: #0e1830;
+	--panel: #101b30;
+	--line: rgba(255, 255, 255, 0.14);
+	--track: #2a3a58;
+	--skel: #1d2b47;
+	--chip: #24344f;
+	--ink: #edf2fa;
+	--ink-soft: #a9b6cf;
+	--bar: #080f1d;
+	--bar-fg: #cbd5e1;
+	--accent: #c2410c;
+	--accent-ink: #f2ab7e;
+	--accent-soft: rgba(194, 65, 12, 0.25);
+	--btn: #e8eefb;
+	--btn-fg: #14213d;
+	--ok-bg: rgba(4, 120, 87, 0.2);
+	--ok-fg: #6ee7b7;
+	--ok-solid: #10b981;
+	--bad-bg: rgba(190, 18, 60, 0.2);
+	--bad-fg: #fda4af;
+	--bad-solid: #f43f5e;
+	--warn-bg: rgba(217, 119, 6, 0.14);
+	--warn-fg: #fcd34d;
+	--warn-line: #d97706;
 }
 
 body {
@@ -27,7 +107,7 @@ body {
 }
 
 :focus-visible {
-	outline: 2px solid var(--color-accent);
+	outline: 2px solid var(--accent);
 	outline-offset: 2px;
 }
 
@@ -35,6 +115,48 @@ html {
 	touch-action: manipulation;
 	-webkit-tap-highlight-color: transparent;
 	color-scheme: light;
+}
+
+html.dark {
+	color-scheme: dark;
+}
+
+/* Botão 3D estilo Duolingo: borda inferior grossa que afunda no press */
+.btn3d {
+	border-bottom-width: 4px;
+	transition:
+		transform 0.07s ease,
+		border-bottom-width 0.07s ease,
+		filter 0.15s ease;
+}
+.btn3d:active {
+	border-bottom-width: 0;
+	transform: translateY(4px);
+}
+.duo-accent {
+	background: var(--accent);
+	border-color: #7c2d12;
+	color: #fff;
+}
+.duo-accent:hover {
+	filter: brightness(1.08);
+}
+.duo-btn {
+	background: var(--btn);
+	border-color: var(--btn-edge, #0a1120);
+	color: var(--btn-fg);
+}
+:root {
+	--btn-edge: #0a1120;
+}
+.dark {
+	--btn-edge: #8fa1c0;
+}
+.duo-btn:hover {
+	filter: brightness(1.06);
+}
+.dark .duo-btn:hover {
+	filter: brightness(1.12);
 }
 
 @keyframes rise {
@@ -47,14 +169,103 @@ html {
 		transform: none;
 	}
 }
-
 .rise {
 	animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pop {
+	0% {
+		transform: scale(1);
+	}
+	45% {
+		transform: scale(1.025);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+.pop {
+	animation: pop 0.32s ease-out;
+}
+
+@keyframes shake {
+	0%,
+	100% {
+		transform: translateX(0);
+	}
+	25% {
+		transform: translateX(-6px);
+	}
+	55% {
+		transform: translateX(5px);
+	}
+	80% {
+		transform: translateX(-3px);
+	}
+}
+.shake {
+	animation: shake 0.36s ease-out;
+}
+
+@keyframes flick {
+	0%,
+	100% {
+		transform: scale(1) rotate(-3deg);
+	}
+	50% {
+		transform: scale(1.14) rotate(3deg);
+	}
+}
+.flame-on {
+	animation: flick 1.6s ease-in-out infinite;
+	transform-origin: 50% 90%;
+}
+
+@keyframes floatup {
+	0% {
+		opacity: 0;
+		transform: translateY(8px) scale(0.9);
+	}
+	20% {
+		opacity: 1;
+		transform: translateY(0) scale(1.05);
+	}
+	75% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-44px) scale(1);
+	}
+}
+.xp-float {
+	animation: floatup 0.95s ease-out both;
+}
+
+@keyframes springin {
+	0% {
+		opacity: 0;
+		transform: scale(0.6);
+	}
+	60% {
+		opacity: 1;
+		transform: scale(1.08);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+.springin {
+	animation: springin 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .dotgrid {
 	background-image: radial-gradient(rgba(20, 33, 61, 0.14) 1px, transparent 1px);
 	background-size: 18px 18px;
+}
+.dark .dotgrid {
+	background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
 }
 
 @media (prefers-reduced-motion: reduce) {

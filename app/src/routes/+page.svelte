@@ -47,7 +47,7 @@
 </script>
 
 <section class="dotgrid -mx-4 -mt-6 px-4 pt-10 pb-8">
-	<p class="rise inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white/80 px-3 py-1 text-xs font-bold tracking-wide text-ink-soft">
+	<p class="rise inline-flex items-center gap-2 rounded-full border border-line bg-card/80 px-3 py-1 text-xs font-bold tracking-wide text-ink-soft">
 		ENADE 2026 · ENGENHARIA DE COMPUTAÇÃO
 	</p>
 	<h1
@@ -62,9 +62,9 @@
 	<dl class="rise mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold" style="animation-delay: 180ms">
 		{#if !pronto}
 			<div class="flex gap-4" role="status" aria-label="Carregando estatísticas">
-				<div class="h-5 w-20 animate-pulse rounded-full bg-ink/10"></div>
-				<div class="h-5 w-24 animate-pulse rounded-full bg-ink/10"></div>
-				<div class="h-5 w-24 animate-pulse rounded-full bg-ink/10"></div>
+				<div class="h-5 w-20 animate-pulse rounded-full bg-skel"></div>
+				<div class="h-5 w-24 animate-pulse rounded-full bg-skel"></div>
+				<div class="h-5 w-24 animate-pulse rounded-full bg-skel"></div>
 			</div>
 		{:else}
 			<div class="flex items-center gap-1.5">
@@ -73,7 +73,7 @@
 				<dd class="nums">{xp} XP</dd>
 			</div>
 			<div class="flex items-center gap-1.5">
-				<Flame size={17} weight="bold" class="text-accent" aria-hidden="true" />
+				<Flame size={17} weight="bold" class={dias > 0 ? 'flame-on text-accent' : 'text-ink-soft opacity-50'} aria-hidden="true" />
 				<dt class="sr-only">Dias seguidos</dt>
 				<dd class="nums">{dias} {dias === 1 ? 'dia seguido' : 'dias seguidos'}</dd>
 			</div>
@@ -86,14 +86,14 @@
 	</dl>
 </section>
 
-<nav class="divide-y divide-slate-300/70 border-y border-slate-300/70" aria-label="Modos de estudo">
+<nav class="divide-y divide-line border-y border-line" aria-label="Modos de estudo">
 	{#each modos as m, k (m.href)}
 		<a
 			href={m.href}
-			class="rise group flex items-center gap-4 bg-white/60 py-4 transition-colors hover:bg-white active:bg-accent-soft"
+			class="rise group flex items-center gap-4 bg-card/70 py-4 transition-colors hover:bg-card active:bg-accent-soft"
 			style="animation-delay: {220 + k * 70}ms"
 		>
-			<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-ink" aria-hidden="true">
+			<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-bar" aria-hidden="true">
 				<m.icone size={24} weight="bold" color="#fff" aria-hidden="true" />
 			</span>
 			<span class="min-w-0 flex-1">
@@ -104,7 +104,7 @@
 				size={20}
 				weight="bold"
 				aria-hidden="true"
-				class="shrink-0 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-accent"
+				class="shrink-0 text-ink-soft opacity-60 transition-transform group-hover:translate-x-1 group-hover:text-accent group-hover:opacity-100"
 			/>
 		</a>
 	{/each}

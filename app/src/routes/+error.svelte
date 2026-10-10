@@ -3,8 +3,8 @@
 </script>
 
 <div class="py-10 text-center">
-	<p class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-ink">
-		<MagnifyingGlass size={26} weight="bold" color="#fff" />
+	<p class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-bar">
+		<MagnifyingGlass size={26} weight="bold" color="#fff" aria-hidden="true" />
 	</p>
 	<h1 class="mt-4 text-2xl font-extrabold tracking-tight">Página não encontrada</h1>
 	<p class="mx-auto mt-2 max-w-[40ch] text-sm text-ink-soft">
@@ -12,7 +12,7 @@
 	</p>
 	<a
 		href="/"
-		class="mt-5 inline-flex items-center gap-2 rounded-xl bg-ink px-5 py-3 text-sm font-bold text-white transition-transform active:scale-[0.98]"
+		class="btn3d duo-btn mt-5 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold"
 	>
 		<ArrowLeft size={17} weight="bold" aria-hidden="true" /> Voltar ao início
 	</a>

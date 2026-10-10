@@ -16,6 +16,14 @@
 		<meta property="og:type" content="website" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<title>Simulado ENADE · Engenharia de Computação</title>
+		<script>
+			try {
+				var t = localStorage.getItem('enade-tema');
+				if (t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)) {
+					document.documentElement.classList.add('dark');
+				}
+			} catch (e) {}
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

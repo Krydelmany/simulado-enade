@@ -5,6 +5,7 @@
 	import { carregarBanco, embaralhar, doNivel } from '$lib/banco.js';
 	import { somarXP, registrarAtividade, registrarErro, removerErro } from '$lib/stats.js';
 	import { ArrowLeft, CheckCircle, Target, Trophy } from 'phosphor-svelte';
+	import XpToast from '$lib/XpToast.svelte';
 
 	const TOTAL = 10;
 	const NIVEIS = {
@@ -23,6 +24,7 @@
 	let parciais = $state(0);
 	let fim = $state(false);
 	let pronto = $state(false);
+	let xpPing = $state(0);
 
 	onMount(async () => {
 		try {
@@ -49,6 +51,7 @@
 		if (r.certa) {
 			certas++;
 			somarXP(10);
+			xpPing++;
 			removerErro(r.id);
 		} else if (r.parcial) {
 			parciais++;
@@ -71,15 +74,15 @@
 
 {#if !carregou}
 	<div class="space-y-3" role="status" aria-label="Carregando questões">
-		<div class="h-40 animate-pulse rounded-3xl bg-white"></div>
-		<div class="h-14 animate-pulse rounded-2xl bg-white"></div>
-		<div class="h-14 animate-pulse rounded-2xl bg-white"></div>
+		<div class="h-40 animate-pulse rounded-3xl bg-skel"></div>
+		<div class="h-14 animate-pulse rounded-2xl bg-skel"></div>
+		<div class="h-14 animate-pulse rounded-2xl bg-skel"></div>
 	</div>
 {:else if falhou || !banco.length}
-	<div class="rounded-3xl bg-white p-6 text-center shadow-sm" role="alert">
+	<div class="rounded-3xl bg-card p-6 text-center shadow-sm" role="alert">
 		<p class="text-lg font-bold">Não deu para carregar as questões</p>
 		<p class="mt-1 text-sm text-ink-soft">Verifique sua conexão e tente de novo.</p>
-		<button type="button" onclick={() => location.reload()} class="mt-4 w-full rounded-2xl bg-ink p-3.5 font-bold text-white transition-transform active:scale-[0.98]">
+		<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
 			Tentar de novo
 		</button>
 	</div>
@@ -89,10 +92,10 @@
 			<button
 				type="button"
 				onclick={() => comecar(Number(n))}
-				class="rise flex w-full items-center gap-4 rounded-3xl bg-white p-5 text-left shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)] transition-transform hover:-translate-y-0.5 active:scale-[0.99]"
+				class="rise flex w-full items-center gap-4 rounded-3xl bg-card p-5 text-left shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)] transition-transform hover:-translate-y-0.5 active:scale-[0.99]"
 				style="animation-delay: {k * 70}ms"
 			>
-				<span class="nums flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-ink text-xl font-extrabold text-white">
+				<span class="nums flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-bar text-xl font-extrabold text-white">
 					{n}
 				</span>
 				<span>
@@ -103,35 +106,35 @@
 		{/each}
 	</div>
 {:else if fim}
-	<div class="rise space-y-4 rounded-3xl bg-white p-6 text-center shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]">
-		<p class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-soft">
-			<Trophy size={28} weight="bold" aria-hidden="true" class="text-accent-deep" />
+	<div class="rise space-y-4 rounded-3xl bg-card p-6 text-center shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]">
+		<p class="springin mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-soft">
+			<Trophy size={28} weight="bold" aria-hidden="true" class="text-accent-ink" />
 		</p>
 		<h2 class="text-lg font-bold">{NIVEIS[nivel].nome}</h2>
 		<p class="text-6xl font-extrabold tracking-tight text-ink nums">
 			<Contador valor={certas} />/{sessao.length}
 		</p>
 		<div class="mx-auto grid max-w-xs grid-cols-2 gap-2 text-center">
-			<div class="rounded-2xl bg-paper p-3">
+			<div class="rounded-2xl bg-tile p-3">
 				<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold">
 					<Target size={17} weight="bold" aria-hidden="true" />{Math.round((certas / sessao.length) * 100)}%
 				</p>
 				<p class="text-[11px] font-semibold text-ink-soft">acerto</p>
 			</div>
-			<div class="rounded-2xl bg-paper p-3">
+			<div class="rounded-2xl bg-tile p-3">
 				<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold">
 					<CheckCircle size={17} weight="bold" aria-hidden="true" />{parciais}
 				</p>
 				<p class="text-[11px] font-semibold text-ink-soft">meias</p>
 			</div>
 		</div>
-		<button type="button" onclick={() => (nivel = null)} class="w-full rounded-2xl bg-ink p-3.5 font-bold text-white transition-transform active:scale-[0.98]">
+		<button type="button" onclick={() => (nivel = null)} class="btn3d duo-accent w-full rounded-2xl p-3.5 font-bold">
 			Outra sessão
 		</button>
 	</div>
 {:else}
 	<div class="mb-3">
-		<div class="h-2.5 overflow-hidden rounded-full bg-slate-300/60" role="progressbar" aria-valuenow={i + 1} aria-valuemin="1" aria-valuemax={sessao.length} aria-label="Progresso da sessão">
+		<div class="h-2.5 overflow-hidden rounded-full bg-track" role="progressbar" aria-valuenow={i + 1} aria-valuemin="1" aria-valuemax={sessao.length} aria-label="Progresso da sessão">
 			<div class="h-full rounded-full bg-accent transition-[width] duration-500 ease-out" style="width: {((i + 1) / sessao.length) * 100}%"></div>
 		</div>
 		<p class="nums mt-1.5 text-center text-sm font-bold text-ink-soft">
@@ -146,10 +149,13 @@
 			<button
 				type="button"
 				onclick={() => (fim = true)}
-				class="mt-3 w-full rounded-2xl bg-accent p-3.5 font-bold text-white transition-transform active:scale-[0.98]"
+				class="btn3d duo-accent mt-3 w-full rounded-2xl p-3.5 font-bold"
 			>
 				Ver resultado
 			</button>
 		{/if}
+	{/if}
+	{#if xpPing > 0}
+		<XpToast n={xpPing} />
 	{/if}
 {/if}

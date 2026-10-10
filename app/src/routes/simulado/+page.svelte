@@ -25,8 +25,8 @@
 </div>
 
 <div class="space-y-4">
-	<div class="rise rounded-3xl bg-ink p-5 text-white shadow-[0_10px_30px_-12px_rgba(20,33,61,0.45)]">
-		<p class="flex items-center gap-2 text-[11px] font-bold tracking-[0.14em] text-slate-300 uppercase">
+	<div class="rise rounded-3xl bg-bar p-5 text-white shadow-[0_10px_30px_-12px_rgba(20,33,61,0.45)]">
+		<p class="flex items-center gap-2 text-[11px] font-bold tracking-[0.14em] text-bar-fg uppercase">
 			<Timer size={15} weight="bold" aria-hidden="true" /> Formato ENADE 2026
 		</p>
 		<ul class="nums mt-3 space-y-1.5 text-[15px] font-semibold">
@@ -37,12 +37,12 @@
 		</ul>
 	</div>
 
-	<div class="rise rounded-3xl bg-white p-5 shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]" style="animation-delay: 80ms">
+	<div class="rise rounded-3xl bg-card p-5 shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]" style="animation-delay: 80ms">
 		<p class="text-sm font-bold">Banco atual</p>
 		<p class="nums mt-1 text-sm text-ink-soft">
 			{total} de {META} questões ({obj} objetivas + {disc} discursivas)
 		</p>
-		<div class="mt-2 h-2.5 overflow-hidden rounded-full bg-slate-300/60" role="progressbar" aria-valuenow={total} aria-valuemin="0" aria-valuemax={META} aria-label="Progresso do banco de questões">
+		<div class="mt-2 h-2.5 overflow-hidden rounded-full bg-track" role="progressbar" aria-valuenow={total} aria-valuemin="0" aria-valuemax={META} aria-label="Progresso do banco de questões">
 			<div class="h-full rounded-full bg-accent transition-[width] duration-700 ease-out" style="width: {(total / META) * 100}%"></div>
 		</div>
 		<button
@@ -50,13 +50,13 @@
 			disabled
 			aria-disabled="true"
 			title="Disponível quando o banco estiver completo"
-			class="mt-4 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-2xl bg-slate-200 p-3.5 font-bold text-slate-500"
+			class="mt-4 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-2xl bg-tile p-3.5 font-bold text-ink-soft"
 		>
 			<LockKey size={18} weight="bold" aria-hidden="true" /> Cronometrado em breve
 		</button>
 		<p class="mt-2 text-center text-xs text-ink-soft">
-			Enquanto isso: <a href="/treino/" class="font-bold text-accent-deep underline">treino livre</a> e
-			<a href="/estudo/" class="font-bold text-accent-deep underline">estudo por níveis</a>.
+			Enquanto isso: <a href="/treino/" class="font-bold text-accent-ink underline">treino livre</a> e
+			<a href="/estudo/" class="font-bold text-accent-ink underline">estudo por níveis</a>.
 		</p>
 	</div>
 </div>

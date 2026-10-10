@@ -2,7 +2,14 @@
 	import { fly } from 'svelte/transition';
 	import { rotuloQuestao } from './banco.js';
 	import { DUR } from './motion.js';
-	import { CheckCircle, Image as ImageIcon, Info, MinusCircle, XCircle } from 'phosphor-svelte';
+	import {
+		BookOpen,
+		CheckCircle,
+		Image as ImageIcon,
+		Info,
+		MinusCircle,
+		XCircle
+	} from 'phosphor-svelte';
 
 	let { q, onResponder } = $props();
 	let escolha = $state(null);
@@ -10,6 +17,8 @@
 	let mostrouPadrao = $state(false);
 
 	const LETRAS = ['A', 'B', 'C', 'D', 'E'];
+	const acertou = $derived(respondida && q.gabarito !== 'ANULADA' && escolha === q.gabarito);
+	const errou = $derived(respondida && q.gabarito !== 'ANULADA' && escolha !== q.gabarito);
 
 	function responder(letra) {
 		if (respondida) return;
@@ -27,24 +36,35 @@
 	function classeAlt(letra) {
 		const base =
 			'flex w-full items-start gap-3 rounded-2xl border-2 p-3.5 text-left text-[15px] leading-relaxed transition-[border-color,background-color,color,transform] duration-150 active:scale-[0.99] disabled:cursor-default ';
-		if (!respondida)
-			return base + 'border-slate-300 bg-white hover:border-ink hover:bg-slate-50';
-		if (q.gabarito === 'ANULADA') return base + 'border-slate-300 bg-slate-100';
-		if (letra === q.gabarito) return base + 'border-emerald-700 bg-emerald-700 text-white';
-		if (letra === escolha) return base + 'border-rose-700 bg-rose-700 text-white';
-		return base + 'border-slate-200 bg-white opacity-50';
+		if (!respondida) return base + 'border-line bg-card hover:border-ink';
+		if (q.gabarito === 'ANULADA') return base + 'border-line bg-tile';
+		if (letra === q.gabarito) return base + 'border-ok-solid bg-ok-solid text-white pop';
+		if (letra === escolha) return base + 'border-bad-solid bg-bad-solid text-white';
+		return base + 'border-line bg-card opacity-50';
 	}
 </script>
 
-<article in:fly={{ x: 28, duration: DUR }} class="rounded-3xl bg-white p-4 shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)] sm:p-6">
-	<p class="text-[11px] font-bold tracking-[0.14em] text-accent-deep uppercase">
-		{rotuloQuestao(q)}
-	</p>
+<article in:fly={{ x: 28, duration: DUR }} class="rounded-3xl bg-card p-4 shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)] sm:p-6">
+	<div class="flex flex-wrap items-center gap-2">
+		<p class="text-[11px] font-bold tracking-[0.14em] text-accent-ink uppercase">
+			{rotuloQuestao(q)}
+		</p>
+		{#if q.materia_ava}
+			<p class="flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-[11px] font-bold text-accent-ink">
+				<BookOpen size={12} weight="bold" aria-hidden="true" />
+				{q.materia_ava}
+			</p>
+		{/if}
+	</div>
 	<h2 class="mt-1 text-base font-bold tracking-tight">{q.tema}</h2>
 
-	{#if q.figura}
-		<p class="mt-3 flex items-start gap-2 rounded-2xl border border-dashed border-amber-500 bg-amber-50 p-3 text-sm text-amber-900">
-			<ImageIcon size={18} weight="bold" aria-hidden="true" class="mt-0.5 shrink-0" />
+	{#if q.imagem}
+		<figure class="mt-3 overflow-hidden rounded-2xl border border-line bg-white">
+			<img src={q.imagem.src} alt={q.imagem.alt} loading="lazy" class="h-auto w-full" />
+		</figure>
+	{:else if q.figura}
+		<p class="mt-3 flex items-start gap-2 rounded-2xl border border-dashed border-warn-line bg-warn-bg p-3 text-sm text-warn-fg">
+			<ImageIcon size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 			<span>Figura: {q.figura.desc} <span class="italic">(imagem entra aqui)</span></span>
 		</p>
 	{/if}
@@ -61,7 +81,7 @@
 								class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-sm font-extrabold {respondida &&
 								(letra === q.gabarito || letra === escolha)
 									? 'bg-white/25'
-									: 'bg-slate-200/70 text-ink'}"
+									: 'bg-chip text-ink'}"
 							>
 								{letra}
 							</span>
@@ -74,19 +94,19 @@
 		{#if respondida}
 			<p
 				in:fly={{ y: 8, duration: DUR }}
-				class="mt-3 flex items-start gap-2 rounded-2xl p-3.5 text-sm font-semibold {q.gabarito === 'ANULADA' || escolha === q.gabarito
-					? 'bg-emerald-50 text-emerald-900'
-					: 'bg-rose-50 text-rose-900'}"
+				class="mt-3 flex items-start gap-2 rounded-2xl p-3.5 text-sm font-semibold {errou
+					? 'shake bg-bad-bg text-bad-fg'
+					: 'bg-ok-bg text-ok-fg'}"
 				role="status"
 			>
 				{#if q.gabarito === 'ANULADA'}
-					<Info size={19} weight="bold" aria-hidden="true" class="mt-0.5 shrink-0" />
+					<Info size={19} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 					<span>Questão anulada pelo INEP — ponto para todos.</span>
-				{:else if escolha === q.gabarito}
-					<CheckCircle size={19} weight="bold" aria-hidden="true" class="mt-0.5 shrink-0" />
+				{:else if acertou}
+					<CheckCircle size={19} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 					<span>Certa. Gabarito: {q.gabarito}</span>
 				{:else}
-					<XCircle size={19} weight="bold" aria-hidden="true" class="mt-0.5 shrink-0" />
+					<XCircle size={19} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 					<span>Não foi dessa vez. Gabarito: {q.gabarito} — você marcou {escolha}.</span>
 				{/if}
 			</p>
@@ -97,12 +117,12 @@
 				<button
 					type="button"
 					onclick={() => (mostrouPadrao = true)}
-					class="w-full rounded-2xl bg-ink p-3.5 font-bold text-white transition-transform hover:bg-ink-soft active:scale-[0.98]"
+					class="btn3d duo-accent w-full rounded-2xl p-3.5 font-bold"
 				>
 					Escrevi minha resposta — ver padrão oficial
 				</button>
 			{:else}
-				<div in:fly={{ y: 8, duration: DUR }} class="rounded-2xl border border-slate-300 bg-slate-50 p-4">
+				<div in:fly={{ y: 8, duration: DUR }} class="rounded-2xl border border-line bg-panel p-4">
 					<p class="text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">
 						Padrão de resposta · INEP
 					</p>
@@ -114,21 +134,21 @@
 						<button
 							type="button"
 							onclick={() => autoavaliar(1)}
-							class="flex items-center justify-center gap-1.5 rounded-2xl bg-emerald-700 p-3 text-sm font-bold text-white transition-transform active:scale-[0.97]"
+							class="btn3d flex items-center justify-center gap-1.5 rounded-2xl border-ok-solid bg-ok-solid p-3 text-sm font-bold text-white"
 						>
 							<CheckCircle size={17} weight="bold" aria-hidden="true" /> Acertei
 						</button>
 						<button
 							type="button"
 							onclick={() => autoavaliar(0.5)}
-							class="flex items-center justify-center gap-1.5 rounded-2xl bg-amber-500 p-3 text-sm font-bold text-white transition-transform active:scale-[0.97]"
+							class="btn3d flex items-center justify-center gap-1.5 rounded-2xl border-amber-600 bg-amber-500 p-3 text-sm font-bold text-white"
 						>
 							<MinusCircle size={17} weight="bold" aria-hidden="true" /> Meio
 						</button>
 						<button
 							type="button"
 							onclick={() => autoavaliar(0)}
-							class="flex items-center justify-center gap-1.5 rounded-2xl bg-rose-700 p-3 text-sm font-bold text-white transition-transform active:scale-[0.97]"
+							class="btn3d flex items-center justify-center gap-1.5 rounded-2xl border-bad-solid bg-bad-solid p-3 text-sm font-bold text-white"
 						>
 							<XCircle size={17} weight="bold" aria-hidden="true" /> Errei
 						</button>
