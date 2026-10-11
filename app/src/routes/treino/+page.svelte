@@ -112,7 +112,7 @@
 		</button>
 	</div>
 {:else if encerrada}
-	<div class="-mx-4 -mt-6 bg-bar px-4 pt-8 pb-10 text-center text-white" style="border-radius: 0 0 26px 26px;">
+	<div class="blueprint -mx-4 -mt-6 bg-bar px-4 pt-8 pb-10 text-center text-white" style="border-radius: 0 0 26px 26px;">
 		<p class="text-sm font-medium text-bar-fg">{revisao ? 'Revisão de erros' : 'Treino livre'}</p>
 		<h2 class="mt-1 font-display text-3xl font-extrabold tracking-tight">Sessão concluída</h2>
 		<p class="springin mx-auto mt-4 flex h-24 w-24 items-center justify-center rounded-full bg-accent-soft">

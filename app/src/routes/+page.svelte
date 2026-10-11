@@ -58,7 +58,7 @@
 </script>
 
 <div class="lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:items-start lg:gap-10">
-	<section class="pauta -mx-4 -mt-6 bg-bar px-4 pt-8 pb-7 text-white lg:mx-0 lg:rounded-3xl lg:p-8" style="border-radius: 0 0 26px 26px;">
+	<section class="blueprint -mx-4 -mt-6 bg-bar px-4 pt-8 pb-7 text-white lg:mx-0 lg:rounded-3xl lg:p-8" style="border-radius: 0 0 26px 26px;">
 		<div class="mx-auto w-full max-w-3xl lg:max-w-none">
 			<p class="rise inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold tracking-wide">
 				ENADE 2026 · ENGENHARIA DE COMPUTAÇÃO
@@ -133,7 +133,11 @@
 	</aside>
 </div>
 
-<h2 class="mt-8 font-display text-xl font-extrabold tracking-tight">Escolha seu modo</h2>
+<p class="mt-6 overflow-hidden font-code text-[11px] tracking-[0.2em] whitespace-nowrap text-ink-soft/60 select-none" aria-hidden="true">
+	01010011 01001001 01001101 01010111 01000001 01010010 01000101 00100000 01000101 01001110 01000001 01000100 01000101
+</p>
+
+<h2 class="mt-5 font-display text-xl font-extrabold tracking-tight">Escolha seu modo</h2>
 <nav class="mt-3 space-y-3 lg:grid lg:grid-cols-3 lg:gap-4 lg:space-y-0" aria-label="Modos de estudo">
 	{#each modos as m, k (m.href)}
 		<a

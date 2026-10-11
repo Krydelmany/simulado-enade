@@ -99,6 +99,9 @@
 					Provas ENADE Engenharia de Computação (INEP) + simulado da turma. Formato 2026:
 					Portaria INEP nº 161.
 				</p>
+				<p class="mt-2 font-code text-[10px] tracking-[0.12em] text-ink-soft/70" aria-hidden="true">
+					REV A · GERADO DE PROVAS INEP · 2014/2017/2019/2023
+				</p>
 			</div>
 		</div>
 	</footer>

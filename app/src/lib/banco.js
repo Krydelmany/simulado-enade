@@ -34,5 +34,6 @@ export function doNivel(q, nivel) {
 }
 
 export function rotuloQuestao(q) {
-	return `${q.edicao} · ${q.parte} · ${q.tipo === 'discursiva' ? 'Discursiva' : 'Q' + q.numero}`;
+	const n = q.tipo === 'discursiva' ? `D${q.numero}` : `Q${q.numero}`;
+	return `REF ${q.edicao}-${q.parte}-${n}`;
 }

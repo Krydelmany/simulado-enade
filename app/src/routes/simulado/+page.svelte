@@ -28,7 +28,7 @@
 </div>
 
 <div class="space-y-4">
-	<div class="rise rounded-3xl bg-bar p-5 text-white shadow-[0_10px_30px_-12px_rgba(20,33,61,0.45)]">
+	<div class="blueprint rise rounded-3xl bg-bar p-5 text-white shadow-[0_10px_30px_-12px_rgba(20,33,61,0.45)]">
 		<p class="flex items-center gap-2 text-[11px] font-bold tracking-[0.14em] text-bar-fg uppercase">
 			<Timer size={15} weight="bold" aria-hidden="true" /> Formato ENADE 2026
 		</p>

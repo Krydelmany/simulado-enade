@@ -1,11 +1,89 @@
 # Simulado ENADE — Engenharia de Computação
 
-Site de simulado para a turma: treino livre, estudo em 10 questões com níveis
-e simulado no formato real da prova (Portaria INEP nº 161/2026).
+Site de estudo para a prova do ENADE com questões oficiais do INEP:
+**treino livre** (fila infinita), **estudo em 10 questões com níveis N1–N3**
+e **simulado no formato real da prova** (Portaria INEP nº 161/2026:
+FG 15 + CE 30 + 1 discursiva, 4h).
 
-- `app/` — SvelteKit + Tailwind, build estático (deploy na Vercel)
-- `app/static/banco/*.json` — banco de questões (única fonte de verdade do app)
-- `fontes/` — PDFs oficiais (RIEP/INEP, GitHub geacc/enade) + relatório do professor
-- `revisao/` — lotes de extração para aprovação antes de entrar no banco
-- `banco/` — (futuro) scripts de extração
-- `INVENTARIO.md` — o que cada edição tem
+## Subir o projeto
+
+Pré-requisitos: **Node 20+** (usamos o 22) + npm + Git.
+
+```sh
+git clone https://github.com/Krydelmany/simulado-enade.git
+cd simulado-enade/app
+npm install
+npm run dev      # http://localhost:5173
+```
+
+Outros comandos (dentro de `app/`):
+
+```sh
+npm run build    # gera o site estático em app/build
+npm run preview  # serve o build p/ conferir antes de publicar
+```
+
+## Publicar na Vercel
+
+1. Vercel → Add New → Project → importa `Krydelmany/simulado-enade`.
+2. Root Directory: `app`. O preset **SvelteKit** detecta o resto sozinho
+   (o `adapter-static` já cospe HTML puro — hospedagem grátis, sem servidor).
+3. Cada push em `main` publica sozinho; cada PR ganha URL de preview.
+
+## Como o projeto está organizado
+
+```
+app/                  o site (SvelteKit 2 + Svelte 5 + Tailwind 4 + Vite 6)
+  src/routes/         páginas: / (início), /treino, /estudo, /simulado
+  src/lib/            Questao.svelte, SessaoTopo, BarraAcao, banco.js, stats.js…
+  static/banco/       O BANCO: *.json de questões + img/ (única fonte do app)
+  static/favicon.svg  marca
+fontes/               PDFs oficiais (RIEP/INEP, GitHub geacc/enade) + relatório
+revisao/              lotes de extração p/ aprovar antes de entrar no banco
+banco/                (futuro) scripts de extração
+testes-mob/           harness mobile: pilota Chromium emulado (Pixel 7),
+                      fotografa fluxos e mede rolagem lateral
+INVENTARIO.md         o que cada edição tem (143 objetivas + 17 discursivas)
+PLANO.md              direção do produto · ROADMAP.md → fases e status
+```
+
+## Como entra questão nova no banco
+
+1. A fonte vai em `fontes/` (prova + gabarito + padrão de resposta).
+2. Extrai em lote de 10 para `revisao/lote-NN-<edicao>-<parte>.md` com:
+   enunciado limpo, alternativas, gabarito, padrão da discursiva,
+   `tema`, `dificuldade` (Fácil/Média/Difícil) e `materia_ava`
+   (qual matéria do AVA estudar — `null` se for FG transversal).
+3. Alguém revisa o lote; só o aprovado vira JSON em
+   `app/static/banco/*.json` no formato:
+   `id, edicao, parte, numero, tipo, tema, dificuldade, materia_ava,
+   enunciado, alternativas, gabarito | padrao, imagem? {src, alt, legenda?}`.
+4. Figura = recorte da página renderizada (`pdftoppm -r 150` + corte),
+   validado a olho. Foto → JPG q82; linha/gráfico → PNG. Nada de baixar
+   vídeo — vídeo é link, nunca arquivo (regra do projeto).
+5. Questão `ANULADA` no gabarito (`"gabarito": "ANULADA"`) = ponto p/ todos,
+   como faz o INEP.
+
+Regras de extração que já doeram: rodapé do PDF (`Área livre + nº +
+ENGENHARIA DE…`) vaza para o fim da última alternativa — cortar sempre;
+`mod/resource` não existe aqui, mas no AVA o scraping é só HTML
+(ver `INVENTARIO.md`); 2017 tem ~10 questões com fonte quebrada (OCR/manual).
+
+## Convenções do código (seguir para não quebrar o visual)
+
+- **Mobile-first, referência 390px.** Desktop se adapta (nav no topo, home
+  em 2 colunas); quiz continua em coluna de leitura — é o padrão.
+- **Design tokens em `app/src/app.css`** (`@theme inline`): `paper, card,
+  tile, ink, accent…` — **nunca hex cru nas telas**; o `.dark` vira sozinho.
+- **Zero emoji** — ícones `phosphor-svelte` peso `bold`, com `aria-hidden`
+  quando decorativos.
+- **Animações** respeitam `prefers-reduced-motion` (`src/lib/motion.js`).
+- **Contraste AA**: qualquer cor nova passa pelo cálculo antes (scripts
+  usados estão no histórico; perguntar que eu mostro).
+- Progresso do aluno fica no `localStorage` (por aparelho, sem login).
+  Placar compartilhado = fase 2 com backend — ainda não existe.
+
+## Fluxo de trabalho sugerido
+
+`main` é o que está no ar. Mudança = branch curta + PR (a Vercel dá preview
+automático) + merge após olhar no celular. Dúvida de escopo: `ROADMAP.md`.

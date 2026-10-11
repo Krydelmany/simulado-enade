@@ -73,7 +73,7 @@
 
 <article in:fly={{ x: 28, duration: DUR }} class="rounded-3xl bg-card p-4 shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)] sm:p-6">
 	<div class="flex flex-wrap items-center gap-2">
-		<p class="text-[11px] font-bold tracking-[0.14em] text-accent-ink uppercase">
+		<p class="font-code text-[11px] font-bold tracking-[0.14em] text-accent-ink uppercase">
 			{rotuloQuestao(q)}
 		</p>
 		{#if q.materia_ava}

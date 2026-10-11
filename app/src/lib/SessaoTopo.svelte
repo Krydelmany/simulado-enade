@@ -4,8 +4,10 @@
 	let { titulo, detalhe = '', progresso = 0, xp = 0, aoFechar } = $props();
 </script>
 
-<div class=" -mx-4 -mt-6 bg-bar px-4 pt-4 pb-5 text-white" style="border-radius: 0 0 26px 26px;">
-	<div class="mx-auto max-w-3xl">
+<div class="blueprint -mx-4 -mt-6 bg-bar px-4 pt-4 pb-5 text-white" style="border-radius: 0 0 26px 26px;">
+	<div class="relative mx-auto max-w-3xl">
+		<span class="pointer-events-none absolute top-0 left-0 font-code text-sm text-white/30" aria-hidden="true">+</span>
+		<span class="pointer-events-none absolute top-0 right-0 font-code text-sm text-white/30" aria-hidden="true">+</span>
 		<div class="flex items-center gap-3">
 			<button
 				type="button"
@@ -23,9 +25,12 @@
 		</div>
 		<div class="mt-3 flex items-baseline justify-between gap-3">
 			<p class="text-[17px] font-bold">{titulo}</p>
-			{#if detalhe}
-				<p class="shrink-0 text-sm font-medium text-bar-fg">{detalhe}</p>
-			{/if}
+			<div class="shrink-0 text-right">
+				{#if detalhe}
+					<p class="text-sm font-medium text-bar-fg">{detalhe}</p>
+				{/if}
+				<p class="font-code text-[10px] tracking-[0.12em] text-white/40" aria-hidden="true">SIM-ENADE // REV A</p>
+			</div>
 		</div>
 		<div
 			class="mt-2 h-2.5 overflow-hidden rounded-full bg-white/15"
