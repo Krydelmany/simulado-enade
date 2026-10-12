@@ -64,10 +64,22 @@ PLANO.md              direção do produto · ROADMAP.md → fases e status
 5. Questão `ANULADA` no gabarito (`"gabarito": "ANULADA"`) = ponto p/ todos,
    como faz o INEP.
 
-Regras de extração que já doeram: rodapé do PDF (`Área livre + nº +
-ENGENHARIA DE…`) vaza para o fim da última alternativa — cortar sempre;
-`mod/resource` não existe aqui, mas no AVA o scraping é só HTML
-(ver `INVENTARIO.md`); 2017 tem ~10 questões com fonte quebrada (OCR/manual).
+Regras de extração que já doeram:
+
+- **rodapé do PDF** (`Área livre`, nº de página, `ENGENHARIA DE…`) vaza para
+  o fim da última alternativa — cortar sempre;
+- **`mod/resource` não existe aqui**; no AVA o scraping é só HTML (ver
+  `INVENTARIO.md`);
+- **2014 e 2017 têm fonte quebrada** (sem `ToUnicode`): o `pdftotext` devolve
+  glifos trocados, e a página precisa ser RENDERIZADA para o tesseract ler.
+  Renderizar com **mutool**, não com `pdftoppm` — a fonte substituída pelo
+  poppler sai com glifos que o tesseract lê errado de forma sistemática
+  (toda maiúscula vira minúscula);
+- **nada entra no banco sem passar em `banco/qualidade.py`.** Questão com
+  alternativa faltando, enunciado vazado para dentro das alternativas ou
+  gabarito fora das letras lidas fica de fora — com uma opção a menos, o
+  gabarito aponta para a letra errada e o aluno erra sem saber por quê. O
+  que sobrou está em `revisao/pendencias.md`.
 
 ## Convenções do código (seguir para não quebrar o visual)
 

@@ -7,12 +7,16 @@ Fontes em `fontes/`. Provas oficiais do INEP (RIEP + GitHub `geacc/enade`)
 
 | Edição | Formato | Objetivas | Discursivas | Gabarito | Padrão resp. | Anuladas | Extração de texto |
 |---|---|---|---|---|---|---|---|
-| 2014 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (9 p.) | Q27, Q30, Q34 | ok |
-| 2017 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (11 p.) | — | **falha em ~10 questões** (fonte com mapa quebrado: somem Q34–35, D4–D5, 2 FG + 4 CE) → OCR/manual |
-| 2019 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (10 p.) | Q1 (= mesma do AVA) | ok |
-| 2023 | FG 1–9 + CE 10–38 | 38 | 2 (D1–D2) | ok | ok | — | ok |
+| 2014 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (9 p.) | Q27, Q30, Q34 | OCR (mutool + tesseract) — 19/39 no banco |
+| 2017 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (11 p.) | — | OCR (mutool + tesseract) — 24/40 no banco |
+| 2019 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (10 p.) | Q1 (= mesma do AVA) | pdftotext — 38/40 no banco |
+| 2023 | FG 1–9 + CE 10–38 | 38 | 2 (D1–D2) | ok | ok | — | pdftotext — 40/40 no banco |
 
 **Total: 143 objetivas + 17 discursivas = 160 questões.**
+**No banco hoje: 123** (107 objetivas + 16 discursivas). O que falta está em
+`revisao/pendencias.md`, com o motivo de cada uma — em geral o OCR da prova
+perde a bolinha de uma alternativa e o gabario passaria a apontar para a
+letra errada.
 
 Anulada = o INEP credita a todos (como fez o professor no relatório:
 "Q1 anulada no gabarito oficial: creditada a todos, como faz o INEP").
@@ -49,7 +53,11 @@ novas — mas entrega duas coisas prontas:
 - Figuras são majoritariamente **vetoriais** (raster conta pouco:
   15/5/3/5 imgs). Extrair por crop da página renderizada, não por
   `pdfimages`.
-- 2017 exige OCR ou digitação manual em ~10 questões.
+- **2014 e 2017 exigem OCR.** A fonte embutida não tem `ToUnicode`, então o
+  `pdftotext` devolve glifos trocados: a página é renderizada (com `mutool`,
+  não `pdftoppm`) e lida pelo tesseract. O que o OCR não pega é a bolinha da
+  alternativa — daí a busca por desenho na imagem (`ocr._bolinhas_da_imagem`)
+  e a porta de qualidade que preferisce deixar a questão de fora.
 - `Questionario_INEP_Enade_2026.pdf` (AVA) é o questionário
   socioeconômico — não pontua, **fora** do banco.
 - Referência de formato 2026 (prova real que farão): Portaria INEP nº 161 —

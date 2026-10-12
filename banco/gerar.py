@@ -13,6 +13,7 @@ import sys
 
 sys.path.insert(0, '/root/enade-simulado/banco')
 import classificar
+import qualidade
 import montar
 
 RAIZ = '/root/enade-simulado'
@@ -106,8 +107,19 @@ def main(ano, parte):
             q['imagem'] = {'src': f'/banco/img/{q["id"]}.png', 'alt': alt}
     qs = [q for q in qs if q['parte'] == parte]
 
+    # Porta de qualidade (ver qualidade.py): uma objetiva com alternativa
+    # faltando, vazia ou com pedaço de enunciado é PIOR que não existir — o
+    # aluno marcaria uma letra e levaria o resultado errado sem perceber.
+    boas, pendentes = [], []
+    for q in (qualidade.limpa(q) for q in qs):
+        motivo = qualidade.problema(q)
+        if motivo:
+            pendentes.append((q, motivo))
+        else:
+            boas.append(q)
+
     ordem = {'discursiva': 0, 'objetiva': 1}
-    qs.sort(key=lambda q: (ordem.get(q['tipo'], 9), q['numero']))
+    qs = sorted(boas, key=lambda q: (ordem.get(q['tipo'], 9), q['numero']))
 
     # --- JSON do site -------------------------------------------------
     destino = f'{BANCO}/enade{ano}-{parte.lower()}.json'
@@ -129,6 +141,22 @@ def main(ano, parte):
     sem_tema = [q['id'] for q in qs if not q['tema']]
     if sem_tema:
         L += ['', f'⚠️ **Sem classificação:** {", ".join(sem_tema)}']
+    if pendentes:
+        L += [
+            '',
+            f'## ⚠️ {len(pendentes)} questão(ões) FORA do banco',
+            '',
+            'O extrator não achou as cinco alternativas (o OCR da prova perde a '
+            'bolinha em algumas). Não entraram no site porque, com uma '
+            'alternativa faltando, o gabarito aponta para a letra errada. '
+            'Precisam de digitação manual:',
+            '',
+        ]
+        for q, motivo in pendentes:
+            ach = ', '.join(sorted(q.get('alternativas') or {})) or '—'
+            gab = q.get('gabarito') or '?'
+            L.append(f'- `{q["id"]}` — {motivo} (lidas: {ach}, gabarito {gab})')
+        L.append('')
     figs = [q for q in qs if q.get('imagem')]
     if figs:
         L += ['', 'Questões com alternativas em imagem (recorte da página): '
@@ -165,5 +193,54 @@ def main(ano, parte):
     return qs
 
 
+def resumo():
+    """Lista única do que ainda falta, das quatro edições.
+
+    Os lotes ficam um por arquivo; este junta tudo num só lugar, que é o
+    que dá para conferir de uma vez.
+    """
+    L = ['# Pendências da extração', '',
+         'Questões do PDF oficial que **não entraram no banco** porque o '
+         'extrator não conseguiu ler as cinco alternativas (o OCR da prova '
+         'perde a bolinha). Com alternativa faltando, o gabarito aponta '
+         'para a letra errada — por isso ficam de fora em vez de irem '
+         'erradas.', '']
+    total = entrada = 0
+    for ano in (2014, 2017, 2019, 2023):
+        # `aplicar_figuras` é o que marca as questões de alternativa-em-imagem
+        # (código, fórmula, diagrama): elas não têm texto para conferir, e
+        # por isso não são pendência
+        qs = montar.aplicar_figuras(
+            classificar.aplicar(montar.extrair(ano)), FIGURAS
+        )
+        qs = [qualidade.limpa(q) for q in qs]
+        ok = [q for q in qs if not qualidade.problema(q)]
+        bad = [(q, qualidade.problema(q)) for q in qs if qualidade.problema(q)]
+        entrada += len(ok)
+        total += len(qs)
+        L.append(f'## {ano} — {len(ok)} de {len(qs)} no banco')
+        if bad:
+            L.append('')
+            for q, motivo in bad:
+                gab = q.get('gabarito') or '?'
+                L.append(f'- `{q["id"]}` ({q["parte"]}) — {motivo}; '
+                         f'gabarito {gab}')
+        L.append('')
+    L.insert(3, f'**{entrada} questões no banco** de {total} extraídas '
+                f'({total - entrada} pendentes).')
+    L += ['', '---', '',
+          'Para fechar uma pendência: abrir o PDF da edição, digitar as '
+          'cinco alternativas e pôr no `classificacao.json`/no gerador. O '
+          'gabarito vem do PDF de gabaritos, então só ele não basta — '
+          'sem as cinco opções a questão não pode ir ao site.', '']
+    os.makedirs(REVISAO, exist_ok=True)
+    with open(f'{REVISAO}/pendencias.md', 'w', encoding='utf-8') as fh:
+        fh.write('\n'.join(L))
+    print(f'{entrada}/{total} no banco -> {REVISAO}/pendencias.md')
+
+
 if __name__ == '__main__':
-    main(int(sys.argv[1]), sys.argv[2])
+    if len(sys.argv) > 1 and sys.argv[1] == 'resumo':
+        resumo()
+    else:
+        main(int(sys.argv[1]), sys.argv[2])

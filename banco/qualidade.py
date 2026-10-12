@@ -1,0 +1,131 @@
+"""Porta de qualidade do banco: o que NÃO pode entrar no site.
+
+Uma questão com alternativa faltando ou trocada é PIOR do que não existir —
+o aluno marcaria uma letra e levaria o resultado errado sem perceber. E uma
+questão em que o enunciado vazou para dentro das alternativas é ilegível.
+
+A extração das provas de 2014 e 2017 passa por OCR (a fonte delas não tem
+ToUnicode), e o OCR erra justamente a bolinha da alternativa: quando ela some,
+o bloco de Alternatives não fecha e o enunciado inteiro cai dentro das
+alternativas. Aqui isso é detectado pelo FORMATO — o enunciado da prova é
+muito mais longo que qualquer alternativa, e traz as frases de comando que
+só aparecem antes das opções.
+
+Para 2019 e 2023 o texto vem íntegro do PDF; o filtro também passa por lá,
+e é a rede de segurança contra uma regressão silenciosa.
+"""
+
+import re
+
+# frases que só aparecem no ENUNCIADO, nunca na alternativa
+COMANDO_ENUNCIADO = re.compile(
+    r'assinale\s+(a\s+)?(a\s+)?op[çc][ãa]o'
+    r'|avalie\s+as\s+afirma'
+    r'|a\s+partir\s+das\s+informa[çc][õo]es\s+apresentadas'
+    r'|conclus[õo]es?\s+que'
+    r'|com\s+base\s+nas\s+informa[çc][õo]es'
+    r'|considerando?\s+o\s+texto',
+    re.I,
+)
+
+LIXO_PROVA = re.compile(
+    r'EN[GW]?ENHARIA\s+(?:DE|N[DE])|Exame\s+Nacional|\benade\b'
+    r'|COMPONENTE\s+ESPEC|CADERNOS?\s+DE|FORMA[ÇC][ÃA]O\s+GERAL'
+    r'|\*\s*R\d{6,}',
+    re.I,
+)
+
+# A prova de 2023 CE tem alternativas muito verborrágicas (a maior tem 352
+# caracteres); enunciado vazado na alternativa passa de 470. O corte fica no
+# meio, e o teste de "trecho de enunciado" pega o resto.
+MAX_ALTERNATIVA = 400
+MIN_ENUNCIADO = 60         # enunciado mais curto que este é corte errado
+
+# SUFIXO de rodapé que o extrador deixa grudado na última alternativa (é
+# sempre a E, que é a última da página). Corta do marcador até o fim.
+SUFIXO_RODAPE = re.compile(
+    r'\s*(?:'
+    r'EN[GW]?ENHARIA\s+(?:DE|N[DE])(?:\s+COMPUTA[\wÇÃ]*)?'
+    r'|COMPUTA[ÇC][ÃA]O'
+    r'|Engenharia\s*MAT[ÉE]RIA\s*de\s*Computa[Çc][Ãa]o'
+    r'|MAT[ÉE]RIA'
+    r'|LOGO'
+    r'|COMPONENTE\s+ESPEC\w*'
+    r'|FORMA[ÇC][ÃA]O\s+GERAL'
+    r'|CADERNOS?\s+DE'
+    r'|\d{4}\s+enade'
+    r'|enade'
+    r'|Exame\s+Nacional.*'
+    r'|\*[^.]{4,}\*?'
+    r'|\d{1,3}\s*$'
+    r').*$',
+    re.I,
+)
+
+
+def limpa(q):
+    """Tira o rodapé que sobrou grudado nas alternativas (em cópia)."""
+    q = dict(q)
+    alt = q.get('alternativas') or {}
+    novo = {}
+    for letra, txt in alt.items():
+        t = SUFIXO_RODAPE.sub('', (txt or '').strip()).strip()
+        t = ' '.join(t.split())
+        if t:
+            novo[letra] = t
+    q['alternativas'] = novo
+    enun = SUFIXO_RODAPE.sub('', (q.get('enunciado') or '').strip()).strip()
+    q['enunciado'] = ' '.join(enun.split())
+    return q
+
+
+# Questões fora do banco por um motivo que a checagem de formato não pega,
+# com o motivo escrito — a lista é curta e revisável.
+FORA = {
+    '2014-FG-Q01': 'enunciado com DUAS questões coladas (o OCR juntou a do '
+                   'texto de Milton Nascimento com a de asserções '
+                   'verdadeiro/falso); as alternativas são da segunda e as '
+                   'asserções sumiram',
+}
+
+
+def problema(q):
+    """-> motivo string, ou None se a questão pode entrar no banco."""
+    if q['id'] in FORA:
+        return FORA[q['id']]
+
+    if q.get('alternativas_visuais'):
+        # alternativa é a própria imagem (código/fórmula/diagrama): não há
+        # texto para conferir, e é assim que essas questões já estão no site
+        return None
+
+    if q['tipo'] != 'objetiva':
+        if len(q['enunciado']) < MIN_ENUNCIADO:
+            return 'enunciado curto demais'
+        return None
+
+    enun = q['enunciado'] or ''
+    alts = q.get('alternativas') or {}
+
+    if not enun.strip():
+        return 'enunciado vazio'
+    if len(enun) < MIN_ENUNCIADO:
+        return f'enunciado curto demais ({len(enun)} car.)'
+
+    if len(alts) != 5:
+        return f'só {len(alts)} de 5 alternativas'
+    for letra, txt in sorted(alts.items()):
+        t = (txt or '').strip()
+        if not t:
+            return f'alternativa {letra} vazia'
+        if len(t) > MAX_ALTERNATIVA:
+            return f'alternativa {letra} com {len(t)} caracteres (enunciado)'
+        if COMANDO_ENUNCIADO.search(t):
+            return f'alternativa {letra} é trecho de enunciado'
+        if LIXO_PROVA.search(t):
+            return f'alternativa {letra} com lixo da página'
+
+    gab = (q.get('gabarito') or '').strip()
+    if gab and gab != 'ANULADA' and gab not in alts:
+        return f'gabarito {gab} não está entre as alternativas'
+    return None

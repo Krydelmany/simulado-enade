@@ -3,3 +3,6 @@ app/build/
 app/.svelte-kit/
 *.txt
 fontes/*.txt
+
+__pycache__/
+*.pyc

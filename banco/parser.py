@@ -255,14 +255,15 @@ def _checar_ocr(linhas):
             j += 1
         p.append((i, txt, letra))
 
-    # O tesseract às vezes marca bolinha onde não é alternativa (dentro de
-    # figura, no cabeçalho). Fica só o trecho em que as letras formam
-    # A..B..C..D..E na ordem — é a assinatura das alternativas.
-    for k in range(len(p) - 3):
+    # O tesseract às vezes marca bolinha onde não é alternativa: as ASSERÇÕES
+    # ("I. ...", "II. ...") viram "1." / "l." e entram como se fossem. Como as
+    # alternativas são sempre o ÚLTIMO bloco da questão (depois delas vem só
+    # o rodapé), vale o ÚLTIMO trecho que fecha A..B..C..D..E.
+    for k in range(len(p) - 3, -1, -1):
         trecho = p[k:k + 5]
         if [t[2] for t in trecho] == ['A', 'B', 'C', 'D', 'E']:
             return trecho
-    for k in range(len(p) - 2):
+    for k in range(len(p) - 2, -1, -1):
         trecho = p[k:k + 4]
         if [t[2] for t in trecho] == ['A', 'B', 'C', 'D']:
             return trecho
