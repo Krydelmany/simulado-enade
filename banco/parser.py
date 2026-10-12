@@ -133,7 +133,9 @@ FIM_ENUNCIADO = re.compile(
 MAX_ALT_LINHA = 220    # alternativa que cabe numa linha do PDF
 
 
-_LETRA_OCR = re.compile(r'^\[LETRA\]\s*\)?\s*(.*)$')
+# O OCR marca a letra entre colchetes: "[A] texto". O marcador antigo
+# "[LETRA]" (quando a bolinha não tinha letra) ainda é aceito.
+_LETRA_OCR = re.compile(r'^\[(?:([A-E])|LETRA)\]\s*\)?\s*(.*)$')
 
 
 def _ocr_para_letra(linhas):
@@ -156,7 +158,10 @@ def _comeca_com_letra(ln):
     # OCR: a bolinha da alternativa volta como [LETRA]
     m = _LETRA_OCR.match(ln.strip())
     if m:
-        return _LetraOcr(m.group(1))
+        letra, texto = m.group(1), m.group(2) or ''
+        if letra:
+            return re.match(r'^([A-E])\s+(\S.*)$', f'{letra} {texto}')
+        return _LetraOcr(texto)
     return None
 
 
@@ -227,24 +232,28 @@ def _sequencia_sozinha(linhas):
 
 
 def _checar_ocr(linhas):
-    """-> [(i, texto)] das linhas marcadas [LETRA], se forem 4 ou 5 em bloco.
+    """-> [(i, texto, letra)] das linhas de alternativa do OCR.
 
-    A bolinha às vezes vem numa linha e o texto na seguinte (o tesseract
-    separates os dois); nesse caso junta as linhas até o próximo [LETRA].
+    O OCR de 2014/2017 marca a letra entre colchetes ("[A] texto"), vinda da
+    geometria do PDF — então a letra é lida de lá, nunca por ordem. Quando
+    a bolinha vem numa linha e o texto na seguinte, junta até a próxima.
     """
     marcas = [
-        i for i, ln in enumerate(linhas) if _LETRA_OCR.match(ln.strip())
+        (i, _LETRA_OCR.match(ln.strip()))
+        for i, ln in enumerate(linhas)
+        if _LETRA_OCR.match(ln.strip())
     ]
     if len(marcas) < 4:
         return None
     p = []
-    for k, i in enumerate(marcas):
-        txt = _LETRA_OCR.match(linhas[i].strip()).group(1).strip()
+    idx = {i for i, _m in marcas}
+    for i, m in marcas:
+        letra, txt = m.group(1), (m.group(2) or '').strip()
         j = i + 1
-        while j < len(linhas) and j not in marcas and linhas[j].strip():
+        while j < len(linhas) and j not in idx and linhas[j].strip():
             txt = (txt + ' ' + linhas[j].strip()).strip()
             j += 1
-        p.append((i, txt))
+        p.append((i, txt, letra))
     return p
 
 
@@ -295,10 +304,11 @@ def separar_alternativas(corpo):
         enunciado = '\n'.join(linhas[:inicio]).strip()
         alt = {}
         letras = 'ABCDE'
-        for k, (i, txt) in enumerate(ocr):
+        for k, (i, txt, letra) in enumerate(ocr):
             if k >= 5:
                 break
-            alt[letras[k]] = txt
+            # letra do PDF quando houver; senão segue a ordem
+            alt[letra if (letra and letra in 'ABCDE') else letras[k]] = txt
         # continuação depois da última bolinha
         if fim + 1 < len(linhas) and alt:
             ult = chr(ord('A') + len(alt) - 1)

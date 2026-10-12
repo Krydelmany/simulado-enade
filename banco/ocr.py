@@ -12,6 +12,8 @@ import re
 import subprocess
 import sys
 
+sys.path.insert(0, '/root/enade-simulado/banco')
+
 SAIDA = '/tmp/opencode/extr/ocr'
 
 
@@ -260,24 +262,205 @@ def _comeca_bolinha(t):
 
 
 def processar(pdf, nome, paginas=None, dpi=300):
+    """OCR de todas as páginas -> texto na ordem de leitura, COM as letras
+    das alternativas corrigidas pela geometria do PDF."""
+    import alternativas
+    from PIL import Image
+
     os.makedirs(SAIDA, exist_ok=True)
     info = subprocess.run(['pdfinfo', pdf], capture_output=True).stdout.decode()
     m = re.search(r'Pages:\s+(\d+)', info)
     total = int(m.group(1)) if m else 0
     if paginas:
         total = max(paginas)
+
+    seqs = alternativas.indice_por_pagina(os.path.basename(pdf))  # {pag: [grupos]}
     partes = []
     for p in range(1, total + 1):
         png = render(pdf, p, dpi)
-        palavras = ocr(png)
-        from PIL import Image  # noqa
         with Image.open(png) as im:
             W, H = im.size
-        txt = montar(palavras, W, H, pdf, p)
-        partes.append(txt)
+            partes.append(_pagina(png, im, W, H, dpi, seqs.get(p, [])))
         os.remove(png)
-        print(f'  {nome} p{p}/{total} ok ({len(txt)} car.)', flush=True)
+        print(f'  {nome} p{p}/{total} ok ({len(partes[-1])} car.)', flush=True)
     return '\n'.join(partes)
+
+
+def _recorte_alternativa(png, im, dpi, seq, k, x1=None):
+    """OCR de UMA alternativa, pela faixa entre a letra atual e a seguinte.
+
+    A letra da alternativa é um glifo de 15.6 pt (o corpo do texto tem 12.3),
+    e a caixa dela vem da geometria do PDF — que não depende de OCR. Cortando
+    da base dessa caixa até a base da seguinte, cai exatamente na linha da
+    alternativa: o tesseract lendo a página inteira erra a última (a bolinha
+    pequena encosta no rodapé), mas lendo só a faixa acerta.
+    """
+    from PIL import Image
+
+    letra, y0, y1, x0 = seq[k]
+    n = len(seq)
+    topo = y0 - 2
+    base = seq[k + 1][1] - 2 if k + 1 < n else y1 + 8
+    # a coluna vai da margem até o x da letra seguinte coluna - 5pt
+    x1 = (seq[-1][3] - 10) if seq and seq[-1][3] > x0 + 60 else None
+    escala = dpi / 72.0
+    W, H = im.size
+    # o x1 limita a COLUNA: em página de 2 colunas a alternativa da questão
+    # vizinha está logo à direita e entrava no recorte.
+    x_max = W if x1 is None else min(W, int(x1 * escala))
+    faixa = im.crop((
+        max(0, int((x0 - 8) * escala)),
+        max(0, int(topo * escala)),
+        max(int((x0) * escala) + 40, x_max),
+        min(H, int(base * escala)),
+    ))
+    faixa = faixa.resize((faixa.width * 2, faixa.height * 2), Image.LANCZOS)
+    tmp = f'{SAIDA}/_alt{k}.png'
+    faixa.save(tmp)
+    r = subprocess.run(
+        ['tesseract', tmp, 'stdout', '-l', 'por', '--psm', '6'],
+        capture_output=True,
+    )
+    os.remove(tmp)
+    linhas = [l for l in r.stdout.decode('utf-8', 'replace').split('\n') if l.strip()]
+    if not linhas:
+        return ''
+    return _tira_bolinha(max(linhas, key=lambda l: len(l.strip())))
+
+
+def _pagina(png, im, W, H, dpi, grupos):
+    """Texto da página: corpo pelo OCR de página toda + alternativas por
+    recorte (que é onde o OCR de página inteira falha).
+
+    Uma página pode ter 2 ou 3 questões, então `grupos` é a lista dos blocos
+    de alternativas — um por questão.
+    """
+    if not grupos:
+        return montar(ocr(png), W, H)
+    palavras = ocr(png)
+    texto = montar(palavras, W, H)
+    # as alternativas saem do corpo e entram pelo recorte, na ordem
+    # Para cada bloco de alternativas: recorta as 5 e troca o bloco
+    # correspondente no texto, de baixo para cima (assim os índices das
+    # linhas de cima não mudam).
+    linhas = texto.split('\n')
+    for seq in grupos:
+        novas = []
+        # coluna: da margem desta até a margem da outra
+        x_esq = seq[0][3]
+        x_dir = seq[-1][3]
+        duas = x_dir - x_esq > 60
+        x1 = (x_dir - 12) if duas else None
+        for k, (letra, _y0, _y1, _x0) in enumerate(seq):
+            alt = _recorte_alternativa(png, im, dpi, seq, k, x1)
+            if alt:
+                novas.append(f'[{letra}] {alt}')
+        if not novas:
+            continue
+        i = _primeira_alternativa(linhas)
+        j = len(linhas)
+        if i >= 0:
+            j = _ultima_alternativa(linhas, i)
+        corpo = linhas[:i] + novas + linhas[j:]
+        linhas = corpo
+    return '\n'.join(linhas)
+
+
+def _ultima_alternativa(linhas, i):
+    """Fim do bloco de alternativas que começa em i (última linha `[E]`)."""
+    ultimo = i
+    for k in range(i, len(linhas)):
+        if re.match(r'^\s*\[[A-E]\]', linhas[k]):
+            ultimo = k
+        elif ultimo > i and linhas[k].strip():
+            # texto de continuação da alternativa anterior
+            continue
+    return ultimo + 1
+
+
+def _primeira_alternativa(linhas):
+    """Índice da 1ª linha que já é alternativa (a do OCR de página toda)."""
+    for i, ln in enumerate(linhas):
+        if re.match(r'^\s*\[?LETRA\]?|^\s*O\s+\S|^\s*OQ\s+', ln):
+            return i
+    return -1
+
+
+BOLINHA_OU = re.compile(r'^\s*(?:[(\[]?\s*)?(?:O|OQ|QO|0|4|8|9|1|2|3|5|6|7|BA|OW|lell|ll)\s*\)?\s*')
+
+
+def _tira_bolinha(txt):
+    """Remove a bolinha lida como letra do começo do texto da alternativa."""
+    return BOLINHA_OU.sub('', txt, count=1).strip()
+
+
+def _pagina_com_letras(palavras, W, H, escala, seq, pdf, pag):
+    k = 0
+    """Monta o texto da página e troca a bolinha (lida como 'O') pela letra
+    verdadeira, vinda da geometria.
+
+    A bolinha da alternativa fica na MESMA altura da letra real (glifo de
+    15.6 pt), então casamos por proximidade vertical — sem isso, quando o
+    tesseract perde a 5ª bolinha, as letras A..E saem deslocadas e a questão
+    fica com alternativas trocadas.
+    """
+    texto = montar(palavras, W, H, pdf, pag)
+    if not seq:
+        return texto
+    linhas = texto.split('\n')
+    # y (pt) de cada linha, na ordem em que saíram
+    alturas = []
+    tol = max(2, int(H * 0.004))
+    agrupadas = []
+    for w in sorted(palavras, key=lambda w: ((w[1] + w[3]) / 2, w[0])):
+        y = (w[1] + w[3]) / 2
+        if agrupadas and abs(agrupadas[-1][0] - y) <= tol:
+            agrupadas[-1][1].append(w)
+        else:
+            agrupadas.append([y, [w]])
+
+    # Casa cada linha do OCR com a letra pela ALTURA (a bolinha e a letra
+    # real estão na mesma linha). Quando o tesseract perde a bolinha, sobra
+    # uma linha vazia entre duas — a geometria ainda sabe que letra é a
+    # próxima, então preenche.
+    letras_y = [(a[0], (a[1] + a[2]) / 2) for a in seq]
+
+    def letra_da_linha(y_pt):
+        melhor, dist = None, 1e9
+        for letra, cy in letras_y:
+            d = abs(cy - y_pt)
+            if d < dist:
+                melhor, dist = letra, d
+        return melhor if dist <= 12 else None
+
+    saida = []
+    ult_letra = ''
+    for ln in linhas:
+        s = ln.strip()
+        m = re.match(r'^\[?LETRA\]?\s*|^O\s+|^OQ\s+|^\d\s+|^(?:BA|OW)\s+', s)
+        if m:
+            if k < len(agrupadas):
+                letra = letra_da_linha(agrupadas[k][0] * escala)
+            else:
+                letra = None
+            k += 1
+            if letra:
+                cauda = s[m.end():].strip()
+                saida.append(f'[{letra}] ' + cauda)
+                ult_letra = letra
+                continue
+        saida.append(ln)
+    return '\n'.join(saida)
+
+
+def _letra_mais_proxima(y_pt, seq):
+    melhor, dist = None, 1e9
+    for letra, y0, y1, _x0 in seq:
+        centro = (y0 + y1) / 2
+        d = abs(centro - y_pt)
+        if d < dist:
+            melhor, dist = letra, d
+    return melhor if dist <= 12 else None
 
 
 if __name__ == '__main__':
