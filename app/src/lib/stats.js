@@ -47,3 +47,19 @@ export function removerErro(id) {
 export function getErros() {
 	return ler('enade-erros', []);
 }
+
+/** Sessão de treino pausada (para continuar depois). */
+export function salvarSessao(s) {
+	gravar('enade-sessao', s);
+}
+export function carregarSessao() {
+	return ler('enade-sessao', null);
+}
+export function limparSessao() {
+	if (!browser) return;
+	try {
+		localStorage.removeItem('enade-sessao');
+	} catch {
+		// ignora
+	}
+}

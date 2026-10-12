@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import Questao from '$lib/Questao.svelte';
 	import SessaoTopo from '$lib/SessaoTopo.svelte';
 	import BarraAcao from '$lib/BarraAcao.svelte';
@@ -11,9 +12,12 @@
 		getXP,
 		getErros,
 		registrarErro,
-		removerErro
+		removerErro,
+		salvarSessao,
+		carregarSessao,
+		limparSessao
 	} from '$lib/stats.js';
-	import { ArrowsClockwise, Flag, Lightning, Tag, Target, Timer, Trophy } from 'phosphor-svelte';
+	import { ArrowsClockwise, Flag, Lightning, Play, Tag, Target, Timer, Trophy } from 'phosphor-svelte';
 
 	let banco = $state([]);
 	let fila = $state([]);
@@ -29,6 +33,21 @@
 	let xpPing = $state(0);
 	let carregou = $state(false);
 	let falhou = $state(false);
+	let escolha = $state(false);
+	let salva = $state(null);
+	let prontoModo = $state(null);
+
+	$effect(() => {
+		if (!carregou || !banco.length) return;
+		const m = revisao ? 'rev' : 'nor';
+		if (prontoModo === m) return;
+		prontoModo = m;
+		if (m === 'rev') {
+			escolha = false;
+			encerrada = false;
+			montar();
+		}
+	});
 
 	let revisao = $derived($page.url.searchParams.get('modo') === 'revisao');
 	let temas = $derived([...new Set(banco.map((q) => q.tema))].sort());
@@ -42,6 +61,15 @@
 		} finally {
 			carregou = true;
 		}
+		const s = carregarSessao();
+		if (s?.ids?.length) {
+			const ordem = s.ids.map((id) => banco.find((q) => q.id === id)).filter(Boolean);
+			if (ordem.length && !revisao) {
+				salva = { ...s, fila: ordem };
+				escolha = true;
+				return;
+			}
+		}
 		montar();
 	});
 
@@ -51,16 +79,42 @@
 		return lista;
 	}
 
-	function montar() {
-		fila = embaralhar(base());
-		i = 0;
-		certas = 0;
-		feitas = 0;
-		log = [];
-		xpGanho = 0;
+	function montar(nova = true) {
+		if (nova) {
+			limparSessao();
+			fila = embaralhar(base());
+			i = 0;
+			certas = 0;
+			feitas = 0;
+			log = [];
+			xpGanho = 0;
+			inicio = Date.now();
+		} else if (salva) {
+			fila = salva.fila;
+			i = Math.min(salva.i, fila.length - 1);
+			certas = salva.certas;
+			feitas = salva.feitas;
+			log = salva.log || [];
+			xpGanho = salva.xpGanho || 0;
+			inicio = salva.inicio || Date.now();
+		}
 		xpPing = 0;
+		escolha = false;
 		encerrada = false;
-		inicio = Date.now();
+	}
+
+	function persistir() {
+		if (revisao || !fila.length) return;
+		salvarSessao({
+			v: 1, i, certas, feitas, log, tema,
+			ids: fila.map((q) => q.id),
+			inicio, xpGanho
+		});
+	}
+
+	function sair() {
+		persistir();
+		goto('/');
 	}
 
 	function aoResponder(r) {
@@ -77,6 +131,7 @@
 		} else if (!r.anulada) {
 			registrarErro(r.id);
 		}
+		persistir();
 	}
 
 	function mmss() {
@@ -109,6 +164,20 @@
 		<p class="mt-1 text-sm text-ink-soft">Verifique sua conexão e tente de novo.</p>
 		<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
 			Tentar de novo
+		</button>
+	</div>
+ {:else if escolha && salva}
+	<div class="rise rounded-3xl bg-card p-6 text-center shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]">
+		<p class="font-code text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">Sessão pausada</p>
+		<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight">Continuar de onde parou?</h2>
+		<p class="nums mt-2 text-sm text-ink-soft">
+			Questão {salva.i + 1} · {salva.certas}/{salva.feitas} certas{salva.tema !== 'todos' ? ` · ${salva.tema}` : ''}
+		</p>
+		<button type="button" onclick={() => montar(false)} class="btn3d duo-accent mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
+			<Play size={20} weight="fill" aria-hidden="true" /> Continuar sessão
+		</button>
+		<button type="button" onclick={() => montar()} class="mt-2 w-full rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
+			Nova sessão
 		</button>
 	</div>
 {:else if encerrada}
@@ -171,7 +240,7 @@
 		detalhe={revisao ? `${certas}/${feitas}` : `${certas}/${feitas} certas`}
 		progresso={fila.length ? (i + 1) / fila.length : 0}
 		{xp}
-		aoFechar={() => (encerrada = true)}
+		aoFechar={sair}
 	/>
 	{#if !fila.length}
 		<div class="mt-6 rounded-3xl bg-card p-6 text-center shadow-sm">
@@ -197,9 +266,15 @@
 					{/each}
 				</select>
 			</label>
-			<p class="nums flex items-center gap-1.5 rounded-2xl bg-card px-3 py-3 text-sm font-bold" role="status">
+			<button
+				type="button"
+				onclick={() => { limparSessao(); encerrada = true; }}
+				title="Encerrar sessão e ver o resumo"
+				aria-label="Encerrar sessão e ver o resumo"
+				class="nums flex items-center gap-1.5 rounded-2xl bg-card px-3 py-3 text-sm font-bold transition-transform active:scale-95"
+			>
 				<Flag size={16} weight="bold" class="text-accent" aria-hidden="true" />{certas}/{feitas}
-			</p>
+			</button>
 		</div>
 		{#if fila[i]}
 			{#key fila[i].id + '-' + i}
