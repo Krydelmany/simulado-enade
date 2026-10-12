@@ -5,6 +5,7 @@ e `materia_ava` entram depois, na revisão (ver revisao/).
 """
 
 import json
+import os
 import re
 import sys
 
@@ -36,15 +37,27 @@ def gabaritos(ano):
     return out
 
 
+CACHE = '/tmp/opencode/extr'
+
+
 def texto_da_prova(ano, cache=None):
-    """2014/2017 têm fonte quebrada -> usa o OCR (ver ocr.py)."""
-    p = f'/tmp/opencode/extr/ocr/{ano}-ocr.txt'
-    try:
-        with open(p, encoding='utf-8') as fh:
+    """2014/2017 têm fonte quebrada -> usa o OCR (ver ocr.py).
+
+    2019 e 2023 têm texto íntegro: extrai na hora e guarda em cache, para
+    não reprocessar o PDF a cada geração de lote.
+    """
+    ocr = f'{CACHE}/ocr/{ano}-ocr.txt'
+    if os.path.exists(ocr):
+        with open(ocr, encoding='utf-8') as fh:
             return fh.read()
-    except FileNotFoundError:
-        pass
-    return layout.normaliza(layout.limpar(layout.texto(FONTE + PROVAS[ano])))
+    cache_txt = f'{CACHE}/{ano}-stext.txt'
+    if cache_txt and os.path.exists(cache_txt):
+        with open(cache_txt, encoding='utf-8') as fh:
+            return fh.read()
+    txt = layout.normaliza(layout.limpar(layout.texto(FONTE + PROVAS[ano])))
+    with open(cache_txt, 'w', encoding='utf-8') as fh:
+        fh.write(txt)
+    return txt
 
 
 def extrair(ano):

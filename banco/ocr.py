@@ -26,7 +26,7 @@ def render(pdf, pag, dpi=300):
     return base + '.png'
 
 
-def ocr(png, lang='por', psm='3'):
+def ocr(png, lang='por', psm='3'):  # noqa: ARG001
     """-> [(x0,y0,x1,y1,palavra,conf)] via saida TSV."""
     r = subprocess.run(
         ['tesseract', png, 'stdout', '-l', lang, '--psm', psm, 'tsv'],
@@ -60,57 +60,69 @@ def _corrige(pal):
     return pal
 
 
+def _agrupar(palavras, tol):
+    """Palavras -> linhas por altura."""
+    linhas = []
+    for w in sorted(palavras, key=lambda w: ((w[1] + w[3]) / 2, w[0])):
+        y = (w[1] + w[3]) / 2
+        if linhas and abs(linhas[-1][0] - y) <= tol:
+            linhas[-1][1].append(w)
+            linhas[-1][2] = max(linhas[-1][2], w[2])
+        else:
+            linhas.append([y, [w], w[2]])
+    for l in linhas:
+        l[1].sort(key=lambda w: w[0])
+    return linhas
+
+
 def montar(palavras, W, H):
     """-> texto na ordem de leitura, respeitando 1 ou 2 colunas.
 
-    O tesseract devolve a página em Z (topo,baixo,topo,baixo...) e mistura as
-    colunas quando as linhas caem na mesma altura. Aqui as linhas são
-    montadas por y e a página é partida em colunas ANTES de concatenar.
+    O tesseract devolve a página em Z (topo,baixo,topo,baixo...). Duas
+    colunas com linhas na MESMA altura viram uma linha só se forem agrupadas
+    antes de separar — por isso a coluna é decidida ANTES do agrupamento.
     """
     if not palavras:
         return ''
     meio = W / 2
-
-    # 1) monta as linhas (tolerance proportional à altura da página)
     tol = max(2, int(H * 0.004))
-    ordenadas = sorted(palavras, key=lambda w: ((w[1] + w[3]) / 2, w[0]))
-    linhas = []          # [y, x0, x1, [palavras]]
-    for w in ordenadas:
-        y = (w[1] + w[3]) / 2
-        if linhas and abs(linhas[-1][0] - y) <= tol:
-            linhas[-1][3].append(w)
-            linhas[-1][2] = max(linhas[-1][2], w[2])
-            linhas[-1][0] = (linhas[-1][0] * (len(linhas[-1][3]) - 1) + y) / len(linhas[-1][3])
-        else:
-            linhas.append([y, w[0], w[2], [w]])
-    for l in linhas:
-        l[3].sort(key=lambda w: w[0])
 
-    # 2) 2 colunas? nenhuma palavra cruzando o meio
-    cruza = any(l[1] < meio * 0.85 and l[2] > meio * 1.15 for l in linhas)
-    tem_esq = any(l[1] < meio * 0.8 for l in linhas)
-    tem_dir = any(l[1] >= meio * 0.9 for l in linhas)
+    # 1) decide a coluna pelo centroid de x, olhando o corpo da página
+    ys = sorted(((w[1] + w[3]) / 2 for w in palavras))
+    y0, y1 = ys[0], ys[-1]
+    altura = y1 - y0 or 1.0
+    corpo = [
+        w for w in palavras
+        if y0 + 0.06 * altura <= (w[1] + w[3]) / 2 <= y1 - 0.06 * altura
+    ] or palavras
+    cruza = any(w[0] < meio * 0.85 and w[2] > meio * 1.15 for w in corpo)
+    tem_esq = any(w[0] < meio * 0.85 for w in corpo)
+    tem_dir = any(w[0] >= meio * 0.9 for w in corpo)
     duas = (not cruza) and tem_esq and tem_dir
 
-    def linha_txt(l):
-        return ' '.join(w[4] for w in l[3])
-
-    if duas:
-        partes_txt = []
-        for pred in (lambda x: x < meio, lambda x: x >= meio):
-            partes_txt.append([linha_txt(l) for l in linhas if pred(l[1])])
+    if not duas:
+        partes = [_agrupar(palavras, tol)]
     else:
-        partes_txt = [[linha_txt(l) for l in linhas]]
+        partes = [
+            _agrupar([w for w in palavras if w[0] < meio], tol),
+            _agrupar([w for w in palavras if w[0] >= meio], tol),
+        ]
 
-    return '\n'.join('\n'.join(_marca_bolinhas(p)) for p in partes_txt)
+    textos = []
+    for linhas in partes:
+        textos.append(_marca_bolinhas([' '.join(w[4] for w in l[1]) for l in linhas]))
+    return '\n'.join('\n'.join(t) for t in textos)
 
 
 BOLINHA = '[LETRA]'
 
 # OCR da bolinha varies conforme a fonte: A) -> "O", B) -> "4"/"B", C) -> "OQ".
 # Normalizamos para o mesmo marcador.
+# A bolinha da alternativa é lida de formas varieadas conforme a fonte e o
+# ruído: "A)"->"O", "B)"->"4", "C)"->"OQ"/"Q", "D)"->"lell", "E)"->"|".
+# O tesseract também pode devolver a bolinha SOZINHA numa linha.
 BOLINHA_VARIANTES = re.compile(
-    r'^(?:\(|\[)?(?:O|OQ|QO|0|4|8|9|1|2|3|5|6|7)(?:\)|\])?(?=\s|$)'
+    r'^(?:\(|\[)?(?:O|OQ|QO|Q0|QQ|0|4|8|9|1|2|3|5|6|7|lell|lelll)(?:\)|\])?(?=\s|$)'
 )
 
 

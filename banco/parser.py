@@ -93,24 +93,36 @@ def _parte(cfg, tipo, num):
 ALT_RE = re.compile(r'^([A-E])\s+(\S.*)$', re.S)
 
 
-# frases que tipicamente ENCERRAM o enunciado (pedem "assinale a alternativa…")
-# o PDF cola espaço dentro da palavra quando a fonte usa kerning ("af irma",
-# "not if ica"). Estas são as âncoras de encerramento já com essa falha
-# tolerada — casadas literalmente contra o texto que o extrator devolveu.
+# Frases que ENCERRAM o enunciado — o enunciado está fechado e as
+# alternativas vêm a seguir. O PDF às vezes cola espaço dentro da palavra
+# (kerning da Calibri): "af irma", por isso o "\s?" nos pontos onde isso
+# acontece de fato.
 FIM_ENUNCIADO = re.compile(
-    r'(é\s+(in)?corret[oa]\s+o\s+que\s+se\s+afirma|está\s+(in)?corret[oa]\s+o\s+que|'
-    r'assinale\s+a\s+(alternativa|op[çc][ãa]o)|a\s+alternativa\s+(correta|incorreta)|'
-    r'escolha\s+a\s+(alternativa|op[çc][ãa]o)|qual\s+(d[ao]s|das)\s+alternativas|'
-    r'marque\s+a\s+alternativa|selecione\s+a\s+alternativa|'
-    r'assinale\s+(a|o)\s+que\s+est[áa]\s+correto|com\s+base\s+n[ao]s\s+informa[çc][õo]es|'
-    r'[ée]\s+corret[oa]\s+(apenas\s+)?o\s+que\s+se\s+af\s?irma)',
+    r'(?:'
+    # "é correto o que se afirma em" / "está incorreto o que se afirma em"
+    r'|[\u00e9\u00ea]\s+corret[oa]s?\s+(?:apenas\s+)?o\s*que\s*se\s*af\s?irm(?:a|am)'
+    # "é correto afirmar que" / "é correto afirmar"
+    r'|[\u00e9\u00ea]\s+corret[oa]\s*af\s?irm[ao]\s+que'
+    r'|est[\u00e1a]\s+(?:in)?corret[oa]\s+o\s+que'
+    r'|assinale\s+a\s+(?:alternativa|op[\u00e7c][\u00e3a]o)'
+    r'|assinale\s+(?:a|o)\s+que\s+est[\u00e1a]\s+corret[oa]'
+    r'|a\s+alternativa\s+(?:correta|incorreta)'
+    r'|escolha\s+a\s+(?:alternativa|op[\u00e7c][\u00e3a]o)'
+    r'|qual\s+(?:d[ao]s|das)\s+alternativas'
+    r'|marque\s+a\s+alternativa'
+    r'|selecione\s+a\s+alternativa'
+    r'|com\s+base\s+n[ao]s\s+informa[\u00e7c][\u00f5o]es'
+    # "avalie as afirmações" (também vem com espaço colado: "af irmações")
+    r'|avalie\s+as?\s+afirma(?:\u00e7|c)(?:\u00f5|o)es'
+    r')',
     re.I,
 )
+
 
 MAX_ALT_LINHA = 220    # alternativa que cabe numa linha do PDF
 
 
-_LETRA_OCR = re.compile(r'^\[LETRA\]\s*\)?\s*(\S.*)$')
+_LETRA_OCR = re.compile(r'^\[LETRA\]\s*\)?\s*(.*)$')
 
 
 def _ocr_para_letra(linhas):
@@ -152,14 +164,25 @@ def _fecha_enunciado(trecho):
 
 
 def _checar_ocr(linhas):
-    """-> [(i, texto)] das linhas marcadas [LETRA], se forem 4 ou 5 em bloco."""
-    p = [
-        (i, m.group(1).strip())
-        for i, ln in enumerate(linhas)
-        for m in [_LETRA_OCR.match(ln.strip())]
-        if m
+    """-> [(i, texto)] das linhas marcadas [LETRA], se forem 4 ou 5 em bloco.
+
+    A bolinha às vezes vem numa linha e o texto na seguinte (o tesseract
+    separates os dois); nesse caso junta as linhas até o próximo [LETRA].
+    """
+    marcas = [
+        i for i, ln in enumerate(linhas) if _LETRA_OCR.match(ln.strip())
     ]
-    return p if len(p) >= 4 else None
+    if len(marcas) < 4:
+        return None
+    p = []
+    for k, i in enumerate(marcas):
+        txt = _LETRA_OCR.match(linhas[i].strip()).group(1).strip()
+        j = i + 1
+        while j < len(linhas) and j not in marcas and linhas[j].strip():
+            txt = (txt + ' ' + linhas[j].strip()).strip()
+            j += 1
+        p.append((i, txt))
+    return p
 
 
 def _sequencia(linhas):
@@ -217,6 +240,12 @@ def separar_alternativas(corpo):
         return enunciado, alt
 
     inicio, _fim = seq
+    if inicio <= 1 and linhas and linhas[0].strip().upper().startswith('TEXTO'):
+        # "TEXTO 1 / TEXTO 2" — os textos vêm antes do enunciado, e o
+        # "A Inteligência…" do primeiro texto não é alternativa.
+        inicio += 1
+        while inicio < len(linhas) and not re.match(r'^[A-E]\s+\S', linhas[inicio].strip()):
+            inicio += 1
     if inicio == 0:
         # A sequência colou na linha 0: isso é porque o enunciado COMEÇOU com
         # "A ..." (ex.: "A sociedade do século XXI…"). A真正 âncora é a frase

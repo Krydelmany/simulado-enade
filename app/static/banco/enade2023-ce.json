@@ -1,0 +1,596 @@
+[
+ {
+  "id": "2023-CE-D02",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "02",
+  "tipo": "discursiva",
+  "tema": "Algoritmos de eliminação de registros duplicados",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "Considere que uma rede de varejo resolva consolidar a base de dados de suas M lojas, o que resulta em uma tabela X não ordenada com N registros de clientes, possivelmente repetidos. Devido à necessidade de se criar uma tabela Y contendo os clientes da tabela X com as repetições eliminadas, cogita-se utilizar dois possíveis algoritmos, os quais são apresentados a seguir.\nAlgoritmo A, que executa as seguintes ações:\n1. Cria uma tabela Y inicialmente vazia;\n2. Percorre a tabela X, cliente por cliente, verifciando se cada um deles já está na tabela Y. Caso não esteja, insere na tabela Y o cliente que está faltando.\nAlgoritmo B, que executa as seguintes ações:\n1. Cria uma tabela Y inicialmente vazia;\n2. Ordena a tabela X usando o algoritmo quicksort;\n3. Insere, na tabela Y, o cliente da primeira posição da tabela X;\n4. Percorre a tabela X, cliente por cliente, a partir do segundo cliente, verificando se cada cliente é igual ao anterior. Caso não seja, insere o cliente na tabela Y.\nComo resultado das ações tanto do algoritmo A quanto do algoritmo B, a tabela Y gerada ao final\nconterá os clientes da tabela X com as repetçiões eliminadas.\nA partri dessas informações, observe o código em linguagem C apresentado a seguir.\n\u0000void quicksort(int *v, int ini, int fim) {\n\u0000// v é o vetor a ser ordenado\n\u0000// ini é o índice do primeiro elemento a ser ordenado\n\u0000// fmi é o índice do último elemento a ser ordenado\n\u0000 if(ini < fim) {\n\u0000 x = particiona(v, ini, fim,(ini+fim)/2);\n\u0000 // atribuir os valores para a, b, c e d\n\u0000 quicksort(v,a,b);\n\u0000 quicksort(v,c,d);\n\u0000 }\n\u0000}\n\u0000int particiona (int *vetor, int ini, int fim, int pivot){\n\u0000// implementar uma função que reorganiza o vetor e retorna a posição\n\u0000final x do pivot. Ao final do processo, os elementos menores ou iguais a\n\u0000vetor[pivot] devem ter índice menor do que x; os elementos maiores que\n\u0000vetor[pivot] devem ter índice maior do que x.\n\u0000}\n\u0000void troca (int *vetor, int i, int j) {\n\u0000// função auxiliar que permuta os conteúdos das posições i e j do\n\u0000vetor\n\u0000aux = vetor[i];\n\u0000vetor[i] = vetor[j];\n\u0000vetor[j] = aux;\n\u0000}\nCom base nos dados apresentados, faça o que se pede nos itens a seguir.\na) Determine o número máximo de comparações executadas no passo 2 do algoritmo A.\n(valor: 2,0 pontos)\nb) Determine o número máximo de comparações executadas no passo 4 do algoritmo B. (valor: 2,0 pontos) c) Na implementação recursiva do programa apresentado, quais são os valores dos parâmetros a, b, c e d? (valor: 2,0 pontos) d) Escreva o corpo da função particiona em linguagem C utilizando a função auxiliar troca, a qual foi definida anteriormente. (valor: 4,0 pontos) RASCUNHO",
+  "alternativas": {},
+  "padrao": "",
+  "materia_ava": "COMPUTACAO PARALELA"
+ },
+ {
+  "id": "2023-CE-Q10",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "10",
+  "tipo": "objetiva",
+  "tema": "Resistores em série e paralelo",
+  "dificuldade": "Fácil",
+  "figura": null,
+  "enunciado": "Os resistores são dispositvios utliizados com fnialidade de limitar a corrente elétrica em um circuito elétrico. Eles conseguem desempenhar essa função por apresentarem a propriedade da resistência elétrica, que é a capacidade de um corpo se opor à passagem de corrente elétrica. Diversos materiais podem ser utilizados como resistores, tais como níquel-cromo, carbono e grafite.\nDiante disso, considere uma situação hipotétcia em que seja preciso construir resistores cilíndricos na forma da fgiura a seguir, a fmi de serem utliizados em um circuito de corrente contníua que possui tensão igual a 12 V. Na fgiura, L representa o comprimento do material e A representa a área de seção transversal.\nA\nL\nObserve, também, a tabela a seguir, a qual especifica características de três tipos de materiais utilizados para fabricação dos resistores hipotéticos, como a resistividade r , o comprimento L e a área A.\nMaterialr [ohm.mm2/m]L (m)A (mm2)\nCarbono40,001,002,50\nGrafite13,001,501,50\nNíquel-cromo1,105,000,50\nCom base nessas informações, é correto afrimar que, a fim de se obter a configuração de resistores\nviável para se ter uma corrente menor do que 300 mA, é preciso utilizar apenas",
+  "alternativas": {
+   "A": "2 resistores de grafite em série.",
+   "B": "3 resistores de carbono em série.",
+   "C": "2 resistores de grafite em paralelo.",
+   "D": "2 resistores de carbono em paralelo.",
+   "E": "3 resistores de níquel-cromo em série."
+  },
+  "gabarito": "B",
+  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
+ },
+ {
+  "id": "2023-CE-Q11",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "11",
+  "tipo": "objetiva",
+  "tema": "Protocolo OSPF e grafos",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "O protocolo de roteamento interno OSPF (open shortest path first) representa um\nsistema autônomo (SA) como um grafo ponderado, em que roteadores são os vértices, conexões entre\nos roteadores são as arestas e atrasos nas conexões são os pesos. No OSPF, a identificação de cada\nconexão e seu respectivo atraso são passados de roteador em roteador até que todos os roteadores\nformem uma base de dados com o grafo que descreve o SA. O OSPF utiliza uma versão distribuída\ndo algoritmo de caminhos mínimos de Dijkstra para computar as melhores rotas para todos os\npossíveis destinos e para produzir as tabelas de rotas para cada roteador. Cada rota computada é a que apresenta o menor valor para a soma dos atrasos nas conexões usadas na rota entre a rede de origem e a rede de destino.\nDisponível em: https://memoria.rnp.br/newsgen/9705/n1-1.html. Acesso em: 1 mar. 2023 (adaptado).\nAcerca do protocolo OSPF e com base nas informações apresentadas no texto, avalie as afirmações\na seguir.\nI. Quando há diferentes caminhos possíveis entre uma origem e um destino, a rota selecionada é a\nque apresenta o menor número de conexões.\nII. Há uma instância da base de dados relativa a conexões e a atrasos, formando o grafo que\ndescreve o SA em cada roteador que compõe o SA.\nIII. O algoritmo de Dijkstra é executado por um único roteador dentro do SA e a tabela de rotas\nresultante é passada para todos os roteadores no SA.\nIV. Para todos os roteadores dentro de um SA, há a necessidade de tráfego de informações\nacerca de atrasos e de conexões entre roteadores.\nÉ correto apenas o que se afirma em",
+  "alternativas": {
+   "A": "I e III.",
+   "B": "II e III.",
+   "C": "II e IV.",
+   "D": "I, II e IV.",
+   "E": "I, III e IV."
+  },
+  "gabarito": "C",
+  "materia_ava": "TELECOMUNICACOES"
+ },
+ {
+  "id": "2023-CE-Q12",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "12",
+  "tipo": "objetiva",
+  "tema": "Relações de equivalência e partições",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "Uma relação R em um conjunto S é uma relação de equivalência se ela satisfizer todas as propriedades\na seguir:\n1. Reflexividade. Para todo a Î S, a R a;\n2. Simetria. Para todos a, b Î S, a R b Û b R a;\n3. Transitviidade. Para todos a, b, c Î S, se a R b e b R c, então, a R c.\nUma partçião de um conjunto S é uma coleção de subconjuntos disjuntos não vazios, cuja união é igual\na S. Se R é uma relação de equivalência em um conjunto S e se x Î S, denota-se por [x] o conjunto de\ntodos os elementos relacionados a x em S e chama-se esse conjunto de classe de equivalência de x.\nGERSTING, J. L. Fundamentos matemáticos para a ciência da computação: um tratamento moderno de\nmatemática discreta. 5. ed. Rio de Janeiro: LTC, 2008 (adaptado).",
+  "alternativas": {
+   "A": "A relação descrita pela tabela é uma relação de equivalência.",
+   "B": "A relação descrita pela tabela apresenta a propriedade de simetria, mas não a de transitividade.",
+   "C": "A relação descrita pela tabela apresenta a propriedade de transitividade, mas não a de simetria.",
+   "D": "O subconjunto de computadores representados pelos números 1, 3, 5, 7 e 10 forma uma classe de equivalência.",
+   "E": "O subconjunto de computadores representados pelos números 2, 3, 4, 8 e 9 forma uma classe de equivalência."
+  },
+  "gabarito": "A",
+  "materia_ava": "MATEMATICA APLICADA"
+ },
+ {
+  "id": "2023-CE-Q13",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "13",
+  "tipo": "objetiva",
+  "tema": "Leis de Kirchhoff em circuitos",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "Uma forma sistemática de analisar circuitos elétricos de qualquer tamanho, visando à simulação\nem computadores, consiste em representá-los por meio de grafos. Essa representação implica a\nsubsttiuição dos elementos do ramo do circuito por uma conexão orientada (arco) e de nós do circuito\npor vértcies, resultando em um grafo orientado. A orientação dos arcos coincide com a orientação dos\nsentdios de referência associados de tensão e corrente, adotados pela convenção passiva.\nGrafos são ditos conexos se existir, ao menos, um caminho entre quaisquer dois nós. Corte refere-se\na um conjunto de arcos que, se removido, divide o grafo (tornando-o desconexo). A lei de Kirchof f\ndas correntes, usando a nomenclatura de grafos, pode ser enunciada como “para qualquer rede de\nparâmetros concentrados e para qualquer de seus cortes, a soma algébrica de todas as correntes\natravés dos arcos do corte é zero.”\nDisponível em: http://www.peb.ufrj.br/. Acesso em: 16 jun. 2023 (adaptado).",
+  "alternativas": {
+   "A": "I1 + I4 - I5 = 0 e I1 + I2 + I3 - I5 = 0",
+   "B": "I1 + I4 + I5 = 0 e I1 + I2 + I3 + I5 = 0",
+   "C": "I1 + I4 + I5 = 0 e I1 + I3 + I4 - I6 = 0",
+   "D": "I1 + I2 - I3 - I5 = 0 e I1 + I3 + I4 - I6 = 0",
+   "E": "I1 + I2 - I3 - I5 = 0 e I1 - I3 + I4 - I6 = 0"
+  },
+  "gabarito": "D",
+  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
+ },
+ {
+  "id": "2023-CE-Q14",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "14",
+  "tipo": "objetiva",
+  "tema": "Listas, cabeça e cauda em programação funcional",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "Uma lista pode ser dividida em duas partes: o primeiro elemento (a cabeça da lista) e os demais\nelementos (sua cauda). Por exemplo, em uma lista de inteiros [1, 2, 3, 4], a cabeça dessa\nlista é o valor inteiro 1, enquanto sua cauda é a lista de inteiros [2, 3, 4]. Uma lista vazia é\nrepresentada por [].\nO código a seguir define duas funções descritas em uma linguagem de programação funcional que\nmanipulam listas de inteiros. A função enade recebe uma lista de inteiros e produz uma nova lista de\ninteiros. A função auxiliar é chamada pela função enade e possui dois parâmetros: um número\ninteiro e uma lista de inteiros. Essa função produz uma lista de inteiros.\n\u0000enade :: [Int] -> [Int]\n\u0000enade [] = []\n\u0000enade (cabeca:cauda) = auxiliar cabeca (enade cauda)\n\u0000auxiliar :: Int -> [Int] -> [Int]\n\u0000auxiliar x [] = [x]\n\u0000auxiliar x (cabeca:cauda)\n\u0000 | (x `mod` 2 == 0) = x:cabeca:cauda\n\u0000 | otherwise = cabeca:auxiliar x cauda\nConsiderando o código apresentado, é correto afirmar que se a função enade for executada recebendo\ncomo parâmetro de entrada a lista [1, 2, 3, 4, 5, 6, 7, 8], o resultado será",
+  "alternativas": {
+   "A": "[].",
+   "B": "[2, 4, 6, 8].",
+   "C": "[1, 2, 3, 4, 5, 6, 7, 8].",
+   "D": "[2, 4, 6, 8, 1, 3, 5, 7].",
+   "E": "[2, 4, 6, 8, 7, 5, 3, 1]."
+  },
+  "gabarito": "E",
+  "materia_ava": "PROGRAMACAO PARA CIENCIA DOS DADOS"
+ },
+ {
+  "id": "2023-CE-Q15",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "15",
+  "tipo": "objetiva",
+  "tema": "Vazamento de memória em C (malloc/free)",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "Memory leak, ou vazamento de memória, é um problema que ocorre em sistemas computacionais\nquando uma parte da memória, alocada para uma determinada operação, não é liberada quando se\ntorna desnecessária. Na linguagem C, esse tipo de problema é quase sempre relacionado ao uso\nincorreto das funções malloc( ) e free( ). Esse erro de programação pode levar a falhas no\nsistema se a memória for completamente consumida.",
+  "alternativas": {
+   "A": "void f( ){ \u0000 void *s; \u0000 s = malloc(50); \u0000 free(s); \u0000}",
+   "B": "int f( ){ \u0000 folat *a; \u0000 return 0; \u0000}",
+   "C": "int f(char *data){ \u0000 void *s; \u0000 s = malloc(50); \u0000 int size = strlen(data); \u0000 if (size > 50) \u0000 return(-1); \u0000 free(s); \u0000 return 0; \u0000}",
+   "D": "int *f(int n){ \u0000 int *num = malloc(sizeof(int)*n); \u0000 return num; \u0000} \u0000 int main(void){ \u0000 int *num; \u0000 num = f(10); \u0000 free(num); \u0000 return 0; \u0000}",
+   "E": "void f(int n){ \u0000 char *m = malloc(10); \u0000 char *n = malloc(10); \u0000 free(m); \u0000 m = n; \u0000 free(m); \u0000 free(n); \u0000}"
+  },
+  "gabarito": "C",
+  "materia_ava": "PROGRAMACAO PARA CIENCIA DOS DADOS"
+ },
+ {
+  "id": "2023-CE-Q16",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "16",
+  "tipo": "objetiva",
+  "tema": "Álgebra booleana e operações binárias",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "Na programação de sistemas embarcados, algumas posições de memória servem para diferentes\npropósitos, não apenas para armazenar valores. Em algumas dessas memórias, cada um dos bits possui\num significado diferente, sendo necessário manipulá-los individualmente ou em pequenos grupos.\nPor isso, o conhecimento da álgebra booliana, bem como dos operadores utliizados para realizar operações binárias nas linguagens de programação, é essencial para o desenvolvimento desse tpio de sistema.\nALMEIDA, R. M.; MORAES, C. H. V.; SERAPHIM, T. F. P. Programação de Sistemas Embarcados: desenvolvendo software para microcontroladores em linguagem C. Rio de Janeiro: Elsevier, 2016 (adaptado).",
+  "alternativas": {
+   "A": "10 1 0",
+   "B": "10 1 11",
+   "C": "11 11 11",
+   "D": "15 12 2",
+   "E": "15 13 0"
+  },
+  "gabarito": "E",
+  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
+ },
+ {
+  "id": "2023-CE-Q17",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "17",
+  "tipo": "objetiva",
+  "tema": "Subsequências e prefixos de sequências",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "Dada uma sequência de caracteres S = s1, s2, ..., sn, uma subsequência de S é dada pela\nremoção de zero ou mais caracteres de S. Formalmente, a sequência X = x1, x2, ..., xk é\nsubsequência de S se existe uma sequência crescente de índices i1, ..., ik de S, tal que xj = Sij\npara todo j = 1, 2, ..., k. Define-se, também, um prefixo da sequência S com comprimento i para\ni = 0, ..., n, como Si = s1, s2, ..., si.\nO problema da Subsequência Comum Mais Longa (LCS) e suas variações, defniido a seguir, pode ser\nutliizado em análise de textos e em bioinformátcia. O problema da LCS pressupõe duas sequências\nde caracteres A = a1, a2, ..., an e B = b1, b2, ..., bm, de comprimentos n e m, respectviamente.\nDadas essas duas sequências, é preciso encontrar uma sequência de maior comprimento possível que seja, simultaneamente, subsequência de A e de B.",
+  "alternativas": {
+   "A": "I e III.",
+   "B": "I e IV.",
+   "C": "II e III.",
+   "D": "I, II e IV.",
+   "E": "II, III e IV"
+  },
+  "gabarito": "D",
+  "materia_ava": "TEORIA DA COMPUTACAO"
+ },
+ {
+  "id": "2023-CE-Q18",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "18",
+  "tipo": "objetiva",
+  "tema": "Vetores de tamanho dinâmico e custo amortizado",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "Vetores de tamanho dinâmico são muito utliizados como estruturas de dados para armazenar listas e\ntabelas de dispersão (tabelas hash). Essa representação permite que o número máximo de elementos\na ser inserido não precise ser pré-determinado. Uma técnica para implementar vetores de tamanho\ndinâmico é aquela que dobra o tamanho do vetor quando o número de itens a ser armazenado\nultrapassa o tamanho atual do vetor. Essa operação requer uma alocação de memória para conter o vetor com o dobro do tamanho atual e a realização de cópia dos elementos para o novo vetor. Com base nessas informações, considere uma lista linear implementada com um vetor dinâmico. Assuma que todos os itens inseridos na lista tenham o mesmo tamanho e que o vetor tenha tamanho inicial para comportar apenas 1 item.\nConsiderando uma sequência de n inserções no final dessa lista, o tempo médio por inserção e o tempo\ntotal gasto para executar todas as n operações são, respectivamente, da ordem de",
+  "alternativas": {
+   "A": "Q(log n) e Q(n log n).",
+   "B": "Q(1 ) e Q(n ).",
+   "C": "Q(1 ) e Q(n).",
+   "D": "Q(n ) e Q(n). 3/2",
+   "E": "Q(n) e Q(n)."
+  },
+  "gabarito": "B",
+  "materia_ava": "ESTRUTURA DE DADOS E ALGORITMOS"
+ },
+ {
+  "id": "2023-CE-Q19",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "19",
+  "tipo": "objetiva",
+  "tema": "Compiladores: análise léxica, sintática e semântica",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "É chamado de compilação o processo de conversão do código escrito pelo programador para um arquivo\nbinário que o computador consegue executar. Esse processo é realizado por um programa chamado\ncompilador. Entre as diversas tarefas de um compilador, destaca-se a de identficiar os possíveis erros sintátcios e semântcios. Com base nessas informações, considere uma linguagem de programação em que a sintaxe de uma operação aritmétcia seja dada pela seguinte gramátcia livre de contexto:\nS → var = E; | var = E; S\nE → E + E | E - E | E * E | E/E | E(E) | var\nInspirado nessa gramática, um profissional submete a seguinte sentença ao compilador dessa linguagem\nde programação:\na = a / (b - b);\nCom base na gramática da linguagem de programação e acerca do processo de análise sintática e\nsemântica da sentença proposta pelo profsisional, é correto afirmar que",
+  "alternativas": {
+   "A": "a gramátcia gera a sentença apresentada e o erro presente na expressão está fora do escopo das análises sintática e semântica.",
+   "B": "a gramática gera a sentença apresentada, porém o analisador semântico transmitirá uma mensagem de erro.",
+   "C": "o analisador léxico transmitirá uma mensagem de erro, pois a gramática não gera a sentença apresentada.",
+   "D": "o analisador semântico transmitirá uma mensagem de erro, pois a gramática não gera a sentença apresentada.",
+   "E": "a gramátcia gera a sentença apresentada, porém o analisador léxico transmitriá uma mensagem de erro."
+  },
+  "gabarito": "B",
+  "materia_ava": null
+ },
+ {
+  "id": "2023-CE-Q20",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "20",
+  "tipo": "objetiva",
+  "tema": "Computação em nuvem: pública e privada",
+  "dificuldade": "Fácil",
+  "figura": null,
+  "enunciado": "Computação em nuvem representa um conceito relativo ao compartilhamento de recursos, tais como\ncapacidade de processamento, armazenamento, comunicação de dados e pessoal qualificado para\nmanter sistemas computacionais disponíveis na internet. Quando esse compartilhamento constitui\num serviço disponível para qualquer pessoa, o serviço é conhecido como nuvem pública. Quando as\nmesmas tecnologias são empregadas para uma única empresa, não permitindo que terceiros utilizem\nparte dos recursos, temos uma nuvem privada.\nConsiderando as vantagens que o gerente de uma empresa espera obter na contratação de um serviço\nde nuvem pública, avalie as afirmações a seguir.\nI. Um serviço de nuvem pública proporciona a redução de custos operacionais, pois é possível\ndimensionar a necessidade desses recursos com base na demanda, visto que há momentos em\nque a empresa precisa de mais recursos e há momentos em que ela precisa de menos recursos.\nII. Um serviço de nuvem pública gera aumento da velocidade de execução do software e de acesso\nao software a partir de qualquer localidade, pois a nuvem pública garante acesso rápido em\nqualquer parte do mundo, o que contrasta com um servidor localizado na cidade da empresa.\nIII. Um serviço de nuvem pública viabiliza a redução do investimento inicial com equipamentos, com\ninfraestrutura e com pessoal para iniciar a operação, visto que torna possível adiar a instalação\ndesses recursos na empresa até que a operação se demonstre economicamente viável.\nIV. Um serviço de nuvem pública propicia aumento de segurança da informação, pois as rotinas de\nsegurança são responsabilidade do administrador da nuvem pública, não do contratante, o que\ncontrasta com um servidor localizado dentro da empresa.\nÉ correto apenas o que se afirma em",
+  "alternativas": {
+   "A": "I e II.",
+   "B": "I e III.",
+   "C": "II e IV.",
+   "D": "I, III e IV.",
+   "E": "II, III e IV."
+  },
+  "gabarito": "B",
+  "materia_ava": null
+ },
+ {
+  "id": "2023-CE-Q21",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "21",
+  "tipo": "objetiva",
+  "tema": "Governo digital e eficiência de serviços",
+  "dificuldade": "Fácil",
+  "figura": null,
+  "enunciado": "A fim de melhorar a qualidade de vida de seus cidadãos e de criar eficiência nos serviços e nas",
+  "alternativas": {
+   "A": "I, apenas.",
+   "B": "II, apenas.",
+   "C": "I e III, apenas.",
+   "D": "II e III, apenas.",
+   "E": "I, II e III."
+  },
+  "gabarito": "A",
+  "materia_ava": null
+ },
+ {
+  "id": "2023-CE-Q22",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "22",
+  "tipo": "objetiva",
+  "tema": "Consultas SQL com junções",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "Considere um banco de dados relacional formado por três tabelas, conforme é apresentado na\nfigura a seguir. As chaves primárias das tabelas cliente e funcionario são chaves estrangeiras\nda tabela pessoa.\nfuncionario\ncliente\nfuncionário\nid_funcionario: int\nid_cliente: int\ndata_cadastro: date\ndata_cadastro: date\ncntps: varchar(255)\nlimite_credito: decimal(10, 0)\nmatricula: varchar(255)\nsaldo_compras: decimal(10, 0)\npis: varchar(255)\nsaldo_devedor: decimal(10, 0)\nsalario: decimal(10, 0)\npessoa\nid_pessoa: int\nnome: varchar(255)\ncpf: varchar(255)\nrg: varchar(255)\ndata_cadastro: date",
+  "alternativas": {
+   "A": "SELECT * FROM cliente as c INNER JOIN pessoa as p, funcionario as \u0000 f WHERE c.saldo_devedor > f.salario AND c.id_cliente=p.id_pessoa \u0000 AND f.id_funcionario=p.id_pessoa ORDER BY c.saldo_devedor ASC",
+   "B": "SELECT p.nome, c.saldo_devedor FROM cliente as c, pessoa as p WHERE \u0000 c.saldo_devedor > f.salario AND c.id_cliente=p.id_pessoa AND \u0000 f.id_funcionario=p.id_pessoa ORDER BY c.saldo_devedor DESC",
+   "C": "SELECT p.nome, c.saldo_devedor FROM cliente as c, pessoa as p, \u0000 funcionario as f WHERE c.saldo_devedor < f.salario AND \u0000 c.id_cliente=p.id_pessoa AND f.id_funcionario=p.id_pessoa ORDER BY \u0000 c.saldo_devedor ASC",
+   "D": "SELECT p.nome, c.saldo_devedor FROM cliente as c LEFT OUTER JOIN \u0000 pessoa as p on c.id_cliente=p.id_pessoa LEFT OUTER JOIN funcionario \u0000 as f on p.id_pessoa=f.id_funcionario WHERE c.saldo_devedor > \u0000 f.salario ORDER BY f.salario, c.saldo_devedor ASC",
+   "E": "SELECT p.nome, c.saldo_devedor FROM cliente as c RIGHT OUTER JOIN \u0000 pessoa as p ON c.id_cliente=p.id_pessoa RIGHT OUTER JOIN funcionario \u0000 as f on p.id_pessoa=f.id_funcionario WHERE c.saldo_devedor > \u0000 f.salario ORDER BY c.saldo_devedor ASC"
+  },
+  "gabarito": "E",
+  "materia_ava": null
+ },
+ {
+  "id": "2023-CE-Q23",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "23",
+  "tipo": "objetiva",
+  "tema": "Filtros RC com amplificadores operacionais",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "As figuras a seguir representam dois circuitos que possuem a finalidade de construção de filtros para sinais analógicos.\n180pF\n1,8kW\nvin (t)\n+vo (t)\n100pF\nvin (t)18kWvo (t)\n–\n10kW\n–\n+\nFigura 1 Figura 2\nConsiderando que os amplificadores operacionais apresentados são ideais, avalie as afirmações a seguir.\nI. Existe uma faixa de frequências na qual a impedância de entrada do circuito da Figura 1 é inferior à do circuito da Figura 2.\nII. Ambos os circuitos realizam a função de filtro passa-baixa de primeira ordem.\nIII. A frequência de corte de ambos os flitros é igual.\nÉ correto o que se afirma em",
+  "alternativas": {
+   "A": "I, apenas.",
+   "B": "II, apenas.",
+   "C": "I e III, apenas.",
+   "D": "II e III, apenas.",
+   "E": "I, II e III."
+  },
+  "gabarito": "A",
+  "materia_ava": "TELECOMUNICACOES"
+ },
+ {
+  "id": "2023-CE-Q24",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "24",
+  "tipo": "objetiva",
+  "tema": "Porta paralela e registrador de direção",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "Um determinado sistema embarcado possui uma porta paralela de 8 bits, na qual cada pino pode ser\nconfgiurado individualmente como interface de entrada ou de saída. A direção de cada pino da porta\né defniida pelo bit correspondente do registrador de direção de 8 bits PORT_DIR da seguinte forma:\nvalor 0 para confgiuração como entrada e valor 1 para confgiuração como saída.\nOs bits de entrada da porta são armazenados no registrador PORT_IN e os bits de saída da porta são\narmazenados no registrador PORT_OUT, ambos de 8 bits. Os pinos que correspondem ao nibble\n(conjunto de 4 bits) menos significativo da porta de I/O são conectados aos seguintes dispositivos\nexternos: alarme (SPK1), chave 2 (CH2), LED (LED1) e chave 1 (CH1), conforme a figura a seguir.\nVDDVDDVDD\nSPK1\nCH2\nLED1\nCH1\nP2P1P0\nP3\nPinos 3, 2, 1 e 0 da Porta de I/O\nConsidere que uma tensão VDD na porta corresponda ao valor lógico 1 e que uma tensão próxima a 0 V\ncorresponda ao valor lógico 0.\nCom base nas informações apresentadas e no esquema da figura, avalie as afirmações a seguir.\nI. O nibble menos signifciatvio do registrador PORT_DIR deverá ser carregado com o valor 9 (decimal)\npelo software do sistema para configuração adequada da porta de I/O.\nII. Quando ambas as chaves (1 e 2) estvierem fechadas simultaneamente, o registrador PORT_IN\npossuirá o valor binário X1X0 no nibble menos significativo (X significa irrelevante).\nIII. Para acionar o alarme e o LED, simultaneamente, o registrador PORT_OUT deverá ser carregado\ncom o valor binário 1X0X no nibble menos significativo (X significa irrelevante).\nÉ correto o que se afirma em",
+  "alternativas": {
+   "A": "I, apenas.",
+   "B": "II, apenas.",
+   "C": "I e III, apenas.",
+   "D": "II e III, apenas.",
+   "E": "I, II e III."
+  },
+  "gabarito": "D",
+  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
+ },
+ {
+  "id": "2023-CE-Q25",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "25",
+  "tipo": "objetiva",
+  "tema": "HDL: descrição de circuitos digitais",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "Os sistemas digitais são componentes essenciais em uma ampla variedade de aplicações, desde\ndispositvios eletrônicos portáteis até sistemas de controle industrial. Um dos principais aspectos do projeto desse tipo de sistema é a descrição do circuito em uma Hardware Description Language (HDL), como Verilog ou VHDL. Essas linguagens permitem descrever o comportamento e a estrutura do circuito de forma abstrata, viabilizando a síntese e a simulação do sistema.\nUm exemplo de circuito sequencial é o contador de 4 bits assíncrono, mostrado na figura a seguir,\no qual foi implementado utilizando flip-flops JK.\ncount 3\ncount 2count 1count 0\nJQ\nJQ\nJQ\nJQ\nClk\nClk\nClk\nClk\nKQ\nKQ\nKQ\nKQ\nCLRCLRCLRCLR\nreset\nclk\nNesse contexto, considere que um engenheiro proponha as duas traduções desse circuito em Verilog e\nVHDL, equivalentes entre si, conforme observado a seguir.\n\u0000Verilog:\n\u0000//-----------------------------------------------\n\u0000module contador_4bits (\n\u0000 input wire clk,\n\u0000 input wire reset,\n\u0000 output reg [1:0] count\n\u0000);\n\u0000 always @(posedge clk or posedge reset) begin\n\u0000 if (reset)\n\u0000 count <= 0;\n\u0000 else\n\u0000 count <= count + 1;\n\u0000 end\n\u0000endmodule\n\u0000//-----------------------------------------------\n\u0000VHDL:\n\u0000//-----------------------------------------------\n\u0000library ieee;\n\u0000use ieee.std_logic_1164.all;\n\u0000entity contador_4bits is\n\u0000 port (\n\u0000 clk : in std_logic;\n\u0000 reset : in std_logic;\n\u0000 count : out integer range 0 to 3\n\u0000 );\n\u0000end entity contador_4bits;\n\u0000architecture behavioral of contador_4bits is\n\u0000begin\n\u0000 process(clk, reset)\n\u0000 variable q : integer range 0 to 3;\n\u0000 begin\n\u0000 if reset = '1' then\n\u0000 q := 0;\n\u0000 elsif rising_edge(clk) then\n\u0000 q := q + 1;\n\u0000 end if;\n\u0000 count <= q;\n\u0000 end process;\n\u0000end architecture behavioral;\n\u0000//-----------------------------------------------\nConsiderando as informações apresentadas, avalie as asserções a seguir e a relação proposta entre elas.\nI. Qualquer um dos códigos corresponde ao circuito contador de 4 bits mostrado na figura.\nPORQUE\nII. Ao atnigir o valor máximo da contagem, o valor da saída será zerado no próximo ciclo de clock e\no processo será reiniciado.",
+  "alternativas": {
+   "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+   "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+   "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+   "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+   "E": "As asserções I e II são proposições falsas."
+  },
+  "gabarito": "D",
+  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
+ },
+ {
+  "id": "2023-CE-Q26",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "26",
+  "tipo": "objetiva",
+  "tema": "Multiprocessadores, threads e exclusão mútua",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "Considere um cenário em que um computador seja organizado com múltiplos processadores,\nos quais compartilham a mesma memória RAM. Cada processador possui múltiplos núcleos.\nNesse arranjo, o sistema operacional permite múltiplas threads, as quais podem ser dinamicamente\nalocadas para execução em diferentes núcleos e processadores.",
+  "alternativas": {
+   "A": "Sistemas com múltiplos processadores devem alocar a mesma quantidade de memória RAM para cada processador do arranjo.",
+   "B": "Como há múltiplos processadores, são desnecessários os semáforos, uma vez que não há acessos concorrentes a recursos compartilhados.",
+   "C": "Como a exclusão mútua não é possível em arquitetura de múltiplos processadores, apenas uma aplicação pode ser executada de cada vez, mas com múltiplas threads.",
+   "D": "Os processos que possuem múltiplas threads em execução são mantidos por meio de funções da biblioteca no código da aplicação e dispensam serviços do sistema operacional.",
+   "E": "Dados trocados durante a comunicação entre processos podem ser armazenados nas áreas de memória compartilhada, mas o acesso a essas áreas é intermediado pelo sistema operacional."
+  },
+  "gabarito": "E",
+  "materia_ava": "COMPUTACAO PARALELA"
+ },
+ {
+  "id": "2023-CE-Q27",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "27",
+  "tipo": "objetiva",
+  "tema": "Virtualização de hardware",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "A técnica de virtualização de hardware consiste em emular um computador no qual a camada de",
+  "alternativas": {
+   "A": "adquirir licenças de software do usuário no volume de uma licença para cada computador físico, o que favorece a economia de licenças, pois softwares em máquinas virtuais não correspondem a cópias extras.",
+   "B": "utliizar um computador com capacidade extra de comunicação de dados para favorecer o seu desempenho, pois um sistema distribuído em máquinas virtuais consome mais recursos de rede do que o mesmo sistema distribuído sendo executado em um computador físico.",
+   "C": "utliizar um computador com capacidade extra de memória principal para favorecer o seu desempenho, pois um sistema distribuído em máquinas virtuais requer mais espaço de memória física do que o mesmo sistema distribuído sendo executado em um computador físico.",
+   "D": "adquirir computadores físicos com processadores similares para favorecer a compatibilidade, pois sistemas distribuídos fortemente acoplados compartliham recursos intensamente, funcionando de forma mais eficiente em máquinas virtuais quando os computadores físicos são compatíveis.",
+   "E": "adquirir dispositivos de armazenamento físico com, pelo menos, o dobro da capacidade do dispositivo virtual a ser usado a fim de favorecer a disponibilidade, pois os sistemas operacionais da máquina virtual e da máquina física devem ter espaço equivalente de dados para que exista o mapeamento direto entre o dispositivo virtual e o dispositivo físico."
+  },
+  "gabarito": "C",
+  "materia_ava": null
+ },
+ {
+  "id": "2023-CE-Q28",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "28",
+  "tipo": "objetiva",
+  "tema": "Memória virtual e paginação",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "Alguns sistemas com memória virtual utliizam uma técnica chamada de paginação. Nesses sistemas,\nexiste um conjunto de endereços de memória, denominados endereços virtuais, que são gerados durante\na execução dos programas, com o uso de indexação, de registradores-base, de registradores-segmento\nou de outras técnicas. Um endereço virtual é dividido em número de página virtual e deslocamento.\nO número de página virtual é usado como índice dentro da tabela de páginas para encontrar o\nquadro correspondente. O endereço fsíico de memória é a concatenação entre o endereço do quadro\ncom o deslocamento do endereço virtual.\nUm mecanismo denominado TLB (do inglês, translation lookaside bufefr), tipicamente implementado\nem hardware, fornece auxílio durante a atividade de mapeamento de endereços virtuais para\nendereços fsíicos sem passar pela tabela de página. A função do TLB é agilizar o processo de tradução de endereços lógicos para físicos.\nTANENBAUM, A. S. Sistemas Operacionais Modernos. 3. ed. São Paulo: Pearson Prentice Hall, 2009 (adaptado).\nCom relação à memória paginada, avalie as asserções a seguir e a relação proposta entre elas.\nI. Quando um processo é escalonado para execução, tanto a MMU (Memory Management Unit)\nquanto o TLB são reconfigurados para o novo processo.\nPORQUE\nII. Para livrar-se de resíduos do processo executado anteriormente, a tabela de páginas do novo\nprocesso deve tornar-se a tabela atual, o que, em geral, é feito por meio da cópia da tabela ou de\num ponteiro para ela em registradores em hardware.",
+  "alternativas": {
+   "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+   "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+   "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+   "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+   "E": "As asserções I e II são proposições falsas."
+  },
+  "gabarito": "A",
+  "materia_ava": "COMPUTACAO PARALELA"
+ },
+ {
+  "id": "2023-CE-Q29",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "29",
+  "tipo": "objetiva",
+  "tema": "Máquinas de vetores de suporte (SVM)",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "Considere que uma equipe de engenheiros projete um sistema robótico para reciclagem de resíduos\nsólidos, o qual utiliza visão computacional para separar objetos de plástico e de vidro. Com o objetivo de automatziar o processo de classificação, opta-se pela técnica support vector machine (SVM).\nNo método SVM, i é o índice do vetor suporte (1 ≤ i ≤ 5), w é o coeficiente angular (peso) e b é o\ncoeficiente linear (polarização) da reta de separação. O par ordenado (x, y) é a saída do sistema de\nVisão Computacional que representa os vetores de características dos supostos materiais, plástico ou\nvidro, com classificação normalizada em ƒ (i) Î {-1, +1} . A separação linear do material é resultado da diferença entre os pontos P1 = w.x + b e P2 = y, conforme a equação a seguir.\n\nw xby\n+−≥\nse\n\n,\n= +\nii\n\n( )\nf i\nw xby\n−+−<\nse\n\n,\nii\nO pseudocódigo apresentado a seguir foi projetado para solucionar o problema de classificação com\nvalores de w e b obtidos a partir de um conjunto de dados de treinamento.\n\u0000Início\n\u0000 w <- 0.4\n\u0000 b <- 2.7\n\u0000 para i de 1 até 5 faça\n\u0000 yr <- w * x[i] + b\n\u0000 se yr - y[i] > 0 então\n\u0000 f[i] <- 1\n\u0000 senão\n\u0000 f[i] <- -1\n\u0000 fimse\n\u0000 fimpara\n\u0000 para i de 1 até 5 faça\n\u0000 se f[i] = -1 então\n\u0000 escreva(\"Plástico\")\n\u0000 senão\n\u0000 escreva(\"Vidro\")\n\u0000 fimse\n\u0000 fmipara\n\u0000Fim\nObserve a seguinte tabela com dados de teste.\ni12345\nx36451\ny76432\nConsiderando essas informações, assinale a opção que apresenta a classificação correta da sequência\ndos materiais na saída do algoritmo.",
+  "alternativas": {
+   "A": "Plástico, Vidro, Vidro, Plástico, Vidro.",
+   "B": "Plástico, Plástico, Vidro, Vidro, Vidro.",
+   "C": "Plástico, Vidro, Plástico, Vidro, Vidro.",
+   "D": "Plástico, Plástico, Plástico, Vidro, Vidro.",
+   "E": "Plástico, Vidro, Vidro, Plástico, Plástico."
+  },
+  "gabarito": "B",
+  "materia_ava": "ROBOTICA INDUSTRIAL"
+ },
+ {
+  "id": "2023-CE-Q30",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "30",
+  "tipo": "objetiva",
+  "tema": "Paralelismo e dependência de dados",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "Considere que, para melhorar o desempenho de sistemas computacionais, projetistas de hardware\ndecidam aumentar o número de processadores em vez de aumentar a frequência de clock. Dessa forma,\nsurge a necessidade de utilizar softwares que explorem o paralelismo. Um problema típico encontrado\nno desenvolvimento desse tipo de software é a dependência de dados. Nesse contexto, considere que\ndois processadores precisem realizar, simultaneamente, o acesso a uma mesma matriz A.\nCom base nas informações apresentadas, com relação aos trechos de código em linguagem C\napresentados a seguir, assinale a opção que apresenta uma situação de conflito de dados.",
+  "alternativas": {
+   "A": "Processador 1: \u0000int a = &A[0][0]; Processador 2: \u0000int b = &A[0][0];",
+   "B": "Processador 1: \u0000*A[0][0] = 10; Processador 2: \u0000*A[0][1] = 20;",
+   "C": "Processador 1: \u0000*A[0][0] = 10; Processador 2: \u0000int b = &A[0][0];",
+   "D": "Processador 1: \u0000int a = &A[0][0]; Processador 2: \u0000*A[0][0] = 20;",
+   "E": "Processador 1: \u0000*A[0][0] = 10; Processador 2: \u0000*A[0][0] = 20;"
+  },
+  "gabarito": "E",
+  "materia_ava": "COMPUTACAO PARALELA"
+ },
+ {
+  "id": "2023-CE-Q31",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "31",
+  "tipo": "objetiva",
+  "tema": "Teorema da amostragem e taxa de amostragem",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "Um sinal em tempo contínuo pode ser processado, a partir de suas amostras, por um sistema que opere\nem tempo discreto. Para isso, é importante manter a taxa de amostragem do sinal suficientemente alta\npara permitri a reconstrução do sinal original sem erro ou com um erro dentro de uma dada tolerância.\nLATHI, B. P. Sinais e Sistemas Lineares, 2. ed., Porto Alegre: Bookman, 2007 (adaptado).\nNesse contexto, considerando o teorema da amostragem, avalie as asserções a seguir e a relação\nproposta entre elas.\nI. Para que um sinal contínuo seja reconstruído a partir de suas amostras é necessário que ele\npossua um espectro em frequência limitado e que a frequência de amostragem seja maior do\nque duas vezes a largura de faixa do sinal.\nPORQUE\nII. Na situação proposta, o espectro do sinal amostrado, será limitado em frequência, o que permitriá a reconstrução do sinal original antes da amostragem.",
+  "alternativas": {
+   "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+   "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+   "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+   "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+   "E": "As asserções I e II são proposições falsas."
+  },
+  "gabarito": "C",
+  "materia_ava": "TELECOMUNICACOES"
+ },
+ {
+  "id": "2023-CE-Q32",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "32",
+  "tipo": "objetiva",
+  "tema": "Busca gulosa em grafos",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "Suponha que uma empresa de transportes deseje calcular uma rota de Manaus para São Paulo\nutliizando a estratégia da busca gulosa, técnica de busca local que seleciona a melhor alternativa\ndisponível a cada passo. Observe, a seguir, um grafo de conexão de cidades até o destino final e o\nquadro com estimativas de distância de São Paulo até as demais cidades do grafo.\nMacapá\nCidadeDistância\nManaus2 693 Km\nBelém\nManaus\nPorto Velho2 464 Km\nMacapá2 665 Km\nPorto Velho\nPalmas\nBelém2 463 Km\nPalmas1 489 Km\nCuiabá\nGoiânia\nCuiabá1 326 Km\nGoiânia809 Km\nSão Paulo0 Km\nSão Paulo\nCom base nessas informações, é correto afrimar que a solução encontrada a partir da utilização do\nalgoritmo será",
+  "alternativas": {
+   "A": "Manaus → Macapá → São Paulo",
+   "B": "Manaus → Porto Velho → Cuiabá → Goiânia → São Paulo",
+   "C": "Manaus → Porto Velho → Palmas → Goiânia → São Paulo",
+   "D": "Manaus → Macapá → Belém → Palmas → Goiânia → São Paulo",
+   "E": "Manaus → Macapá → Belém → Palmas → Porto Velho → Cuiabá → Goiânia → São Paulo"
+  },
+  "gabarito": "B",
+  "materia_ava": "ROBOTICA INDUSTRIAL"
+ },
+ {
+  "id": "2023-CE-Q33",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "33",
+  "tipo": "objetiva",
+  "tema": "Implementação de controlador PID em software",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "Considere que uma empresa planeje desenvolver um sistema de controle automátcio para manter, em um\nambiente industrial, a temperatura constante por meio de um controlador proporcional-integral-derivatvio (PID). O controlador PID pode ser implementado em qualquer linguagem que possua estruturas de dados adequadas para a manutenção do histórico e da taxa de mudança do sinal de erro.\nConsiderando essa situação, avalie as afirmações a seguir.\nI. A implementação do componente Integral requer a soma de todos os erros acumulados desde o\ninício da operação do sistema, o que torna necessário o uso de uma estrutura de dados do tpio flia.\nII. A parte Proporcional do controlador PID é implementada ao ajustar, proporcionalmente,\na variável de controle à diferença entre a temperatura desejada e a temperatura atual.\nIII. Uma pilha é adequada para o componente Derivativo, pois a taxa de mudança do erro é\ncalculada apenas com a amostra mais recente e a anterior do sinal de erro.\nÉ correto o que se afirma em",
+  "alternativas": {
+   "A": "I, apenas.",
+   "B": "II, apenas.",
+   "C": "I e III, apenas.",
+   "D": "II e III, apenas.",
+   "E": "I, II e III."
+  },
+  "gabarito": "D",
+  "materia_ava": "ROBOTICA INDUSTRIAL"
+ },
+ {
+  "id": "2023-CE-Q34",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "34",
+  "tipo": "objetiva",
+  "tema": "Enfileiramento em roteadores e buffer",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "Cada roteador em redes de computadores precisa implementar alguma estratégia de enflieiramento\npara controlar como os pacotes são armazenados em bufefr enquanto esperam para serem transmitdios,\nindependentemente do mecanismo de alocação de recursos. O algoritmo de enflieiramento aloca\ntanto largura de banda, ao transmitri pacotes, quanto espaço de bufefr, ao decidir quais pacotes\nsão descartados.\nPETERSON, L. L.; DAVIE, B. S. Redes de Computadores: uma abordagem de sistemas.\nRio de Janeiro: Elsevier, 2013 (adaptado).\nConsiderando as informações apresentadas, avalie as afirmações a seguir.\nI. O algoritmo FIFO (First-In, First-Out) é adequado para situações em que o tráfego de dados com\nrajadas de longa duração provoca descarte de pacotes.\nII. O algoritmo de enfileiramento justo ponderado (WFQ, do inglês Weighted Fair Queuing) permite\ndefinir um peso para cada fila, defniindo quantos bits são transmitidos sempre que o roteador\natender a uma determinada fila.\nIII. O algoritmo de enfileiramento por prioridade (PQ, do inglês Priority Queuing) evita que uma fila de menor prioridade fique indefinidamente sem ser atendida (starvation), utilizando o algoritmo Round-Robin para servir a todas as flias.\nIV. Os roteadores que implementam o algoritmo de detecção antecipada aleatória (RED, do inglês\nRandom Early Detection) mantêm a média acumulada do tamanho de suas filas e, quando\nesse tamanho ultrapassa, em algum enlace, um determinado limiar, uma fração dos pacotes é\ndescartada aleatoriamente.\nÉ correto apenas o que se afirma em",
+  "alternativas": {
+   "A": "I e III.",
+   "B": "I e IV.",
+   "C": "II e IV.",
+   "D": "I, II e III.",
+   "E": "II, III e IV."
+  },
+  "gabarito": "C",
+  "materia_ava": "TELECOMUNICACOES"
+ },
+ {
+  "id": "2023-CE-Q35",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "35",
+  "tipo": "objetiva",
+  "tema": "TCP e UDP: transferência de dados",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "O TCP (Transmission Control Protocol) e o UDP (User Datagram Protocol) são opções frequentemente\nusadas em sistemas distribuídos para realizar transferência de dados entre máquinas, ainda que não\nsejam os únicos protocolos que funcionam com base no protocolo IP (Internet Protocol).\nCom relação a esses protocolos, avalie as afrimações a seguir.\nI. O protocolo TCP é usado para implementar o mecanismo de sockets utilizado em sistemas\ndistribuídos, como mecanismo de troca de mensagens confiável.\nII. O protocolo UDP é mais eficiente do que o protocolo TCP quanto ao tempo de envio de dados\nentre os nós de um sistema distribuído, pois gera menor overhead.\nIII. O protocolo UDP é uma escolha adequada para fluxos de dados em tempo real,\nespecialmente daqueles dados que admitem perda ou corrupção de parte de seu conteúdo,\ntais como vídeos ou voz.\nÉ correto o que se afirma em",
+  "alternativas": {
+   "A": "II, apenas.",
+   "B": "III, apenas.",
+   "C": "I e II, apenas.",
+   "D": "I e III, apenas.",
+   "E": "I, II e III."
+  },
+  "gabarito": "E",
+  "materia_ava": "TELECOMUNICACOES"
+ },
+ {
+  "id": "2023-CE-Q36",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "36",
+  "tipo": "objetiva",
+  "tema": "Desempenho: threads e núcleos de processamento",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "A análise de desempenho de sistemas computacionais é uma atividade crítica para identificar gargalos,",
+  "alternativas": {
+   "A": "O desempenho do sistema aumenta de maneira linear em relação ao aumento do número de threads e de núcleos de processamento.",
+   "B": "O número de threads tem um impacto direto no desempenho do sistema, enquanto a influência do número de núcleos de processamento é insignificante.",
+   "C": "O desempenho do sistema é afetado positivamente pelo aumento do número de threads e de núcleos de processamento até um certo limite dependente da aplicação.",
+   "D": "O número de núcleos de processamento tem um impacto direto no desempenho do sistema, independentemente do número de threads utilizado.",
+   "E": "O número de threads e de núcleos de processamento não possui relação direta com o desempenho do sistema, pois esse resultado é determinado, exclusivamente, por técnicas e por algoritmos utliizados no software."
+  },
+  "gabarito": "C",
+  "materia_ava": "COMPUTACAO PARALELA"
+ },
+ {
+  "id": "2023-CE-Q37",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "37",
+  "tipo": "objetiva",
+  "tema": "Mecanismos de segurança de sistemas",
+  "dificuldade": "Fácil",
+  "figura": null,
+  "enunciado": "A segurança de sistemas de computação é uma preocupação crescente devido à constante",
+  "alternativas": {
+   "A": "I e II.",
+   "B": "I e IV.",
+   "C": "III e IV.",
+   "D": "I, II e III.",
+   "E": "II, III e IV."
+  },
+  "gabarito": "C",
+  "materia_ava": null
+ },
+ {
+  "id": "2023-CE-Q38",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "38",
+  "tipo": "objetiva",
+  "tema": "Microsserviços e sistemas distribuídos",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "Os sistemas distribuídos consistem em múltpilos componentes de software que se comunicam e que\ncooperam entre si para realizar tarefas complexas. Um padrão arquitetural comumente utilizado em\nsistemas distribuídos é o de microsserviços, o qual divide o sistema em componentes independentes\ne escaláveis, cada um executando sua própria funcionalidade específica. Essa abordagem facilita\na manutenção, o teste e a escalabilidade do sistema como um todo.\nEm relação a esse tema, qual dos seguintes benefícios é associado à arquitetura de microsserviços em\nsistemas distribuídos?",
+  "alternativas": {
+   "A": "Capacidade de escalabilidade.",
+   "B": "Garantia de consistência de dados.",
+   "C": "Melhor desempenho de processamento.",
+   "D": "Menor consumo de recursos de hardware.",
+   "E": "Redução da complexidade de comunicação entre os componentes."
+  },
+  "gabarito": "A",
+  "materia_ava": null
+ }
+]

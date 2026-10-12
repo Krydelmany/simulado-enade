@@ -129,12 +129,44 @@ def _largura_mono(chars):
     return passos[len(passos) // 2]
 
 
+def _dedup_espaco(chars):
+    """Remove os espaços que o mutool emite mas que NÃO são espaço.
+
+    Só um caso: o espaço de recuo sai na MESMA coordenada x do caractere
+    seguinte, porque o glifo da letra tem deslocamento. Espaço de verdade
+    sempre anda alguns pontos; x igual é artefato, sem exceção.
+    """
+    saida = []
+    for i, c in enumerate(chars):
+        if c[1] == ' ':
+            prox = chars[i + 1] if i + 1 < len(chars) else None
+            if prox and abs(prox[0] - c[0]) < 0.5:
+                continue
+        saida.append(c)
+
+    # ligadura: a Calibri liga "fi" num glyph só, e o mutool emite o glyph
+    # partido em DOIS caracteres na MESMA posição (delta 0). O espaço do
+    # mutool entre os dois é o que produz "af irma".
+    corrigido = []
+    for c in saida:
+        if corrigido and abs(c[0] - corrigido[-1][0]) < 0.5 and c[1] != ' ':
+            anterior = corrigido.pop()
+            # junta as letras; se entre elas havia espaço, ele era artefato
+            if len(corrigido) and corrigido[-1][1] == ' ':
+                # espaço real antes da ligadura? (ex.: "o fi") -> mantém
+                corrigido.pop()
+            corrigido.append((anterior[0], anterior[1] + c[1], anterior[2]))
+            continue
+        corrigido.append(c)
+    return corrigido
+
+
 def _monta_texto(chars, margem=None):
     """Concatena na ordem x. Em fonte monoespaçada, um vão na horizontal
     significa espaço perdido na extração — e em código recuo é sintaxe, então
     o vão é reconstruído (o PDF emite parte dos espaços e "some" com o resto).
     """
-    chars = sorted(chars, key=lambda c: c[0])
+    chars = _dedup_espaco(sorted(chars, key=lambda c: c[0]))
     texto = ''.join(c[1] for c in chars)
     mono_tudo = all(m for _x, _c, m in chars if _c.strip())
 
@@ -212,6 +244,9 @@ LIXO = [
     re.compile(r'^\s*\d{1,3}\s*$'),
     re.compile(r'^\s*(?:Novembro\s*\|\s*)?\d{4}\s*$'),
     re.compile(r'^\s*de\s+Computational\b.*$', re.I),
+    # carimbo do arquivo impresso: "VALIDINEP2023VALIDINEP2023..." (a marca d'
+    # água sai colada na última linha da página)
+    re.compile(r'^\s*(?:VALIDINEP\d{4}|\[MARCA\'D.?[ÁA]GUA\]|[A-Z]{3,}\d{4})[A-Z0-9\s]*$', re.I),
 ]
 
 

@@ -1,0 +1,402 @@
+{
+ "2019-CE-D03": [
+  "Árvores AVL: balanceamento e inserção",
+  "Difícil",
+  "ESTRUTURA DE DADOS E ALGORITMOS"
+ ],
+ "2019-CE-D04": [
+  "Funções iterativa e recursiva em C",
+  "Difícil",
+  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+ ],
+ "2019-CE-D05": [
+  "Corrente alternada e fator de potência",
+  "Média",
+  "ROBOTICA INDUSTRIAL"
+ ],
+ "2019-CE-Q09": [
+  "Ordenação e recursão: MergeSort",
+  "Difícil",
+  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+ ],
+ "2019-CE-Q10": [
+  "Aprendizado de máquina: classificação e seleção de características",
+  "Média",
+  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+ ],
+ "2019-CE-Q11": [
+  "Coloração de grafos e alocação de recursos",
+  "Difícil",
+  "COMPUTACAO PARALELA"
+ ],
+ "2019-CE-Q12": [
+  "Programação linear e região viável",
+  "Difícil",
+  "MATEMATICA APLICADA"
+ ],
+ "2019-CE-Q13": [
+  "Resposta em frequência e função de transferência",
+  "Difícil",
+  "TELECOMUNICACOES"
+ ],
+ "2019-CE-Q14": [
+  "Filtros digitais e normalização de frequência",
+  "Difícil",
+  "TELECOMUNICACOES"
+ ],
+ "2019-CE-Q15": [
+  "Mínimos quadrados e ajuste de reta",
+  "Média",
+  "MATEMATICA APLICADA"
+ ],
+ "2019-CE-Q16": [
+  "Circuitos lógicos: demultiplexador com CIs 7404 e 7411",
+  "Difícil",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2019-CE-Q17": [
+  "Amplificador operacional e sensor NTC",
+  "Difícil",
+  "ROBOTICA INDUSTRIAL"
+ ],
+ "2019-CE-Q18": [
+  "Criptografia DES e 3DES",
+  "Média",
+  null
+ ],
+ "2019-CE-Q19": [
+  "Hardware trojan e segurança de sistemas",
+  "Média",
+  null
+ ],
+ "2019-CE-Q20": [
+  "Rigidez de software e acoplamento entre módulos",
+  "Difícil",
+  null
+ ],
+ "2019-CE-Q21": [
+  "Critérios de decisão multicritério (HP)",
+  "Média",
+  "MATEMATICA APLICADA"
+ ],
+ "2019-CE-Q22": [
+  "Redes bayesianas e inferência probabilística",
+  "Difícil",
+  "ROBOTICA INDUSTRIAL"
+ ],
+ "2019-CE-Q23": [
+  "Autômatos de estados finitos e linguagens regulares",
+  "Difícil",
+  "TEORIA DA COMPUTACAO"
+ ],
+ "2019-CE-Q24": [
+  "Difusão em redes e spanning tree",
+  "Difícil",
+  "TELECOMUNICACOES"
+ ],
+ "2019-CE-Q25": [
+  "Recursão em cauda e otimização em Python",
+  "Difícil",
+  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+ ],
+ "2019-CE-Q26": [
+  "Controlador PID e controlador de processo",
+  "Média",
+  "ROBOTICA INDUSTRIAL"
+ ],
+ "2019-CE-Q27": [
+  "Padrões de projeto: Strategy",
+  "Média",
+  null
+ ],
+ "2019-CE-Q28": [
+  "Atraso de propagação em circuitos lógicos",
+  "Difícil",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2019-CE-Q29": [
+  "Internet das Coisas e sistemas distribuídos",
+  "Fácil",
+  "TELECOMUNICACOES"
+ ],
+ "2019-CE-Q30": [
+  "Contêiner de servlets e ciclo de requisição",
+  "Média",
+  null
+ ],
+ "2019-CE-Q31": [
+  "Estados de processos e sistema operacional",
+  "Média",
+  null
+ ],
+ "2019-CE-Q32": [
+  "Quantização de sinal e desvio padrão",
+  "Média",
+  "ROBOTICA INDUSTRIAL"
+ ],
+ "2019-CE-Q33": [
+  "Impedância em trilhas de PCB (stripline)",
+  "Difícil",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2019-CE-Q34": [
+  "Escalonamento Round Robin e troca de contexto",
+  "Média",
+  "COMPUTACAO PARALELA"
+ ],
+ "2019-CE-Q35": [
+  "Usabilidade: inteligibilidade e apagar",
+  "Fácil",
+  "IHC"
+ ],
+ "2023-FG-D01": [
+  "Desigualdade social e segurança alimentar",
+  "Média",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2023-FG-Q01": [
+  "Fome, insegurança alimentar e desigualdade",
+  "Média",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2023-FG-Q02": [
+  "Saneamento básico e urbanização",
+  "Média",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2023-FG-Q03": [
+  "Cobertura vacinal infantil e saúde pública",
+  "Fácil",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2023-FG-Q04": [
+  "IA generativa e impactos socioeconômicos",
+  "Média",
+  null
+ ],
+ "2023-FG-Q05": [
+  "Mobilidade urbana e percepção de risco",
+  "Média",
+  null
+ ],
+ "2023-FG-Q06": [
+  "Racismo, literatura e relações de poder",
+  "Difícil",
+  "HISTORIA E CULTURA AFRO-INDIGENA"
+ ],
+ "2023-FG-Q07": [
+  "Reforma previdenciária e trabalho do idoso",
+  "Média",
+  "ECONOMIA"
+ ],
+ "2023-FG-Q08": [
+  "Sistema prisional e população negra",
+  "Difícil",
+  null
+ ],
+ "2023-FG-Q09": [
+  "Sociedade do desempenho e saúde mental",
+  "Média",
+  "PRODUCAO DE TEXTOS CIENTIFICOS"
+ ],
+ "2023-CE-D02": [
+  "Algoritmos de eliminação de registros duplicados",
+  "Difícil",
+  "COMPUTACAO PARALELA"
+ ],
+ "2023-CE-Q10": [
+  "Resistores em série e paralelo",
+  "Fácil",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2023-CE-Q11": [
+  "Protocolo OSPF e grafos",
+  "Difícil",
+  "TELECOMUNICACOES"
+ ],
+ "2023-CE-Q12": [
+  "Relações de equivalência e partições",
+  "Difícil",
+  "MATEMATICA APLICADA"
+ ],
+ "2023-CE-Q13": [
+  "Leis de Kirchhoff em circuitos",
+  "Difícil",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2023-CE-Q14": [
+  "Listas, cabeça e cauda em programação funcional",
+  "Difícil",
+  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+ ],
+ "2023-CE-Q15": [
+  "Vazamento de memória em C (malloc/free)",
+  "Média",
+  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+ ],
+ "2023-CE-Q16": [
+  "Álgebra booleana e operações binárias",
+  "Média",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2023-CE-Q17": [
+  "Subsequências e prefixos de sequências",
+  "Difícil",
+  "TEORIA DA COMPUTACAO"
+ ],
+ "2023-CE-Q18": [
+  "Vetores de tamanho dinâmico e custo amortizado",
+  "Difícil",
+  "ESTRUTURA DE DADOS E ALGORITMOS"
+ ],
+ "2023-CE-Q19": [
+  "Compiladores: análise léxica, sintática e semântica",
+  "Difícil",
+  null
+ ],
+ "2023-CE-Q20": [
+  "Computação em nuvem: pública e privada",
+  "Fácil",
+  null
+ ],
+ "2023-CE-Q21": [
+  "Governo digital e eficiência de serviços",
+  "Fácil",
+  null
+ ],
+ "2023-CE-Q22": [
+  "Consultas SQL com junções",
+  "Difícil",
+  null
+ ],
+ "2023-CE-Q23": [
+  "Filtros RC com amplificadores operacionais",
+  "Difícil",
+  "TELECOMUNICACOES"
+ ],
+ "2023-CE-Q24": [
+  "Porta paralela e registrador de direção",
+  "Média",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2023-CE-Q25": [
+  "HDL: descrição de circuitos digitais",
+  "Média",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2023-CE-Q26": [
+  "Multiprocessadores, threads e exclusão mútua",
+  "Difícil",
+  "COMPUTACAO PARALELA"
+ ],
+ "2023-CE-Q27": [
+  "Virtualização de hardware",
+  "Média",
+  null
+ ],
+ "2023-CE-Q28": [
+  "Memória virtual e paginação",
+  "Difícil",
+  "COMPUTACAO PARALELA"
+ ],
+ "2023-CE-Q29": [
+  "Máquinas de vetores de suporte (SVM)",
+  "Difícil",
+  "ROBOTICA INDUSTRIAL"
+ ],
+ "2023-CE-Q30": [
+  "Paralelismo e dependência de dados",
+  "Difícil",
+  "COMPUTACAO PARALELA"
+ ],
+ "2023-CE-Q31": [
+  "Teorema da amostragem e taxa de amostragem",
+  "Média",
+  "TELECOMUNICACOES"
+ ],
+ "2023-CE-Q32": [
+  "Busca gulosa em grafos",
+  "Média",
+  "ROBOTICA INDUSTRIAL"
+ ],
+ "2023-CE-Q33": [
+  "Implementação de controlador PID em software",
+  "Média",
+  "ROBOTICA INDUSTRIAL"
+ ],
+ "2023-CE-Q34": [
+  "Enfileiramento em roteadores e buffer",
+  "Difícil",
+  "TELECOMUNICACOES"
+ ],
+ "2023-CE-Q35": [
+  "TCP e UDP: transferência de dados",
+  "Média",
+  "TELECOMUNICACOES"
+ ],
+ "2023-CE-Q36": [
+  "Desempenho: threads e núcleos de processamento",
+  "Difícil",
+  "COMPUTACAO PARALELA"
+ ],
+ "2023-CE-Q37": [
+  "Mecanismos de segurança de sistemas",
+  "Fácil",
+  null
+ ],
+ "2023-CE-Q38": [
+  "Microsserviços e sistemas distribuídos",
+  "Média",
+  null
+ ],
+ "2019-FG-D01": [
+  "Desastres naturais e ação do Estado",
+  "Média",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2019-FG-D02": [
+  "Hélice tríplice: universidade–empresa–governo",
+  "Média",
+  "ECONOMIA"
+ ],
+ "2019-FG-Q01": [
+  "Mudanças climáticas e cooperação internacional",
+  "Fácil",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2019-FG-Q02": [
+  "Poesia concreta e interpretação",
+  "Difícil",
+  "PRODUCAO DE TEXTOS CIENTIFICOS"
+ ],
+ "2019-FG-Q03": [
+  "Agricultura, demografia e segurança alimentar",
+  "Média",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2019-FG-Q04": [
+  "Saneamento básico e abastecimento de água",
+  "Fácil",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2019-FG-Q05": [
+  "Povos indígenas e território",
+  "Média",
+  "HISTORIA E CULTURA AFRO-INDIGENA"
+ ],
+ "2019-FG-Q06": [
+  "Violência contra a mulher e raça/cor",
+  "Difícil",
+  "HISTORIA E CULTURA AFRO-INDIGENA"
+ ],
+ "2019-FG-Q07": [
+  "Acessibilidade e desenho universal",
+  "Média",
+  null
+ ],
+ "2019-FG-Q08": [
+  "Síndrome de Burnout e saúde do trabalhador",
+  "Fácil",
+  null
+ ]
+}

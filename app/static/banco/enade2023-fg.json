@@ -1,0 +1,196 @@
+[
+ {
+  "id": "2023-FG-D01",
+  "edicao": 2023,
+  "parte": "FG",
+  "numero": "01",
+  "tipo": "discursiva",
+  "tema": "Desigualdade social e segurança alimentar",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "\u0000\nNa publicação Síntese de Indicadores Sociais, divulgada pelo Instituto Brasileiro de Geografia\ne Estatística (IBGE) em 2022, é sistematizado um conjunto de informações sobre a realidade\nsocial brasileira. Os indicadores ilustram a heterogeneidade da sociedade sob a perspectiva das\ndesigualdades sociais e, de modo geral, demonstram que todas as Grandes Regiões do Brasil\nregistraram aumento da extrema pobreza em 2021. Pelos critérios do Banco Mundial, cerca de 29,4%\nda população do Brasil estavam em situação de pobreza e 8,4%, de extrema pobreza, sendo esses os\nmaiores percentuais de ambos os grupos desde o início da série, em 2012. O índice de Gini, indicador\nque permite analisar o nível de igualdade ou desigualdade de uma região ou de um país, teve seu\nvalor elevado e atingiu o segundo maior patamar da série. Com esses resultados, o Brasil permanece\nentre os países mais desiguais do mundo. Além disso, a urbanização desigual e acelerada resultou na\nexpansão e no agravamento de diversos problemas socioambientais. São evidentes as desigualdades\nterritoriais no acesso a áreas com infraestrutura adequada nas cidades brasileiras. É na periferia,\nmarcada pela estratificação e segregação socioespacial, que se consolida a exclusão da população\nvulnerabilizada socioeconomicamente.\nDisponível em: https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/35687-em-2021-pobreza-tem-aumento-recorde-e-atinge-62-5-milhoes-de-pessoas-maior-nivel-desde-2012.\nAcesso em: 9 jun. 2023 (adaptado).\nA partri das ideias apresentadas no texto, faça o que se pede nos itens a seguir.\na) Explique a relação entre o perfli da população brasileira atingida pelas desigualdades sociais nas cidades e os fenômenos de risco socioambiental. (valor: 5,0 pontos) b) Apresente duas propostas que possam ser desenvolvidas em bairros periféricos com condições habitacionais precárias, de forma a serem minimizados os riscos socioambientais, e que envolvam ação governamental e participação da comunidade. (valor: 5,0 pontos) RASCUNHO",
+  "alternativas": {},
+  "padrao": "",
+  "materia_ava": "CIENCIAS DO AMBIENTE"
+ },
+ {
+  "id": "2023-FG-Q01",
+  "edicao": 2023,
+  "parte": "FG",
+  "numero": "01",
+  "tipo": "objetiva",
+  "tema": "Fome, insegurança alimentar e desigualdade",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "A fome e a insegurança alimentar, antigos problemas da sociedade, são agravados em regiões com",
+  "alternativas": {
+   "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+   "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+   "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+   "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+   "E": "As asserções I e II são proposições falsas."
+  },
+  "gabarito": "D",
+  "materia_ava": "CIENCIAS DO AMBIENTE"
+ },
+ {
+  "id": "2023-FG-Q02",
+  "edicao": 2023,
+  "parte": "FG",
+  "numero": "02",
+  "tipo": "objetiva",
+  "tema": "Saneamento básico e urbanização",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "O crescimento das cidades promove o aumento da demanda por serviços de água tratada, esgotamento\nsanitário, manejo das águas pluviais, limpeza urbana e coleta de resíduos sólidos. No Brasil, o processo de urbanização ocorreu de forma rápida e desigual, o que resultou no agravamento de injustiças sociais e econômicas. Os serviços de saneamento básico considerados direitos humanos fundamentais não são acessíveis a uma parcela significativa da população, principalmente àquela em que se concentram os segmentos populacionais em situação de vulnerabilidade.\nO atendimento integral e universalizado junto às populações periféricas e em situação de\nvulnerabilidade constitui um grande desafio, por demandar políticas públicas e investimentos\nsubsidiados e permanentes.\nDisponível em: https://www.periodicos.unimontes.br/index.php/verdegrande/ article/view/6018.\nAcesso em: 22 jun. 2023 (adaptado).\nAcerca do saneamento básico no Brasil, avalie as afirmações a seguir.\nI. A grave desigualdade social, evidenciada pela segregação nos espaços urbanos, é uma das\nbarreiras para a universalização do acesso aos serviços de saneamento básico.\nII. O serviço de abastecimento de água no Brasil situa-se no mesmo patamar de fornecimento e de\ninfraestrutura que o sistema de coleta e tratamento do esgoto.\nIII. A universalização do acesso aos serviços de saneamento básico requer investimentos em\npolíticas públicas e em tecnologias sociais que priorizem a democratização e o atendimento às\npopulações em situação de vulnerabilidade.\nIV. O aumento da incidência de doenças transmitidas pela água resulta não somente da\ninadequação dos serviços de saneamento, mas também da precariedade das condições de\nmoradia da população em situação de vulnerabilidade.\nÉ correto apenas o que se afirma em",
+  "alternativas": {
+   "A": "I e II.",
+   "B": "I e IV.",
+   "C": "II e III.",
+   "D": "I, III e IV.",
+   "E": "II, III e IV."
+  },
+  "gabarito": "D",
+  "materia_ava": "CIENCIAS DO AMBIENTE"
+ },
+ {
+  "id": "2023-FG-Q03",
+  "edicao": 2023,
+  "parte": "FG",
+  "numero": "03",
+  "tipo": "objetiva",
+  "tema": "Cobertura vacinal infantil e saúde pública",
+  "dificuldade": "Fácil",
+  "figura": null,
+  "enunciado": "Estudos realizados em 2021 pelo Fundo das Nações Unidas para a Infância (Unicef), em parceria com a\nOrganização Mundial da Saúde (OMS), mostraram que, no Brasil, houve uma queda brusca da taxa de\nvacinação infantli nos últmios anos: entre 2017 e 2021, a taxa caiu de 93,1% para 71,49%, considerando-se crianças com menos de um ano de idade.\nEssa redução da cobertura vacinal deixa a população infantil muito vulnerável e exposta a doenças que já estavam praticamente erradicadas, tal como o sarampo, que em 2018 voltou a ser uma preocupação para os brasileiros. Além do sarampo, corre-se o risco de outras doenças voltarem a acometer as crianças, como a poliomielite, a meningite, a rubéola e a difetria.\nO gráfico a seguir mostra as taxas de vacinação infantil, em crianças menores de um ano de idade,\nno período de 2017 a 2021.\nMeta de\nPercentual de vacinação\nvacinação\nImunizante\nem crianças menores de 1 ano\nBCG\n90%\n95%\nTríplice Viral D1\n95%\nTríplice Viral D2\n95%\nTetraviral (SRC+VZ)\n95%\nPoliomielite\n95%\nFebre Amarela\n95%\nHepa�te A\n9987,\n9927,\n9321,\n9261,\n8945,\n8264,\n8667,\n8025,\n8244,\n8914,\n8296,\n8155,\n9757,\n8947,\n8967,\n0675,\n0275,\n0347,\n2947,\n0947,\n3617,\n9365,\n0645,\n2826,\n2614,\n9055,\n6555,\n2057,\n9264,\n3477,\n3445,\n3244,\n3326,\n057,\n2017,\n2018201920202021\n\u0000\nDisponível em: https://portal.fiocruz.br/noticia/vacinacao-infantil-sofre-queda-brusca-no-brasil.\nAcesso em: 23 de jun. 2023 (adaptado).\nConsiderando as informações apresentadas no texto e no gráfico, assinale a opção correta.",
+  "alternativas": {
+   "A": "O percentual de vacinação com o imunizante da poliomielite se manteve constante na maior parte do período de 2017 a 2021.",
+   "B": "A baixa cobertura vacinal de crianças menores de um ano de idade é um dos indicadores de baixo desempenho das políticas públicas de atenção primária em saúde.",
+   "C": "A cobertura vacinal de crianças menores de um ano de idade foi muito variável, com alto índice vacinal da BCG e média cobertura da vacina tetraviral, no período de 2017 a 2021.",
+   "D": "O aumento da taxa de vacinação infantil contra a febre amarela em 2021, em comparação com o índice registrado em 2017, revela que as campanhas de conscientização da população foram bem-sucedidas quanto ao alcance da meta de vacinação contra essa enfermidade.",
+   "E": "A pandemia de Covid-19, ao ampliar a conscientização da população sobre a necessidade de manter alto índice vacinal para evitar o reaparecimento de doenças infectocontagiosas, contribuiu para o aumento da cobertura vacinal contra outras doenças, conforme indicado no gráfico."
+  },
+  "gabarito": "B",
+  "materia_ava": "CIENCIAS DO AMBIENTE"
+ },
+ {
+  "id": "2023-FG-Q04",
+  "edicao": 2023,
+  "parte": "FG",
+  "numero": "04",
+  "tipo": "objetiva",
+  "tema": "IA generativa e impactos socioeconômicos",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "TEXTO 1\nA Inteligência Artfiicial (IA) generativa é capaz de criar novos dados, únicos, que possibilitam aprender por conta própria, indo além do que a tecnologia tradicional proporciona, visto que esta precisa de intervenção humana. Um exemplo da IA generativa é o ChatGPT, que pode gerar imagens, músicas e textos completamente novos. Entre outras coisas, por meio da IA generativa, é possível elaborar modelos de previsão de testes clínicos, realizar a identificação de padrões em exames médicos e, ainda, auxiliar no diagnóstico de doenças.\nDisponível em: https://olhardigital.com.br/2023/07/12/internet-e-redes-sociais/ inteligencia-artificial-generativa-o-que-e- como-funciona-e-onde-usar/. Acesso em: 2 ago. 2023 (adaptado).\nTEXTO 2\nAcredita-se que a tecnologia de IA generativa será disruptiva e, portanto, capaz de alterar drasticamente a maneira como o ser humano se relaciona com as máquinas. O uso da IA generativa pode causar importante revolução no segmento de produção de conteúdo. Muitas dessas consequências poderão ser maléficas para diversos setores da sociedade. Além do mau uso dessa tecnologia e das questões éticas, avalia-se que ela pode agravar a desigualdade econômico-social, tanto entre nações quanto entre indivíduos da mesma nação.\nDisponível em: https://canaltech.com.br/inteligencia-artificial/o-que-e-ia-generativa/.\nAcesso em: 2 ago. 2023 (adaptado).\nConsiderando os textos apresentados, é correto afirmar que a IA generativa",
+  "alternativas": {
+   "A": "proporciona novos recursos de linguagem que geram tecnologias capazes de realizar interações próprias dos seres humanos.",
+   "B": "restringe o aprendizado ao que é legalmente estabelecido e útil ao ser humano, o que facilita seu modo de agir no mundo do conhecimento e do trabalho.",
+   "C": "promove a igualdade econômico-social ao substituir o ser humano no exercício de profissões cujas atividades sejam repetitivas e exijam pouco conhecimento.",
+   "D": "gera pouco impacto socioeconômico em países com elevado desenvolvimento tecnológico, pois, neles, os processos de criação e inovação já estão bem consolidados.",
+   "E": "estimula o desenvolvimento intelectual dos seres humanos, uma vez que ela assume parte do conhecimento, resolvendo problemas antes delegados apenas a especialistas."
+  },
+  "gabarito": "A",
+  "materia_ava": null
+ },
+ {
+  "id": "2023-FG-Q05",
+  "edicao": 2023,
+  "parte": "FG",
+  "numero": "05",
+  "tipo": "objetiva",
+  "tema": "Mobilidade urbana e percepção de risco",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "Os seguintes ícones foram utilizados em um estudo realizado por um grupo de trabalho de\nmonitoramento da relação das mulheres com a mobilidade urbana na cidade de São Paulo. Na pesquisa,\nperguntou-se às mulheres como elas se sentiam nas situações representadas por tais imagens.\nAs respostas relativas a cada tipo de mobilidade urbana são apresentadas a seguir.\nAtenta\nDesconfortável\nCansada\nInsegura\nInsegura\nAnsiosaPéssima\nAndo a pé\nPego o ônibus\nAtenta aos assédios\nObservada\nNão ando\nDesconfiada\nLivre\nAndo de Metrô\nAndo de bicicleta\nUm pouco mais segura\nNem fico, tenho medo\nEm pânico\nPasso correndo\nApertada\nFrequento o\nEm alerta\nespaço público\nAndo de trem\nColetivo Fórum Regional das Mulheres da Zona Norte, Rede MÁS, Sampapé! (2018). Relatório de Análises, Resultados e Recomendações. Projeto Mulheres Caminhantes! Auditoria de Segurança de Gênero e Caminhabilidade Terminal Santana, São Paulo, SP (adaptado).\nConsiderando o estudo apresentado e relacionando o trabalho de monitoramento social das\nnecessidades de mulheres no contexto urbano aos pressupostos do direito à cidade, avalie as\nafirmações a seguir.\nI. A predominância de comentários negativos indica o medo generalizado que as mulheres\nsentem ao se deslocarem ativamente pela cidade, inclusive quanto à percepção de seu corpo no\nespaço urbano.\nII. Os comentários negativos sobre os modos coletivos de transporte estão relacionados à lotação\nnesses meios e a situações de assédio, tendo sido o metrô avaliado como um espaço um pouco\nmais seguro para as mulheres, em comparação com outras formas de mobilidade.\nIII. Os comentários negativos refletem a percepção das mulheres quanto ao perigo a que se expõem\ne sugerem que o medo relacionado à vulnerabilidade de gênero aponta para uma geografia\nparticular nas cidades, em que os meios de transporte afetam os movimentos rotineiros das\nmulheres no espaço urbano.\nÉ correto o que se afirma em",
+  "alternativas": {
+   "A": "I, apenas.",
+   "B": "III, apenas.",
+   "C": "I e II, apenas.",
+   "D": "II e III, apenas.",
+   "E": "I, II e III."
+  },
+  "gabarito": "E",
+  "materia_ava": null
+ },
+ {
+  "id": "2023-FG-Q06",
+  "edicao": 2023,
+  "parte": "FG",
+  "numero": "06",
+  "tipo": "objetiva",
+  "tema": "Racismo, literatura e relações de poder",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "TEXTO 1\nMaria Bárbara tinha o verdadeiro tipo das velhas maranhenses criadas na fazenda. Tratava muito dos\navós, quase todos portugueses. Quando falava dos pretos, dizia “os sujos” e, quando se referia a um\nmulato dizia “o cabra”. Maria Bárbara tinha grande admiração pelos portugueses, dedicava-lhes um\nentusiasmo sem limites, preferia-os em tudo aos brasileiros. Quando a filha foi pedida por Manuel\nPedroso, então principiante no comércio da capital, ela dissera: “Bem! Ao menos tenho a certeza de que é branco!” AZEVEDO, A. O mulato. São Luís: Typografia o Paiz, 1881 (adaptado).\nTEXTO 2",
+  "alternativas": {
+   "A": "II.",
+   "B": "IV.",
+   "C": "I e III.",
+   "D": "I e IV.",
+   "E": "II e III."
+  },
+  "gabarito": "C",
+  "materia_ava": "HISTORIA E CULTURA AFRO-INDIGENA"
+ },
+ {
+  "id": "2023-FG-Q07",
+  "edicao": 2023,
+  "parte": "FG",
+  "numero": "07",
+  "tipo": "objetiva",
+  "tema": "Reforma previdenciária e trabalho do idoso",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "No Brasil, os idosos têm sido cada vez mais obrigados a permanecer no trabalho formal ou informal,\nmesmo após a aposentadoria, visto que os recursos provenientes desta, na maioria dos casos,\nsão insuficientes para a manutenção dos indivíduos. Um fator que pode ter agravado essa situação foi\na aprovação da reforma previdenciária de 2019, que modificou as regras de idade e contribuição para o acesso ao direito ao benefício da aposentadoria. Tal mudança pode ter resultado em um número ainda maior de idosos que disputam com as populações jovens e com sistemas de automação, no mercado atual, o trabalho precarizado. Essa situação contribui para o acirramento do preconceito contra essa faixa etária, denominado etarismo.\nConsiderando o texto apresentado, avalie as afirmações a seguir.\nI. O conceito de etarismo fundamenta-se no fato de os idosos terem capacidade de\ntrabalho reduzida e imporem custo elevado à previdência social, o que compromete a sua\nsustentabilidade econômica.\nII. As ações legislatvias que visem ao prolongamento do tempo de atuação da população idosa no\nmercado de trabalho devem ser acompanhadas por uma polítcia de promoção da saúde e da\nqualidade de vida.\nIII. As ações intergeracionais no mercado de trabalho têm como premissa o desenvolvimento de\ntecnologias que dotem o idoso de capacidade de trabalho equivalente à de seus colegas jovens.\nÉ correto o que se afirma em",
+  "alternativas": {
+   "A": "II, apenas.",
+   "B": "III, apenas.",
+   "C": "I e II, apenas.",
+   "D": "I e III, apenas.",
+   "E": "I, II e III."
+  },
+  "gabarito": "A",
+  "materia_ava": "ECONOMIA"
+ },
+ {
+  "id": "2023-FG-Q08",
+  "edicao": 2023,
+  "parte": "FG",
+  "numero": "08",
+  "tipo": "objetiva",
+  "tema": "Sistema prisional e população negra",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "Recentemente, a população carcerária feminina do Brasil tornou-se a terceira maior do mundo.",
+  "alternativas": {
+   "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+   "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+   "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+   "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+   "E": "As asserções I e II são proposições falsas."
+  },
+  "gabarito": "B",
+  "materia_ava": null
+ },
+ {
+  "id": "2023-FG-Q09",
+  "edicao": 2023,
+  "parte": "FG",
+  "numero": "09",
+  "tipo": "objetiva",
+  "tema": "Sociedade do desempenho e saúde mental",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "A sociedade do século XXI não é mais uma sociedade disciplinar, mas, sim, uma sociedade do desempenho.",
+  "alternativas": {
+   "A": "I, apenas.",
+   "B": "III, apenas.",
+   "C": "I e II, apenas.",
+   "D": "II e III, apenas.",
+   "E": "I, II e III. \u0000 COMPONENTE ESPECÍFICO"
+  },
+  "gabarito": "E",
+  "materia_ava": "PRODUCAO DE TEXTOS CIENTIFICOS"
+ }
+]

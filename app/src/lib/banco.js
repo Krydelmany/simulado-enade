@@ -2,7 +2,17 @@ import { browser } from '$app/environment';
 
 /** Carrega todos os JSONs do banco (pasta static/banco). */
 export async function carregarBanco() {
-	const arquivos = ['enade2019-fg.json'];
+	// um arquivo por (edição, parte): FG 1–8 e CE 9–35, etc.
+	const arquivos = [
+		'enade2019-fg.json',
+		'enade2019-ce.json',
+		'enade2023-fg.json',
+		'enade2023-ce.json',
+		'enade2014-fg.json',
+		'enade2014-ce.json',
+		'enade2017-fg.json',
+		'enade2017-ce.json'
+	];
 	const questoes = [];
 	for (const arq of arquivos) {
 		try {
