@@ -1,15 +1,22 @@
-"""Extração de texto do PDF com coluna, fonte e recuo preservados.
+"""Extração de texto do PDF com coluna e recuo preservados.
 
-Usa `mutool draw -F stext`, que entrega cada caractere com posição E com a
-fonte usada. Isso resolve três coisas que o pdftotext estraga:
+A camada de texto é lida com `pdftotext -bbox-layout`: o poppler entrega cada
+PALAVRA com a sua caixa E o texto já decodificado certo. Isso resolve duas
+coisas que o `pdftotext` puro estraga:
 
-1. **colunas** — as provas têm corpo em 1 ou 2 colunas; o texto tem de sair na
-   ordem de leitura, senão o enunciado de uma questão se mistura com o da
+1. **colunas** — as provas têm corpo em 1 ou 2 colunas; no modo comum o texto
+   sai na ordem visual e o enunciado de uma questão se mistura com o da
    vizinha;
-2. **código** — fonte monoespaçada (Courier/Consolas) vira bloco indentado, e
-   em código a indentação é sintaxe, não formatação;
-3. **fonte quebrada** — 2014 e 2017 embutem fonte sem ToUnicode; aí o stext
-   também não salva e o caminho é OCR (ocr.py), que entrega o mesmo esquema.
+2. **código** — a fonte monoespaçada é reconhecida pelo advance uniforme dos
+   caracteres, e o recuo (que o PDF emite só pela metade) é reconstruído a
+   partir do vão horizontal.
+
+O `mutool draw -F stext` também entrega posição, mas erra caracteres com
+frequência nesse acervo ("Criptografai", "of-fthe-shelf", "sofwtare") e esses
+erros iam parar no enunciado das questões.
+
+2014 e 2017 embutem fonte sem ToUnicode — aí nem o poppler salva e o caminho
+é OCR (ver ocr.py), que entrega o mesmo esquema.
 """
 
 import html
@@ -17,15 +24,23 @@ import re
 import subprocess
 import unicodedata
 
-PAGE_RE = re.compile(r'<page id="[^"]*" width="([\d.]+)" height="([\d.]+)">')
-BLOCK_RE = re.compile(r'<block bbox="([\d.\s-]+)">(.*?)</block>', re.S)
-LINE_RE = re.compile(r'<line bbox="([\d.\s-]+)"[^>]*>(.*?)</line>', re.S)
-FONT_RE = re.compile(r'<font name="([^"]+)" size="([\d.]+)"[^>]*>(.*?)</font>', re.S)
-# c="..." pode conter &quot; etc.? não, mas sim caracteres escapados; o
-# atributo é o ÚLTIMO da tag, então casamos até o fechamento.
-CHAR_RE = re.compile(r'<char\s+quad="([^"]+)"[^>]*?\bc="((?:[^"])*)"', re.S)
-
-MONO = re.compile(r'courier|consolas|mono|menlo|couriernew', re.I)
+# Saída do `pdftotext -bbox-layout` (XHTML do poppler).
+PAGE_RE = re.compile(r'<page width="([\d.]+)" height="([\d.]+)"')
+BLOCK_RE = re.compile(
+    r'<block xMin="([-.\d]+)" yMin="([-.\d]+)" xMax="([-.\d]+)" yMax="([-.\d]+)">'
+    r'(.*?)</block>',
+    re.S,
+)
+LINE_RE = re.compile(
+    r'<line xMin="([-.\d]+)" yMin="([-.\d]+)" xMax="([-.\d]+)" yMax="([-.\d]+)">'
+    r'(.*?)</line>',
+    re.S,
+)
+# <word xMin=.. yMin=.. xMax=.. yMax=..>TEXTO</word>
+WORD_RE = re.compile(
+    r'<word xMin="([-.\d]+)" yMin="([-.\d]+)" xMax="([-.\d]+)" yMax="([-.\d]+)">'
+    r'([^<]*)</word>'
+)
 
 
 def _num(s):
@@ -51,16 +66,25 @@ def _desentidade(c):
 def ler_stext(pdf):
     """-> [(W, H, [[linha, ...], ...])] por página.
 
-    linha = (y, x0, x1, [(x, texto, mono), ...])  — texto já com espaços
-    deduzidos a partir das coordenadas.
+    A FONTE DO TEXTO é o `pdftotext -bbox-layout`, não o `mutool`. Os dois
+    entregam palavra com posição, mas o mutool erra caracteres com
+    frequência nesse acervo: devolve "Criptografai", "of-fthe-shelf",
+    "inflitração", "sofwtare" — erros que vão parar no enunciado das
+    questões. O poppler lê a camada de texto corretamente (os PDFs de 2019 e
+    2023 saem 100% corretos), então o miolho de fazer a leitura de coluna aqui
+    em cima é do poppler.
+
+    linha = (y, x0, x1, [(x, texto, mono), ...])
     """
     xml = subprocess.run(
-        ['mutool', 'draw', '-F', 'stext', '-o', '-', pdf],
+        ['pdftotext', '-bbox-layout', pdf, '-'],
         capture_output=True,
     ).stdout.decode('utf-8', 'replace')
 
-    partes = [(m.start(), m.end(), _num(m.group(1)), _num(m.group(2)))
-              for m in PAGE_RE.finditer(xml)]
+    partes = [
+        (m.start(), m.end(), _num(m.group(1)), _num(m.group(2)))
+        for m in PAGE_RE.finditer(xml)
+    ]
 
     paginas = []
     for i, (ini, fim, W, H) in enumerate(partes):
@@ -69,23 +93,31 @@ def ler_stext(pdf):
         brutos = []
         for bi, bm in enumerate(BLOCK_RE.finditer(trecho)):
             bx = [_num(v) for v in bm.group(1).split()]
-            for lm in LINE_RE.finditer(bm.group(2)):
-                ly = [_num(v) for v in lm.group(1).split()]
+            for lm in LINE_RE.finditer(bm.group(5)):
+                ly = [_num(v) for v in lm.group(1, 2, 3, 4)]
                 y = (ly[1] + ly[3]) / 2 if len(ly) > 3 else ly[1]
-                chars = []
-                for fm in FONT_RE.finditer(lm.group(2)):
-                    mono = bool(MONO.search(fm.group(1)))
-                    for cm in CHAR_RE.finditer(fm.group(3)):
-                        q = [_num(v) for v in cm.group(1).split()]
-                        chars.append((q[0], _desentidade(cm.group(2)), mono))
+                palavras = WORD_RE.findall(lm.group(5))
+                if not palavras:
+                    continue
+                chars = [
+                    (
+                        _num(w[0]),
+                        _num(w[1]),        # yMin, só para ordenar depois
+                        _num(w[2]),
+                        _num(w[3]),
+                        html.unescape(w[4]).strip(),
+                    )
+                    for w in palavras
+                ]
+                chars = [c for c in chars if c[4]]
                 if chars:
                     # bx0 do bloco é a coluna; sem isso, duas colunas com a
-                    # mesma altura viram uma linha só (o stext une as duas).
+                    # mesma altura viram uma linha só.
                     brutos.append((y, min(c[0] for c in chars), chars,
                                    bx[0] if bx else 0.0))
 
-        # o PDF quebra UMA linha visual em vários <line> (recuo vira outro
-        # <line>) -> junta por y DENTRO DA MESMA COLUNA
+        # o PDF quebra UMA linha visual em vários <line> (o recuo da
+        # monoespaçada vira outro <line>) -> junta por y DENTRO DA COLUNA
         grupos = []
         brutos.sort(key=lambda b: (b[3], b[0], b[1]))
         for y, x0, chars, col in brutos:
@@ -96,45 +128,66 @@ def ler_stext(pdf):
                 grupos.append([y, list(chars), x0, y, col])
 
         # margem de referência p/ o recuo do código: a coluna mais à esquerda
-        # entre as linhas monoespaçadas da página (o corpo do texto pode ser
-        # mais recuado que o código e zeraria a conta)
+        # entre as linhas monoespaçadas da página
         x_mono = [
-            min(c[0] for c in chars if c[1].strip())
+            min(c[0] for c in chars if c[4])
             for _y, chars, _x, _y2, _col in grupos
-            if chars and any(c[2] for c in chars) and any(c[1].strip() for c in chars)
+            if chars and c_monospace(chars)
         ]
         margem = min(x_mono) if x_mono else 0.0
 
         linhas = []
         for y, chars, _x0, _y2, _col in grupos:
-            chars.sort(key=lambda c: c[0])
-            texto, mono = _monta_texto(chars, margem)
+            # O poppler JÁ entrega as palavras na ordem de leitura dentro do
+            # <line>; reordenar por x ou por y embaralha: a bolinha da
+            # alternativa (glifo circular maior) tem y levemente diferente e
+            # sai para o fim. A posição no <line> é a única ordem confiável.
+            chars = _ordena_por_x(chars)
+            mono = c_monospace(chars)
+            _ = margem
+            texto = _junta_palavras(chars)
             xmin = min(c[0] for c in chars)
-            xmax = max(c[0] for c in chars)
+            xmax = max(c[2] for c in chars)
             linhas.append((y, xmin, xmax, chars, texto, mono))
-
         linhas.sort(key=lambda l: (l[0], l[1]))
         paginas.append((W, H, linhas))
     return paginas
 
 
-def _largura_mono(chars):
-    """Largura de um caractere na fonte monoespaçada (mediana dos passos)."""
-    passos = [chars[i + 1][0] - chars[i][0]
-              for i in range(len(chars) - 1)
-              if chars[i][1] != ' ' and chars[i + 1][1] != ' ']
-    if not passos:
-        return 0.0
-    passos.sort()
-    return passos[len(passos) // 2]
+def c_monospace(chars):
+    """O poppler -bbox não diz a fonte; linhas de código são as que, com a
+    mesma altura, têm passos horizontais uniformes."""
+    passos = [
+        chars[i + 1][0] - chars[i][0]
+        for i in range(len(chars) - 1)
+        if chars[i][4] != ' ' and chars[i + 1][4] != ' '
+    ]
+    if len(passos) < 6:
+        return False
+    ordenados = sorted(passos)
+    mediana = ordenados[len(ordenados) // 2]
+    if mediana <= 0:
+        return False
+    return (ordenados[-1] - ordenados[0]) / mediana < 0.35
+
+
+def _ordena_por_x(chars):
+    """Ordena da esquerda para a direita, com tolerância para o caso de a
+    bolinha vir ANTES da palavra mas com x ligeiramente menor."""
+    return sorted(chars, key=lambda c: c[0])
+
+
+def _para_triplas(chars):
+    """(x, texto, mono) de (x, y, x1, y1, texto) do poppler."""
+    return [(c[0], c[4], False) for c in chars]
 
 
 def _dedup_espaco(chars):
-    """Remove os espaços que o mutool emite mas que NÃO são espaço.
+    """Remove espaços que não são espaço.
 
-    Só um caso: o espaço de recuo sai na MESMA coordenada x do caractere
-    seguinte, porque o glifo da letra tem deslocamento. Espaço de verdade
-    sempre anda alguns pontos; x igual é artefato, sem exceção.
+    O poppler às vezes emite o espaço de recuo na MESMA coordenada x do
+    caractere seguinte (o glifo tem deslocamento). Espaço de verdade anda
+    alguns pontos; x igual é artefato.
     """
     saida = []
     for i, c in enumerate(chars):
@@ -159,6 +212,32 @@ def _dedup_espaco(chars):
             continue
         corrigido.append(c)
     return corrigido
+
+
+def _junta_palavras(palavras):
+    """palavras (x0,y0,x1,y1,texto) -> texto com espaços.
+
+    O poppler devolve cada palavra com a caixa, sem os espaços entre elas —
+    então o espaço é deduzido do vão: se a próxima palavra começa bem depois
+    do fim da anterior, é uma palavra nova; se encosta, é a mesma.
+    """
+    out = ''
+    fim = None
+    for x0, _y0, x1, _y1, txt in palavras:
+        if fim is None:
+            out = txt
+        else:
+            vao = x0 - fim
+            alt = _y1 - _y0 or 1.0
+            # O poppler não marca os espaços, mas ele ENTREGA cada palavra
+            # separada. O vão entre duas palavras é ~0.2-0.3 da altura da
+            # linha; entre dígitos soltos ("QUESTÃO" + "01") é o mesmo, então
+            # usamos a altura: um espaço de verdade é ~1/4 da altura do texto.
+            if vao > 0.10 * alt and not out.endswith(' '):
+                out += ' '
+            out += txt
+        fim = x1
+    return out
 
 
 def _monta_texto(chars, margem=None):
@@ -269,6 +348,12 @@ def limpar(txt):
     return txt
 
 
+def _arruma_questao(txt):
+    """O poppler junta "QUESTÃO" + "01" sem espaço quando eles são uma
+    palavra só na caixa dele: "QUESTÃO01"."""
+    return re.sub(r'QUEST(?:Ã|A)O(?=\d)', 'QUESTÃO ', txt)
+
+
 def normaliza(txt):
     """NFC + colapsa espaço RUNNING, preservando o recuo de código.
 
@@ -276,6 +361,7 @@ def normaliza(txt):
     colapsar tudo vira 1 espaço e o Java/Python perde a estrutura.
     """
     txt = unicodedata.normalize('NFC', txt)
+    txt = _arruma_questao(txt)
     saida = []
     for ln in txt.split('\n'):
         if ln.startswith('\x00'):

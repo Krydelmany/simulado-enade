@@ -60,6 +60,23 @@ def _corrige(pal):
     return pal
 
 
+# "ÁREA LIVRE" é o rótulo do espaço de resposta da prova; o tesseract cola a
+# bolinha da alternativa seguinte nele ("ÁREA LIVRE E somente L2 ficará…").
+LIXO_OCR = re.compile(
+    r'^(?:[ÁA]REA\s+LIVRE|ENGENHARIA\s+DE\s+COMPUTA[ÇC][ÃA]O|EXAME\s+NACIONAL.*|ENADE\s+\d{4}'
+    r'|\*\s*R\d.*|[A-Z]{3,}\d{4}[A-Z0-9\s]*)$',
+    re.I,
+)
+
+
+def _limpa_lixo(t):
+    t = re.sub(r'\s*\b[ÁA]REA\s+LIVRE\b\s*', ' ', t, flags=re.I)
+    t = re.sub(r'\s*\bENGENHARIA\s+DE\s+COMPUTA[ÇC][ÃA]O\s*\d*\s*', ' ', t, flags=re.I)
+    t = re.sub(r'\s*\*\s*R[\d ]+\*?\s*', ' ', t)
+    t = re.sub(r'\s*(?:VALIDINEP\d{4}|[A-Z]{3,}\d{4})[A-Z0-9\s]*$', '', t)
+    return ' '.join(t.split())
+
+
 def _agrupar(palavras, tol):
     """Palavras -> linhas por altura."""
     linhas = []
@@ -75,7 +92,81 @@ def _agrupar(palavras, tol):
     return linhas
 
 
-def montar(palavras, W, H):
+_BBOX_CACHE = {}
+
+
+def _blocos(pdf, pagina):
+    """Caixas dos blocos de uma página, via pdftotext -bbox-layout.
+
+    Funciona mesmo com a fonte quebrada (o poppler lê a geometria, não o
+    texto), então serve para 2014/2017 também.
+    """
+    chave = (pdf, pagina)
+    if chave in _BBOX_CACHE:
+        return _BBOX_CACHE[chave]
+    r = subprocess.run(
+        ['pdftotext', '-bbox-layout', '-f', str(pagina), '-l', str(pagina), pdf, '-'],
+        capture_output=True,
+    )
+    s = r.stdout.decode('utf-8', 'replace')
+    W = float(re.search(r'<page width="([\d.]+)"', s).group(1)) if re.search(r'<page width="([\d.]+)"', s) else 0
+    bs = [
+        tuple(float(v) for v in b)
+        for b in re.findall(
+            r'<block xMin="([\d.-]+)" yMin="([\d.-]+)" xMax="([\d.-]+)" yMax="([\d.-]+)">', s
+        )
+    ]
+    _BBOX_CACHE[chave] = (W, bs)
+    return _BBOX_CACHE[chave]
+
+
+def _cabecalhos(pdf, pagina):
+    """-> [(x0, y0, x1, y1)] das caixas 'QUESTÃO' numa página."""
+    W, _ = _blocos(pdf, pagina)
+    r = subprocess.run(
+        ['pdftotext', '-bbox', '-f', str(pagina), '-l', str(pagina), pdf, '-'],
+        capture_output=True,
+    )
+    s = r.stdout.decode('utf-8', 'replace')
+    achados = []
+    palavras = re.finditer(
+        r'<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">(QUEST[^<]*)</word>',
+        s,
+    )
+    for m in palavras:
+        achados.append(tuple(float(m.group(i)) for i in (1, 2, 3, 4)))
+    return W, achados
+
+
+def _duas_colunas_por_questoes(pdf, pagina):
+    W, cabs = _cabecalhos(pdf, pagina)
+    if not W or len(cabs) < 2:
+        return False
+    por_linha = {}
+    for x0, y0, x1, y1 in cabs:
+        chave = round(y0 / (H_TOL := 6))
+        por_linha.setdefault(chave, []).append(x0)
+    # 2+ cabeçalhos na mesma altura -> colunas
+    return any(len(v) >= 2 for v in por_linha.values())
+
+
+def _duas_colunas_por_blocos(pdf, pagina, min_largura_frac=0.30):
+    """-> bool: a página tem 2 colunas de TEXTO (não é tabela)."""
+    W, bs = _blocos(pdf, pagina)
+    if not W:
+        return False
+    # Assinatura de página em 2 colunas: existem blocos COMEÇANDO na margem
+    # esquerda (x ~ 8% da largura) E blocos começando na margem da segunda
+    # coluna (x ~ 51%). Numa página de 1 coluna (mesmo com tabela), todo
+    # bloco nasce na margem esquerda.
+    MARGEM_E, MARGEM_D = W * 0.08, W * 0.47
+    tol = W * 0.04
+    esq = [b for b in bs if abs(b[0] - MARGEM_E) < tol]
+    dir_ = [b for b in bs if abs(b[0] - MARGEM_D) < tol]
+    return len(esq) >= 2 and len(dir_) >= 2
+
+
+def montar(palavras, W, H, pdf=None, pagina=None):
     """-> texto na ordem de leitura, respeitando 1 ou 2 colunas.
 
     O tesseract devolve a página em Z (topo,baixo,topo,baixo...). Duas
@@ -95,10 +186,21 @@ def montar(palavras, W, H):
         w for w in palavras
         if y0 + 0.06 * altura <= (w[1] + w[3]) / 2 <= y1 - 0.06 * altura
     ] or palavras
-    cruza = any(w[0] < meio * 0.85 and w[2] > meio * 1.15 for w in corpo)
-    tem_esq = any(w[0] < meio * 0.85 for w in corpo)
-    tem_dir = any(w[0] >= meio * 0.9 for w in corpo)
-    duas = (not cruza) and tem_esq and tem_dir
+    # Uma TABELA (com 2 colunas de dados) também tem palavras dos dois lados
+    # do meio, mas NÃO é página de 2 colunas. A diferença: na página de 2
+    # colunas existe uma FAIXA VERTICAL vazia no meio (gap de ~1 caractere ou
+    # mais em TODA a altura do corpo). Numa tabela, as palavras se encostam.
+    # A geometria do PDF decide, não a densidade do OCR. O sinal é simples e
+    # não ambíguo: o pdftotext -bbox funciona mesmo com a fonte quebrada (ele
+    # lê a caixa, não o texto) e devolve uma caixa "QUESTÃO" SEPARADA para
+    # cada questão. Duas caixas na MESMA altura = página de 2 colunas; uma
+    # caixa só (mesmo com tabelas e figuras ao lado) = página de 1 coluna.
+    if any(w[0] < meio * 0.85 and w[2] > meio * 1.15 for w in corpo):
+        duas = False
+    elif pdf and pagina:
+        duas = _duas_colunas_por_questoes(pdf, pagina)
+    else:
+        duas = False
 
     if not duas:
         partes = [_agrupar(palavras, tol)]
@@ -110,7 +212,9 @@ def montar(palavras, W, H):
 
     textos = []
     for linhas in partes:
-        textos.append(_marca_bolinhas([' '.join(w[4] for w in l[1]) for l in linhas]))
+        cru = [' '.join(w[4] for w in l[1]) for l in linhas]
+        limpo = [t for t in (_limpa_lixo(t) for t in cru) if t]
+        textos.append(_marca_bolinhas(limpo))
     return '\n'.join('\n'.join(t) for t in textos)
 
 
@@ -122,7 +226,7 @@ BOLINHA = '[LETRA]'
 # ruído: "A)"->"O", "B)"->"4", "C)"->"OQ"/"Q", "D)"->"lell", "E)"->"|".
 # O tesseract também pode devolver a bolinha SOZINHA numa linha.
 BOLINHA_VARIANTES = re.compile(
-    r'^(?:\(|\[)?(?:O|OQ|QO|Q0|QQ|0|4|8|9|1|2|3|5|6|7|lell|lelll)(?:\)|\])?(?=\s|$)'
+    r'^(?:\(|\[)?(?:O|OQ|QO|Q0|QQ|BA|OW|OU|O[A-Z]|0|4|8|9|1|2|3|5|6|7|lell|lelll|ll)(?:\)|\])?(?=\s|$)'
 )
 
 
@@ -169,7 +273,7 @@ def processar(pdf, nome, paginas=None, dpi=300):
         from PIL import Image  # noqa
         with Image.open(png) as im:
             W, H = im.size
-        txt = montar(palavras, W, H)
+        txt = montar(palavras, W, H, pdf, p)
         partes.append(txt)
         os.remove(png)
         print(f'  {nome} p{p}/{total} ok ({len(txt)} car.)', flush=True)

@@ -31,7 +31,8 @@ CABECALHO_COMPOSTO = re.compile(
 # precisa ser o TÍTULO da seção (linha inteira, curta): na capa a palavra
 # aparece minúscula dentro de um parágrafo e não pode cortar nada.
 PERCEPCAO = re.compile(
-    r'^\s*[A-Za-zÀ-ÿ\s]{0,60}\bpercep[çc][ãa]o\s+d[ao]\s+prov[ae]\s*$', re.I
+    r'^\s*(?:question[áa]rio\s+de\s+)?percep[çc][ãa]o(?:\s+d[ao]\s+prov[ae])?\s*$',
+    re.I,
 )
 
 
@@ -94,25 +95,35 @@ ALT_RE = re.compile(r'^([A-E])\s+(\S.*)$', re.S)
 
 
 # Frases que ENCERRAM o enunciado — o enunciado está fechado e as
-# alternativas vêm a seguir. O PDF às vezes cola espaço dentro da palavra
-# (kerning da Calibri): "af irma", por isso o "\s?" nos pontos onde isso
-# acontece de fato.
+# alternativas vêm a seguir. O PDF cola espaço dentro da palavra quando
+# a fonte usa kerning ("af irma"), daí o "\s?" nesses pontos.
+#
+# Cada padrão é uma alternativa do grupo: um "(?:" com "|" inicial
+# criaria um grupo VAZIO, que casaria com qualquer linha.
 FIM_ENUNCIADO = re.compile(
-    r'(?:'
-    # "é correto o que se afirma em" / "está incorreto o que se afirma em"
-    r'|[\u00e9\u00ea]\s+corret[oa]s?\s+(?:apenas\s+)?o\s*que\s*se\s*af\s?irm(?:a|am)'
-    # "é correto afirmar que" / "é correto afirmar"
-    r'|[\u00e9\u00ea]\s+corret[oa]\s*af\s?irm[ao]\s+que'
+    # "é correto o que se afirma em" (o PDF cola espaço: "af irma")
+    r'(?:[\u00e9\u00ea]\s+corret[oa]s?\s+(?:apenas\s+)?o\s*que\s*se\s*af\s?irm(?:a|am)'
+    # "é correto o que se afirma em" (o PDF cola espaço: "af irma")
+    r'|[\u00e9\u00ea]\s+corret[oa]\s*af\s?irm\w*\s+que'
+    # "é correto afirmar que"
     r'|est[\u00e1a]\s+(?:in)?corret[oa]\s+o\s+que'
+    # "está correto o que…"
     r'|assinale\s+a\s+(?:alternativa|op[\u00e7c][\u00e3a]o)'
+    # "assinale a alternativa/opção"
     r'|assinale\s+(?:a|o)\s+que\s+est[\u00e1a]\s+corret[oa]'
+    # "assinale o que está correto"
     r'|a\s+alternativa\s+(?:correta|incorreta)'
+    # "a alternativa correta/incorreta é"
     r'|escolha\s+a\s+(?:alternativa|op[\u00e7c][\u00e3a]o)'
+    # "escolha a alternativa/opção"
     r'|qual\s+(?:d[ao]s|das)\s+alternativas'
+    # "qual (d)as alternativas"
     r'|marque\s+a\s+alternativa'
+    # "marque a alternativa"
     r'|selecione\s+a\s+alternativa'
+    # "selecione a alternativa"
     r'|com\s+base\s+n[ao]s\s+informa[\u00e7c][\u00f5o]es'
-    # "avalie as afirmações" (também vem com espaço colado: "af irmações")
+    # "com base nas informações"
     r'|avalie\s+as?\s+afirma(?:\u00e7|c)(?:\u00f5|o)es'
     r')',
     re.I,
@@ -161,6 +172,30 @@ class _LetraOcr:
 
 def _fecha_enunciado(trecho):
     return bool(FIM_ENUNCIADO.search(trecho))
+
+
+_CURTA = re.compile(r'^([A-E])\s+(\S{1,3}\.?)$')
+
+
+def _sequencia_curta(linhas):
+    """Alternativas de uma letra/um termo: "A X.", "B Y.", "C Z."…
+
+    Não formam enunciado (são minúsculas), então basta a sequência A..E.
+    """
+    melhor = None
+    for i, ln in enumerate(linhas):
+        if not _CURTA.match(ln.strip()):
+            continue
+        achadas = []
+        letra = 'A'
+        for k in range(i, min(len(linhas), i + 10)):
+            m = _CURTA.match(linhas[k].strip())
+            if m and m.group(1) == letra:
+                achadas.append(k)
+                letra = chr(ord(letra) + 1)
+        if len(achadas) >= 4 and (melhor is None or achadas[-1] > melhor[-1]):
+            melhor = achadas
+    return (melhor[0], melhor[-1]) if melhor else None
 
 
 def _checar_ocr(linhas):
@@ -222,7 +257,7 @@ def separar_alternativas(corpo):
     """
     linhas = corpo.split('\n')
 
-    seq = _sequencia(linhas)
+    seq = _sequencia(linhas) or _sequencia_curta(linhas)
     if seq is None:
         ocr = _checar_ocr(linhas)
         if ocr is None:
@@ -231,8 +266,11 @@ def separar_alternativas(corpo):
         # as bolinhas dão a letra pela ordem
         enunciado = '\n'.join(linhas[:inicio]).strip()
         alt = {}
-        for k, (i, txt) in enumerate(ocr[:5]):
-            alt[chr(ord('A') + k)] = txt
+        letras = 'ABCDE'
+        for k, (i, txt) in enumerate(ocr):
+            if k >= 5:
+                break
+            alt[letras[k]] = txt
         # continuação depois da última bolinha
         if fim + 1 < len(linhas) and alt:
             ult = chr(ord('A') + len(alt) - 1)

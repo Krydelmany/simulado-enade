@@ -398,5 +398,405 @@
   "Síndrome de Burnout e saúde do trabalhador",
   "Fácil",
   null
+ ],
+ "2014-FG-D01": [
+  "Mobilidade urbana e desenvolvimento sustentável",
+  "Média",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2014-FG-D02": [
+  "Direitos humanos,-apps e segurança de jovens",
+  "Difícil",
+  null
+ ],
+ "2014-FG-Q01": [
+  "Cultura popular e-industria fonográfica",
+  "Média",
+  null
+ ],
+ "2014-FG-Q02": [
+  "Globalização, ONGs e políticas públicas",
+  "Média",
+  "ECONOMIA"
+ ],
+ "2014-FG-Q03": [
+  "Pegada ecológica e biocapacidade",
+  "Difícil",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2014-FG-Q04": [
+  "Redes sociais e recrutamento profissional",
+  "Fácil",
+  null
+ ],
+ "2014-FG-Q05": [
+  "Inovação tecnológica e saúde (parto)",
+  "Fácil",
+  null
+ ],
+ "2014-FG-Q06": [
+  "Trabalho feminino, cuidado não remunerado e escolarização",
+  "Difícil",
+  null
+ ],
+ "2014-FG-Q07": [
+  "Deslocamento casa-trabalho e mobilidade",
+  "Média",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2014-FG-Q08": [
+  "Transformações sociais no campo e na cidade",
+  "Média",
+  null
+ ],
+ "2014-CE-D03": [
+  "Matriz de adjacência e ciclos em grafos",
+  "Difícil",
+  "TEORIA DA COMPUTACAO"
+ ],
+ "2014-CE-D04": [
+  "Computação em nuvem e requisitos de infraestrutura",
+  "Média",
+  null
+ ],
+ "2014-CE-D05": [
+  "Controle de qualidade com pesos e notas",
+  "Média",
+  "MATEMATICA APLICADA"
+ ],
+ "2014-CE-Q09": [
+  "Variável aleatória e distribuição de distância percorrida",
+  "Média",
+  "MATEMATICA APLICADA"
+ ],
+ "2014-CE-Q10": [
+  "Cargas elétrica e resistores",
+  "Fácil",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2014-CE-Q11": [
+  "DBO, autodepuração e qualidade da água",
+  "Difícil",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2014-CE-Q12": [
+  "Conforto térmico em edificações",
+  "Difícil",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2014-CE-Q13": [
+  "Elevadores e grupos de motores",
+  "Média",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2014-CE-Q14": [
+  "Perda de carga e fator de atrito em tubulações",
+  "Difícil",
+  null
+ ],
+ "2014-CE-Q15": [
+  "Algoritmo de ordenação por seleção (sort)",
+  "Média",
+  "ESTRUTURA DE DADOS E ALGORITMOS"
+ ],
+ "2014-CE-Q16": [
+  "Biomassa como fonte de energia",
+  "Fácil",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2014-CE-Q17": [
+  "Pesquisa eleitoral e margem de erro",
+  "Média",
+  "MATEMATICA APLICADA"
+ ],
+ "2014-CE-Q18": [
+  "Materiais e fabricação de cadeira de rodas",
+  "Média",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2014-CE-Q19": [
+  "Marco Civil da Internet e neutralidade da rede",
+  "Média",
+  "TELECOMUNICACOES"
+ ],
+ "2014-CE-Q20": [
+  "Filtros digitais FIR e IIR",
+  "Difícil",
+  "TELECOMUNICACOES"
+ ],
+ "2014-CE-Q21": [
+  "Compressão de dados e algoritmos",
+  "Média",
+  null
+ ],
+ "2014-CE-Q22": [
+  "Pesquisa operacional: transporte e alocação",
+  "Difícil",
+  "COMPUTACAO PARALELA"
+ ],
+ "2014-CE-Q23": [
+  "Matriz lógica programável (PLA)",
+  "Média",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2014-CE-Q24": [
+  "Protocolo TCP e controle de conexão",
+  "Difícil",
+  "TELECOMUNICACOES"
+ ],
+ "2014-CE-Q25": [
+  "Root locus e síntese de compensadores",
+  "Difícil",
+  "TELECOMUNICACOES"
+ ],
+ "2014-CE-Q26": [
+  "Rede neural perceptron e classificação",
+  "Média",
+  "ROBOTICA INDUSTRIAL"
+ ],
+ "2014-CE-Q27": [
+  "Protótipo de tela de classificados e usabilidade",
+  "Fácil",
+  "IHC"
+ ],
+ "2014-CE-Q28": [
+  "Aquisição de sinal com amplificador e vibração",
+  "Difícil",
+  "ROBOTICA INDUSTRIAL"
+ ],
+ "2014-CE-Q29": [
+  "Expressões regulares e reconhecimento de padrões",
+  "Média",
+  "TEORIA DA COMPUTACAO"
+ ],
+ "2014-CE-Q30": [
+  "Endereçamento de memória de 32 bits",
+  "Difícil",
+  null
+ ],
+ "2014-CE-Q31": [
+  "CSMA/CD em redes locais",
+  "Difícil",
+  "TELECOMUNICACOES"
+ ],
+ "2014-CE-Q32": [
+  "Índice com 999 999 chaves e estrutura de dados",
+  "Difícil",
+  "ESTRUTURA DE DADOS E ALGORITMOS"
+ ],
+ "2014-CE-Q33": [
+  "Indústria de alta tecnologia e microeletrônica",
+  "Fácil",
+  null
+ ],
+ "2014-CE-Q34": [
+  "Sistemas de investimento e modelagem",
+  "Média",
+  "ECONOMIA"
+ ],
+ "2014-CE-Q35": [
+  "Troca de valores em Java",
+  "Fácil",
+  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+ ],
+ "2017-FG-D01": [
+  "Sífilis congênita e saúde pública",
+  "Difícil",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2017-FG-D02": [
+  "Identidade de gênero e direito à_rectificação",
+  "Média",
+  null
+ ],
+ "2017-FG-Q01": [
+  "Brexit e mercados financeiros",
+  "Fácil",
+  "ECONOMIA"
+ ],
+ "2017-FG-Q02": [
+  "Agricultura familiar e sustentabilidade",
+  "Fácil",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2017-FG-Q03": [
+  "Tarifação de energia elétrica e bandeiras",
+  "Fácil",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2017-FG-Q04": [
+  "Tirinha e leitura crítica",
+  "Fácil",
+  "PRODUCAO DE TEXTOS CIENTIFICOS"
+ ],
+ "2017-FG-Q05": [
+  "Hidrogéis e aplicação agrícola",
+  "Fácil",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2017-FG-Q06": [
+  "Imigração haitiana e xenofobia",
+  "Difícil",
+  "HISTORIA E CULTURA AFRO-INDIGENA"
+ ],
+ "2017-FG-Q07": [
+  "Cultura popular e produção artesanal",
+  "Fácil",
+  null
+ ],
+ "2017-FG-Q08": [
+  "Objetivos de Desenvolvimento Sustentável",
+  "Fácil",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2017-CE-D03": [
+  "Autômatos celulares e simulação",
+  "Difícil",
+  "TEORIA DA COMPUTACAO"
+ ],
+ "2017-CE-D04": [
+  "Monitoramento ambiental e variáveis",
+  "Média",
+  "CIENCIAS DO AMBIENTE"
+ ],
+ "2017-CE-D05": [
+  "Gerência de memória e paginação",
+  "Difícil",
+  null
+ ],
+ "2017-CE-Q09": [
+  "Sistema de archivos e armazenamento",
+  "Média",
+  null
+ ],
+ "2017-CE-Q10": [
+  "Diagrama de tensão e comercial",
+  "Difícil",
+  "MATEMATICA APLICADA"
+ ],
+ "2017-CE-Q11": [
+  "Conceitos de resistência térmica",
+  "Média",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2017-CE-Q12": [
+  "Sistema Toyota de produção e lei de resfriamento",
+  "Média",
+  "COMPUTACAO PARALELA"
+ ],
+ "2017-CE-Q13": [
+  "Veículos espaciais e estrutura",
+  "Fácil",
+  null
+ ],
+ "2017-CE-Q14": [
+  "Pressão hidrostática e profundidade",
+  "Fácil",
+  "MATEMATICA APLICADA"
+ ],
+ "2017-CE-Q15": [
+  "Sensores eGrandezas físicas",
+  "Média",
+  "ROBOTICA INDUSTRIAL"
+ ],
+ "2017-CE-Q16": [
+  "Campanha publicitária e execução de programa",
+  "Fácil",
+  null
+ ],
+ "2017-CE-Q17": [
+  "Estruturas de dados e automação",
+  "Média",
+  "ESTRUTURA DE DADOS E ALGORITMOS"
+ ],
+ "2017-CE-Q18": [
+  "Ensaio de flexão e otimização de materiais",
+  "Média",
+  "ROBOTICA INDUSTRIAL"
+ ],
+ "2017-CE-Q19": [
+  "Sistema de catracas e controle de acesso",
+  "Difícil",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2017-CE-Q20": [
+  "Programa de computador e campanha",
+  "Média",
+  null
+ ],
+ "2017-CE-Q21": [
+  "Compilador e microcontrolador",
+  "Difícil",
+  "PROJETO DE SISTEMAS EMBARCADOS"
+ ],
+ "2017-CE-Q22": [
+  "Tipos em C e memória de 32 bits",
+  "Difícil",
+  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+ ],
+ "2017-CE-Q23": [
+  "Filtros digitais e FIR",
+  "Difícil",
+  "TELECOMUNICACOES"
+ ],
+ "2017-CE-Q24": [
+  "Rede neural e reconhecimento",
+  "Média",
+  "ROBOTICA INDUSTRIAL"
+ ],
+ "2017-CE-Q25": [
+  "Heurísticas e provedor de segurança",
+  "Média",
+  "TELECOMUNICACOES"
+ ],
+ "2017-CE-Q26": [
+  "Filas e pilhas em automação",
+  "Fácil",
+  "ESTRUTURA DE DADOS E ALGORITMOS"
+ ],
+ "2017-CE-Q27": [
+  "Monitoramento de deslocamento e banco de dados",
+  "Média",
+  null
+ ],
+ "2017-CE-Q28": [
+  "Computação verde e programación linear",
+  "Difícil",
+  "COMPUTACAO PARALELA"
+ ],
+ "2017-CE-Q29": [
+  "Programação linear e computação verde",
+  "Difícil",
+  "COMPUTACAO PARALELA"
+ ],
+ "2017-CE-Q30": [
+  "Programação linear e pesquisa operacional",
+  "Difícil",
+  "COMPUTACAO PARALELA"
+ ],
+ "2017-CE-Q31": [
+  "Vazamento de dados e imagens íntimas",
+  "Média",
+  null
+ ],
+ "2017-CE-Q32": [
+  "GPU e computação de alto desempenho",
+  "Difícil",
+  "COMPUTACAO PARALELA"
+ ],
+ "2017-CE-Q33": [
+  "Segurança em banco de dados",
+  "Difícil",
+  null
+ ],
+ "2017-CE-Q34": [
+  "Envelhecimento e mudanças fisiológicas",
+  "Fácil",
+  null
+ ],
+ "2017-CE-Q35": [
+  "Roteamento de estado de enlace (ISPF)",
+  "Difícil",
+  "TELECOMUNICACOES"
  ]
 }

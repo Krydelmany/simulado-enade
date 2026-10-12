@@ -32,7 +32,14 @@ def gabaritos(ano):
     """-> {numero(int): letra|'ANULADA'}"""
     txt = open(FONTE + GABARITO[ano], encoding='utf-8').read()
     out = {}
+    # formato 2019/2023: "QUESTÃO 1   ANULADA"
     for m in re.finditer(r'QUEST[ÃA]O\s+(\d{1,2})\s+([A-E]|ANULADA)', txt, re.I):
+        out[int(m.group(1))] = m.group(2).upper()
+    if out:
+        return out
+    # formato 2014/2017: tabela "ITEM / GABARITO" com número e letra em linhas
+    # separadas — "     1        A"
+    for m in re.finditer(r'(?m)^\s*(\d{1,2})\s+(ANULADA|[A-E])\s*$', txt):
         out[int(m.group(1))] = m.group(2).upper()
     return out
 
