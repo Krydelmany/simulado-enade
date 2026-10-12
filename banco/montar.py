@@ -70,6 +70,11 @@ def texto_da_prova(ano, cache=None):
 def extrair(ano):
     txt = texto_da_prova(ano)
     gab = gabaritos(ano)
+    import padrao as _padrao
+    try:
+        padroes = _padrao.extrair(ano)
+    except Exception:
+        padroes = {}
     out = []
     for idx, tipo, num, parte, corpo in parser.cortar(txt, ano):
         if tipo == 'objetiva':
@@ -95,7 +100,7 @@ def extrair(ano):
         if tipo == 'objetiva':
             q['gabarito'] = gab.get(num, '')
         else:
-            q['padrao'] = ''
+            q['padrao'] = padroes.get(q['id'], '')
         q['materia_ava'] = None
         out.append(q)
     return out

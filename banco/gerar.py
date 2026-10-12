@@ -19,6 +19,33 @@ RAIZ = '/root/enade-simulado'
 BANCO = f'{RAIZ}/app/static/banco'
 REVISAO = f'{RAIZ}/revisao'
 
+# Figura/tabela citada no ENUNCIADO: entra como imagem recortada da página.
+# O alt descreve o desenho para quem usa leitor de tela — não é decoração.
+IMAGENS = {
+    '2019-CE-Q11': 'Tabela de conflitos de horário entre os cinco grupos de eventos.',
+    '2019-CE-Q12': 'Gráfico da região viável em空间 de duas variáveis, com os pontos A a F.',
+    '2019-CE-Q15': 'Tabela com os quatro pontos usados no ajuste de reta por mínimos quadrados.',
+    '2019-CE-Q16': 'Diagrama esquemático do demultiplexador de quatro canais com CIs 7404 e 7411.',
+    '2019-CE-Q21': 'Tabela com os cinco fornecedores e os critérios CD1 a CD6.',
+    '2019-CE-Q23': 'Autômato de estados finitos com os estados P, I1 e I0.',
+    '2019-CE-Q24': 'Tabela com o custo de cada enlace da rede.',
+    '2019-CE-Q27': 'Diagrama de classes UML do padrão Strategy.',
+    '2019-CE-Q31': 'Diagrama dos estados dos processos: execução, espera e pronto.',
+    '2019-CE-Q32': 'Tabela com as medidas de temperatura de cada período de monitoramento.',
+    '2019-FG-Q02': 'Poema concreto de Augusto de Campos.',
+    '2019-FG-D02': 'Diagrama da hélice tríplice: setor público, instituição de ensino superior e empresa.',
+    '2019-FG-Q05': 'Duas fotos: uma cava a céu aberto na floresta e um povoado com construções e torres de energia.',
+    '2019-FG-Q06': 'Gráfico do Atlas da Violência: homicídios de mulheres negras e não negras.',
+    '2019-FG-Q06': 'Gráfico do Atlas da Violência: homicídios de mulheres negras e não negras.',
+    '2023-CE-Q10': 'Desenho do cilindro-resistor com os pontos A e L indicados.',
+    '2023-CE-Q13': 'Circuito elétrico e o grafo equivalente, com as correntes I1 a I6.',
+    '2023-CE-Q22': 'Diagrama do banco de dados relacional com as tabelas pessoa, cliente e funcionario.',
+    '2023-CE-Q23': 'Figuras 1 e 2: os dois circuitos que formam os filtros.',
+    '2023-CE-Q25': 'Contador assíncrono de quatro bits com quatro flip-flops JK.',
+    '2023-CE-Q32': 'Grafo de conexão das cidades e o quadro com as distâncias até São Paulo.',
+    '2023-FG-Q03': 'Gráfico das taxas de vacinação infantil de 2017 a 2021.',
+}
+
 # questões cujas alternativas são desenho (código/fórmula/diagrama): entram
 # como imagem recortada da página, não como texto
 FIGURAS = {
@@ -28,6 +55,7 @@ FIGURAS = {
 }
 
 LOTE = {
+    (2019, 'FG'): 1,
     (2019, 'CE'): 2,
     (2023, 'FG'): 3,
     (2023, 'CE'): 4,
@@ -45,6 +73,10 @@ def parte_nome(parte):
 def main(ano, parte):
     qs = classificar.aplicar(montar.extrair(ano))
     qs = montar.aplicar_figuras(qs, FIGURAS)
+    for q in qs:
+        alt = IMAGENS.get(q['id'])
+        if alt:
+            q['imagem'] = {'src': f'/banco/img/{q["id"]}.png', 'alt': alt}
     qs = [q for q in qs if q['parte'] == parte]
 
     ordem = {'discursiva': 0, 'objetiva': 1}

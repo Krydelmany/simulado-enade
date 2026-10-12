@@ -10,7 +10,7 @@
   "figura": null,
   "enunciado": "Uma árvore binária de busca é uma árvore ordenada que pode apresentar prejuízos no desempenho\nde determinados algoritmos em função do desbalanceamento causado pela ordem de inserção dos\nelementos na estrutura. Uma árvore AVL é uma árvore binária de busca balanceada em que a diferença\nem módulo entre a altura da subárvore esquerda e a altura da subárvore direita de cada nó é, no máximo, de uma unidade.\nNesse contexto, faça o que se pede nos itens a seguir.\na) Apresente uma árvore binária de busca balanceada com os elementos 2, 9, 15, 21, 27, 36 e 50 em\nque o nó raiz principal contém o elemento 21 e o balanceamento de cada nó seja no máximo uma\nunidade. (valor: 3,0 pontos)\nb) Considerando as inserções dos elementos 9, 27 e 50, nesta ordem, em uma árvore AVL inicialmente\nvazia, apresente a árvore resultante. (valor: 3,0 pontos)\nc) Considerando as inserções dos elementos 9, 27, 50, 15, 2, 21 e 36, nesta ordem, em uma árvore AVL\ninicialmente vazia, apresente a árvore resultante. (valor: 4,0 pontos)\nRASCUNHO",
   "alternativas": {},
-  "padrao": "",
+  "padrao": "a) o estudante deve apresentar um desenho tal como:\nb) o estudante deve apresentar um desenho tal como:\nc) o estudante deve apresentar um desenho tal como:",
   "materia_ava": "ESTRUTURA DE DADOS E ALGORITMOS"
  },
  {
@@ -24,7 +24,7 @@
   "figura": null,
   "enunciado": "Na matemática, um produtório é definido como:\nn\nx x \u001b x\n\u001b xm 2 \u001b \u001a\u001b xn 1 \u001b xn.\nm 1\ni\nm\ni m\nCom base nessa equação, e considerando que xi i , com i > 0 , faça o que se pede nos itens a seguir.\ni\na) Escreva uma função iterativa, em linguagem C, que receba os parâmetros de limite inferior m e de\nlimite superior n, calcule e retorne o resultado do produtório. (valor: 5,0 pontos).\nb) Escreva uma função recursiva, em linguagem C, que receba os parâmetros de limite inferior m e de\nlimite superior n, calcule e retorne o resultado do produtório. (valor: 5,0 pontos).\nRASCUNHO",
   "alternativas": {},
-  "padrao": "",
+  "padrao": "O estudante deve elaborar algoritmos tais como:\nfloat pode ser intercambiável por double.\n•\na)\no\nSolução 1:\nfloat produtorio(int m, int n)\n{\nfloat i = 1; // contador como ponto flutuante\nfloat r = 1.0; // necessário resultado como ponto flutuante\nfor(i = m; i <= n; i+=1) // incremento com soma\nr *= i + 1/i;\nreturn r;\n}\no\nSolução 2:\nfloat produtorio(int m, int n)\n{\nint i = 1; // contador como inteiro\nfloat r = 1.0; // necessário resultado como ponto flutuante\nfor(i = m; i <= n; i++) // incremento (INC)\nr *= i + 1.0/i; // necessário realizar a divisão como valor ponto\nflutuante, caso contrário o resultado estará incorreto\nreturn r;\n}\n•\nb):\no\nSolução 1:\nfloat produtorio(int m, int n)\n{\nif(m == n)\nreturn (n + 1.0/n); // pode ser (m + 1.0/m)\nelse\nreturn (m + 1.0/m)*produtorio(m+1,n);\n}\no\nSolução 2:\nfloat produtorio(int m, int n)\n{\nif(m == n)\nreturn (n + 1.0/n); // pode ser (m + 1.0/m)\nelse\nreturn (n + 1.0/n)*produtorio(m,n-1);\n}",
   "materia_ava": "PROGRAMACAO PARA CIENCIA DOS DADOS"
  },
  {
@@ -38,7 +38,7 @@
   "figura": null,
   "enunciado": "Um circuito elétrico de corrente contínua é aquele em que todas as tensões são constantes no tempo.\nCircuitos de corrente alternada, por sua vez, possuem valores de tensão variantes no tempo. As variações de tensão senoidal são expressas pela equação V(t) = Vmsen(2pft) em que Vm representa o valor de pico, f representa a frequência do sinal e t o tempo. Os gráficos a seguir mostram a tensão e a corrente em uma carga.\nTensão senoidal v(t)\nV(volts)\n-5\n-10\n-15\n0,01\n0,02\n0,03\n0,04\n0,05\n0,06\nt (segundos)\nCorrente senoidal i(t)\ni(Ampères)\n-5\n0,01\n0,02\n0,03\n0,04\n0,05\n0,06\nt (segundos)\nCom base nas informações e nos gráficos, faça o que se pede nos itens a seguir.\na) Determine a natureza da carga (resistiva, capacitiva ou indutiva) e justifique. (valor: 2,5 pontos) b) Calcule o valor da impedância da carga. (valor: 2,5 pontos) c) Apresente a equação da forma de onda da corrente alternada. (valor: 2,5 pontos) d) Calcule a tensão eficaz (RMS) do circuito de corrente alternada. (valor: 2,5 pontos) RASCUNHO",
   "alternativas": {},
-  "padrao": "",
+  "padrao": "O estudante deve apresentar respostas tais como:\na) resistiva, pois não há defasagem entre corrente e a tensão na carga conforme pode ser visto\nnos gráficos.\nb) Pela lei de ohm, o valor da resistência pode ser encontrado a partir de\nc) Inicialmente o estudante deverá analisar o gráfico a fim de obter as grandezas necessárias\npara a resolução da questão, como frequência e valores máximo da tensão e corrente.\nA frequência pode ser obtida dividindo-se o número de ciclos pelo tempo levado para a\nexecução destes ciclos.\nO valor máximo da corrente alternada pode ser obtido por inspeção no gráfico, sendo o maior\nvalor apresentado no eixo das ordenadas, igual a 5A.\nA equação da forma de onda da corrente alternada é da forma\n.\nSubstituindo-se os valores obtidos graficamente, pode-se obter\nd) A tensão eficaz será\nou 10, 61 V",
   "materia_ava": "ROBOTICA INDUSTRIAL"
  },
  {
@@ -98,7 +98,11 @@
    "E": "cinco. COMPUTAÇÃO"
   },
   "gabarito": "C",
-  "materia_ava": "COMPUTACAO PARALELA"
+  "materia_ava": "COMPUTACAO PARALELA",
+  "imagem": {
+   "src": "/banco/img/2019-CE-Q11.png",
+   "alt": "Tabela de conflitos de horário entre os cinco grupos de eventos."
+  }
  },
  {
   "id": "2019-CE-Q12",
@@ -118,7 +122,11 @@
    "E": "130."
   },
   "gabarito": "B",
-  "materia_ava": "MATEMATICA APLICADA"
+  "materia_ava": "MATEMATICA APLICADA",
+  "imagem": {
+   "src": "/banco/img/2019-CE-Q12.png",
+   "alt": "Gráfico da região viável em空间 de duas variáveis, com os pontos A a F."
+  }
  },
  {
   "id": "2019-CE-Q13",
@@ -177,7 +185,11 @@
    "E": "y = 1,1x."
   },
   "gabarito": "E",
-  "materia_ava": "MATEMATICA APLICADA"
+  "materia_ava": "MATEMATICA APLICADA",
+  "imagem": {
+   "src": "/banco/img/2019-CE-Q15.png",
+   "alt": "Tabela com os quatro pontos usados no ajuste de reta por mínimos quadrados."
+  }
  },
  {
   "id": "2019-CE-Q16",
@@ -197,7 +209,11 @@
    "E": "o pino 11 da porta IC1C está conectado com S1, ao invés de estar conectado com a ENTRADA."
   },
   "gabarito": "E",
-  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
+  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS",
+  "imagem": {
+   "src": "/banco/img/2019-CE-Q16.png",
+   "alt": "Diagrama esquemático do demultiplexador de quatro canais com CIs 7404 e 7411."
+  }
  },
  {
   "id": "2019-CE-Q17",
@@ -297,7 +313,11 @@
    "E": "I, II e III."
   },
   "gabarito": "B",
-  "materia_ava": "MATEMATICA APLICADA"
+  "materia_ava": "MATEMATICA APLICADA",
+  "imagem": {
+   "src": "/banco/img/2019-CE-Q21.png",
+   "alt": "Tabela com os cinco fornecedores e os critérios CD1 a CD6."
+  }
  },
  {
   "id": "2019-CE-Q22",
@@ -336,7 +356,11 @@
    "E": "{w ∈ {0,1}*| |w| é par e termina com 11}. ENGENHARIA DE"
   },
   "gabarito": "B",
-  "materia_ava": "TEORIA DA COMPUTACAO"
+  "materia_ava": "TEORIA DA COMPUTACAO",
+  "imagem": {
+   "src": "/banco/img/2019-CE-Q23.png",
+   "alt": "Autômato de estados finitos com os estados P, I1 e I0."
+  }
  },
  {
   "id": "2019-CE-Q24",
@@ -356,7 +380,11 @@
    "E": "11. COMPUTAÇÃO"
   },
   "gabarito": "C",
-  "materia_ava": "TELECOMUNICACOES"
+  "materia_ava": "TELECOMUNICACOES",
+  "imagem": {
+   "src": "/banco/img/2019-CE-Q24.png",
+   "alt": "Tabela com o custo de cada enlace da rede."
+  }
  },
  {
   "id": "2019-CE-Q25",
@@ -416,7 +444,11 @@
    "E": "II, III e IV."
   },
   "gabarito": "D",
-  "materia_ava": null
+  "materia_ava": null,
+  "imagem": {
+   "src": "/banco/img/2019-CE-Q27.png",
+   "alt": "Diagrama de classes UML do padrão Strategy."
+  }
  },
  {
   "id": "2019-CE-Q28",
@@ -496,7 +528,11 @@
    "E": "II, III e IV."
   },
   "gabarito": "E",
-  "materia_ava": null
+  "materia_ava": null,
+  "imagem": {
+   "src": "/banco/img/2019-CE-Q31.png",
+   "alt": "Diagrama dos estados dos processos: execução, espera e pronto."
+  }
  },
  {
   "id": "2019-CE-Q32",
@@ -516,7 +552,11 @@
    "E": "I, II e III."
   },
   "gabarito": "D",
-  "materia_ava": "ROBOTICA INDUSTRIAL"
+  "materia_ava": "ROBOTICA INDUSTRIAL",
+  "imagem": {
+   "src": "/banco/img/2019-CE-Q32.png",
+   "alt": "Tabela com as medidas de temperatura de cada período de monitoramento."
+  }
  },
  {
   "id": "2019-CE-Q33",

@@ -10,7 +10,7 @@
   "figura": null,
   "enunciado": "Considere que uma rede de varejo resolva consolidar a base de dados de suas M lojas, o que resulta em uma tabela X não ordenada com N registros de clientes, possivelmente repetidos. Devido à necessidade de se criar uma tabela Y contendo os clientes da tabela X com as repetições eliminadas, cogita-se utilizar dois possíveis algoritmos, os quais são apresentados a seguir.\nAlgoritmo A, que executa as seguintes ações:\n1. Cria uma tabela Y inicialmente vazia;\n2. Percorre a tabela X, cliente por cliente, verificando se cada um deles já está na tabela Y. Caso não esteja, insere na tabela Y o cliente que está faltando.\nAlgoritmo B, que executa as seguintes ações:\n1. Cria uma tabela Y inicialmente vazia;\n2. Ordena a tabela X usando o algoritmo quicksort;\n3. Insere, na tabela Y, o cliente da primeira posição da tabela X;\n4. Percorre a tabela X, cliente por cliente, a partir do segundo cliente, verificando se cada cliente é igual ao anterior. Caso não seja, insere o cliente na tabela Y.\nComo resultado das ações tanto do algoritmo A quanto do algoritmo B, a tabela Y gerada ao final\nconterá os clientes da tabela X com as repetições eliminadas.\nA partir dessas informações, observe o código em linguagem C apresentado a seguir.\nvoid quicksort(int *v, int ini, int fim) {\n// v é o vetor a ser ordenado\n// ini é o índice do primeiro elemento a ser ordenado\n// fim é o índice do último elemento a ser ordenado\nif(ini < fim) {\nx = particiona(v, ini, fim,(ini+fim)/2);\n// atribuir os valores para a, b, c e d\nquicksort(v,a,b);\nquicksort(v,c,d);\n}\n}\nint particiona (int *vetor, int ini, int fim, int pivot){\n// implementar uma função que reorganiza o vetor e retorna a posição\nfinal x do pivot. Ao final do processo, os elementos menores ou iguais a\nvetor[pivot] devem ter índice menor do que x; os elementos maiores que\nvetor[pivot] devem ter índice maior do que x.\n}\nvoid troca (int *vetor, int i, int j) {\n// função auxiliar que permuta os conteúdos das posições i e j do\nvetor\naux = vetor[i];\nvetor[i] = vetor[j];\nvetor[j] = aux;\n}\nCom base nos dados apresentados, faça o que se pede nos itens a seguir.\na) Determine o número máximo de comparações executadas no passo 2 do algoritmo A.\n(valor: 2,0 pontos)\nb) Determine o número máximo de comparações executadas no passo 4 do algoritmo B. (valor: 2,0 pontos) c) Na implementação recursiva do programa apresentado, quais são os valores dos parâmetros a, b, c e d? (valor: 2,0 pontos) d) Escreva o corpo da função particiona em linguagem C utilizando a função auxiliar troca, a qual foi definida anteriormente. (valor: 4,0 pontos) RASCUNHO",
   "alternativas": {},
-  "padrao": "",
+  "padrao": "a) Em sua resposta, o estudante deverá determinar o seguinte:\nQue o número máximo de comparações ocorrerá quando todos os clientes forem diferentes, ou seja,\nquando não houver repetição de clientes. Nesse caso, serão feitas 0 + 1 + 2 + ... + (N - 2) + (N - 1)\ncomparações, resultando em N.(N - 1)/2 comparações.\nResposta alternativa: São feitas O(N²) comparações.\nb) Em sua resposta, o estudante deverá determinar o seguinte:\nQue serão feitas (N - 1) comparações.\nResposta alternativa: São feitas O(N) comparações.\nc) Em sua resposta, o estudante deverá responder o seguinte:\na = ini; b=x-1 ou b=x; c= x+1 ou c=x; d=fim\nd) Em sua resposta, o estudante deverá escrever a seguinte função:\nNa linguagem C\ntroca(v, ini, pivot);\npivot = ini;\nini=ini+1;\nwhile (ini <= fim)\nif(vetor[ini] <= vetor [pivot])\nini = ini+1;\nelse {\ntroca(v, ini, fim);\nfim=fim-1;\n}\ntroca(v,pivot,fim);\nreturn fim;\nObs.: o espaço previsto para a resposta na prova pode ser livremente utilizado pelo respondente, inclusive\ncom a divisão do espaço em colunas.",
   "materia_ava": "COMPUTACAO PARALELA"
  },
  {
@@ -31,7 +31,11 @@
    "E": "3 resistores de níquel-cromo em série."
   },
   "gabarito": "B",
-  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
+  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS",
+  "imagem": {
+   "src": "/banco/img/2023-CE-Q10.png",
+   "alt": "Desenho do cilindro-resistor com os pontos A e L indicados."
+  }
  },
  {
   "id": "2023-CE-Q11",
@@ -91,7 +95,11 @@
    "E": "I1 + I2 - I3 - I5 = 0 e I1 - I3 + I4 - I6 = 0"
   },
   "gabarito": "D",
-  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
+  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS",
+  "imagem": {
+   "src": "/banco/img/2023-CE-Q13.png",
+   "alt": "Circuito elétrico e o grafo equivalente, com as correntes I1 a I6."
+  }
  },
  {
   "id": "2023-CE-Q14",
@@ -271,7 +279,11 @@
    "E": "SELECT p.nome, c.saldo_devedor FROM cliente as c RIGHT OUTER JOIN pessoa as p ON c.id_cliente=p.id_pessoa RIGHT OUTER JOIN funcionario as f on p.id_pessoa=f.id_funcionario WHERE c.saldo_devedor > f.salario ORDER BY c.saldo_devedor ASC"
   },
   "gabarito": "E",
-  "materia_ava": null
+  "materia_ava": null,
+  "imagem": {
+   "src": "/banco/img/2023-CE-Q22.png",
+   "alt": "Diagrama do banco de dados relacional com as tabelas pessoa, cliente e funcionario."
+  }
  },
  {
   "id": "2023-CE-Q23",
@@ -291,7 +303,11 @@
    "E": "I, II e III."
   },
   "gabarito": "A",
-  "materia_ava": "TELECOMUNICACOES"
+  "materia_ava": "TELECOMUNICACOES",
+  "imagem": {
+   "src": "/banco/img/2023-CE-Q23.png",
+   "alt": "Figuras 1 e 2: os dois circuitos que formam os filtros."
+  }
  },
  {
   "id": "2023-CE-Q24",
@@ -331,7 +347,11 @@
    "E": "As asserções I e II são proposições falsas."
   },
   "gabarito": "D",
-  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
+  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS",
+  "imagem": {
+   "src": "/banco/img/2023-CE-Q25.png",
+   "alt": "Contador assíncrono de quatro bits com quatro flip-flops JK."
+  }
  },
  {
   "id": "2023-CE-Q26",
@@ -471,7 +491,11 @@
    "E": "Manaus → Macapá → Belém → Palmas → Porto Velho → Cuiabá → Goiânia → São Paulo"
   },
   "gabarito": "B",
-  "materia_ava": "ROBOTICA INDUSTRIAL"
+  "materia_ava": "ROBOTICA INDUSTRIAL",
+  "imagem": {
+   "src": "/banco/img/2023-CE-Q32.png",
+   "alt": "Grafo de conexão das cidades e o quadro com as distâncias até São Paulo."
+  }
  },
  {
   "id": "2023-CE-Q33",
