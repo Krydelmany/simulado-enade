@@ -88,6 +88,10 @@ def extrair(ano):
             'enunciado': parser.limpar_texto(en),
             'alternativas': {k: parser.limpar_texto(v) for k, v in parser.juntar(alt)},
         }
+        for k in list(q['alternativas']):
+            chave = f"{q['id']}|{k}"
+            if chave in CORRECOES:
+                q['alternativas'][k] = CORRECOES[chave]
         if tipo == 'objetiva':
             q['gabarito'] = gab.get(num, '')
         else:
@@ -100,6 +104,16 @@ def extrair(ano):
 # Diagrama vira "MDAD / TLMA / A / MDAD / TLMA / B…" no texto extraído: os
 # nós e as letras sobram depois que o desenho virou imagem. Estes cortes vão por
 # questão porque cada enunciado termina num fraseado diferente.
+# Correções manuais do que o extrator não consegue ler. Cada entrada é
+# conferida contra o PDF renderizado — são fórmulas whose glyph não vira
+# palavra, ou texto que o poppler entrega numa caixa própria.
+CORRECOES = {
+    # 2023-CE-Q18, alternativa E: o radical (√) e o expoente fracionário não
+    # viram palavra; conferido na imagem da página 22 do PDF. O extrator
+    # entrega só a letra "E" nessa linha.
+    '2023-CE-Q18|E': 'Θ(√n) e Θ(n^(3/2)).',
+}
+
 CORTE_FIM = {
     '2019-CE-Q22': 'Assim, a rede bayesiana para esse domínio é',
     '2019-CE-Q09': 'a implementação do protótpio do método sort da classe MergeSort é',

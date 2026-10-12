@@ -161,13 +161,17 @@ def _comeca_com_letra(ln):
 
 
 class _LetraOcr:
-    """Letra vinda da bolinha do OCR: casa como 'LETRAOCR' + o texto."""
+    """Letra vinda da bolinha (OCR): casa como 'LETRAOCR' + o texto."""
 
     def __init__(self, texto):
         self._t = texto
 
     def group(self, n):
         return 'LETRAOCR' if n == 1 else self._t
+
+
+# a bolinha do OCR e a letra solta do poppler seguem o mesmo caminho
+_LetraOCR = _LetraOcr
 
 
 def _fecha_enunciado(trecho):
@@ -196,6 +200,30 @@ def _sequencia_curta(linhas):
         if len(achadas) >= 4 and (melhor is None or achadas[-1] > melhor[-1]):
             melhor = achadas
     return (melhor[0], melhor[-1]) if melhor else None
+
+
+LETRA_SOZINHA = re.compile(r'^([A-E])$')
+
+
+def _sequencia_sozinha(linhas):
+    """Alternativas com a LETRA numa linha e o texto na seguinte.
+
+    Acontece nas alternativas curtas de fórmula: o poppler põe "A" sozinho e
+    o texto ("Q(1) e Q(n).") na linha seguinte.
+    """
+    achadas = []
+    letra = 'A'
+    for k, ln in enumerate(linhas):
+        s = ln.strip()
+        m = LETRA_SOZINHA.match(s)
+        if m and m.group(1) == letra:
+            achadas.append(k)
+            letra = chr(ord(letra) + 1)
+            if letra > 'E':
+                break
+    if len(achadas) >= 4:
+        return achadas[0], achadas[-1]
+    return None
 
 
 def _checar_ocr(linhas):
@@ -257,7 +285,7 @@ def separar_alternativas(corpo):
     """
     linhas = corpo.split('\n')
 
-    seq = _sequencia(linhas) or _sequencia_curta(linhas)
+    seq = _sequencia(linhas) or _sequencia_curta(linhas) or _sequencia_sozinha(linhas)
     if seq is None:
         ocr = _checar_ocr(linhas)
         if ocr is None:
@@ -308,6 +336,9 @@ def separar_alternativas(corpo):
     for ln in linhas[inicio:]:
         s2 = ln.strip()
         m = _comeca_com_letra(s2)
+        sozinha = LETRA_SOZINHA.match(s2)
+        if (not m) and sozinha:
+            m = _LetraOCR(sozinha.group(1))   # letra sozinha, texto na linha seguinte
         if m and len(s2) <= 500:
             if m.group(1) == 'LETRAOCR':
                 letra_atual = proxima
@@ -318,6 +349,12 @@ def separar_alternativas(corpo):
             alt[letra_atual] = m.group(2).strip()
         elif letra_atual:
             alt[letra_atual] = (alt[letra_atual] + ' ' + s2).strip()
+
+    # a letra que veio sozinha na linha anterior pode ter ficado colada no
+    # texto da alternativa ("A" + "A Q(1) e Q(n)." -> "A A Q(1)...")
+    for letra, txt in alt.items():
+        if txt.startswith(letra + ' '):
+            alt[letra] = txt[len(letra) + 1 :].strip()
     return enunciado, alt
 
 

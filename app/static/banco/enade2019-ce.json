@@ -5,13 +5,13 @@
   "parte": "CE",
   "numero": "03",
   "tipo": "discursiva",
-  "tema": "Modelo de maturatione do processo de software e indicadores de qualidade",
-  "dificuldade": "Média",
+  "tema": "Árvores AVL: balanceamento e inserção",
+  "dificuldade": "Difícil",
   "figura": null,
   "enunciado": "Uma árvore binária de busca é uma árvore ordenada que pode apresentar prejuízos no desempenho\nde determinados algoritmos em função do desbalanceamento causado pela ordem de inserção dos\nelementos na estrutura. Uma árvore AVL é uma árvore binária de busca balanceada em que a diferença\nem módulo entre a altura da subárvore esquerda e a altura da subárvore direita de cada nó é, no máximo, de uma unidade.\nNesse contexto, faça o que se pede nos itens a seguir.\na) Apresente uma árvore binária de busca balanceada com os elementos 2, 9, 15, 21, 27, 36 e 50 em\nque o nó raiz principal contém o elemento 21 e o balanceamento de cada nó seja no máximo uma\nunidade. (valor: 3,0 pontos)\nb) Considerando as inserções dos elementos 9, 27 e 50, nesta ordem, em uma árvore AVL inicialmente\nvazia, apresente a árvore resultante. (valor: 3,0 pontos)\nc) Considerando as inserções dos elementos 9, 27, 50, 15, 2, 21 e 36, nesta ordem, em uma árvore AVL\ninicialmente vazia, apresente a árvore resultante. (valor: 4,0 pontos)\nRASCUNHO",
   "alternativas": {},
   "padrao": "",
-  "materia_ava": "PROJETO DE CONCLUSAO DE CURSO II"
+  "materia_ava": "ESTRUTURA DE DADOS E ALGORITMOS"
  },
  {
   "id": "2019-CE-D04",
@@ -19,13 +19,13 @@
   "parte": "CE",
   "numero": "04",
   "tipo": "discursiva",
-  "tema": "Modelo de dados relacional e consultas SQL",
-  "dificuldade": "Média",
+  "tema": "Funções iterativa e recursiva em C",
+  "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Na matemática, um produtório é definido como:\n\u0000\nn\n��������.\nxxxxxx\nmm�1m�2n�1n\ni\ni m\n�\ni�1 , com i > 0 , faça o que se pede nos itens a seguir.\nCom base nessa equação, e considerando que x\ni �\ni\na) Escreva uma função iterativa, em linguagem C, que receba os parâmetros de limite inferior m e de\nlimite superior n, calcule e retorne o resultado do produtório. (valor: 5,0 pontos).\nb) Escreva uma função recursiva, em linguagem C, que receba os parâmetros de limite inferior m e de\nlimite superior n, calcule e retorne o resultado do produtório. (valor: 5,0 pontos).\nRASCUNHO",
+  "enunciado": "Na matemática, um produtório é definido como:\nn\nx x \u001b x\n\u001b xm 2 \u001b \u001a\u001b xn 1 \u001b xn.\nm 1\ni\nm\ni m\nCom base nessa equação, e considerando que xi i , com i > 0 , faça o que se pede nos itens a seguir.\ni\na) Escreva uma função iterativa, em linguagem C, que receba os parâmetros de limite inferior m e de\nlimite superior n, calcule e retorne o resultado do produtório. (valor: 5,0 pontos).\nb) Escreva uma função recursiva, em linguagem C, que receba os parâmetros de limite inferior m e de\nlimite superior n, calcule e retorne o resultado do produtório. (valor: 5,0 pontos).\nRASCUNHO",
   "alternativas": {},
   "padrao": "",
-  "materia_ava": null
+  "materia_ava": "PROGRAMACAO PARA CIENCIA DOS DADOS"
  },
  {
   "id": "2019-CE-D05",
@@ -33,13 +33,13 @@
   "parte": "CE",
   "numero": "05",
   "tipo": "discursiva",
-  "tema": "Modelo de dados relacional e consultas SQL",
-  "dificuldade": "Difícil",
+  "tema": "Corrente alternada e fator de potência",
+  "dificuldade": "Média",
   "figura": null,
-  "enunciado": "Um circuito elétrico de corrente contínua é aquele em que todas as tensões são constantes no tempo.\nCircuitos de corrente alternada, por sua vez, possuem valores de tensão variantes no tempo. As variações de tensão senoidal são expressas pela equação V(t) = Vmsen(2pft) em que Vm representa o valor de pico, f representa a frequência do sinal e t o tempo. Os gráficos a seguir mostram a tensão e a corrente em uma carga.\nTensão senoidal v(t)\nl()Vtosv\n-5\n-10\n-15\n00,010,020,030,040,050,06\nt (segundos)\nCorrente senoidal i(t)\n()èiAmpres\n-5\n00,010,020,030,040,050,06\nt (segundos)\nCom base nas informações e nos gráficos, faça o que se pede nos itens a seguir.\na) Determine a natureza da carga (resistiva, capacitiva ou indutiva) e justifique. (valor: 2,5 pontos) b) Calcule o valor da impedância da carga. (valor: 2,5 pontos) c) Apresente a equação da forma de onda da corrente alternada. (valor: 2,5 pontos) d) Calcule a tensão eficaz (RMS) do circuito de corrente alternada. (valor: 2,5 pontos) RASCUNHO",
+  "enunciado": "Um circuito elétrico de corrente contínua é aquele em que todas as tensões são constantes no tempo.\nCircuitos de corrente alternada, por sua vez, possuem valores de tensão variantes no tempo. As variações de tensão senoidal são expressas pela equação V(t) = Vmsen(2pft) em que Vm representa o valor de pico, f representa a frequência do sinal e t o tempo. Os gráficos a seguir mostram a tensão e a corrente em uma carga.\nTensão senoidal v(t)\nV(volts)\n-5\n-10\n-15\n0,01\n0,02\n0,03\n0,04\n0,05\n0,06\nt (segundos)\nCorrente senoidal i(t)\ni(Ampères)\n-5\n0,01\n0,02\n0,03\n0,04\n0,05\n0,06\nt (segundos)\nCom base nas informações e nos gráficos, faça o que se pede nos itens a seguir.\na) Determine a natureza da carga (resistiva, capacitiva ou indutiva) e justifique. (valor: 2,5 pontos) b) Calcule o valor da impedância da carga. (valor: 2,5 pontos) c) Apresente a equação da forma de onda da corrente alternada. (valor: 2,5 pontos) d) Calcule a tensão eficaz (RMS) do circuito de corrente alternada. (valor: 2,5 pontos) RASCUNHO",
   "alternativas": {},
   "padrao": "",
-  "materia_ava": null
+  "materia_ava": "ROBOTICA INDUSTRIAL"
  },
  {
   "id": "2019-CE-Q09",
@@ -50,7 +50,7 @@
   "tema": "Ordenação e recursão: MergeSort",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "O MergeSort é um método de ordenação que combina dois vetores ordenados e cria um terceiro vetor maior também ordenado. O algoritmo abaixo apresenta essa ideia e combina os vetores a[lo..mid] e a[mid+1..hi] no vetor a[lo..hi]. \u0000public class MergeSort { \u0000 private static Comparable[] aux; \u0000 public static void merge(Comparable[] a, int lo, int mid, int hi) { \u0000 int i = lo, j = mid+1; \u0000 for (int k = lo; k <= hi; k++) \u0000 aux[k] = a[k]; \u0000 for (int k = lo; k <= hi; k++) { \u0000 if (i > mid) \u0000 a[k] = aux[j++]; \u0000 else if (j > hi ) \u0000 a[k] = aux[i++]; \u0000 else if (aux[j].compareTo(aux[i])) \u0000 a[k] = aux[j++]; \u0000 else \u0000 a[k] = aux[i++]; \u0000 } \u0000 } \u0000 public static void sort(Comparable[] a) { \u0000 aux = new Comparable[a.length]; \u0000 sort(a, 0, a.length - 1); \u0000 } \u0000 private static void sort(Comparable[] a, int lo, int hi) { \u0000 //implementação \u0000 } \u0000} SEDGEWICK, R.; WAYNE, K. Algorithms. 4. ed. Boston: Addison-Wesley, 2011 (adaptado). Considerando o código apresentado, a implementação do protótpio do método sort da classe MergeSort é (ver as alternativas na imagem).",
+  "enunciado": "O MergeSort é um método de ordenação que combina dois vetores ordenados e cria um terceiro vetor\nmaior também ordenado. O algoritmo abaixo apresenta essa ideia e combina os vetores a[lo..mid]\ne a[mid+1..hi] no vetor a[lo..hi].\npublic class MergeSort {\nprivate static Comparable[] aux;\npublic static void merge(Comparable[] a, int lo, int mid, int hi) {\nint i = lo, j = mid+1;\nfor (int k = lo; k <= hi; k++)\naux[k] = a[k];\nfor (int k = lo; k <= hi; k++) {\nif (i > mid)\na[k] = aux[j++];\nelse if (j > hi )\na[k] = aux[i++];\nelse if (aux[j].compareTo(aux[i]))\na[k] = aux[j++];\nelse\na[k] = aux[i++];\n}\n}\npublic static void sort(Comparable[] a) {\naux = new Comparable[a.length];\nsort(a, 0, a.length - 1);\n}\nprivate static void sort(Comparable[] a, int lo, int hi) {\n//implementação\n}\n}\nSEDGEWICK, R.; WAYNE, K. Algorithms. 4. ed. Boston: Addison-Wesley, 2011 (adaptado).\nConsiderando o código apresentado, a implementação do protótipo do método sort da classe MergeSort é\nif (hi == lo)\nif (hi > lo)\nreturn;\nreturn;\nint mid = lo + (hi - lo)/2;\nint mid = lo + (hi - lo)/2;\nD\nA\nsort(a, lo, mid);\nsort(a, lo, mid);\nsort(a, mid, hi);\nsort(a, mid+1, hi);\nmerge(a, lo, mid, hi);\nmerge(a, lo, mid, hi);\nif (hi > lo)\nif (hi <= lo)\nreturn;\nreturn;\nint mid = lo + (hi - lo)/2;\nint mid = lo + (hi - lo)/2;\nB\nE\nsort(a, lo, mid);\nsort(a, lo, mid);\nsort(a, mid, hi);\nsort(a, mid+1, hi);\nmerge(a, lo, mid, hi);\nmerge(a, lo, mid, hi);\nif (hi <= lo)\nreturn;\nint mid = lo + (hi - lo)/2;\nC\nsort(a, lo, mid);\nsort(a, mid, hi);\nmerge(a, lo, mid, hi);",
   "alternativas": {},
   "gabarito": "E",
   "materia_ava": "PROGRAMACAO PARA CIENCIA DOS DADOS",
@@ -69,13 +69,13 @@
   "tema": "Aprendizado de máquina: classificação e seleção de características",
   "dificuldade": "Média",
   "figura": null,
-  "enunciado": "Um estudo recente de pesquisadores mostrou\nque os algoritmos de inteligência artificial também\npodem ser usados para prever, pelo olhar de um\nindivíduo, se ele tem chances de sofrer um ataque\ncardíaco. Os pesquisadores treinaram um sistema\nde Inteligência Artificial (IA) com exames de retina\nde 284 335 pacientes em busca de padrões nos\ncruzamentos de vasos sanguíneos para que a\nmáquina aprenda a identificar os sinais indicadores\nde doenças cardiovasculares.\nDisponível em: <htpts://www.g1.globo.com/ciencia-e-saude/notciia/\n2019/03/15/como-a-ia-detecta-sinais-de-doencas-que-humanos-\nnao-podem-enxergar.ghtml>. Acesso em 01 Jun. de 2019 (adaptado).\nAcerca do caso apresentado, avalie as afirmações\na seguir.\nI. O conjunto de dados utilizado para a\nrealização da técnica de reconhecimento de\npadrões corresponde aos exames de retina\nde 284 335 pacientes.\nII. A seleção de características que serão\nutilizadas como base para o reconhecimento\nde padrões equivale ao cruzamento de vasos\nsanguíneos.\nIII. A classificação dos resultados corresponde a\nidentificar os sinais indicadores de doenças\ncardiovasculares.\nÉ correto o que se afirma em",
+  "enunciado": "Um estudo recente de pesquisadores mostrou\nque os algoritmos de inteligência artificial também\npodem ser usados para prever, pelo olhar de um\nindivíduo, se ele tem chances de sofrer um ataque\ncardíaco. Os pesquisadores treinaram um sistema\nde Inteligência Artificial (IA) com exames de retina\nde 284 335 pacientes em busca de padrões nos\ncruzamentos de vasos sanguíneos para que a\nmáquina aprenda a identificar os sinais indicadores\nde doenças cardiovasculares.\nDisponível em: <https://www.g1.globo.com/ciencia-e-saude/noticia/2019/03/15/como-a-ia-detecta-sinais-de-doencas-que-humanos- nao-podem-enxergar.ghtml>. Acesso em 01 Jun. de 2019 (adaptado).\nAcerca do caso apresentado, avalie as afirmações\na seguir.\nI. O conjunto de dados utilizado para a\nrealização da técnica de reconhecimento de\npadrões corresponde aos exames de retina\nde 284 335 pacientes.\nII. A seleção de características que serão\nutilizadas como base para o reconhecimento\nde padrões equivale ao cruzamento de vasos\nsanguíneos.\nIII. A classificação dos resultados corresponde a\nidentificar os sinais indicadores de doenças\ncardiovasculares.\nÉ correto o que se afirma em",
   "alternativas": {
    "A": "I, apenas.",
    "B": "II, apenas.",
    "C": "I e III, apenas.",
    "D": "II e III, apenas.",
-   "E": "I, II e III."
+   "E": "I, II e III. ENGENHARIA DE"
   },
   "gabarito": "E",
   "materia_ava": "PROGRAMACAO PARA CIENCIA DOS DADOS"
@@ -89,13 +89,13 @@
   "tema": "Coloração de grafos e alocação de recursos",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "O gestor de um hotel precisa satisfazer a demanda\nde vários grupos de eventos pelo uso exclusivo de\nauditórios por uma semana utilizando o menor\nnúmero possível de auditórios. A tabela apresenta\nos conflitos de demandas dos grupos de eventos\npara todos os dias na semana, em que o valor 1\nem uma célula indica que um determinado grupo\nprecisará usar um auditório no mesmo horário que\noutro grupo e o valor 0 indica que não há conflito\nentre os dois grupos.\nG1G2G3G4G5\nG1-1111\nG21-110\nG311-01\nG4110-0\nG51010-\nNessa situação, o número mínimo de auditórios\nque satisfaz todas as demandas é de",
+  "enunciado": "O gestor de um hotel precisa satisfazer a demanda\nde vários grupos de eventos pelo uso exclusivo de\nauditórios por uma semana utilizando o menor\nnúmero possível de auditórios. A tabela apresenta\nos conflitos de demandas dos grupos de eventos\npara todos os dias na semana, em que o valor 1\nem uma célula indica que um determinado grupo\nprecisará usar um auditório no mesmo horário que\noutro grupo e o valor 0 indica que não há conflito\nentre os dois grupos.\nG1\nG2\nG3\nG4\nG5\n-\nG1\n-\nG2\n-\nG3\n-\nG4\n-\nG5\nNessa situação, o número mínimo de auditórios\nque satisfaz todas as demandas é de",
   "alternativas": {
    "A": "um.",
    "B": "dois.",
    "C": "três.",
    "D": "quatro.",
-   "E": "cinco."
+   "E": "cinco. COMPUTAÇÃO"
   },
   "gabarito": "C",
   "materia_ava": "COMPUTACAO PARALELA"
@@ -109,7 +109,7 @@
   "tema": "Programação linear e região viável",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Em um sistema computacional avalia-se o desempenho no uso de dois tipos de memória secundária por\nmeio de programação linear. No gráfico apresentado cada eixo representa a quantidade de posições de\nmemória de cada tipo e a região colorida representa, de forma contínua, o conjunto de soluções viáveis (região viável).\ny\nB\nb\nC\na\nc\nD\nA\nf\nd\nex\nE\nF\n123456789101112\nAs arestas da região viável foram definidas pelas diversas restrições observadas para os dois tipos\nde memória. Com base no gráfico, o máximo desempenho do sistema, representado pela variável\nZ = 30x + 10y, é de",
+  "enunciado": "Em um sistema computacional avalia-se o desempenho no uso de dois tipos de memória secundária por\nmeio de programação linear. No gráfico apresentado cada eixo representa a quantidade de posições de\nmemória de cada tipo e a região colorida representa, de forma contínua, o conjunto de soluções viáveis (região viável).\ny\nB\nb\nC\na\nc\nD\nA\nf\nd\nx\ne\nE\nF\nAs arestas da região viável foram definidas pelas diversas restrições observadas para os dois tipos\nde memória. Com base no gráfico, o máximo desempenho do sistema, representado pela variável\nZ = 30x + 10y, é de",
   "alternativas": {
    "A": "350.",
    "B": "280.",
@@ -129,7 +129,7 @@
   "tema": "Resposta em frequência e função de transferência",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Considere a modelagem matemática de um processo e a resposta à excitação do tipo degrau unitário\napresentados a seguir.\nR(s)+G(s)Y(s)\n−\nResposta ao degrau\n0,9\n0,8\n0,7\n0,6\n()Yt\n0,5\n0,4\n0,3\n0,2\n0,1\n0,511,52\nTempo (segundos)\nNesse processo, o tempo de estabilização é de 1 segundo para o critério de 4 constantes de tempo, a função Y (s ) de transferência de malha fechada é T (s )= e a função de transferência no ramo direto é G(s).\nR( s )\nCom base nas informações apresentadas, avalie as asserções a seguir e a relação proposta entre elas.\n3 2\nI. A função de transferência do ramo direto é G s,\n( )�\n.\n0 8\ns�\n,\nPORQUE\n3 2\nII. A função de transferência de malha fechada é T s,\n( )�\n.\ns�",
+  "enunciado": "Considere a modelagem matemática de um processo e a resposta à excitação do tipo degrau unitário\napresentados a seguir.\n+\nG(s)\nR(s)\nY(s)\n−\nResposta ao degrau\n0,9\n0,8\n0,7\n0,6\nY(t)\n0,5\n0,4\n0,3\n0,2\n0,1\n0,5\n1,5\nTempo (segundos)\nNesse processo, o tempo de estabilização é de 1 segundo para o critério de 4 constantes de tempo, a função Y (s) de transferência de malha fechada é T(s) = e a função de transferência no ramo direto é G(s).\nR(s)\nCom base nas informações apresentadas, avalie as asserções a seguir e a relação proposta entre elas.\n3,2 .\nI. A função de transferência do ramo direto é G(s)\ns 0, 8\nPORQUE\nII. A função de transferência de malha fechada é T(s) 3,2 .\ns 4",
   "alternativas": {
    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa da I.",
    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa da I.",
@@ -168,11 +168,11 @@
   "tema": "Mínimos quadrados e ajuste de reta",
   "dificuldade": "Média",
   "figura": null,
-  "enunciado": "O método de regressão linear pelos mínimos quadrados é um dos mais difundidos para encontrar\naproximações para modelos lineares em diferentes áreas, como por exemplo, processamento gráfico,\naprendizagem de máquina e visão computacional.\nEm um sistema superdeterminado do tpio AX = B, que não possua solução (devido a erros nos dados), a\nsolução mais próxima, segundo o critério dos mínimos quadrados, é dada pelo sistema: AT ⋅ A X = AT ⋅ B, em que AT é a transposta de A. Considere o problema de encontrar a reta que melhor se ajusta a quatro pontos no plano, segundo o critério dos mínimos quadrados, cujas coordenadas são:\nP1P2P3P4\nx1234\ny1325\nSuponha que uma reta seja dada na forma funcional y = mx + c. Ao se substituírem as coordenadas de\ncada ponto nesta equação, forma-se um sistema de equações AX = B, em que X é o vetor de incógnitas\n��\nm\n��\n��. A equação da reta que é solução dos mínimos quadrados é\nc\n�\n�",
+  "enunciado": "O método de regressão linear pelos mínimos quadrados é um dos mais difundidos para encontrar\naproximações para modelos lineares em diferentes áreas, como por exemplo, processamento gráfico,\naprendizagem de máquina e visão computacional.\nEm um sistema superdeterminado do tipo AX = B, que não possua solução (devido a erros nos dados), a\nsolução mais próxima, segundo o critério dos mínimos quadrados, é dada pelo sistema: AT ⋅ A X = AT ⋅ B, em que AT é a transposta de A. Considere o problema de encontrar a reta que melhor se ajusta a quatro pontos no plano, segundo o critério dos mínimos quadrados, cujas coordenadas são:\nP1\nP2\nP3\nP4\nx\ny\nSuponha que uma reta seja dada na forma funcional y = mx + c. Ao se substituírem as coordenadas de\ncada ponto nesta equação, forma-se um sistema de equações AX = B, em que X é o vetor de incógnitas\nm\n\u001a. A equação da reta que é solução dos mínimos quadrados é\nc \u001a\n\u001b",
   "alternativas": {
    "A": "y = 0,5x + 1.",
    "B": "y = x + 0,1.",
-   "C": "y�(x�1).",
+   "C": "y (x 1).",
    "D": "y = 1,5x.",
    "E": "y = 1,1x."
   },
@@ -188,7 +188,7 @@
   "tema": "Circuitos lógicos: demultiplexador com CIs 7404 e 7411",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Considere a construção de um Demultiplexador digital (DEMUX) de 4 canais, usando CIs 7404 e 7411, para que um mesmo controle (liga/desliga) seja compartilhado por quatro leds. A figura a seguir apresenta o diagrama esquemático do circuito.\nS0\nS1\n3CIA\n3CIB\n0C4A4N7\n0C4A4N7\n1IC1A\n74AC11N\nIC1B\nENTRADA\n1R\n2R\n3R\n4R\n74AC11N\nIC1C\n1LED\n2LED\n3LED\nL4ED\n74AC11N\nIC2A\nGND\n74AC11N\nApós a montagem, constatou-se que o circuito não funciona corretamente. Para certificação de que o\ncircuito do diagrama esquemático estava correto, comparou-se os estados esperados com os estados\nobservados do circuito para identificar o defeito. A tabela a seguir sintetiza os dados dessa comparação.\nENTRADA S1S0 Estado esperado dos LedsEstado observado dos Leds\n0 0 Todos os leds apagados Todos os leds apagados\n0 1 Todos os leds apagados Todos os leds apagados\n0 2 Todos os leds apagados LED2 aceso\n0 3 Todos os leds apagados Todos os leds apagados\n1 0 LED4 aceso LED4 aceso\n1 1 LED3 aceso LED3 aceso\n1 2 LED2 aceso LED2 aceso\n1 3 LED1 aceso LED1 aceso\nCom base nos dados apresentados na tabela, o defeito que condiz com os resultados das observações é que",
+  "enunciado": "Considere a construção de um Demultiplexador digital (DEMUX) de 4 canais, usando CIs 7404 e 7411, para que um mesmo controle (liga/desliga) seja compartilhado por quatro leds. A figura a seguir apresenta o diagrama esquemático do circuito.\nS0\nS1\nIC3A\nIC3B\n74AC04N2\n74AC04N4\nIC1A\n74AC11N\nIC1B\nENTRADA\nR1\nR2\nR3\nR4\n74AC11N\nIC1C\nLED1\nLED2\nLED3\nLED4\n74AC11N\nIC2A\nGND\n74AC11N\nApós a montagem, constatou-se que o circuito não funciona corretamente. Para certificação de que o\ncircuito do diagrama esquemático estava correto, comparou-se os estados esperados com os estados\nobservados do circuito para identificar o defeito. A tabela a seguir sintetiza os dados dessa comparação.\nENTRADA\nS1S0\nEstado esperado dos Leds\nEstado observado dos Leds\nTodos os leds apagados\nTodos os leds apagados\nTodos os leds apagados\nTodos os leds apagados\nTodos os leds apagados\nLED2 aceso\nTodos os leds apagados\nTodos os leds apagados\nLED4 aceso\nLED4 aceso\nLED3 aceso\nLED3 aceso\nLED2 aceso\nLED2 aceso\nLED1 aceso\nLED1 aceso\nCom base nos dados apresentados na tabela, o defeito que condiz com os resultados das observações é que",
   "alternativas": {
    "A": "o pino 11 da porta IC1C não foi conectado.",
    "B": "o pino 9 da porta IC1C está conectado com S0, ao invés de estar conectado com S1.",
@@ -208,7 +208,7 @@
   "tema": "Amplificador operacional e sensor NTC",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Os amplificadores operacionais são utilizados em circuitos de controle e supervisão de processos\nindustriais, em que sinais de entrada são provenientes de sensores ou transdutores colocados nas malhas de controle do sistema. O diagrama a seguir ilustra um exemplo de circuito utilizado para medição da temperatura com um sensor do tipo NTC (Negative Temperature Coefficient):\n10 V\n+\n-\n1 kΩ\n10 kΩ\nNTC\n\u0000\n-tc*\n100 Ω\n100 Ω\n-\n1 kΩ\n+\n+\n2 kΩ10 kΩ\n+\n1 kΩ\nVolts\n-\nVoltímetro\n1 kΩ\n-\n100 Ω\n100 Ω\nDe acordo com o manual do fabricante do sensor NTC, para uma temperatura de 30 °C é observada uma\nresistência de 8 kΩ, portanto, o valor da tensão exibida na tela (display) do voltímetro ligado na saída do circuito eletrônico apresentado é de",
+  "enunciado": "Os amplificadores operacionais são utilizados em circuitos de controle e supervisão de processos\nindustriais, em que sinais de entrada são provenientes de sensores ou transdutores colocados nas malhas de controle do sistema. O diagrama a seguir ilustra um exemplo de circuito utilizado para medição da temperatura com um sensor do tipo NTC (Negative Temperature Coefficient):\n10 V\n+\n-\n1 kΩ\n10 kΩ\nNTC\n-tc*\n100 Ω\n100 Ω\n-\n1 kΩ\n+\n+\n2 kΩ\n10 kΩ\n+\n1 kΩ\nVolts\n-\nVoltímetro\n1 kΩ\n-\n100 Ω\n100 Ω\nDe acordo com o manual do fabricante do sensor NTC, para uma temperatura de 30 °C é observada uma\nresistência de 8 kΩ, portanto, o valor da tensão exibida na tela (display) do voltímetro ligado na saída do circuito eletrônico apresentado é de",
   "alternativas": {
    "A": "-6 volts.",
    "B": "6 volts.",
@@ -228,13 +228,13 @@
   "tema": "Criptografia DES e 3DES",
   "dificuldade": "Média",
   "figura": null,
-  "enunciado": "O algoritmo de criptografia Data Encryption\nStandard (DES) cifra blocos de 64 bits utilizando\nchaves simétricas de 56 bits. Atualmente o DES\nnão é mais considerado uma cifra segura devido\nao pequeno número de bits utilizado para a chave.\nPara resolver o tamanho da chave, foi proposto\no DES Triplo (3DES), que utiliza três execuções do\nDES e chaves de até 168 bits. A chave k para o\n3DES é dividida em três partes (ka, kb, kc) e cada\numa destas partes é utilizada na execução de uma\ninstância do DES.\nSTALLINGS, W. Criptografai e Segurança de Redes: Princípios e prátcias.\n4ª ed. São Paulo: Pearson Prentice Hall, 2008 (adaptado).\nO algoritmo DES define uma função C(m, k1)que\ncifra uma mensagem m com uma chave k1 e uma\nfunção (Dc, k1) que decifra uma mensagem C\ncifrada com a chave k1. Para que o 3DES seja capaz\nde decifrar mensagens cifradas com o DES, sua\nimplementação deve ser",
+  "enunciado": "O algoritmo de criptografia Data Encryption\nStandard (DES) cifra blocos de 64 bits utilizando\nchaves simétricas de 56 bits. Atualmente o DES\nnão é mais considerado uma cifra segura devido\nao pequeno número de bits utilizado para a chave.\nPara resolver o tamanho da chave, foi proposto\no DES Triplo (3DES), que utiliza três execuções do\nDES e chaves de até 168 bits. A chave k para o\n3DES é dividida em três partes (ka, kb, kc) e cada\numa destas partes é utilizada na execução de uma\ninstância do DES.\nSTALLINGS, W. Criptografia e Segurança de Redes: Princípios e práticas.\n4ª ed. São Paulo: Pearson Prentice Hall, 2008 (adaptado).\nO algoritmo DES define uma função C(m, k1)que\ncifra uma mensagem m com uma chave k1 e uma\nfunção (Dc, k1) que decifra uma mensagem C\ncifrada com a chave k1. Para que o 3DES seja capaz\nde decifrar mensagens cifradas com o DES, sua\nimplementação deve ser",
   "alternativas": {
    "A": "D(C(D(m, ka), kb), kc), sendo ka ≠ kb ≠ kc partes da chave usada no 3DES e ka a chave usada no DES.",
    "B": "D(D(D(m, ka), kb), kc), sendo ka ≠ kb ≠ kc, partes da chave do 3DES e ka a chave usada no DES.",
-   "C": "D(D(D(m, ka), kb), kc), sendo ka = kb = kc, partes da chave do 3DES e ka a chave usada no DES.",
+   "C": "D(D(D(m, ka), kb), kc),sendo ka = kb = kc,partes da chave do 3DES e ka a chave usada no DES.",
    "D": "D(C(D(m, ka), kb), kc), sendo ka = kb = kc partes da chave usada no 3DES e ka a chave usada no DES.",
-   "E": "D(D(C(m, ka), kb), kc), sendo ka = kb = kc partes da chave usada no 3DES e ka a chave usada no DES."
+   "E": "D(D(C(m, ka), kb), kc), sendo ka = kb = kc partes da chave usada no 3DES e ka a chave usada no DES. ENGENHARIA DE"
   },
   "gabarito": "D",
   "materia_ava": null
@@ -248,13 +248,13 @@
   "tema": "Hardware trojan e segurança de sistemas",
   "dificuldade": "Média",
   "figura": null,
-  "enunciado": "Pesquisadores vêm trabalhando na possibilidade\nde microprocessadores comerciais of-fthe-shelf\nterem sido adquiridos com um backdoor utilizado\npara desativá-los no momento oportuno, ou seja,\nataques a sistemas cibernéticos poderiam ser\nintencionalmente ativados por meio de um gatilho\n(trigger), em momento definido pelo atacante.\nDisponível: <http://www.abin.gov.br>.\nAcesso em: 29 jun. 2019 (adaptado).\nSão inúmeras as possibilidades de ação por meio do\nuso de hardware trojan, que permite uma inflitração\nsilenciosa e cuja detecção é extremamente complexa.\nCom base no texto e no contexto de detecção e\nprevenção de ameaças, avalie as afrimações a seguir.\nI. Detecção de falhas de manufatura, como\nfalhas de atraso (delay), garante a detecção\ndos trojans.\nII. Detecção por meio de inspeção física ou\nengenharia reversa destrutiva não garante\nque os microprocessadores comerciais\nestejam livres do hardware trojan.\nIII. O preenchimento total de células no circuito\nprevine a inserção de hardware trojan, não\ndeixando espaços vagos no design.\nIV. Prevenção por meio de camuflagem é um\ntipo de estratégia de ofuscação no nível\ndo layout físico, que consiste na adição de\ncontatos e conexões falsas.\nÉ correto apenas o que se afirma em",
+  "enunciado": "Pesquisadores vêm trabalhando na possibilidade\nde microprocessadores comerciais off-the-shelf\nterem sido adquiridos com um backdoor utilizado\npara desativá-los no momento oportuno, ou seja,\nataques a sistemas cibernéticos poderiam ser\nintencionalmente ativados por meio de um gatilho\n(trigger), em momento definido pelo atacante.\nDisponível: <http://www.abin.gov.br>.\nAcesso em: 29 jun. 2019 (adaptado).\nSão inúmeras as possibilidades de ação por meio do\nuso de hardware trojan, que permite uma infiltração\nsilenciosa e cuja detecção é extremamente complexa.\nCom base no texto e no contexto de detecção e\nprevenção de ameaças, avalie as afirmações a seguir.\nI. Detecção de falhas de manufatura, como\nfalhas de atraso (delay), garante a detecção\ndos trojans.\nII. Detecção por meio de inspeção física ou\nengenharia reversa destrutiva não garante\nque os microprocessadores comerciais\nestejam livres do hardware trojan.\nIII. O preenchimento total de células no circuito\nprevine a inserção de hardware trojan, não\ndeixando espaços vagos no design.\nIV. Prevenção por meio de camuflagem é um\ntipo de estratégia de ofuscação no nível\ndo layout físico, que consiste na adição de\ncontatos e conexões falsas.\nÉ correto apenas o que se afirma em",
   "alternativas": {
    "A": "I e II.",
    "B": "I e III.",
    "C": "II e IV.",
    "D": "I, III e IV.",
-   "E": "II, III e IV."
+   "E": "II, III e IV. COMPUTAÇÃO"
   },
   "gabarito": "C",
   "materia_ava": null
@@ -268,7 +268,7 @@
   "tema": "Rigidez de software e acoplamento entre módulos",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Rigidez é a tendência de um software ser difícil de modificar. Cada mudança causa uma cascata de\nmudanças subsequentes em módulos dependentes. O trecho de código a seguir faz parte de um sistema\ncom suporte à comunicação entre diferentes dispositivos de comunicação via rádio (modems):\n\u00001 struct Modem { enum Type {hayes, courrier, ernie) type; };\n\u00002 struct Hayes {\n\u00003 Modem::Type type;\n\u00004 // Detalhes do modem tipo Hayes\n\u00005 };\n\u00006 struct Courrier {\n\u00007 Modem::Type type;\n\u00008 // Detalhes do modem tipo Courrier\n\u00009 };\n\u000010 struct Ernie {\n\u000011 Modem::Type type;\n\u000012 // Detalhes do modem tipo Ernie\n\u000013 };\n\u000014 void LogOn(Modem& m, string& frq, string& user, string& pw) {\n\u000015 if (m.type == Modem::hayes)\n\u000016 OpenHayesChannel((Hayes&)m, frq);\n\u000017 else OpenCourrierChannel((Courrier&)m, frq);\n\u000018 // depois de conectado, enviar user, pw, etc.\n\u000019 // (continua)\nDisponível em: <http://www.staf.fcs.utu.fi/staff/jouni.smed/doos_06/material/DesignPrinciplesAndPatetrns.pdf>.\nAcesso em: 15 jun. 2019 (adaptado).\nNesse trecho, cada tipo de modem tem suas particularidades e foram criadas estruturas específicas\npara cada tipo (linhas 2 a 13). Um \"enumeration\" (linha 1) é utilizado para identificar o tipo de modem.\nO procedimento LogOn (linhas 14 a 19) é responsável por realizar a conexão a um modem. Dados o tipo\ndo modem (m), a frequência (frq), o nome de usuário (user) e a senha (pw), inicialmente, é feita a\nabertura do canal de comunicação, que corresponde a uma chamada específica para cada tipo de modem\n(linhas 15 a 17). Como os modems do tipo Courrier e Ernie são similares em termos de abertura de\ncanal, o programador decidiu otimizar o código, utilizando a função do modem Courrier para ambos\n(OpenCourrierChannel - linha 17). Uma vez conectado, o código continua o processo de LogOn na\nlinha 18 em diante.\nNesse projeto do código um sintoma de rigidez é que",
+  "enunciado": "Rigidez é a tendência de um software ser difícil de modificar. Cada mudança causa uma cascata de\nmudanças subsequentes em módulos dependentes. O trecho de código a seguir faz parte de um sistema\ncom suporte à comunicação entre diferentes dispositivos de comunicação via rádio (modems):\n1 struct Modem { enum Type {hayes, courrier, ernie) type; };\n2 struct Hayes {\n3 Modem::Type type;\n4 // Detalhes do modem tipo Hayes\n5 };\n6 struct Courrier {\n7 Modem::Type type;\n8 // Detalhes do modem tipo Courrier\n9 };\n10 struct Ernie {\n11 Modem::Type type;\n12 // Detalhes do modem tipo Ernie\n13 };\n14 void LogOn(Modem& m, string& frq, string& user, string& pw) {\n15 if (m.type == Modem::hayes)\n16 OpenHayesChannel((Hayes&)m, frq);\n17 else OpenCourrierChannel((Courrier&)m, frq);\n18 // depois de conectado, enviar user, pw, etc.\n19 // (continua)\nDisponível em: <http://www.staff.cs.utu.fi/staff/jouni.smed/doos_06/material/DesignPrinciplesAndPatterns.pdf>.\nAcesso em: 15 jun. 2019 (adaptado).\nNesse trecho, cada tipo de modem tem suas particularidades e foram criadas estruturas específicas\npara cada tipo (linhas 2 a 13). Um \"enumeration\" (linha 1) é utilizado para identificar o tipo de modem.\nO procedimento LogOn (linhas 14 a 19) é responsável por realizar a conexão a um modem. Dados o tipo\ndo modem (m), a frequência (frq), o nome de usuário (user) e a senha (pw), inicialmente, é feita a\nabertura do canal de comunicação, que corresponde a uma chamada específica para cada tipo de modem\n(linhas 15 a 17). Como os modems do tipo Courrier e Ernie são similares em termos de abertura de\ncanal, o programador decidiu otimizar o código, utilizando a função do modem Courrier para ambos\n(OpenCourrierChannel - linha 17). Uma vez conectado, o código continua o processo de LogOn na\nlinha 18 em diante.\nNesse projeto do código um sintoma de rigidez é que",
   "alternativas": {
    "A": "se o suporte ao modem do tipo Ernie for removido do sistema, será necessário remover a estrutura Ernie do código.",
    "B": "se um novo tipo de modem for adicionado, será necessário alterar o número de parâmetros definidos no procedimento LogOn.",
@@ -288,7 +288,7 @@
   "tema": "Critérios de decisão multicritério (HP)",
   "dificuldade": "Média",
   "figura": null,
-  "enunciado": "Uma empresa de análise de mercado de entregas de encomendas foi contratada para selecionar aquela\nque prestaria serviço para seu cliente e fez um levantamento de dados do setor nos últimos 10 anos,\nproduzindo um relatório com a tabela a seguir, que apresenta 5 principais fornecedores em potencial para o serviço de entrega de encomendas.\nCÓDIGO CD1 CD2 CD3 CD4 CD5 CD6\nFornecedor 1 300 40 32 50 2.9 Nacional\nFornecedor 2 160 28 27 30 0.2 Nacional\nFornecedor 3 140 24 24 25 0.01 Regional\nFornecedor 4 220 30 27 30 0.5 Nacional\nFornecedor 5 240 34 30 40 1.05 Nacional\nCom base nessa situação e considerando que a tabela faz parte do banco de dados da empresa com o\nnome de TABELA1, avalie as afirmações a seguir.\nI. O código em SQL que exclui da TABELA1 as informações do Fornecedor 1, Fornecedor 4 e Fornecedor 5\né: DELETE FROM TABELA1 WHERE CD6 = 'Regional' OR CD1 > 160 OR CD5 > 1;.\nII. A inclusão de uma nova coluna com dados de taxa de eficiência de entrega para os fornecedores\nconstantes na TABELA1 é feita pelo código: INSERT INTO TABELA1 (CD7) SET CD7 =\n'CD3/CD2';.\nIII. O código que reflete a escolha do cliente, o Fornecedor 3, é: SELECT Fornecedor FROM\n\u0000 TABELA1 WHERE CD1 > 100 AND (CD3/CD2) > 0.99 AND CD5 < 0.5 ORDER BY\nCD3;.\nÉ correto o que se afirma em",
+  "enunciado": "Uma empresa de análise de mercado de entregas de encomendas foi contratada para selecionar aquela\nque prestaria serviço para seu cliente e fez um levantamento de dados do setor nos últimos 10 anos,\nproduzindo um relatório com a tabela a seguir, que apresenta 5 principais fornecedores em potencial para o serviço de entrega de encomendas.\nCÓDIGO\nCD1\nCD2\nCD3\nCD4\nCD5\nCD6\nFornecedor 1\n2.9\nNacional\nFornecedor 2\n0.2\nNacional\nFornecedor 3\n0.01\nRegional\nFornecedor 4\n0.5\nNacional\nFornecedor 5\n1.05\nNacional\nCom base nessa situação e considerando que a tabela faz parte do banco de dados da empresa com o\nnome de TABELA1, avalie as afirmações a seguir.\nI. O código em SQL que exclui da TABELA1 as informações do Fornecedor 1, Fornecedor 4 e Fornecedor 5\né: DELETE FROM TABELA1 WHERE CD6 = 'Regional' OR CD1 > 160 OR CD5 > 1;.\nII. A inclusão de uma nova coluna com dados de taxa de eficiência de entrega para os fornecedores\nconstantes na TABELA1 é feita pelo código: INSERT INTO TABELA1 (CD7) SET CD7 =\n'CD3/CD2';.\nIII. O código que reflete a escolha do cliente, o Fornecedor 3, é: SELECT Fornecedor FROM\nTABELA1 WHERE CD1 > 100 AND (CD3/CD2) > 0.99 AND CD5 < 0.5 ORDER BY\nCD3;.\nÉ correto o que se afirma em",
   "alternativas": {
    "A": "I, apenas.",
    "B": "III, apenas.",
@@ -327,13 +327,13 @@
   "tema": "Autômatos de estados finitos e linguagens regulares",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Considere o autômato de estados finitos\ndeterminístico representado na figura a seguir.\nP1\n1,0\n1,0\nO autômato representado reconhece a seguinte\nlinguagem regular",
+  "enunciado": "Considere o autômato de estados finitos\ndeterminístico representado na figura a seguir.\nP\n1,0\n1,0\nO autômato representado reconhece a seguinte\nlinguagem regular",
   "alternativas": {
    "A": "{w ∈ {0,1}*| |w| é 4}.",
    "B": "{w ∈ {0,1}*| |w| é ímpar e termina com 1}.",
    "C": "{w ∈ {0,1}*| |w| é par e termina com 01}.",
    "D": "{w ∈ {0,1}*| |w| é ímpar e termina com 0}.",
-   "E": "{w ∈ {0,1}*| |w| é par e termina com 11}."
+   "E": "{w ∈ {0,1}*| |w| é par e termina com 11}. ENGENHARIA DE"
   },
   "gabarito": "B",
   "materia_ava": "TEORIA DA COMPUTACAO"
@@ -347,13 +347,13 @@
   "tema": "Difusão em redes e spanning tree",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Protocolos de roteamento de estado de enlace\nutilizam difusão para propagar informações de\nestado de enlace que são usadas para calcular rotas\nindividuais. Entretanto, algumas técnicas provocam\na transmissão de pacotes redundantes na rede.\nIdealmente, cada nó deveria receber apenas uma\ncópia do pacote de difusão.\nUma técnica utilizada para resolver o problema da\nredundância de pacotes, é a difusão por spanning\ntree. Uma spanning tree de um grafo G = (N, E) é\num grafo G' = (N, E') tal que E' é um subconjunto\nde E, G' é conexo, não possui ciclos e contém todos\nos nós originais em G. Se cada enlace tiver um\ncusto associado e o custo de uma árvore for a soma\ndos custos dos enlaces, então uma árvore cujo\ncusto seja o mínimo entre todas as spanning trees\ndo grafo é denominada uma spanning tree mínima.\nKUROSE, J. F.; ROSS, K. W. Redes de computadores e a Internet:\numa abordagem top-down. 6. ed. São Paulo:\nPearson Education do Brasil, 2013 (adaptado).\nConsidere uma rede composta por 6 roteadores,\ndesignados pelas letras A, B, C, D, E e F, conectados\nconforme a seguinte tabela de custos de seus enlaces:\nConexãoCusto do enlace",
+  "enunciado": "Protocolos de roteamento de estado de enlace\nutilizam difusão para propagar informações de\nestado de enlace que são usadas para calcular rotas\nindividuais. Entretanto, algumas técnicas provocam\na transmissão de pacotes redundantes na rede.\nIdealmente, cada nó deveria receber apenas uma\ncópia do pacote de difusão.\nUma técnica utilizada para resolver o problema da\nredundância de pacotes, é a difusão por spanning\ntree. Uma spanning tree de um grafo G = (N, E) é\num grafo G' = (N, E') tal que E' é um subconjunto\nde E, G' é conexo, não possui ciclos e contém todos\nos nós originais em G. Se cada enlace tiver um\ncusto associado e o custo de uma árvore for a soma\ndos custos dos enlaces, então uma árvore cujo\ncusto seja o mínimo entre todas as spanning trees\ndo grafo é denominada uma spanning tree mínima.\nKUROSE, J. F.; ROSS, K. W. Redes de computadores e a Internet:\numa abordagem top-down. 6. ed. São Paulo:\nPearson Education do Brasil, 2013 (adaptado).\nConsidere uma rede composta por 6 roteadores,\ndesignados pelas letras A, B, C, D, E e F, conectados\nconforme a seguinte tabela de custos de seus enlaces:\nConexão\nCusto do enlace\nA - B\nA - C\nB - C\nB - D\nC - D\nC - E\nC - F\nD - F\nE - F\nNeste cenário, o custo da spanning tree mínima\ncorrespondente é, exatamente:",
   "alternativas": {
    "A": "5.",
    "B": "7.",
    "C": "8.",
    "D": "9.",
-   "E": "11."
+   "E": "11. COMPUTAÇÃO"
   },
   "gabarito": "C",
   "materia_ava": "TELECOMUNICACOES"
@@ -367,7 +367,7 @@
   "tema": "Recursão em cauda e otimização em Python",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "A linguagem Python não permite alguns tipos de otimização como, por exemplo, a recursão em cauda e,\ndevido à sua natureza dinâmica, é impossível realizar esse tipo de otimização em tempo de compilação\ntal como em linguagens funcionais como Haskell ou ML.\nDisponível em: <http:/www.python-history.blogspot.com/2009/04/origins-of-pythons-functional-features.html>.\nAcesso: em 15 jun. 2019 (adaptado).\nO trecho de código a seguir, escrito em Python, realiza a busca binária de um elemento x em uma lista lst e a função binary_search tem código recursivo em cauda.\n\u00001 def binary_search(x, lst, low=None, high=None):\n\u00002 if low == None : low = 0\n\u00003 if high == None : high = len(lst)-1\n\u00004 mid = low + (high - low) // 2\n\u00005 if low > high :\n\u00006 return None\n\u0000\n\u00007 elif lst[mid] == x :\n\u00008 return mid\n\u0000\n\u00009 elif lst[mid] > x :\n\u000010 return binary_search(x, lst, low, mid-1)\n\u0000\n\u000011 else :\n\u000012 return binary_search(x, lst, mid+1, high)\n\u0000\nDisponível em: <https://www.kylem.net/programming/tailcall.html>. Acesso em: 15 jun. 2019 (adaptado).\nConsiderando esse trecho de código, avalie as afirmações a seguir.\nI. Substituindo-se o conteúdo da linha 10 por high = mid - 1 e substituindo-se o conteúdo da\nlinha 12 por low = mid + 1, não se altera o resultado de uma busca.\nII. Envolvendo-se o código das linhas 4 a 12 em um laço while True, substituindo-se o conteúdo\nda linha 10 por high = mid - 1 e substtiuindo-se o conteúdo da linha 12 por low = mid + 1\nremove-se a recursão de cauda e o resultado da busca não é alterado.\nIII. Substituindo-se o código da linha 10 por:\n\u0000 newhigh = mid-1\n\u0000 return binary_search(x, lst, low, newhigh)\ne substituindo-se o código da linha 12 por:\n\u0000 newlow = mid+1\n\u0000 return binary_search(x, lst, newlow, high)\nremove-se a recursão de cauda.\nIV. Substituindo-se o conteúdo das linhas 9 a 12 por\n\u0000 if lst[mid] > x :\n\u0000 newlow = low\n\u0000 newhigh = mid-1\n\u0000 else:\n\u0000 newlow = mid+1\n\u0000 newhigh = high\n\u0000 return binary_search(x, lst, newlow, newhigh)\nmantém-se o resultado da busca.\nÉ correto o que se afirma em",
+  "enunciado": "A linguagem Python não permite alguns tipos de otimização como, por exemplo, a recursão em cauda e,\ndevido à sua natureza dinâmica, é impossível realizar esse tipo de otimização em tempo de compilação\ntal como em linguagens funcionais como Haskell ou ML.\nDisponível em: <http:/www.python-history.blogspot.com/2009/04/origins-of-pythons-functional-features.html>.\nAcesso: em 15 jun. 2019 (adaptado).\nO trecho de código a seguir, escrito em Python, realiza a busca binária de um elemento x em uma lista lst e a função binary_search tem código recursivo em cauda.\n1 def binary_search(x, lst, low=None, high=None):\n2 if low == None : low = 0\n3 if high == None : high = len(lst)-1\n4 mid = low + (high - low) // 2\n5 if low > high :\n6 return None\n7 elif lst[mid] == x :\n8 return mid\n9 elif lst[mid] > x :\n10 return binary_search(x, lst, low, mid-1)\n11 else :\n12 return binary_search(x, lst, mid+1, high)\nDisponível em: <https://www.kylem.net/programming/tailcall.html>. Acesso em: 15 jun. 2019 (adaptado).\nConsiderando esse trecho de código, avalie as afirmações a seguir.",
   "alternativas": {
    "A": "I, apenas.",
    "B": "II e III, apenas.",
@@ -407,7 +407,7 @@
   "tema": "Padrões de projeto: Strategy",
   "dificuldade": "Média",
   "figura": null,
-  "enunciado": "Padrões de projeto são soluções gerais para problemas frequentes de projetos de software. O diagrama\nde classes UML abaixo ilustra a estrutura do padrão Strategy:\nContextStrategy\n-strategy\n+ContextInterface()+AlgorithmInterface()\nConcreteStrategyAConcreteStrategyBConcreteStrategyC\n+AlgorithmInterface()+AlgorithmInterface()+AlgorithmInterface()\nGAMMA, E. et al. Padrões de projeto: Soluções reutilizáveis de software orientado a objetos.\n2. ed. Porto Alegre: Bookman, 2000 (adaptado).",
+  "enunciado": "Padrões de projeto são soluções gerais para problemas frequentes de projetos de software. O diagrama\nde classes UML abaixo ilustra a estrutura do padrão Strategy:\nStrategy\nContext\n-strategy\n+AlgorithmInterface()\n+ContextInterface()\nConcreteStrategyA\nConcreteStrategyB\nConcreteStrategyC\n+AlgorithmInterface()\n+AlgorithmInterface()\n+AlgorithmInterface()\nGAMMA, E. et al. Padrões de projeto: Soluções reutilizáveis de software orientado a objetos.\n2. ed. Porto Alegre: Bookman, 2000 (adaptado).",
   "alternativas": {
    "A": "I e II.",
    "B": "I e IV.",
@@ -427,13 +427,13 @@
   "tema": "Atraso de propagação em circuitos lógicos",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Um sistema de tempo real satisfaz explicitamente\nrestrições de tempo de resposta, podendo ter\nconsequências como riscos ou falhas caso não\ncumpra essas restrições. O circuito lógico a seguir\nfaz parte de um sistema de tempo real que realiza\no acionamento de um alarme.\nA\nB\nY\nC\nD\nNesse circuito existem vários atrasos de\npropagação do sinal, que por sua vez geram atrasos\nno acionamento do alarme. Na forma como a\nlógica está implementada, o circuito não atende o\nrequisito de tempo real especificado pelo sistema.\nPara cada porta lógica utilizada, os atrasos típicos,\nem unidades de tempo (u.t.), são:\nPorta Atraso (u.t.)\nAND3\nOR4\nNOT1\nApós a simplificação do circuito, o menor tempo\npossível para o acionamento do alarme é de",
+  "enunciado": "Um sistema de tempo real satisfaz explicitamente\nrestrições de tempo de resposta, podendo ter\nconsequências como riscos ou falhas caso não\ncumpra essas restrições. O circuito lógico a seguir\nfaz parte de um sistema de tempo real que realiza\no acionamento de um alarme.\nA\nB\nY\nC\nD\nNesse circuito existem vários atrasos de\npropagação do sinal, que por sua vez geram atrasos\nno acionamento do alarme. Na forma como a\nlógica está implementada, o circuito não atende o\nrequisito de tempo real especificado pelo sistema.\nPara cada porta lógica utilizada, os atrasos típicos,\nem unidades de tempo (u.t.), são:\nPorta Atraso (u.t.)\nAND 3\nOR 4\nNOT 1\nApós a simplificação do circuito, o menor tempo\npossível para o acionamento do alarme é de",
   "alternativas": {
    "A": "9 u.t.",
    "B": "10 u.t.",
    "C": "3 u.t.",
    "D": "4 u.t.",
-   "E": "6 u.t."
+   "E": "6 u.t. ENGENHARIA DE"
   },
   "gabarito": "C",
   "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
@@ -447,13 +447,13 @@
   "tema": "Internet das Coisas e sistemas distribuídos",
   "dificuldade": "Fácil",
   "figura": null,
-  "enunciado": "A Internet das Coisas (Internet of Things (IoT))\npode ser definida como um ambiente de objetos\nfísicos interconectados com a internet por meio\nde sensores/atuadores embutidos, criando um\necossistema de computação onipresente (ubíqua) e\nintroduzindo soluções funcionais nos processos do\ndia-a-dia, sejam domésticos ou profissionais. É um\nconjunto de tecnologias e protocolos associados\nque permitem que objetos se conectem a uma\nrede de comunicações e sejam identificados e\ncontrolados por essa conexão. A IoT usa conceitos,\ntecnologias e soluções que envolvem sistemas\ndistribuídos e redes de comunicação.\nMAGRANI, E. A internet das coisas. Rio de Janeiro:\nFGV Editora, 2018 (adaptado).\nNesse contexto, avalie as asserções a seguir e a\nrelação proposta entre elas.\nI. Em soluções e aplicações para IoT, é preciso\ngarantir que essas funcionarão de forma\nconsistente em um ambiente concorrente,\nonde ocorrem várias requisições ao mesmo\nrecurso compartilhado.\nPORQUE\nII. Em soluções atuais de IoT existe\nheterogeneidade, ou seja, dentro do mesmo\necossistema, uma variedade de sistemas\noperacionais, hardware, linguagens de\nprogramação e padrões de redes de\ncomunicação são utilizados.\nA respeito dessas asserções, assinale a alternativa\ncorreta.",
+  "enunciado": "A Internet das Coisas (Internet of Things (IoT))\npode ser definida como um ambiente de objetos\nfísicos interconectados com a internet por meio\nde sensores/atuadores embutidos, criando um\necossistema de computação onipresente (ubíqua) e\nintroduzindo soluções funcionais nos processos do\ndia-a-dia, sejam domésticos ou profissionais. É um\nconjunto de tecnologias e protocolos associados\nque permitem que objetos se conectem a uma\nrede de comunicações e sejam identificados e\ncontrolados por essa conexão. A IoT usa conceitos,\ntecnologias e soluções que envolvem sistemas\ndistribuídos e redes de comunicação.\nMAGRANI, E. A internet das coisas. Rio de Janeiro:\nFGV Editora, 2018 (adaptado).\nNesse contexto, avalie as asserções a seguir e a\nrelação proposta entre elas.\nI. Em soluções e aplicações para IoT, é preciso\ngarantir que essas funcionarão de forma\nconsistente em um ambiente concorrente,\nonde ocorrem várias requisições ao mesmo\nrecurso compartilhado.\nPORQUE\nII. Em soluções atuais de IoT existe\nheterogeneidade, ou seja, dentro do mesmo\necossistema, uma variedade de sistemas\noperacionais, hardware, linguagens de\nprogramação e padrões de redes de\ncomunicação são utilizados.\nA respeito dessas asserções, assinale a alternativa",
   "alternativas": {
    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta de I.",
    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta de I.",
    "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
    "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
-   "E": "As asserções I e II são proposições falsas."
+   "E": "As asserções I e II são proposições falsas. COMPUTAÇÃO"
   },
   "gabarito": "A",
   "materia_ava": "TELECOMUNICACOES"
@@ -467,7 +467,7 @@
   "tema": "Contêiner de servlets e ciclo de requisição",
   "dificuldade": "Média",
   "figura": null,
-  "enunciado": "É comum a expressão \"servidor web\" ser utilizada para denominar processos cuja finalidade é disponibilizar recursos estáticos, que são os que se encontram completos antes de uma requisição ser realizada, e recursos dinâmicos, que são produzidos no momento em que um cliente o requisita e seu conteúdo é definido em tempo de requisição. Um Container de Servlets é um servidor web capaz de gerenciar diferentes aplicações que disponibilizam conteúdo dinâmico, e um Servlet é uma classe Java capaz de gerar conteúdo desse tipo, mediante a requisição de um cliente. Cada requisição atendida por um Servlet pode ser executada por uma thread e múltiplas requisições podem estar em execução simultaneamente.\nConsidere o Servlet a seguir que mantém uma variável cuja finalidade é controlar quantas requisições são atendidas ao longo do tempo.\n\u00001 @WebServlet (\"/\")\n\u00002 public class ContaRequisicoes extends HttpServlet {\n\u00003 private int contador;\n\u00004 protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws Exception {\n\u00005 contador = contador + 1;\n\u00006 }\n\u00007 }\nDisponível em: <https://www.javaee.github.io/servlet-spec/downloads/servlet-4.0/servlet-4_0_FINAL.pdf>.\nAcesso em: 24 jun. 2019 (adaptado).\nA respeito do Servlet apresentado, avalie as afirmações a seguir.\nI. O código apresenta uma condição de corrida.\nII. Substituir a linha 5 pela construção synchronized (this) {contador = contador + 1;}\ngarante o correto funcionamento do método.\nIII. Obter a trava do objeto referenciado por request antes de executar o incremento e liberá-la\nlogo a seguir, garante o correto funcionamento do método.\nÉ correto o que se afirma em",
+  "enunciado": "Écomumaexpressão\"servidorweb\"serutilizadaparadenominar processoscujafinalidade édisponibilizar\nrecursos estáticos, que são os que se encontram completos antes de uma requisição ser realizada, e\nrecursos dinâmicos, que são produzidos no momento em que um cliente o requisita e seu conteúdo\né definido em tempo de requisição. Um Container de Servlets é um servidor web capaz de gerenciar\ndiferentes aplicações que disponibilizam conteúdo dinâmico, e um Servlet é uma classe Java capaz de\ngerar conteúdo desse tipo, mediante a requisição de um cliente. Cada requisição atendida por um Servlet pode ser executada por uma thread e múltiplas requisições podem estar em execução simultaneamente.\nConsidere o Servlet a seguir que mantém uma variável cuja finalidade é controlar quantas requisições são atendidas ao longo do tempo.\n1 @WebServlet (\"/\")\n2 public class ContaRequisicoes extends HttpServlet {\n3 private int contador;\n4 protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws Exception {\n5 contador = contador + 1;\n6 }\n7 }\nDisponível em: <https://www.javaee.github.io/servlet-spec/downloads/servlet-4.0/servlet-4_0_FINAL.pdf>.\nAcesso em: 24 jun. 2019 (adaptado).",
   "alternativas": {
    "A": "I, apenas.",
    "B": "II, apenas.",
@@ -487,7 +487,7 @@
   "tema": "Estados de processos e sistema operacional",
   "dificuldade": "Média",
   "figura": null,
-  "enunciado": "Em um sistema computacional, os processos submetidos à execução podem estar em um dos estágios do\nseu ciclo de vida que são classificados como em execução, em espera ou pronto. Quando o processo tem\na posse do processador, está em execução. Se o processo não puder ser executado, por estar aguardando algum dado por exemplo, é considerado um processo em espera. Se não houver impedimentos para sua execução, o processo deve aguardar sua vez para ser executado na fila dos processos prontos. O diagrama a seguir representa os estados dos processos de alguns tipos de sistemas operacionais.\nExecução\nA\nC\nB\nEsperaPronto\nD\nCom base no texto e no diagrama de estados, avalie as afirmações a seguir.\nI. Um novo processo criado é inicializado no estado \"espera\".\nII. Pode haver mais de um processo em estado \"pronto\".\nIII. A transição B indica que o diagrama refere-se a um sistema operacional multitarefa.\nIV. O diagrama é inadequado para representar um sistema monotarefa.\nÉ correto apenas o que se afirma em",
+  "enunciado": "Em um sistema computacional, os processos submetidos à execução podem estar em um dos estágios do\nseu ciclo de vida que são classificados como em execução, em espera ou pronto. Quando o processo tem\na posse do processador, está em execução. Se o processo não puder ser executado, por estar aguardando algum dado por exemplo, é considerado um processo em espera. Se não houver impedimentos para sua execução, o processo deve aguardar sua vez para ser executado na fila dos processos prontos. O diagrama a seguir representa os estados dos processos de alguns tipos de sistemas operacionais.\nExecução\nA\nC\nB\nEspera\nPronto\nD\nCom base no texto e no diagrama de estados, avalie as afirmações a seguir.\nI. Um novo processo criado é inicializado no estado \"espera\".\nII. Pode haver mais de um processo em estado \"pronto\".\nIII. A transição B indica que o diagrama refere-se a um sistema operacional multitarefa.\nIV. O diagrama é inadequado para representar um sistema monotarefa.\nÉ correto apenas o que se afirma em",
   "alternativas": {
    "A": "I e II.",
    "B": "I e III.",
@@ -507,7 +507,7 @@
   "tema": "Quantização de sinal e desvio padrão",
   "dificuldade": "Média",
   "figura": null,
-  "enunciado": "Uma estação de monitoramento de temperatura utiliza um termógrafo para registrar continuamente\nem um gráfico os valores detectados por seus sensores. Um determinado ambiente foi monitorado ao\nlongo de três períodos distintos de um dia. O ambiente é considerado apropriado para um experimento\ncientífico se, para qualquer período Pi de monitoramento σ(Pi) ≤ 2, em que σ(Pi) denota o desvio\npadrão populacional do período Pi em que o ambiente foi monitorado.\nAs medidas de temperatura em °C, obtidas após um processo de quantização do sinal, são apresentadas\nna tabela a seguir.\nMedida 1Medida 2Medida 3Medida 4\nPeríodo (Pi)\nP133,533,533,033,5\nP227,52727,527,5\nP32,02,52,02,0",
+  "enunciado": "Uma estação de monitoramento de temperatura utiliza um termógrafo para registrar continuamente\nem um gráfico os valores detectados por seus sensores. Um determinado ambiente foi monitorado ao\nlongo de três períodos distintos de um dia. O ambiente é considerado apropriado para um experimento\ncientífico se, para qualquer período Pi de monitoramento σ(Pi) ≤ 2, em que σ(Pi) denota o desvio\npadrão populacional do período Pi em que o ambiente foi monitorado.\nAs medidas de temperatura em °C, obtidas após um processo de quantização do sinal, são apresentadas\nna tabela a seguir.\nMedida 1\nMedida 2\nMedida 3\nMedida 4\nPeríodo (Pi)\n33,5\n33,5\n33,0\n33,5\nP1\n27,5\n27,5\n27,5\nP2\n2,0\n2,5\n2,0\n2,0\nP3",
   "alternativas": {
    "A": "I, apenas.",
    "B": "II, apenas.",
@@ -527,7 +527,7 @@
   "tema": "Impedância em trilhas de PCB (stripline)",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Uma trilha de um PCB (printed circuit board) é uma conexão entre dois pontos com impedância controlada, que depende de alguns parâmetros, tais como: frequência de operação, comprimento da trilha, tipo de dielétrico e tipo de sinal. Considerando que ela está sendo projetada com o tipo chamado stripline, o plano de referência é o GND (ground) e o dielétrico é o material FR4, cuja constante dielétrica k é aproximadamente igual a 4, o que implica na velocidade de propagação Vp de um sinal elétrico em uma stripline ser a metade da velocidade no ar, portanto, aproximadamente 15 cm por nanosegundo.\nEm uma linha de transmissão utilizada para sinais digitais, deve-se considerar o tempo entre uma subida e uma descida th do sinal, que é a metade do período T da frequência máxima do sinal. O comprimento crítcio Lc de uma trilha é o limite máximo para o qual a trilha ainda pode ser entendida como uma simples V t h conexão entre 2 pontos, sem necessidade de controlar sua impedância, e é dado por L � .\ncp\nPara uma trilha operar como uma conexão simples entre 2 pontos, seu comprimento L deve ser, no\nmáximo, igual a Lc\n.\n1 5\n,\nNo caso da interface PCI Express, cuja frequência máxima de operação especificada é de 1,25 GHz,\no comprimento L máximo da trilha para que a mesma se comporte como uma simples conexão\nentre 2 pontos é de",
+  "enunciado": "Uma trilha de um PCB (printed circuit board) é uma conexão entre dois pontos com impedância controlada, que depende de alguns parâmetros, tais como: frequência de operação, comprimento da trilha, tipo de dielétrico e tipo de sinal. Considerando que ela está sendo projetada com o tipo chamado stripline, o plano de referência é o GND (ground) e o dielétrico é o material FR4, cuja constante dielétrica k é aproximadamente igual a 4, o que implica na velocidade de propagação Vp de um sinal elétrico em uma stripline ser a metade da velocidade no ar, portanto, aproximadamente 15 cm por nanosegundo.\nEm uma linha de transmissão utilizada para sinais digitais, deve-se considerar o tempo entre uma subida e uma descida th do sinal, que é a metade do período T da frequência máxima do sinal. O comprimento crítico Lc de uma trilha é o limite máximo para o qual a trilha ainda pode ser entendida como uma simples t conexão entre 2 pontos, sem necessidade de controlar sua impedância, e é dado por Lc Vp h.\nPara uma trilha operar como uma conexão simples entre 2 pontos, seu comprimento L deve ser, no\nLc .\nmáximo, igual a\n1,5\nNo caso da interface PCI Express, cuja frequência máxima de operação especificada é de 1,25 GHz,\no comprimento L máximo da trilha para que a mesma se comporte como uma simples conexão\nentre 2 pontos é de",
   "alternativas": {
    "A": "2 cm.",
    "B": "3 cm.",
@@ -547,7 +547,7 @@
   "tema": "Escalonamento Round Robin e troca de contexto",
   "dificuldade": "Média",
   "figura": null,
-  "enunciado": "Um dos algoritmos de escalonamento mais clássicos é o de alternância circular (Round Robin) que atribui um intervalo de tempo para cada processo (quantum), dentro do qual ele pode ser executado. Ao final desse intervalo, o processo sofre uma preempção, caso não termine de executar, e outro processo não finalizado entra para ser executado. Essa ação de alternância de um processo para outro, também conhecida como troca de contexto, requer uma certa quantidade de tempo.\nTANENBAUM, A. S. Sistemas operacionais modernos. 4. ed. São Paulo:Pearson Education do Brasil, 2015 (adaptado).\nUm sistema operacional que utliiza o algoritmo Round Robin precisa executar dois processos, ambos com tempos de tarefa de 20 ms. Objetviando-se minimizar o tempo de resposta do sistema, o Quantum e o tempo de troca de contexto, respectivamente, devem ser",
+  "enunciado": "Um dos algoritmos de escalonamento mais clássicos é o de alternância circular (Round Robin) que atribui um intervalo de tempo para cada processo (quantum), dentro do qual ele pode ser executado. Ao final desse intervalo, o processo sofre uma preempção, caso não termine de executar, e outro processo não finalizado entra para ser executado. Essa ação de alternância de um processo para outro, também conhecida como troca de contexto, requer uma certa quantidade de tempo.\nTANENBAUM, A. S. Sistemas operacionais modernos. 4. ed. São Paulo:Pearson Education do Brasil, 2015 (adaptado).\nUmsistemaoperacionalqueutilizaoalgoritmoRoundRobinprecisaexecutardoisprocessos,amboscomtempos\nde tarefa de 20 ms. Objetivando-se minimizar o tempo de resposta do sistema, o Quantum e o tempo de\ntroca de contexto, respectivamente, devem ser",
   "alternativas": {
    "A": "5 ms e 1 ms.",
    "B": "4 ms e 2 ms.",

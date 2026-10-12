@@ -261,17 +261,21 @@ def _monta_texto(chars, margem=None):
     return texto, mono_tudo
 
 
-def _colunas(W, linhas):
+def _colunas(W, linhas, pdf=None, pagina=None):
     """-> [(x0, x1)] — 1 ou 2 faixas.
 
-    Decide pelo corpo da página, não pelo cabeçalho/rodapé: o "*R09201917*"
-    fica no alto à direita e atravessa o meio, mas não significa que a página
-    seja de uma coluna só.
+    O sinal mais firme não é a densidade de tinta: são os CABEÇALHOS das
+    questões. Duas caixas "QUESTÃO" na mesma altura = página de 2 colunas; uma
+    caixa só (mesmo com tabela e figura ao lado) = 1 coluna. Quando dá para
+    consultar o PDF, é o que a gente usa.
     """
     if not linhas:
         return [(0, W)]
+
+    if pdf and pagina and _duas_colunas_por_questoes(pdf, pagina):
+        return [(0, W / 2), (W / 2, W)]
+
     meio = W / 2
-    # descarta cabeçalho e rodapé (10% de cima e de baixo)
     ys = sorted(l[0] for l in linhas)
     if len(ys) < 6:
         return [(0, W)]
@@ -280,15 +284,37 @@ def _colunas(W, linhas):
     corpo = [l for l in linhas if y0 + 0.06 * altura <= l[0] <= y1 - 0.06 * altura]
     if len(corpo) < 4:
         corpo = linhas
-
     for l in corpo:
         if l[1] < meio * 0.88 and l[2] > meio * 1.12:
-            return [(0, W)]          # algo atravessa -> página de 1 coluna
+            return [(0, W)]
     esq = [l for l in corpo if l[1] < meio * 0.92]
     dir_ = [l for l in corpo if l[1] >= meio * 0.92]
     if not esq or not dir_:
         return [(0, W)]
     return [(0, meio), (meio, W)]
+
+
+def _duas_colunas_por_questoes(pdf, pagina):
+    """-> bool: a página tem 2 questões lado a lado (mesma altura, x distintos)."""
+    r = subprocess.run(
+        ['pdftotext', '-bbox', '-f', str(pagina), '-l', str(pagina), pdf, '-'],
+        capture_output=True,
+    )
+    s = r.stdout.decode('utf-8', 'replace')
+    achados = [
+        (float(m.group(2)), float(m.group(1)))
+        for m in re.finditer(
+            r'<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="[\d.]+" yMax="[\d.]+">'
+            r'QUEST[^<]*</word>',
+            s,
+        )
+    ]
+    if len(achados) < 2:
+        return False
+    alturas = {}
+    for y, x in achados:
+        alturas.setdefault(round(y / 6), []).append(x)
+    return any(len(v) >= 2 for v in alturas.values())
 
 
 def texto(pdf, pular=None):
@@ -298,11 +324,40 @@ def texto(pdf, pular=None):
     for idx, (W, H, linhas) in enumerate(paginas, 1):
         if pular and idx in pular:
             continue
-        cols = _colunas(W, linhas)
-        grupos = [linhas] if len(cols) == 1 else [
-            [l for l in linhas if cols[0][0] <= l[1] < cols[0][1]],
-            [l for l in linhas if l[1] >= cols[1][0]],
-        ]
+        cols = _colunas(W, linhas, pdf, idx)
+        if len(cols) == 1:
+            grupos = [linhas]
+        else:
+            # Separa por x0 ANTES: uma linha pode ter palavras dos dois lados
+            # (a que se estende do enunciado ate as alternativas), e ai não é
+            # a coluna que manda — é a linha inteira.
+            # Separa por PALAVRA, não por linha: uma linha justificada pode
+            # atravessar o meio (o enunciado de uma questão estourando a
+            # margem), e aí a linha inteira pertence à coluna esquerda —
+            # mas a alternativa que começa logo à direita do meio é da
+            # questão vizinha e tem de ir com ela.
+            meio = W / 2
+            por_palavra = [{}, {}]
+            for l in linhas:
+                for c in l[3]:
+                    d = por_palavra[0 if c[0] < meio else 1]
+                    chave = id(l)
+                    d.setdefault(chave, [l, []])
+                    d[chave][1].append(c)
+            grupos = []
+            for d in por_palavra:
+                if not d:
+                    grupos.append([])
+                    continue
+                reconst = []
+                for linha, palavras in d.values():
+                    palavras = sorted(palavras, key=lambda c: c[0])
+                    xmin = min(c[0] for c in palavras)
+                    xmax = max(c[2] for c in palavras)
+                    reconst.append((linha[0], xmin, xmax, palavras,
+                                    _junta_palavras(palavras), False))
+                reconst.sort(key=lambda l: l[0])
+                grupos.append(reconst)
         for g in grupos:
             for l in g:
                 marca = '\x00' if l[5] else ''
