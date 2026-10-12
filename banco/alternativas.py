@@ -106,9 +106,31 @@ def sequencias_por_pagina(pdf):
             for gx in grupos_x:
                 alvo = gx[0]
                 colunas.append([a for a in achados if abs(a[3] - alvo) < 50])
-        # Duas questões na mesma margem ficam em sequência no texto; o
-        # indice_por_pagina quebra os blocos pela letra A, então não precisa
-        # separar aqui.
+        # Duas (ou cinco) questões na MESMA margem, uma embaixo da outra.
+        # O passo entre letras DENTRO de uma alternativa é de poucos pt; o
+        # vão para a alternativa seguinte é o dobro disso. O que separa uma
+        # QUESTÃO da próxima é o intervalo entre o E e o A seguintes: dentro
+        # de uma questão ele é ~2x o passo das letras; entre questões, maior.
+        novas = []
+        for col in colunas:
+            col.sort(key=lambda a: a[1])
+            passos = [col[i + 1][1] - col[i][1] for i in range(len(col) - 1)]
+            if not passos:
+                continue
+            base = sorted(passos)[len(passos) // 2]
+            pedaco = [col[0]]
+            for a in col[1:]:
+                if a[0] == 'A':
+                    # um A novo só fecha o bloco se o vão até o E anterior for
+                    # bem maior que o passo típico das letras
+                    vao = a[1] - pedaco[-1][1]
+                    if vao > base * 2.6:
+                        novas.append(pedaco)
+                        pedaco = [a]
+                        continue
+                pedaco.append(a)
+            novas.append(pedaco)
+        colunas = novas
         for grupo in colunas:
             grupo.sort(key=lambda a: (a[1], a[3]))
             saida.setdefault(pag, []).append(grupo)
@@ -137,7 +159,10 @@ def indice_por_pagina(pdf):
                 grupo = [achados[i]]
                 k = i + 1
                 while k < len(achados) and esperado <= 'E':
-                    if achados[k][0] == esperado and achados[k][1] - grupo[-1][2] < 40:
+                    # 60 pt: uma alternativa pode ter VÁRIAS linhas (a A da
+                    # Q04 do 2014 tem 3), então o passo entre letras varia
+                    # bastante dentro do mesmo bloco.
+                    if achados[k][0] == esperado and achados[k][1] - grupo[-1][2] < 60:
                         grupo.append(achados[k])
                         esperado = chr(ord(esperado) + 1)
                     k += 1

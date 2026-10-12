@@ -275,18 +275,24 @@ def processar(pdf, nome, paginas=None, dpi=300):
         total = max(paginas)
 
     seqs = alternativas.indice_por_pagina(os.path.basename(pdf))  # {pag: [grupos]}
+    # O questionário de percepção da prova não pontua e tem o mesmo desenho
+    # A..E; detectá-lo aqui evita gastar OCR com ele.
+    percepcao = _paginas_do_questionario(pdf)
     partes = []
     for p in range(1, total + 1):
+        if p in percepcao:
+            partes.append('')
+            continue
         png = render(pdf, p, dpi)
         with Image.open(png) as im:
             W, H = im.size
-            partes.append(_pagina(png, im, W, H, dpi, seqs.get(p, [])))
+            partes.append(_pagina(png, im, W, H, dpi, seqs.get(p, []), pdf, p))
         os.remove(png)
         print(f'  {nome} p{p}/{total} ok ({len(partes[-1])} car.)', flush=True)
     return '\n'.join(partes)
 
 
-def _recorte_alternativa(png, im, dpi, seq, k, x1=None):
+def _recorte_alternativa(png, im, dpi, seq, k, x1=None, x_esq=None):
     """OCR de UMA alternativa, pela faixa entre a letra atual e a seguinte.
 
     A letra da alternativa é um glifo de 15.6 pt (o corpo do texto tem 12.3),
@@ -299,23 +305,31 @@ def _recorte_alternativa(png, im, dpi, seq, k, x1=None):
 
     letra, y0, y1, x0 = seq[k]
     n = len(seq)
+    # A alternativa pode ocupar VÁRIAS linhas (a A da Q04 do 2014 tem 3),
+    # então a faixa vai até o topo da letra seguinte. Se o passo for o
+    # normal (uma linha por alternativa, ~16 pt), isso seria uma faixa
+    # rasa demais — por isso o passo médio define a folga.
+    if n > 1:
+        passo = (seq[-1][1] - seq[0][1]) / (n - 1)
+    else:
+        passo = 16.0
     topo = y0 - 2
-    base = seq[k + 1][1] - 2 if k + 1 < n else y1 + 8
-    # a coluna vai da margem até o x da letra seguinte coluna - 5pt
-    x1 = (seq[-1][3] - 10) if seq and seq[-1][3] > x0 + 60 else None
+    base = seq[k + 1][1] - 3 if k + 1 < n else y0 + passo * 3.2
+
     escala = dpi / 72.0
     W, H = im.size
     # o x1 limita a COLUNA: em página de 2 colunas a alternativa da questão
     # vizinha está logo à direita e entrava no recorte.
     x_max = W if x1 is None else min(W, int(x1 * escala))
+    esq = (x_esq if x_esq is not None else x0) - 8
     faixa = im.crop((
-        max(0, int((x0 - 8) * escala)),
+        max(0, int(esq * escala)),
         max(0, int(topo * escala)),
-        max(int((x0) * escala) + 40, x_max),
+        max(int(x0 * escala) + 60, x_max),
         min(H, int(base * escala)),
     ))
     faixa = faixa.resize((faixa.width * 2, faixa.height * 2), Image.LANCZOS)
-    tmp = f'{SAIDA}/_alt{k}.png'
+    tmp = f'{SAIDA}/_alt_{os.getpid()}_{k}.png'
     faixa.save(tmp)
     r = subprocess.run(
         ['tesseract', tmp, 'stdout', '-l', 'por', '--psm', '6'],
@@ -328,42 +342,145 @@ def _recorte_alternativa(png, im, dpi, seq, k, x1=None):
     return _tira_bolinha(max(linhas, key=lambda l: len(l.strip())))
 
 
-def _pagina(png, im, W, H, dpi, grupos):
-    """Texto da página: corpo pelo OCR de página toda + alternativas por
-    recorte (que é onde o OCR de página inteira falha).
+def _paginas_do_questionario(pdf):
+    import subprocess as _sp
 
-    Uma página pode ter 2 ou 3 questões, então `grupos` é a lista dos blocos
-    de alternativas — um por questão.
+    r = _sp.run(['pdfinfo', pdf], capture_output=True)
+    m = re.search(r'Pages:\s+(\d+)', r.stdout.decode())
+    total = int(m.group(1)) if m else 0
+    achadas = set()
+    for p in range(4, total + 1):
+        t = _sp.run(
+            ['pdftotext', '-f', str(p), '-l', str(p), pdf, '-'],
+            capture_output=True,
+        ).stdout.decode('utf-8', 'replace')
+        if re.search(r'QUESTION[\u00c1\u00c3]RIO DE PERCEP[\u00c7\u00c3]\u00c3O', t, re.I):
+            achadas.update(range(p, total + 1))
+            break
+    return achadas
+
+
+def _pagina(png, im, W, H, dpi, grupos, pdf=None, pag=None):
+    """Texto da página com as alternativas corrigidas.
+
+    O OCR da página inteira acerta o texto do CORPO, mas erra a bolinha — lê
+    "O" e às vezes nem a encontra. Duas saídas, combinadas:
+
+    1. o corpo sai do OCR normal (rápido, bom);
+    2. cada ALTERNATIVA sai de um recorte da faixa entre a letra atual e a
+       seguinte. A letra vem da GEOMETRIA do PDF (que não depende de OCR) e
+       o recorte é estreito o bastante para o tesseract não escorregar para a
+       linha vizinha.
+
+    Por que não casar por altura no texto inteiro: a ordem das colunas no
+    texto e a ordem na geometria divergem, e o casamento erra a letra.
     """
     if not grupos:
-        return montar(ocr(png), W, H)
-    palavras = ocr(png)
-    texto = montar(palavras, W, H)
-    # as alternativas saem do corpo e entram pelo recorte, na ordem
-    # Para cada bloco de alternativas: recorta as 5 e troca o bloco
-    # correspondente no texto, de baixo para cima (assim os índices das
-    # linhas de cima não mudam).
+        return montar(ocr(png), W, H, pdf, pag)
+
+    texto = montar(ocr(png), W, H, pdf, pag)
     linhas = texto.split('\n')
-    for seq in grupos:
+
+    # na ordem em que o texto apresenta (de cima para baixo): para o corte
+    # de um bloco não atrapalhar o do outro
+    ordem = sorted(range(len(grupos)),
+                   key=lambda i: grupos[i][0][1])
+    for idx in reversed(ordem):
+        seq = grupos[idx]
         novas = []
-        # coluna: da margem desta até a margem da outra
+        # a coluna vai da margem do bloco até a margem do PRÓXIMO bloco
         x_esq = seq[0][3]
-        x_dir = seq[-1][3]
-        duas = x_dir - x_esq > 60
-        x1 = (x_dir - 12) if duas else None
-        for k, (letra, _y0, _y1, _x0) in enumerate(seq):
-            alt = _recorte_alternativa(png, im, dpi, seq, k, x1)
+        if idx + 1 < len(grupos):
+            x_dir = grupos[idx + 1][0][3] - 14
+        else:
+            x_dir = None
+        if idx > 0:
+            x_esq = max(0, seq[0][3] - 20)
+        passo = (seq[-1][1] - seq[0][1]) / (len(seq) - 1) if len(seq) > 1 else 16.0
+        # a ÚLTIMA alternativa pode ter várias linhas; o texto dela termina
+        # onde começa a figura/questão seguinte. Sem limite, o recorte vaza
+        # para o rodapé ("ENGENHARIA DE COMPUTAÇÃO").
+        if idx + 1 < len(grupos):
+            limite = min(seq[-1][2] + passo * 1.6, grupos[idx + 1][0][1] - 2)
+        else:
+            limite = seq[-1][2] + passo * 1.6
+        for k, (letra, y0, y1, _x0) in enumerate(seq):
+            topo = y0 - 2
+            base = seq[k + 1][1] - 3 if k + 1 < len(seq) else limite
+            alt = _tira_bolinha(
+                _recorte(png, im, dpi, topo, base, x_esq, x_dir)
+            )
             if alt:
                 novas.append(f'[{letra}] {alt}')
         if not novas:
             continue
         i = _primeira_alternativa(linhas)
-        j = len(linhas)
-        if i >= 0:
-            j = _ultima_alternativa(linhas, i)
-        corpo = linhas[:i] + novas + linhas[j:]
-        linhas = corpo
+        j = _ultima_alternativa(linhas, i) if i >= 0 else 0
+        linhas = (linhas[:i] if i >= 0 else linhas) + novas + linhas[j:]
     return '\n'.join(linhas)
+
+
+def _recorte(png, im, dpi, y_topo, y_base, x_esq, x_dir):
+    """OCR de uma faixa horizontal, entre duas coordenadas da imagem."""
+    from PIL import Image
+
+    escala = dpi / 72.0
+    W, H = im.size
+    px0 = max(0, int(x_esq * escala)) if x_esq is not None else 0
+    px1 = min(W, int(x_dir * escala)) if x_dir else W
+    py0 = max(0, int(y_topo * escala))
+    py1 = min(H, int(y_base * escala))
+    if px1 - px0 < 80 or py1 - py0 < 8:
+        return ''
+    faixa = im.crop((px0, py0, px1, py1))
+    faixa = faixa.resize((faixa.width * 2, faixa.height * 2), Image.LANCZOS)
+    tmp = f'{SAIDA}/_r_{os.getpid()}_{y_topo:.0f}.png'
+    faixa.save(tmp)
+    r = subprocess.run(
+        ['tesseract', tmp, 'stdout', '-l', 'por', '--psm', '6'],
+        capture_output=True,
+    )
+    os.remove(tmp)
+    ls = [l for l in r.stdout.decode('utf-8', 'replace').split('\n') if l.strip()]
+    # descarta o que for cabeçalho/rodapé do PDF (o recorte pode encostar
+    # neles quando a alternativa é a última da página)
+    ls = [l for l in ls if not LIXO_OCR.match(l)]
+    return max(ls, key=lambda l: len(l.strip())) if ls else ''
+
+
+def _y_por_linha_px(palavras, W, H, pdf, pag):
+    """y (em PONTOS do PDF) de cada linha do texto, na mesma ordem que o
+    `montar` emite — para casar a linha do OCR com a letra da geometria."""
+    meio = W / 2
+    tol = max(2, int(H * 0.004))
+
+    def agrupa(lst):
+        out = []
+        for w in sorted(lst, key=lambda w: ((w[1] + w[3]) / 2, w[0])):
+            y = (w[1] + w[3]) / 2
+            if out and abs(out[-1][0] - y) <= tol:
+                out[-1][1].append(w)
+            else:
+                out.append([y, [w]])
+        return out
+
+    if not palavras:
+        return []
+
+    duas = bool(pdf and pag) and _duas_colunas_por_questoes(pdf, pag)
+    if duas:
+        colunas = [
+            agrupa([w for w in palavras if w[0] < meio]),
+            agrupa([w for w in palavras if w[0] >= meio]),
+        ]
+    else:
+        colunas = [agrupa(palavras)]
+
+    # `y` saiu em pixels da IMAGEM; a geometria do PDF está em pontos.
+    # dpi = 72 * H / altura_do_pdf_pontos. O poppler renderiza com
+    # pdftoppm, entãodpi = H / altura_da_pagina_em_pontos.
+    ys = [y for col in colunas for y, _ws in col]
+    return ys
 
 
 def _ultima_alternativa(linhas, i):
@@ -385,6 +502,22 @@ def _primeira_alternativa(linhas):
             return i
     return -1
 
+
+# cabeçalho/rodapé que o recorte pode pegar. O OCR erra o próprio rodapé
+# ("DE"->"NE"), então o padrão é tolerante.
+LIXO_OCR = re.compile(
+    r'^\s*(?:'
+    r'[ÁA]REA\s+LIVRE'
+    r'|EXAME\s+NACIONAL'
+    r'|ENADE\s+\d{4}'
+    r'|EN\w*HARIA\s+N[DE]\s*COMPUTA'
+    r'|COMPONENTE\s+ESPEC'
+    r'|FORMA[ÇC][ÃA]O\s+GERAL'
+    r'|\*\s*R\d'
+    r'|CADERNOS?\s+DE'
+    r').*',
+    re.I,
+)
 
 BOLINHA_OU = re.compile(r'^\s*(?:[(\[]?\s*)?(?:O|OQ|QO|0|4|8|9|1|2|3|5|6|7|BA|OW|lell|ll)\s*\)?\s*')
 

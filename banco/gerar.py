@@ -44,6 +44,33 @@ IMAGENS = {
     '2023-CE-Q25': 'Contador assíncrono de quatro bits com quatro flip-flops JK.',
     '2023-CE-Q32': 'Grafo de conexão das cidades e o quadro com as distâncias até São Paulo.',
     '2023-FG-Q03': 'Gráfico das taxas de vacinação infantil de 2017 a 2021.',
+    # ---- 2014 ----
+    '2014-FG-D01': 'Quadro de mobilidade urbana em cidade com mais de 500 mil habitantes.',
+    '2014-FG-Q03': 'Gráfico de barras da razão entre pegada ecológica e biocapacidade do planeta.',
+    '2014-FG-Q06': 'Gráfico da jornada média semanal de trabalho das mulheres e dos homens no Brasil.',
+    '2014-FG-Q07': 'Quadro da proporção de trabalhadores por faixa de deslocamento casa-trabalho.',
+    '2014-CE-Q10': 'Circuito com a fonte de 12 V e as lâmpadas L1, L2 e L3.',
+    '2014-CE-Q11': 'Quadro de classificação da DBO, imagem do rio com as seções X, Y, Z, W e T, e quadro dos resultados.',
+    '2014-CE-Q12': 'Desenho da parede com as camadas e tabela de condutividade térmica dos materiais.',
+    '2014-CE-Q14': 'Fluxograma dos dez blocos do sistema.',
+    '2014-CE-Q15': 'Listagem do programa de ordenação, com as linhas numeradas.',
+    '2014-CE-Q17': 'Gráficos I e II com os candidatos A e B.',
+    '2014-CE-Q23': 'Estrutura da matriz lógica programável, dos estágios AND e OR às saídas.',
+    '2014-CE-Q24': 'Diagramas de troca de mensagens do protocolo TCP.',
+    '2014-CE-Q25': 'Lugar das raízes no plano complexo.',
+    '2014-CE-Q26': 'Quadros da rede neural: pesos, entradas e saídas.',
+    '2014-CE-Q27': 'Protótipo de tela de classificados no celular.',
+    '2014-CE-Q28': 'Diagrama do sistema de aquisição de sinal, do sensor ao conversor.',
+    # ---- 2017 ----
+    '2017-FG-Q01': 'Gráficos das contribuições para a União Europeia e do Reino Unido e da União Europeia.',
+    '2017-FG-Q03': 'Tabela de potência e tempo de uso dos eletrodomésticos.',
+    '2017-FG-Q04': 'Tirinha em quatro quadros sobre o tempo de atenção diante da televisão.',
+    '2017-FG-Q05': 'Infográfico sobre o que são e para que servem os hidrogéis.',
+    '2017-FG-Q08': 'Figura com os Objetivos de Desenvolvimento Sustentável.',
+    '2017-CE-Q09': 'Curvas de tensão por corrente de um dispositivo.',
+    '2017-CE-D04': 'Termistores NTC e circuito de interface com a resistência de referência.',
+    '2017-CE-Q32': 'Diagrama das etapas do pipeline de renderização gráfica.',
+    '2017-CE-Q35': 'Grafo de roteadores usado no cálculo do caminho mais curto.',
 }
 
 # questões cujas alternativas são desenho (código/fórmula/diagrama): entram

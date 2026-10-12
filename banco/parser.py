@@ -254,6 +254,18 @@ def _checar_ocr(linhas):
             txt = (txt + ' ' + linhas[j].strip()).strip()
             j += 1
         p.append((i, txt, letra))
+
+    # O tesseract às vezes marca bolinha onde não é alternativa (dentro de
+    # figura, no cabeçalho). Fica só o trecho em que as letras formam
+    # A..B..C..D..E na ordem — é a assinatura das alternativas.
+    for k in range(len(p) - 3):
+        trecho = p[k:k + 5]
+        if [t[2] for t in trecho] == ['A', 'B', 'C', 'D', 'E']:
+            return trecho
+    for k in range(len(p) - 2):
+        trecho = p[k:k + 4]
+        if [t[2] for t in trecho] == ['A', 'B', 'C', 'D']:
+            return trecho
     return p
 
 
@@ -303,15 +315,11 @@ def separar_alternativas(corpo):
         # as bolinhas dão a letra pela ordem
         enunciado = '\n'.join(linhas[:inicio]).strip()
         alt = {}
-        letras = 'ABCDE'
-        for k, (i, txt, letra) in enumerate(ocr):
-            if k >= 5:
-                break
-            # letra do PDF quando houver; senão segue a ordem
-            alt[letra if (letra and letra in 'ABCDE') else letras[k]] = txt
+        for k, (i, txt, letra) in enumerate(ocr[:5]):
+            alt[letra if (letra and letra in 'ABCDE') else 'ABCDE'[k]] = txt
         # continuação depois da última bolinha
         if fim + 1 < len(linhas) and alt:
-            ult = chr(ord('A') + len(alt) - 1)
+            ult = sorted(alt)[-1]
             alt[ult] = (alt[ult] + ' ' + ' '.join(linhas[fim + 1:]).strip()).strip()
         return enunciado, alt
 
