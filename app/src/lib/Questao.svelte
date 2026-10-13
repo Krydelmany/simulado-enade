@@ -168,9 +168,13 @@
 		if (!avaliadaAgora || !veredito) return;
 		const r = veredito.getBoundingClientRect();
 		const h = window.innerHeight || 0;
-		// só rola se estiver fora da tela ou atrás da barra fixa (~104px) — sem mexer
-		// no scroll quando o elemento já está visível
-		const fora = r.top < 8 || r.bottom > h - 104;
+		// A barra de ação é fixa no rodapé e a altura dela muda conforme a tela
+		// (botão voltar + posição + CTA). Medir no DOM é mais confiável do que
+		// chutar um valor: com o chute, o veredito "certa" ficava atrás da barra
+		// — ou seja, o aluno respondia e não via o resultado.
+		const barra = document.querySelector('[data-barra-acao]');
+		const folga = (barra?.getBoundingClientRect().height || 0) + 12;
+		const fora = r.top < 8 || r.bottom > h - folga;
 		veredito.focus({ preventScroll: true });
 		if (fora) veredito.scrollIntoView({ block: 'center', behavior: REDUCED ? 'auto' : 'smooth' });
 	});

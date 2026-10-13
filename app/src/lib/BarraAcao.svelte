@@ -24,6 +24,7 @@
 </script>
 
 <div
+	data-barra-acao
 	class="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper"
 	style="padding-bottom: env(safe-area-inset-bottom);"
 >
