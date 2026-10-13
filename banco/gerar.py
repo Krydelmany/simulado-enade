@@ -14,6 +14,7 @@ import sys
 sys.path.insert(0, '/root/enade-simulado/banco')
 import arruma
 import classificar
+import digita
 import formato
 import qualidade
 import montar
@@ -70,7 +71,7 @@ IMAGENS = {
     '2017-FG-Q04': 'Tirinha em quatro quadros sobre o tempo de atenção diante da televisão.',
     '2017-FG-Q05': 'Infográfico sobre o que são e para que servem os hidrogéis.',
     '2017-FG-Q08': 'Figura com os Objetivos de Desenvolvimento Sustentável.',
-    '2017-CE-Q09': 'Curvas de tensão por corrente de um dispositivo.',
+    '2017-CE-Q09': 'Diagrama de tensão versus deformação com as curvas I a V de materiais poliméricos.',
     '2017-CE-D04': 'Termistores NTC e circuito de interface com a resistência de referência.',
     '2017-CE-Q32': 'Diagrama das etapas do pipeline de renderização gráfica.',
     '2017-CE-Q35': 'Grafo de roteadores usado no cálculo do caminho mais curto.',
@@ -82,6 +83,14 @@ FIGURAS = {
     '2019-CE-Q09': 'Alternativas A a E: implementação do método sort em Java.',
     '2019-CE-Q14': 'Alternativas A a E: resposta em frequência H(e^jΩ) de cada opção.',
     '2019-CE-Q22': 'Alternativas A a E: diagramas das redes bayesianas candidatas.',
+    # 2017-CE-Q19 e Q22: alternativa é DESENHO (circuito lógico e mapa de
+    # memória), não texto. Digitá-las perderia a informação — as portas e as
+    # ligações são a resposta. Entram como recorte da página do PDF, do mesmo
+    # jeito que as de 2019.
+    '2017-CE-Q19': 'Alternativas A a E: circuitos combinatórios candidatos, '
+                   'com as entradas A a D e as saídas C1 a C4.',
+    '2017-CE-Q22': 'Alternativas A a E: mapas de memória principal, com '
+                   'endereço, dado e nome da variável.',
 }
 
 LOTE = {
@@ -125,8 +134,12 @@ def main(ano, parte):
     # faltando, vazia ou com pedaço de enunciado é PIOR que não existir — o
     # aluno marcaria uma letra e levaria o resultado errado sem perceber.
     boas, pendentes = [], []
-    for q in (qualidade.limpa(formato.formata(arruma.limpa(q))) for q in qs):
-        motivo = qualidade.problema(q)
+    digitadas = digita.completas()
+    for q in (
+        qualidade.limpa(formato.formata(arruma.limpa(digita.aplica(q))))
+        for q in qs
+    ):
+        motivo = qualidade.problema(q, ignorar_fora=digitadas)
         if motivo:
             pendentes.append((q, motivo))
         else:
@@ -228,10 +241,13 @@ def resumo():
         qs = montar.aplicar_figuras(
             classificar.aplicar(montar.extrair(ano)), FIGURAS
         )
-        qs = [qualidade.limpa(formato.formata(arruma.limpa(q)))
+        qs = [qualidade.limpa(formato.formata(arruma.limpa(digita.aplica(q))))
               for q in qs]
-        ok = [q for q in qs if not qualidade.problema(q)]
-        bad = [(q, qualidade.problema(q)) for q in qs if qualidade.problema(q)]
+        ok = [q for q in qs
+              if not qualidade.problema(q, ignorar_fora=digita.completas())]
+        bad = [(q, qualidade.problema(q, ignorar_fora=digita.completas()))
+               for q in qs
+               if qualidade.problema(q, ignorar_fora=digita.completas())]
         entrada += len(ok)
         total += len(qs)
         L.append(f'## {ano} — {len(ok)} de {len(qs)} no banco')

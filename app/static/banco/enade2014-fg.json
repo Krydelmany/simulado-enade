@@ -32,6 +32,46 @@
   "materia_ava": null
  },
  {
+  "id": "2014-FG-Q01",
+  "edicao": 2014,
+  "parte": "FG",
+  "numero": "01",
+  "tipo": "objetiva",
+  "tema": "Cultura popular e-industria fonográfica",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "O trecho da música “Nos Bailes da Vida”, de Milton Nascimento, “todo artista tem de ir aonde o povo está”, é antigo, e a música, de tão tocada, acabou por se tornar um estereótipo de tocadores de violões e de rodas de amigos em Visconde de Mauá, nos anos 1970. Em tempos digitais, porém, ela ficou mais atual do nunca. É fácil entender que o porquê: antigamente, quando a informação se concentrava em centros de exposição, veículos de comunicação, editoras, museus e gravadoras, era preciso passar por uma série de curadores, para garantir a publicação de um artigo ou livro, a gravação de um disco ou a produção de uma exposição. O mesmo funil, que poderia ser injusto e deixar grandes talentos de fora, simplesmente porque não tinham acesso às ferramentas, às pessoas ou às fontes de informação, também servia como filtro de qualidade. Tocar violão ou encenar uma peça de teatro em um grande auditório costumava ter um peso muito maior do que fazê-lo em um bar, um centro cultural ou uma calçada. Nas raras ocasiões em que esse valor se invertia, era justamente porque, para uso do espaço “alternativo”, havia mecanismos de seleção tão ou mais rígidos que os do espaço oficial. RADFAHRER, L. Todo artista tem de ir aonde o povo está.Disponível em: <http://novo.itaucultural.org.br>. Acesso em: 29 jul. 2014 (adaptado). A partir do texto acima, avalie as asserções a seguir e a relação proposta entre elas. |. O processo de evolução tecnológica da atualidade democratiza a produção e a divulgação de obras artísticas, reduzindo a importância que os centros de exposição tinham nos anos 1970. PORQUE Il. As novas tecnologias possibilitam que artistas sejam independentes, montem seus próprios ambientes de produção e disponibilizem seus trabalhos, de forma simples, para um grande número de pessoas. A respeito dessas asserções, assinale a opção correta.",
+  "alternativas": {
+   "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+   "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+   "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+   "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+   "E": "As asserções I e II são proposições falsas."
+  },
+  "gabarito": "A",
+  "materia_ava": null
+ },
+ {
+  "id": "2014-FG-Q02",
+  "edicao": 2014,
+  "parte": "FG",
+  "numero": "02",
+  "tipo": "objetiva",
+  "tema": "Globalização, ONGs e políticas públicas",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "Com a globalização da economia social por meio das organizações não governamentais, surgiu uma discussão do conceito de empresa, de sua forma de concepção junto às organizações brasileiras e de suas práticas. Cada vez mais, é necessário combinar as políticas públicas que priorizam modernidade e competividade com o esforço de incorporação dos setores atrasados, mais intensivos de mão de obra. Disponível em: <http://unpan1.un.org>. Acesso em: 4 ago. 2014 (adaptado). A respeito dessa temática, avalie as afirmações a seguir. |. O terceiro setor é uma mistura dos dois setores econômicos clássicos da sociedade: o público, representado pelo Estado, e o privado, representado pelo empresariado em geral. Il. É o terceiro setor viabiliza o acesso da sociedade à educação e ao desenvolvimento de técnicas que industriais, econômicas, financeiras, políticas e ambientais. HI. A responsabilidade social tem resultado na alteração do perfil corporativo e estratégico das empresas, que têm reformulado a cultura e a filosofia que orientam as ações institucionais. Está correto o que se afirma em",
+  "alternativas": {
+   "A": "|, apenas.",
+   "B": "Il, apenas.",
+   "C": "apenas.",
+   "D": "Ile Ill, apenas.",
+   "E": "I, II e III."
+  },
+  "gabarito": "C",
+  "materia_ava": "ECONOMIA"
+ },
+ {
   "id": "2014-FG-Q03",
   "edicao": 2014,
   "parte": "FG",
@@ -73,6 +113,94 @@
    "E": "a maioria dos executivos brasileiros utilizaria informações obtidas em websites de redes sociais, para desclassificar um candidato em processo de seleção. informações obtidas em websites de redes sociais, para desclassificar um candidato em processo de seleção."
   },
   "gabarito": "B",
+  "materia_ava": null
+ },
+ {
+  "id": "2014-FG-Q05",
+  "edicao": 2014,
+  "parte": "FG",
+  "numero": "05",
+  "tipo": "objetiva",
+  "tema": "Inovação tecnológica e saúde (parto)",
+  "dificuldade": "Fácil",
+  "figura": null,
+  "enunciado": "Uma ideia e um aparelho simples devem, em breve, ajudar a salvar vidas de recém-nascidos. Idealizado pelo mecânico argentinoJorge Odón, o dispositivo que leva seu sobrenome desentala um bebê preso no canal vaginal — e, por mais inusitado que pareça, foi criado com base em técnica usada para remover rolhas de dentro de garrafas. O aparelho consiste em uma bolsa plástica inserida em uma proteção feita do mesmo material e que envolve a cabeça da criança. Estando o dispositivo devidamente posicionado, a bolsa é inflada para aderir à cabeça do bebê e ser puxada aos poucos, de forma a não machucá- lo. O método de Odón deve substituir outros já arcaicos, como o de fórceps e o de tubos de sucção, os quais, se usados por mãos maltreinadas, podem comprometer a vida do bebê, o que, segundo especialistas, não deve acontecer com o novo equipamento. Segundo o The New York Times, a ideia recebeu apoio da Organização Mundial de Saúde (OMS) e já foi até licenciada por uma empresa norte-americana de tecnologia médica. Não se sabe quando o equipamento começará a ser produzido nem o preço a ser cobrado, mas presume-se que ele não passará de 50 dólares, com redução do preço em países mais pobres. GUSMÃO, G. Aparelho deve facilitar partos em situações de emergência. Disponível em: <http://exame.abril.com.br>. Acesso em: 18 nov. 2013 (adaptado). Com relação ao texto acima, avalie as afirmações a seguir. |. A utilização do método de Odón poderá reduzir a taxa de mortalidade de crianças ao nascer, mesmo em países pobres. Il. Por ser uma variante dos tubos de sucção, o aparelho desenvolvido por Odón é resultado de aperfeiçoamento de equipamentos de parto. Por seu uso simples, o dispositivo de Ódon tem grande potencial de ser usado em países onde o parto é usualmente realizado por parteiras. IV. A possibilidade de, em países mais pobres, reduzir-se o preço do aparelho idealizado por Odón evidencia preocupação com a responsabilidade social. É correto o se afirma em apenas que",
+  "alternativas": {
+   "B": "I e IV.",
+   "C": "II e III.",
+   "A": "I e II.",
+   "D": "I, III e IV.",
+   "E": "II, III e IV."
+  },
+  "gabarito": "D",
+  "materia_ava": null
+ },
+ {
+  "id": "2014-FG-Q06",
+  "edicao": 2014,
+  "parte": "FG",
+  "numero": "06",
+  "tipo": "objetiva",
+  "tema": "Trabalho feminino, cuidado não remunerado e escolarização",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "As mulheres frequentam mais os bancos escolares que os homens, dividem seu tempo entre o trabalho e os cuidados com a casa, geram renda familiar, porém continuam ganhando menos e trabalhando mais que os homens. As políticas de benefícios implementadas por empresas preocupadas em facilitar a vida das funcionárias que têm criança pequena em casa já estão chegando ao Brasil. Acordos de horários flexíveis, programas como auxílio-creche, auxílio-babá e auxílio-amamentação são alguns dos benefícios oferecidos. Disponível Acesso em: 30 jul. 2013 (adaptado). JORNADA MÉDIA TOTAL DE TRABALHO POR SEMANA NO BRASIL - (EM HORAS) mãe com filhos mulher chefe de casal com filhos homem chefe de casal com filhos mulher cônjuge em casal com filhos 0 10 20 U 40 40 50 60 70 EE tempo médio por semana dedicado aos afazeres domésticos mm tempo médio por semana dedicado ao trabalho remunerado Disponível em: <http://ipea.gov.br>. Acesso em: 30 jul. 2013. Considerando o texto e o gráfico, avalie as afirmações a seguir. |. Osomatório do tempo dedicado pelas mulheres aos afazeres domésticos e ao trabalho remunerado é superior ao dedicado pelos homens, independentemente do formato da família. Il. O fragmento de texto e os dados do gráfico apontam para a necessidade de criação de políticas que promovam a igualdade entre os gêneros no que concerne, por exemplo, a tempo médio dedicado ao trabalho e remuneração recebida. HI. No fragmento de reportagem apresentado, ressalta-se a diferença entre o tempo dedicado por mulheres e homens ao trabalho remunerado, sem alusão aos afazeres domésticos. É correto o se afirma em que",
+  "alternativas": {
+   "A": "|, apenas.",
+   "B": "Ill, apenas.",
+   "C": "apenas.",
+   "D": "Ile Ill, apenas.",
+   "E": "I, II e III."
+  },
+  "gabarito": "C",
+  "materia_ava": null,
+  "imagem": {
+   "src": "/banco/img/2014-FG-Q06.png",
+   "alt": "Gráfico da jornada média semanal de trabalho das mulheres e dos homens no Brasil."
+  }
+ },
+ {
+  "id": "2014-FG-Q07",
+  "edicao": 2014,
+  "parte": "FG",
+  "numero": "07",
+  "tipo": "objetiva",
+  "tema": "Deslocamento casa-trabalho e mobilidade",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "O quadro a seguir apresenta a proporção (%) de trabalhadores por faixa de tempo gasto no deslocamento casa-trabalho, no Brasil e em três cidades brasileiras. Tempo de Rio de São Brasil Curitiba deslocamento Janeiro | Paulo Até cinco minutos | 12,70 5,80 5,10 7,80 Deseisminutos | | | | 3210 3160 45,80 até meia hora demeiahora Mais | | | | 3350 3460 3240 até uma hora deumahora Mais | | | | 39) 2320 2330 12,90 até duas horas Mais de duas 1,80 | 5,50 | 5,30 | 1,20 horas CENSO 2010/IBGE (adaptado). Com base nos dados apresentados e considerando a distribuição da população trabalhadora nas cidades e as políticas públicas direcionadas à mobilidade urbana, avalie as afirmações a seguir. |. A distribuição das pessoas por faixa de tempo de deslocamento casa-trabalho na região metropolitana do Rio de Janeiro é próxima à que se verifica em São Paulo, mas não em Curitiba e na média brasileira. Il. Nas metrópoles, em geral, a maioria dos postos de trabalho está localizada nas áreas urbanas centrais, e as residências da população de baixa renda estão concentradas em áreas irregulares ou na periferia, o que aumenta o tempo gasto por esta população no deslocamento casa-trabalho e o custo do transporte. As políticas públicas referentes a transportes urbanos, como, por exemplo, Bilhete Único e Veículo Leve sobre Trilhos (VLT), ao serem implementadas, contribuem para redução do tempo gasto no deslocamento casa-trabalho e do custo do transporte. É correto o se afirma em que",
+  "alternativas": {
+   "A": "|, apenas.",
+   "B": "Ill, apenas.",
+   "C": "apenas.",
+   "D": "Ile Ill, apenas.",
+   "E": "I, II e III."
+  },
+  "gabarito": "E",
+  "materia_ava": "CIENCIAS DO AMBIENTE",
+  "imagem": {
+   "src": "/banco/img/2014-FG-Q07.png",
+   "alt": "Quadro da proporção de trabalhadores por faixa de deslocamento casa-trabalho."
+  }
+ },
+ {
+  "id": "2014-FG-Q08",
+  "edicao": 2014,
+  "parte": "FG",
+  "numero": "08",
+  "tipo": "objetiva",
+  "tema": "Transformações sociais no campo e na cidade",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "Constantes transformações ocorreram nos meios rural e urbano, a partir do século XX. Com o advento da industrialização, houve mudanças importantes no modo de vida das pessoas, em seus padrões culturais, valores e tradições. O conjunto de acontecimentos provocou, tanto na zona urbana quanto na rural, problemas como explosão demográfica, prejuízo nas atividades agrícolas e violência. Iniciaram-se inúmeras transformações na natureza, criando-se técnicas para objetos até então sem utilidade para o homem. Isso só foi possível em decorrência dos recursos naturais existentes, que propiciaram estrutura de crescimento e busca de prosperidade, o que faz da experimentação um método de transformar os recursos em benefício próprio. SANTOS, M. Metamorfoses do espaço habitado. São Paulo: Hucitec, 1988 (adaptado). A partir das ideias expressas no texto acima, conclui-se que, no Brasil do século XX, O a industrialização ocorreu independentemente do êxodo rural e dos recursos naturais disponíveis. O o êxodo rural para as cidades não prejudicou as atividades agrícolas nem o meio rural porque novas tecnologias haviam sido introduzidas no campo. homens e mulheres advindos do campo deixaram sua cultura e se adaptaram a outra, citadina, totalmente diferente e oposta aos seus valores. tanto o espaço urbano quanto o rural sofreram transformações decorrentes da aplicação de novas tecnologias às atividades industriais e agrícolas. os migrantes chegaram às grandes cidades trazendo consigo valores e tradições, que lhes possibilitaram manter intacta sua cultura, tal como se manifestava nas pequenas cidades e no meio rural. CO M PO N E NTE ES P ECÍF | CO",
+  "alternativas": {
+   "A": "a industrialização ocorreu independentemente do êxodo rural e dos recursos naturais disponíveis.",
+   "B": "o êxodo rural para as cidades não prejudicou as atividades agrícolas nem o meio rural porque novas tecnologias haviam sido introduzidas no campo.",
+   "C": "homens e mulheres advindos do campo deixaram sua cultura e se adaptaram a outra, citadina, totalmente diferente e oposta aos seus valores.",
+   "D": "tanto o espaço urbano quanto o rural sofreram transformações decorrentes da aplicação de novas tecnologias às atividades industriais e agrícolas.",
+   "E": "os migrantes chegaram às grandes cidades trazendo consigo valores e tradições, que lhes possibilitaram manter intacta sua cultura, tal como se manifestava nas pequenas cidades e no meio rural."
+  },
+  "gabarito": "D",
   "materia_ava": null
  }
 ]

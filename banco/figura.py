@@ -17,6 +17,8 @@ import layout
 
 SAIDA = '/tmp/opencode/extr/fig'
 DPI = 200
+# os PDFs oficiais ficam em fontes/ (ver montar.PROVAS)
+PROVAS_PATH = '/root/enade-simulado/fontes/'
 PAG_INICIAL = 4    # antes disso é capa e instruções, não questões
 
 
@@ -26,7 +28,13 @@ def _cabeçalho(s):
 
 
 def achar_pagina(pdf, edicao, qid):
-    """-> (n_pagina, y_inicio, y_fim) em pontos, pela posição do cabeçalho."""
+    """-> (n_pagina, y_inicio, y_fim) em pontos, pela posição do cabeçalho.
+
+    O cabeçalho às vezes vem com lixo da fonte colado na frente
+    ("...ĚŽƐƉƌŝŶĐşƉŝŽƐĚŽ QUESTÃO 13"), porque a prova de 2014/2017 usa fonte
+    sem ToUnicode. Por isso `search` e não `fullmatch` — a linha tem que
+    CONTER o cabeçalho, não ser só ele.
+    """
     numero = int(re.search(r'(\d{2})$', qid).group(1))
     disc = '-D' in qid
     # posição vertical do cabeçalho da questão dentro da prova (ordem do doc)
@@ -35,15 +43,13 @@ def achar_pagina(pdf, edicao, qid):
             continue
         for l in ls:
             t = l[4].strip()
-            if not re.fullmatch(r'QUEST[AÃ]O\s+(?:DISCURSIVA\s+)?\d{1,2}', t, re.I):
-                continue
-            m = re.search(r'(\d{1,2})', t)
+            m = re.search(r'QUEST[AÃ]O\s+(?:DISCURSIVA\s+)?(\d{1,2})\b', t, re.I)
             if not m or int(m.group(1)) != numero:
                 continue
             if ('DISCURSIVA' in t.upper()) != disc:
                 continue
             return (i, l[0], W, H, ls)   # 1ª ocorrência (o final traz
-    return None                       # um quadro-resumo das respostas)
+    return None                       # um quadro-resumo das respostas
 
 
 def limites(ls, y_ini, H, W):
@@ -84,11 +90,15 @@ def cortar(png, x0, y0, x1, y1, destino, escala=1.0):
 
 
 def figura(pdf, edicao, qid, destino, y_topo=None, y_base=None,
-           x_esq=None, x_dir=None, escala=1.6):
+           x_esq=None, x_dir=None, escala=1.6, dpi=None):
     """Renderiza e recorta a faixa da questão.
 
     y_topo/y_base/x_esq/x_dir em PONTOS do PDF (opcional: corta a página toda).
+    `dpi` é a resolução do recorte (default `DPI`). A escala do corte sai daí —
+    antes ela era fixa em `DPI/72` e quem pedia outra resolução recebia a
+    mesma imagem de sempre.
     """
+    dpi = dpi or DPI
     achado = achar_pagina(pdf, edicao, qid)
     if achado is None:
         raise SystemExit(f'página de {qid} não encontrada')
@@ -98,8 +108,8 @@ def figura(pdf, edicao, qid, destino, y_topo=None, y_base=None,
     b = y_base if y_base is not None else b - 4
     x0 = x_esq if x_esq is not None else 24
     x1 = x_dir if x_dir is not None else W - 24
-    png = render(pdf, pag, DPI)
-    tam = cortar(png, x0, a, x1, b, destino, escala=DPI / 72)
+    png = render(pdf, pag, dpi)
+    tam = cortar(png, x0, a, x1, b, destino, escala=dpi / 72)
     os.remove(png)
     return pag, tam
 

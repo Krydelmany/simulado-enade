@@ -6,3 +6,6 @@ fontes/*.txt
 
 __pycache__/
 *.pyc
+
+# recortes de questão gerados por banco/olho.py — saída, não fonte
+revisao/img/

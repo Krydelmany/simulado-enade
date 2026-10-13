@@ -123,6 +123,10 @@ CORTE_FIM = {
     '2019-CE-Q22': 'Assim, a rede bayesiana para esse domínio é',
     '2019-CE-Q09': 'a implementação do protótpio do método sort da classe MergeSort é',
     '2019-CE-Q14': 'que atenda essas especificações é',
+    # 2017-CE-Q19: o enunciado termina na pergunta; o que vinha depois era o
+    # começo do desenho das alternativas
+    '2017-CE-Q19': 'qual circuito combinatório deverá resolver o problema',
+    '2017-CE-Q22': 'após o programa ser executado',
 }
 
 

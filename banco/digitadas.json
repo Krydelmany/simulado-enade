@@ -1,0 +1,305 @@
+{
+  "_": "Alternativas digitadas a partir da IMAGEM do PDF oficial, para as questões cujo OCR não leu as cinco opções. Cada entrada é '<id>' -> {'A'..'E'}. O pipeline aplica antes da porta de qualidade; o gabarito do PDF é conferido na geração. NUNCA preencher por dedução — se a imagem não der para ler, a questão fica de fora.",
+  "2017-CE-Q11": {
+    "A": "I, apenas.",
+    "B": "II, apenas.",
+    "C": "I e III, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+  },
+  "2017-CE-Q13": {
+    "A": "metálico, dada sua leveza e elevada resistência ao calor.",
+    "B": "polimérico, dada sua baixa resistência ao calor e à corrosão.",
+    "C": "cerâmico poroso, dada sua elevada resistência mecânica à tração.",
+    "D": "polimérico, em razão de sua alta massa específica e de sua resistência ao calor.",
+    "E": "cerâmico poroso, em razão de seu baixo coeficiente de dilatação térmica e de sua baixa condutividade térmica."
+  },
+  "2017-CE-Q15": {
+    "A": "I, apenas.",
+    "B": "III, apenas.",
+    "C": "I e II, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+  },
+  "2014-CE-Q35": {
+    "A": "5 2 5 10 15 20 25.",
+    "B": "2 5 2 4 6 8 10.",
+    "C": "5 2 2 4 6 8 10.",
+    "D": "5 2 1 2 3 4 5.",
+    "E": "2 5 1 2 3 4 5."
+  },
+  "2014-CE-Q34": {
+    "A": "I.",
+    "B": "II.",
+    "C": "I e III.",
+    "D": "II e IV.",
+    "E": "III e IV."
+  },
+  "2014-CE-Q32": {
+    "A": "4.",
+    "B": "5.",
+    "C": "6.",
+    "D": "7.",
+    "E": "8."
+  },
+  "2014-CE-Q33": {
+    "A": "I, apenas.",
+    "B": "II, apenas.",
+    "C": "I e III, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+  },
+  "2014-CE-Q31": {
+    "A": "(1 − P)^(N−1)",
+    "B": "P(1 − P)^(N−1)",
+    "C": "NP(1 − P)^(N−1)",
+    "D": "NP^(N−1)(1 − P)",
+    "E": "P^N(1 − P)^(N−1)"
+  },
+  "2014-CE-Q29": {
+    "A": "R1 e R4.",
+    "B": "R2 e R3.",
+    "C": "R2 e R4.",
+    "D": "R1 e R3.",
+    "E": "R2, R3 e R4."
+  },
+  "2014-CE-Q30": {
+    "A": "III.",
+    "B": "I e II.",
+    "C": "I e V.",
+    "D": "IV e V.",
+    "E": "II, III e IV."
+  },
+  "2014-CE-Q28": {
+    "A": "o amplificador tem ganho unitário e alta impedância de entrada, isolando o sensor do restante do circuito.",
+    "B": "o conversor A/D deverá ser de 12 ou mais bits, para que as leituras obtidas tenham uma resolução de 0,001 m/s².",
+    "C": "o software que fará o processamento da aquisição necessitará trocar o sinal da leitura feita, já que a montagem do amplificador é inversora.",
+    "D": "a faixa de passagem do amplificador deve ficar pelo menos entre 0 e 250 Hz, correspondentes à taxa de Nyquist, já que ocorrerão 500 aquisições por segundo.",
+    "E": "o Sample & Hold vai ser ligado no início da coleta de dados e desligado ao seu final, com a chave mantida fechada durante todos os 2 segundos de cada coleta."
+  },
+  "2014-CE-Q21": {
+    "A": "I, apenas.",
+    "B": "III, apenas.",
+    "C": "I e II, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+  },
+  "2014-CE-Q22": {
+    "A": "II, apenas.",
+    "B": "III, apenas.",
+    "C": "I e II, apenas.",
+    "D": "I e III, apenas.",
+    "E": "I, II e III."
+  },
+  "2014-CE-Q19": {
+    "A": "II, apenas.",
+    "B": "III, apenas.",
+    "C": "I e II, apenas.",
+    "D": "I e III apenas.",
+    "E": "I, II e III."
+  },
+  "2014-CE-Q17": {
+    "A": "I, apenas.",
+    "B": "III, apenas.",
+    "C": "I e II, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+  },
+  "2014-CE-Q16": {
+    "A": "II.",
+    "B": "IV.",
+    "C": "I e II.",
+    "D": "I e III.",
+    "E": "III e IV."
+  },
+  "2014-CE-Q14": {
+    "A": "C B H G A D E J I F",
+    "B": "C H A G B D E J F I",
+    "C": "C G A H B D J E I F",
+    "D": "C A B H G D J E F I",
+    "E": "C B G H A D E J I F"
+  },
+  "2014-CE-Q13": {
+    "A": "I.",
+    "B": "II.",
+    "C": "I e III.",
+    "D": "II e IV.",
+    "E": "III e IV."
+  },
+  "2014-CE-Q11": {
+    "A": "X.",
+    "B": "Y.",
+    "C": "Z.",
+    "D": "W.",
+    "E": "T."
+  },
+  "2014-CE-Q09": {
+    "A": "I.",
+    "B": "I e IV.",
+    "C": "II e III.",
+    "D": "III e V.",
+    "E": "II, IV e V."
+  },
+  "2017-CE-Q09": {
+    "_enunciado": "A figura a seguir representa o diagrama de tensão σ versus deformação ε para diferentes materiais poliméricos. GARCIA, A. et al. Ensaios dos materiais. 2. ed. Rio de Janeiro: Livros Técnicos e Científicos Editora Ltda, 2012 (adaptado). Assinale a opção que apresenta, respectivamente, o módulo de elasticidade e o nível de deformação de uma das curvas do diagrama apresentado.",
+    "A": "Curva I - alto e grande.",
+    "B": "Curva II - baixo e grande.",
+    "C": "Curva III - baixo e pequeno.",
+    "D": "Curva IV - alto e grande.",
+    "E": "Curva V - baixo e pequeno."
+  },
+  "2017-CE-Q28": {
+    "A": "I e II.",
+    "B": "II e IV.",
+    "C": "III e IV.",
+    "D": "I, II e III.",
+    "E": "I, III e IV."
+  },
+  "2017-CE-Q29": {
+    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+    "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+    "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+    "E": "As asserções I e II são proposições falsas."
+  },
+  "2017-CE-Q27": {
+    "A": "I e III.",
+    "B": "II e III.",
+    "C": "II e IV.",
+    "D": "I, II e IV.",
+    "E": "I, III e IV."
+  },
+  "2017-CE-Q26": {
+    "A": "uma fila que processa primeiro os eventos mais antigos.",
+    "B": "uma pilha que processa primeiro os eventos mais antigos.",
+    "C": "uma pilha que processa primeiro os eventos mais recentes.",
+    "D": "uma pilha que processa os eventos na ordem escolhida pelo operador.",
+    "E": "uma fila que processa os eventos de acordo com seu respectivo grau de prioridade."
+  },
+  "2017-CE-Q17": {
+    "A": "I e II.",
+    "B": "I e IV.",
+    "C": "II e III.",
+    "D": "I, III e IV.",
+    "E": "II, III e IV."
+  },
+  "2017-CE-Q16": {
+    "A": "da potência de aparelhos e dispositivos elétricos.",
+    "B": "do tempo de utilização de aparelhos e dispositivos elétricos.",
+    "C": "do consumo de energia elétrica convertida em energia térmica.",
+    "D": "do consumo de energia elétrica por correntes de fuga.",
+    "E": "do consumo de energia térmica convertida em energia elétrica."
+  },
+  "2017-CE-Q12": {
+    "A": "dT/dt = −k(T − A); T(t) = (T(0) − A)e^(−kt) + A",
+    "B": "dT/dt = k(T − A); T(t) = (T(0) − A)e^(kt) + A",
+    "C": "dT/dt = −k(T − A); T(t) = e^(−kt) + A",
+    "D": "dT/dt = k(T − A); T(t) = e^(−kt) + A",
+    "E": "dT/dt = k(T − A); T(t) = e^(kt) + A"
+  },
+  "2017-CE-Q10": {
+    "A": "I e IV.",
+    "B": "I e V.",
+    "C": "II, III e IV.",
+    "D": "I, II, III e V.",
+    "E": "II, III, IV e V."
+  },
+  "2017-CE-Q09": {
+    "A": "Curva I - alto e grande.",
+    "B": "Curva II - baixo e grande.",
+    "C": "Curva III - baixo e pequeno.",
+    "D": "Curva IV - alto e grande.",
+    "E": "Curva V - baixo e pequeno."
+  },
+  "2017-FG-Q03": {
+    "A": "II, apenas.",
+    "B": "III, apenas.",
+    "C": "I e II, apenas.",
+    "D": "I e III, apenas.",
+    "E": "I, II e III."
+  },
+  "2017-FG-Q01": {
+    "A": "A contribuição dos quatro maiores países do bloco somou 41,13%.",
+    "B": "O grupo \"Outros países\" contribuiu para esse bloco econômico com 42,1%.",
+    "C": "A diferença da contribuição do Reino Unido em relação ao recebido do bloco econômico foi 38,94%.",
+    "D": "A soma das participações dos três países com maior contribuição para o bloco econômico supera 50%.",
+    "E": "O percentual de participação do Reino Unido com o bloco econômico em 2014 foi de 17,8%, o que o colocou entre os quatro maiores participantes."
+  },
+  "2014-FG-Q07": {
+    "A": "I, apenas.",
+    "B": "III, apenas.",
+    "C": "I e II, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+  },
+  "2014-FG-Q06": {
+    "A": "I, apenas.",
+    "B": "III, apenas.",
+    "C": "I e II, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+  },
+  "2014-FG-Q02": {
+    "A": "I, apenas.",
+    "B": "II, apenas.",
+    "C": "I e III, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+  },
+  "2014-FG-Q01": {
+    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+    "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+    "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+    "E": "As asserções I e II são proposições falsas."
+  },
+  "2014-FG-Q05": {
+    "A": "I e II.",
+    "B": "I e IV.",
+    "C": "II e III.",
+    "D": "I, III e IV.",
+    "E": "II, III e IV."
+  },
+  "2014-FG-Q08": {
+    "A": "a industrialização ocorreu independentemente do êxodo rural e dos recursos naturais disponíveis.",
+    "B": "o êxodo rural para as cidades não prejudicou as atividades agrícolas nem o meio rural porque novas tecnologias haviam sido introduzidas no campo.",
+    "C": "homens e mulheres advindos do campo deixaram sua cultura e se adaptaram a outra, citadina, totalmente diferente e oposta aos seus valores.",
+    "D": "tanto o espaço urbano quanto o rural sofreram transformações decorrentes da aplicação de novas tecnologias às atividades industriais e agrícolas.",
+    "E": "os migrantes chegaram às grandes cidades trazendo consigo valores e tradições, que lhes possibilitaram manter intacta sua cultura, tal como se manifestava nas pequenas cidades e no meio rural."
+  },
+  "2017-CE-Q33": {
+    "A": "I, apenas.",
+    "B": "II, apenas.",
+    "C": "I e III, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+  },
+  "2017-CE-Q20": {
+    "A": "I, apenas.",
+    "B": "II, apenas.",
+    "C": "I e III, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+  },
+  "2017-CE-Q21": {
+    "A": "MODOEVENTO = 0x0018",
+    "B": "MODOEVENTO |= 0x0018",
+    "C": "MODOEVENTO &= ~0x0018",
+    "D": "MODOEVENTO = (MODOEVENTO | 0x0018) & ~0x0038",
+    "E": "MODOEVENTO = (MODOEVENTO & ~0x0038) | 0x0018"
+  },
+  "2017-FG-Q08": {
+    "A": "II, apenas.",
+    "B": "III, apenas.",
+    "C": "I e II, apenas.",
+    "D": "I e III, apenas.",
+    "E": "I, II e III."
+  },
+  "2017-FG-Q02": {
+    "A": "I, apenas.",
+    "B": "III, apenas.",
+    "C": "I e II, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+  }
+}

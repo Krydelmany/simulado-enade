@@ -147,9 +147,16 @@ def _duplicadas(alts):
     return len(vals) != len(set(vals))
 
 
-def problema(q):
-    """-> motivo string, ou None se a questão pode entrar no banco."""
-    if q['id'] in FORA:
+def problema(q, ignorar_fora=frozenset()):
+    """-> motivo string, ou None se a questão pode entrar no banco.
+
+    `ignorar_fora` são questões que alguém leu na imagem do PDF e digitou as
+    alternativas (ver `digita.py`) — a exclusão em `FORA` era justamente
+    porque não havia o que ler, e agora há. A lista fica explícita em vez de
+    comparada por padrão: uma questão que sai de `FORA` sem registro de quem
+    a rescue é uma questão que ninguém conferiu.
+    """
+    if q['id'] in FORA and q['id'] not in ignorar_fora:
         return FORA[q['id']]
 
     if q.get('alternativas_visuais'):
