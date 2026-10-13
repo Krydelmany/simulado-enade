@@ -1,4 +1,4 @@
-# A Vercel só precisa do diretório `app` (o `rootDirectory` do vercel.json).
+# A Vercel só precisa do diretório `app` (o Root Directory do painel).
 # O resto é material de trabalho — e `fontes/` são os PDFs oficiais do INEP,
 # 20 MB que não entram no site de jeito nenhum. Mandar tudo junto só paga
 # download a cada push.

@@ -25,13 +25,21 @@ npm run preview  # serve o build p/ conferir antes de publicar
 
 ## Publicar na Vercel
 
-O `vercel.json` já deixa tudo pronto: `rootDirectory: app`, preset SvelteKit,
-comando de build e cache do banco de questões. Então:
+O app é SvelteKit com `adapter-static`, mas ele mora em `app/` — na raiz do
+repositório não tem `package.json`, então a Vercel não acha o que buildar
+sem saber onde o site está. Isso se configura **no painel**
+(**Settings → Build and Deployment → Root Directory = `app`**); o
+`vercel.json` não tem essa chave e a Vercel rejeita o arquivo se ela
+aparecer lá.
 
 1. Vercel → **Add New → Project** → importa `Krydelmany/simulado-enade`;
-2. aceitar tudo que a Vercel detectar (não precisa mexer em Root Directory —
-   o `vercel.json` já aponta para `app`);
+2. em **Root Directory**, pôr `app` (é o passo que não dá para pular);
 3. cada push em `main` publica sozinho; cada PR ganha URL de preview.
+
+O `app/vercel.json` (fica ao lado do `package.json` por causa do Root
+Directory) cuida do resto: preset SvelteKit, comando de build e o cache do
+banco de questões — `max-age=0` no browser para o aluno revalidar, um ano
+na borda para o mundo não pedir de novo.
 
 Sem servidor: o `adapter-static` cospe HTML puro, o plano grátis dá conta.
 O `.vercelignore` segura os 20 MB dos PDFs do INEP fora do deploy — eles
