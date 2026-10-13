@@ -102,8 +102,6 @@ Regras de extração que já doeram:
   em 2 colunas); quiz continua em coluna de leitura — é o padrão.
 - **Design tokens em `app/src/app.css`** (`@theme inline`): `paper, card,
   tile, ink, accent…` — **nunca hex cru nas telas**; o `.dark` vira sozinho.
-- **Zero emoji** — ícones `phosphor-svelte` peso `bold`, com `aria-hidden`
-  quando decorativos.
 - **Animações** respeitam `prefers-reduced-motion` (`src/lib/motion.js`).
 - **Contraste AA**: qualquer cor nova passa pelo cálculo antes (scripts
   usados estão no histórico; perguntar que eu mostro).
