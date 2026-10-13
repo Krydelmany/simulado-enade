@@ -25,10 +25,17 @@ npm run preview  # serve o build p/ conferir antes de publicar
 
 ## Publicar na Vercel
 
-1. Vercel → Add New → Project → importa `Krydelmany/simulado-enade`.
-2. Root Directory: `app`. O preset **SvelteKit** detecta o resto sozinho
-   (o `adapter-static` já cospe HTML puro — hospedagem grátis, sem servidor).
-3. Cada push em `main` publica sozinho; cada PR ganha URL de preview.
+O `vercel.json` já deixa tudo pronto: `rootDirectory: app`, preset SvelteKit,
+comando de build e cache do banco de questões. Então:
+
+1. Vercel → **Add New → Project** → importa `Krydelmany/simulado-enade`;
+2. aceitar tudo que a Vercel detectar (não precisa mexer em Root Directory —
+   o `vercel.json` já aponta para `app`);
+3. cada push em `main` publica sozinho; cada PR ganha URL de preview.
+
+Sem servidor: o `adapter-static` cospe HTML puro, o plano grátis dá conta.
+O `.vercelignore` segura os 20 MB dos PDFs do INEP fora do deploy — eles
+são material de trabalho, não do site.
 
 ## Como o projeto está organizado
 
