@@ -1,0 +1,187 @@
+# Geradas — II. Física e Ciência dos Materiais — PARA REVISÃO
+
+Área da Portaria INEP nº 161/2026: *física e ciência dos materiais*. 9 questões escritas para revisão (não são do INEP). Confira o gabarito de cada uma; para corrigir, edite `banco/geradas/` e rode `python3 banco/geradas.py`.
+
+---
+
+## GER-II-F1 — Segunda lei de Newton
+- **Gabarito:** E
+- Nível: **Fácil**
+
+````text
+Um robô móvel de 2 kg é acelerado em linha reta a 3 m/s².
+
+A força resultante que atua sobre o robô é de
+````
+
+A) 1,5 N.
+B) 5 N.
+C) 0,67 N.
+D) 9 N.
+E) 6 N. ✔
+
+---
+
+## GER-II-F2 — Classes de materiais
+- **Gabarito:** A
+- Nível: **Fácil**
+
+````text
+A alumina, usada em substratos de circuitos e em isoladores, é dura, resistente a altas temperaturas, má condutora de eletricidade e frágil: quebra sem se deformar plasticamente.
+
+Essas características são típicas da classe dos materiais
+````
+
+A) cerâmicos. ✔
+B) metálicos.
+C) poliméricos termoplásticos.
+D) elastoméricos.
+E) semicondutores dopados.
+
+---
+
+## GER-II-F3 — Energia cinética
+- **Gabarito:** B
+- Nível: **Fácil**
+
+````text
+Um veículo autônomo de 1 000 kg trafega a 20 m/s.
+
+A energia cinética do veículo é de
+````
+
+A) 20 kJ.
+B) 200 kJ. ✔
+C) 400 kJ.
+D) 10 kJ.
+E) 2 000 kJ.
+
+---
+
+## GER-II-M1 — Condução de calor (lei de Fourier)
+- **Gabarito:** C
+- Nível: **Média**
+
+````text
+A base de um dissipador é uma placa de alumínio com condutividade térmica de 200 W/(m·K), área de 0,01 m² e espessura de 5 mm. Em regime permanente, a diferença de temperatura entre as duas faces da placa é de 2 K.
+
+A taxa de calor conduzida através da placa é de
+````
+
+A) 8 W.
+B) 80 W.
+C) 800 W. ✔
+D) 0,8 W.
+E) 8 000 W.
+
+---
+
+## GER-II-M2 — Tensão, deformação e lei de Hooke
+- **Gabarito:** D
+- Nível: **Média**
+
+````text
+Uma barra de aço com módulo de elasticidade de 200 GPa é submetida a uma tensão de tração de 100 MPa, ainda no regime elástico.
+
+A deformação específica da barra é de
+````
+
+A) 0,5%.
+B) 2%.
+C) 0,005%.
+D) 0,05%. ✔
+E) 5%.
+
+---
+
+## GER-II-M3 — Semicondutores dopados
+- **Gabarito:** E
+- Nível: **Média**
+
+````text
+Na fabricação de um diodo, uma região de silício (4 elétrons de valência) é dopada com fósforo, que tem 5 elétrons de valência.
+
+A região dopada torna-se um semicondutor
+````
+
+A) tipo p, com lacunas como portadores majoritários.
+B) tipo p, com elétrons como portadores majoritários.
+C) intrínseco, com igual concentração de elétrons e lacunas.
+D) tipo n, com lacunas como portadores majoritários.
+E) tipo n, com elétrons como portadores majoritários. ✔
+
+---
+
+## GER-II-D1 — Condutividade térmica dos metais
+- **Gabarito:** A
+- Nível: **Difícil**
+
+````text
+Processadores modernos dissipam dezenas de watts em uma área de poucos centímetros quadrados. Para manter a temperatura de operação dentro dos limites, os fabricantes acoplam ao encapsulamento dissipadores de calor, frequentemente com aletas, por onde o ar circula.
+
+Nesse contexto, avalie as asserções a seguir e a relação proposta entre elas.
+
+I. Dissipadores de calor de processadores são, com frequência, fabricados em alumínio ou em cobre.
+
+PORQUE
+
+II. Os metais apresentam elevada condutividade térmica, em razão da contribuição dos elétrons livres para o transporte de energia.
+
+A respeito dessas asserções, assinale a opção correta.
+````
+
+A) As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I. ✔
+B) As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.
+C) A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.
+D) A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.
+E) As asserções I e II são proposições falsas.
+
+---
+
+## GER-II-D2 — Seleção de materiais: cerâmicos e polímeros
+- **Gabarito:** B
+- Nível: **Difícil**
+
+````text
+Uma empresa projeta um equipamento portátil de monitoramento que operará em ambiente úmido e sujeito a quedas e vibração. A equipe avalia os materiais da carcaça e do encapsulamento dos sensores, considerando também a reciclagem do produto ao fim da vida útil.
+
+Considerando essa situação, avalie as afirmações a seguir.
+
+I. Materiais cerâmicos são preferíveis para peças submetidas a impactos frequentes, pois apresentam alta tenacidade à fratura.
+II. Polímeros termoplásticos podem ser amolecidos por aquecimento e remoldados, o que favorece a reciclagem da carcaça.
+III. A temperatura de transição vítrea de um polímero é aquela acima da qual o material se torna rígido e frágil.
+
+É correto o que se afirma em
+````
+
+A) I, apenas.
+B) II, apenas. ✔
+C) I e III, apenas.
+D) II e III, apenas.
+E) I, II e III.
+
+---
+
+## GER-II-D3 — Resistência térmica e temperatura de junção
+- **Gabarito:** C
+- Nível: **Difícil**
+
+````text
+Um processador dissipa 65 W em regime permanente. O conjunto formado por pasta térmica e dissipador apresenta resistência térmica total entre a junção do processador e o ar ambiente de 0,8 °C/W, e o ar ambiente está a 30 °C. Admita que a resistência térmica não varia com a temperatura.
+
+Com base nessas informações, avalie as afirmações a seguir.
+
+I. A temperatura da junção do processador em regime permanente é de 82 °C.
+II. Substituir o conjunto por outro com resistência térmica de 0,5 °C/W reduziria a temperatura da junção para 62,5 °C.
+III. Dobrar a potência dissipada, mantida a resistência térmica de 0,8 °C/W, dobraria a temperatura da junção medida em °C.
+
+É correto o que se afirma em
+````
+
+A) I, apenas.
+B) III, apenas.
+C) I e II, apenas. ✔
+D) II e III, apenas.
+E) I, II e III.
+
+---

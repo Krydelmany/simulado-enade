@@ -4,7 +4,8 @@
 	import SessaoTopo from '$lib/SessaoTopo.svelte';
 	import BarraAcao from '$lib/BarraAcao.svelte';
 	import Contador from '$lib/Contador.svelte';
-	import { carregarBanco, embaralhar, doNivel } from '$lib/banco.js';
+	import { carregarBanco, embaralhar, doNivel, NIVEL_ENADE } from '$lib/banco.js';
+	import { GRUPOS_MATERIA, materiaExiste, nomeMateria } from '$lib/materias.js';
 	import {
 	somarXP,
 	getXP,
@@ -18,19 +19,25 @@
 	registrarResposta,
 	registrarSessao
 } from '$lib/stats.js';
-	import { ArrowLeft, ArrowsClockwise, Info, Lightning, Play, Target, Timer, Trophy } from 'phosphor-svelte';
+	import { ArrowLeft, ArrowsClockwise, Info, Lightning, Play, SealCheck, Tag, Target, Timer, Trophy } from 'phosphor-svelte';
 
 	const TOTAL = 10;
+	// 1–3: questões geradas para revisão, em escada de dificuldade.
+	// 4: a prova oficial do INEP, sem nível — ver NIVEL_ENADE em banco.js.
 	const NIVEIS = {
-		1: { nome: 'N1 · Fundamentos', desc: 'Objetivas de base, sem pressa.' },
-		2: { nome: 'N2 · Intermediário', desc: 'Misto, ritmo de prova.' },
-		3: { nome: 'N3 · Avançado', desc: 'Misto + discursiva com autoavaliação.' }
+		1: { nome: 'Fácil', desc: 'Conceito direto, contexto simples.' },
+		2: { nome: 'Médio', desc: 'Aplicação com um passo a mais de raciocínio.' },
+		3: { nome: 'Difícil', desc: 'Situação-problema no modelo do ENADE.' },
+		[NIVEL_ENADE]: { nome: 'ENADE oficial', desc: 'Questões das provas do INEP, objetivas e discursivas.' }
 	};
+	const ESCADA = [1, 2, 3];
 	// sessão de estudo pausada — chave própria para não colidir com a sessão do treino
 	const CHAVE = 'enade-sessao-estudo';
 
 	let banco = $state([]);
 	let nivel = $state(null);
+	// filtro opcional: 'todas' ou o id de uma matéria (materias.json)
+	let materiaFiltro = $state('todas');
 	let sessao = $state([]);
 	let i = $state(0);
 	// respostas[i] guarda a resposta da questão i (para voltar e reexibir o veredito)
@@ -58,11 +65,21 @@
 	let parciais = $derived(log.filter((r) => r.parcial).length);
 	let ultima = $derived(i + 1 >= sessao.length);
 	let podeAvancar = $derived(!!respostas[i]);
-	// quantas questões cada nível tem de verdade (para não prometer 10 vazias)
+	// quantas questões cada nível tem de verdade, já com o filtro de matéria
+	// (para não prometer 10 e entregar 3)
 	let contagens = $derived.by(() => {
 		const c = {};
-		for (const n of [1, 2, 3]) c[n] = banco.filter((q) => doNivel(q, n)).length;
+		for (const n of [...ESCADA, NIVEL_ENADE]) c[n] = doFiltro(n).length;
 		return c;
+	});
+	// só entram no select as matérias que têm alguma questão no banco
+	let gruposFiltro = $derived.by(() => {
+		const n = new Map();
+		for (const q of banco) if (q.materia) n.set(q.materia, (n.get(q.materia) || 0) + 1);
+		return GRUPOS_MATERIA.map((g) => ({
+			rotulo: g.rotulo,
+			materias: g.materias.filter((m) => n.get(m.id))
+		})).filter((g) => g.materias.length);
 	});
 	let salvaEfeitas = $derived(salvaE ? (salvaE.log || []).filter((r) => !r.pulada).length : 0);
 	let salvaECertas = $derived(salvaE ? (salvaE.log || []).filter((r) => r.certa).length : 0);
@@ -78,6 +95,10 @@
 		}
 		const s = lerSessao();
 		if (s?.ids?.length) {
+			// v1 = antes da escada de geradas: a sessão era só de questões
+			// oficiais, então hoje ela é do nível ENADE (o número antigo 1–3
+			// mostraria "Fácil" em cima de uma questão do INEP)
+			if (s.v === 1) s.nivel = NIVEL_ENADE;
 			const ordem = s.ids.map((id) => banco.find((q) => q.id === id)).filter(Boolean);
 			if (ordem.length) {
 				salvaE = { ...s, sessao: ordem };
@@ -90,8 +111,14 @@
 		if (confirmaSaida && refSaida) refSaida.focus();
 	});
 
+	function doFiltro(n) {
+		return banco.filter(
+			(q) => doNivel(q, n) && (materiaFiltro === 'todas' || q.materia === materiaFiltro)
+		);
+	}
+
 	function comecar(n) {
-		const pool = embaralhar(banco.filter((q) => doNivel(q, n)));
+		const pool = embaralhar(doFiltro(n));
 		if (!pool.length) {
 			vazioNivel = n;
 			return;
@@ -122,7 +149,7 @@
 			certa: !!r.certa,
 			parcial: !!r.parcial,
 			anulada: !!r.anulada,
-			materia: q?.materia_ava,
+			materia: q?.materia,
 			tema: q?.tema,
 			duracaoMs: Date.now() - (ultimoToque || inicio)
 		});
@@ -131,7 +158,7 @@
 		respostas[i] = { ...r, respondida: true };
 		registrar(i, {
 			id: r.id,
-			materia: q?.materia_ava || q?.tema || '?',
+			materia: q?.materia || '?',
 			certa: !!r.certa,
 			parcial: !!r.parcial,
 			anulada: !!r.anulada,
@@ -163,7 +190,7 @@
 		respostas[i] = { id, pulada: true };
 		registrar(i, {
 			id,
-			materia: q?.materia_ava || q?.tema || '?',
+			materia: q?.materia || '?',
 			certa: false,
 			parcial: false,
 			anulada: false,
@@ -223,6 +250,7 @@
 	function continuar() {
 		if (!salvaE) return;
 		nivel = salvaE.nivel;
+		materiaFiltro = materiaExiste(salvaE.materia) ? salvaE.materia : 'todas';
 		sessao = salvaE.sessao;
 		i = Math.min(salvaE.i ?? 0, sessao.length - 1);
 		respostas = Array.isArray(salvaE.respostas) ? salvaE.respostas : [];
@@ -248,8 +276,9 @@
 			localStorage.setItem(
 				CHAVE,
 				JSON.stringify({
-					v: 1,
+					v: 2,
 					nivel,
+					materia: materiaFiltro,
 					i,
 					respostas,
 					log,
@@ -364,7 +393,7 @@
 		<p class="font-code text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">Sessão de estudo pausada</p>
 		<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight">Continuar de onde parou?</h2>
 		<p class="nums mt-2 text-sm text-ink-soft">
-			{NIVEIS[salvaE.nivel]?.nome ?? 'Sessão'} · questão {salvaE.i + 1} de {salvaE.sessao.length} · {salvaECertas}/{salvaEfeitas} certas
+			{NIVEIS[salvaE.nivel]?.nome ?? 'Sessão'}{materiaExiste(salvaE.materia) ? ` · ${nomeMateria(salvaE.materia)}` : ''} · questão {salvaE.i + 1} de {salvaE.sessao.length} · {salvaECertas}/{salvaEfeitas} certas
 		</p>
 		<button type="button" onclick={continuar} class="btn3d duo-accent mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
 			<Play size={20} weight="fill" aria-hidden="true" /> Continuar sessão
@@ -376,22 +405,42 @@
 {:else if nivel === null}
 	<div class="mb-4">
 		<h1 class="font-display text-2xl font-extrabold tracking-tight">Sessão de estudo</h1>
-		<p class="mt-1 text-sm text-ink-soft">Até 10 questões por sessão. Escolha o nível e comece.</p>
+		<p class="mt-1 text-sm text-ink-soft">Até 10 questões por sessão. Escolha a matéria e o nível.</p>
 	</div>
+	<label class="mb-4 flex items-center gap-2 rounded-2xl border border-line bg-card px-3">
+		<Tag size={17} weight="bold" class="shrink-0 text-ink-soft" aria-hidden="true" />
+		<span class="sr-only">Filtrar por matéria</span>
+		<select
+			bind:value={materiaFiltro}
+			onchange={() => (vazioNivel = null)}
+			class="w-full bg-transparent py-3 text-sm font-semibold text-ink"
+		>
+			<option value="todas">Todas as matérias</option>
+			{#each gruposFiltro as g (g.rotulo)}
+				<optgroup label={g.rotulo}>
+					{#each g.materias as m (m.id)}
+						<option value={m.id}>{m.nome}</option>
+					{/each}
+				</optgroup>
+			{/each}
+		</select>
+	</label>
 	{#if vazioNivel}
 		<div class="mb-3 flex items-start gap-2 rounded-2xl bg-warn-bg p-3 text-sm font-semibold text-warn-fg" role="alert">
 			<Info size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 			<span>
-				O nível {vazioNivel} ainda não tem questões no banco. Tente outro nível ou o
+				{NIVEIS[vazioNivel].nome} ainda não tem questões{materiaFiltro !== 'todas' ? ` de ${nomeMateria(materiaFiltro)}` : ''}.
+				Tente outro nível, outra matéria ou o
 				<a href="/treino/" class="font-bold underline">treino livre</a>.
 			</span>
 		</div>
 	{/if}
+	<p class="mb-2 font-code text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">Revisão por nível</p>
 	<div class="space-y-3">
-		{#each Object.entries(NIVEIS) as [n, info], k (n)}
+		{#each ESCADA as n, k (n)}
 			<button
 				type="button"
-				onclick={() => comecar(Number(n))}
+				onclick={() => comecar(n)}
 				class="rise flex w-full items-center gap-4 rounded-3xl bg-card p-5 text-left shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)] transition-transform hover:-translate-y-0.5 active:scale-[0.99]"
 				style="animation-delay: {k * 70}ms"
 			>
@@ -399,21 +448,37 @@
 					{n}
 				</span>
 				<span class="min-w-0 flex-1">
-					<span class="block font-display text-[17px] font-bold tracking-tight">{info.nome}</span>
-					<span class="block text-sm text-ink-soft">{info.desc}</span>
+					<span class="block font-display text-[17px] font-bold tracking-tight">{NIVEIS[n].nome}</span>
+					<span class="block text-sm text-ink-soft">{NIVEIS[n].desc}</span>
 					<span class="nums block text-xs font-semibold text-ink-soft">{contagens[n]} {contagens[n] === 1 ? 'questão' : 'questões'} disponíveis</span>
 				</span>
 				<span class="flex shrink-0 gap-1" aria-hidden="true">
-					{#each [1, 2, 3] as d (d)}
-						<span class="h-2 w-2 rounded-full {d <= Number(n) ? 'bg-accent' : 'bg-track'}"></span>
+					{#each ESCADA as d (d)}
+						<span class="h-2 w-2 rounded-full {d <= n ? 'bg-accent' : 'bg-track'}"></span>
 					{/each}
 				</span>
 			</button>
 		{/each}
 	</div>
+	<p class="mt-6 mb-2 font-code text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">Prova oficial</p>
+	<button
+		type="button"
+		onclick={() => comecar(NIVEL_ENADE)}
+		class="rise flex w-full items-center gap-4 rounded-3xl bg-card p-5 text-left shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)] transition-transform hover:-translate-y-0.5 active:scale-[0.99]"
+		style="animation-delay: 210ms"
+	>
+		<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-soft" aria-hidden="true">
+			<SealCheck size={26} weight="bold" class="text-accent-ink" />
+		</span>
+		<span class="min-w-0 flex-1">
+			<span class="block font-display text-[17px] font-bold tracking-tight">{NIVEIS[NIVEL_ENADE].nome}</span>
+			<span class="block text-sm text-ink-soft">{NIVEIS[NIVEL_ENADE].desc}</span>
+			<span class="nums block text-xs font-semibold text-ink-soft">{contagens[NIVEL_ENADE]} {contagens[NIVEL_ENADE] === 1 ? 'questão' : 'questões'} disponíveis</span>
+		</span>
+	</button>
 {:else if fim}
 	<div class="blueprint -mx-4 -mt-6 bg-bar px-4 pt-8 pb-10 text-center text-white" style="border-radius: 0 0 26px 26px;">
-		<p class="text-sm font-medium text-bar-fg">Estudo · {NIVEIS[nivel].nome}</p>
+		<p class="text-sm font-medium text-bar-fg">Estudo · {NIVEIS[nivel].nome}{materiaFiltro !== 'todas' ? ` · ${nomeMateria(materiaFiltro)}` : ''}</p>
 		<h2 class="mt-1 font-display text-3xl font-extrabold tracking-tight">Sessão concluída</h2>
 		<p class="springin mx-auto mt-4 flex h-24 w-24 items-center justify-center rounded-full bg-accent-soft">
 			<Trophy size={44} weight="fill" class="text-accent" aria-hidden="true" />
@@ -447,7 +512,7 @@
 				{#each porMateria() as [m, d] (m)}
 					<div>
 						<div class="flex items-baseline justify-between gap-3 text-sm">
-							<p class="truncate font-semibold">{m}</p>
+							<p class="truncate font-semibold">{nomeMateria(m)}</p>
 							<p class="nums shrink-0 font-bold">{d.ok}/{d.n}</p>
 						</div>
 						<div class="mt-1 h-2 overflow-hidden rounded-full bg-track">
@@ -471,7 +536,7 @@
 {:else}
 	<SessaoTopo
 		titulo={`Questão ${i + 1} de ${sessao.length}`}
-		detalhe={NIVEIS[nivel].nome.split(' · ')[0]}
+		detalhe={NIVEIS[nivel].nome}
 		progresso={sessao.length ? (i + 1) / sessao.length : 0}
 		{xp}
 		aoFechar={sair}
@@ -479,7 +544,7 @@
 	{#if sessao.length < TOTAL}
 		<p class="mt-4 flex items-start gap-2 rounded-2xl bg-warn-bg p-3 text-xs font-semibold text-warn-fg" role="status">
 			<Info size={16} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
-			<span>Só há {sessao.length} {sessao.length === 1 ? 'questão' : 'questões'} neste nível — a sessão é mais curta que o normal.</span>
+			<span>Só há {sessao.length} {sessao.length === 1 ? 'questão' : 'questões'} neste nível{materiaFiltro !== 'todas' ? ' nesta matéria' : ''} — a sessão é mais curta que o normal.</span>
 		</p>
 	{/if}
 	<div class="mt-4">

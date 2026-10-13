@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { carregarBanco } from '$lib/banco.js';
+	import { carregarBanco, ehGerada } from '$lib/banco.js';
 	import { getErros } from '$lib/stats.js';
 	import {
 		ArrowLeft,
@@ -33,7 +33,8 @@
 
 	onMount(async () => {
 		try {
-			const b = await carregarBanco();
+			// o simulado é a prova: as questões geradas para revisão não contam
+			const b = (await carregarBanco()).filter((q) => !ehGerada(q));
 			total = b.length;
 			obj = b.filter((q) => q.tipo === 'objetiva').length;
 			disc = b.filter((q) => q.tipo === 'discursiva').length;
@@ -173,7 +174,7 @@
 				</span>
 				<span class="min-w-0 flex-1">
 					<span class="block font-display text-base font-bold">Estudo por níveis</span>
-					<span class="block text-sm text-ink-soft">Sessões de 10 em N1, N2 e N3.</span>
+					<span class="block text-sm text-ink-soft">Fácil, Médio, Difícil e ENADE oficial, por matéria.</span>
 				</span>
 				<ArrowRight
 					size={20}

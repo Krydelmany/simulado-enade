@@ -17,6 +17,11 @@ import sys
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BANCO = os.path.join(RAIZ, 'app', 'static', 'banco')
 IMG = os.path.join(BANCO, 'img')
+TAXONOMIA = os.path.join(RAIZ, 'app', 'src', 'lib', 'materias.json')
+
+# vocabulário do campo `dificuldade` (o mesmo das oficiais); o Estudo usa os
+# três como níveis das questões GERADAS
+DIFICULDADES = {'Fácil', 'Média', 'Difícil'}
 
 # `enade` minúsculo É conteúdo legítimo ("a função enade recebe uma lista"),
 # então a prova do cabeçalho vai separada e case-sensitive: o `re.I` do resto
@@ -80,24 +85,62 @@ def main():
     if not arquivos:
         print('nenhum JSON de banco encontrado')
         return 1
+    arquivos += sorted(glob.glob(os.path.join(BANCO, 'geradas*.json')))
+
+    tax = json.load(open(TAXONOMIA, encoding='utf-8'))
+    materias_ce = {m['id'] for m in tax['ce']}
+    materias = materias_ce | {m['id'] for m in tax['fg']}
 
     problemas = []
     vistos = set()
     total = 0
+    # (materia, dificuldade) -> n, e letra -> n, só das geradas: o Estudo
+    # promete os três níveis em toda matéria, e um gabarito concentrado numa
+    # letra ensina o aluno a chutar, não a matéria
+    cobertura = {}
+    letras = {}
 
     for arq in arquivos:
         for q in json.load(open(arq, encoding='utf-8')):
             total += 1
             nome = os.path.basename(arq)
             qid = q.get('id', '(sem id)')
+            gerada = q.get('fonte') == 'gerada'
 
             if qid in vistos:
                 problemas.append((nome, qid, 'id duplicado'))
             vistos.add(qid)
 
-            for campo in ('edicao', 'parte', 'numero', 'tipo', 'tema', 'enunciado'):
+            # gerada não tem edição: não saiu de prova nenhuma
+            obrigatorios = ('parte', 'numero', 'tipo', 'tema', 'enunciado', 'materia')
+            if not gerada:
+                obrigatorios = ('edicao',) + obrigatorios
+            for campo in obrigatorios:
                 if not q.get(campo):
                     problemas.append((nome, qid, f'sem {campo}'))
+
+            if q.get('materia') and q['materia'] not in materias:
+                problemas.append((
+                    nome, qid,
+                    f'matéria "{q["materia"]}" fora de materias.json — a questão '
+                    'some do filtro'
+                ))
+
+            if gerada:
+                if q.get('materia') not in materias_ce:
+                    problemas.append((nome, qid, 'gerada fora das 20 áreas do CE'))
+                if q.get('dificuldade') not in DIFICULDADES:
+                    problemas.append((
+                        nome, qid,
+                        f'gerada com dificuldade "{q.get("dificuldade")}" — não '
+                        'aparece em nível nenhum do Estudo'
+                    ))
+                if q.get('tipo') != 'objetiva' or not (q.get('gabarito') or '').strip():
+                    problemas.append((nome, qid, 'gerada precisa ser objetiva com gabarito'))
+                chave = (q.get('materia'), q.get('dificuldade'))
+                cobertura[chave] = cobertura.get(chave, 0) + 1
+                g = q.get('gabarito')
+                letras[g] = letras.get(g, 0) + 1
 
             checa_blocos(nome, qid, 'enunciado', q.get('enunciado'), problemas)
             checa_blocos(nome, qid, 'padrão', q.get('padrao'), problemas)
@@ -122,6 +165,9 @@ def main():
                             nome, qid, 'alternativas repetidas — o acerto vira sorteio'
                         ))
                     for letra, txt in alt.items():
+                        # lixo de página só existe no que veio de PDF
+                        if gerada:
+                            continue
                         if LIXO.search(txt or '') or CABECALHO.search(txt or ''):
                             problemas.append((
                                 nome, qid, f'alternativa {letra} com lixo da página'
@@ -148,7 +194,7 @@ def main():
                     ))
 
             enunciado = q.get('enunciado') or ''
-            if LIXO.search(enunciado) or CABECALHO.search(enunciado):
+            if not gerada and (LIXO.search(enunciado) or CABECALHO.search(enunciado)):
                 problemas.append((nome, qid, 'enunciado com lixo da página'))
 
             img = q.get('imagem')
@@ -162,6 +208,20 @@ def main():
                     problemas.append((nome, qid, f'imagem não existe: {img["src"]}'))
 
     print(f'{total} questões em {len(arquivos)} arquivos')
+    if cobertura:
+        for m in sorted(materias_ce):
+            for d in sorted(DIFICULDADES):
+                if not cobertura.get((m, d)):
+                    problemas.append(('geradas', m, f'nenhuma gerada {d}'))
+        n = sum(letras.values())
+        print('gabaritos das geradas: ' + ', '.join(
+            f'{k} {v}' for k, v in sorted(letras.items())))
+        for k, v in letras.items():
+            # 5 letras = 20% cada; acima de 30% o chute já compensa
+            if n >= 25 and v / n > 0.30:
+                problemas.append((
+                    'geradas', k, f'{v} de {n} gabaritos na mesma letra'
+                ))
     if not problemas:
         print('OK — nenhum problema encontrado')
         return 0

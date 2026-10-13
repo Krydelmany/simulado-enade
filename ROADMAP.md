@@ -20,7 +20,8 @@
 ## Depois do lock
 
 - [ ] Lotes 2–4 no banco (2019 CE, 2023, 2014; 2017 precisa OCR parcial)
-- [ ] Modo por matéria do AVA (filtro usando `materia_ava`)
+- [x] Matérias da Portaria nº 161 (20 áreas do CE) + filtro por matéria no Treino e no Estudo
+- [x] Níveis Fácil/Médio/Difícil com 180 questões geradas para revisão; oficiais na categoria ENADE
 - [ ] Simulado cronometrado (abre com banco completo)
 - [ ] Repo GitHub + deploy Vercel + link p/ turma
 

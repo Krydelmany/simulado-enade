@@ -1,0 +1,122 @@
+{
+ "materia": "discreta",
+ "questoes": [
+  {
+   "dificuldade": "Fácil",
+   "tema": "Número máximo de arestas de um grafo simples",
+   "enunciado": "Um grafo simples (sem laços e sem arestas múltiplas) e não orientado tem 5 vértices.\n\nO número máximo de arestas que esse grafo pode ter é",
+   "alternativas": {
+    "A": "5.",
+    "B": "20.",
+    "C": "25.",
+    "D": "10.",
+    "E": "15."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Negação de proposição quantificada",
+   "enunciado": "Considere a proposição: “Todo servidor do cluster está ativo”.\n\nA negação lógica dessa proposição é",
+   "alternativas": {
+    "A": "Nenhum servidor do cluster está ativo.",
+    "B": "Todo servidor do cluster está inativo.",
+    "C": "Algum servidor do cluster está ativo.",
+    "D": "Se um servidor do cluster está ativo, todos estão.",
+    "E": "Existe pelo menos um servidor do cluster que não está ativo."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Diferença de conjuntos",
+   "enunciado": "Sejam os conjuntos A = {1, 2, 3, 4} e B = {3, 4, 5}.\n\nO conjunto A − B (elementos de A que não estão em B) é",
+   "alternativas": {
+    "A": "{1, 2}.",
+    "B": "{3, 4}.",
+    "C": "{5}.",
+    "D": "{1, 2, 5}.",
+    "E": "{1, 2, 3, 4, 5}."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Arranjos sem repetição",
+   "enunciado": "Um sistema de acesso usa códigos de 4 dígitos, formados com os algarismos de 0 a 9, sem repetir algarismo no mesmo código. A ordem dos algarismos importa.\n\nO número de códigos distintos possíveis é",
+   "alternativas": {
+    "A": "10 000.",
+    "B": "5 040.",
+    "C": "210.",
+    "D": "40.",
+    "E": "6 561."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Soma dos graus e número de arestas",
+   "enunciado": "Em uma rede modelada como grafo não orientado, os 6 vértices têm graus 3, 3, 2, 2, 1 e 1.\n\nO número de arestas desse grafo é",
+   "alternativas": {
+    "A": "12.",
+    "B": "3.",
+    "C": "6.",
+    "D": "7.",
+    "E": "24."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Trilhas e circuitos eulerianos",
+   "enunciado": "Um robô de inspeção deve percorrer todos os corredores de um galpão, passando por cada corredor exatamente uma vez. O galpão é modelado como um grafo conexo, em que os corredores são arestas e os cruzamentos são vértices. Exatamente dois vértices desse grafo têm grau ímpar.\n\nNessa situação, o grafo",
+   "alternativas": {
+    "A": "possui um circuito euleriano, que começa e termina no mesmo vértice.",
+    "B": "não possui nenhuma trilha que passe por todas as arestas uma única vez.",
+    "C": "é necessariamente uma árvore.",
+    "D": "possui uma trilha euleriana que começa em um dos vértices de grau ímpar e termina no outro.",
+    "E": "possui necessariamente um ciclo hamiltoniano."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Coloração de grafos e agendamento",
+   "enunciado": "Uma coordenação de curso quer agendar as provas finais usando o menor número possível de horários. Para isso, modelou o problema como um grafo: cada disciplina é um vértice, e há aresta entre duas disciplinas quando algum aluno está matriculado em ambas, pois essas provas não podem ocorrer no mesmo horário. O grafo obtido é planar e contém um subgrafo completo com 4 vértices (K₄).\n\nConsiderando essa modelagem, avalie as afirmações a seguir.\n\nI. São necessários pelo menos 4 horários distintos.\nII. Como o grafo é planar, 4 horários são suficientes.\nIII. Em qualquer grafo, o número cromático é igual ao grau máximo do grafo mais um.\n\nÉ correto o que se afirma em",
+   "alternativas": {
+    "A": "I, apenas.",
+    "B": "III, apenas.",
+    "C": "I e III, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I e II, apenas."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Propriedades das árvores",
+   "enunciado": "Árvores são usadas para representar hierarquias de diretórios, árvores geradoras de redes e estruturas de busca. Um resultado básico sobre elas relaciona o número de vértices com o número de arestas.\n\nNesse contexto, avalie as asserções a seguir e a relação proposta entre elas.\n\nI. Toda árvore com n vértices possui exatamente n − 1 arestas.\n\nPORQUE\n\nII. Uma árvore é um grafo conexo e acíclico, e toda árvore com pelo menos dois vértices possui uma folha, cuja remoção gera uma árvore com um vértice e uma aresta a menos.\n\nA respeito dessas asserções, assinale a opção correta.",
+   "alternativas": {
+    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+    "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+    "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+    "E": "As asserções I e II são proposições falsas."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Relações e ordem parcial",
+   "enunciado": "Em um sistema de controle de versões, o histórico de commits forma um grafo orientado acíclico: cada commit aponta para o(s) commit(s) de que deriva. Sobre o conjunto C de commits de um repositório, define-se a relação R tal que a R b se, e somente se, a = b ou a é ancestral de b.\n\nCom base nessa definição, avalie as afirmações a seguir.\n\nI. R é reflexiva.\nII. R é simétrica.\nIII. R é transitiva.\nIV. R é uma relação de ordem parcial sobre C.\n\nÉ correto apenas o que se afirma em",
+   "alternativas": {
+    "A": "I e II.",
+    "B": "I, III e IV.",
+    "C": "II e IV.",
+    "D": "I, II e III.",
+    "E": "III e IV."
+   },
+   "gabarito": "B"
+  }
+ ]
+}

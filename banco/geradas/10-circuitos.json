@@ -1,0 +1,122 @@
+{
+ "materia": "circuitos",
+ "questoes": [
+  {
+   "dificuldade": "Fácil",
+   "tema": "Lei de Ohm",
+   "enunciado": "Um resistor de 220 Ω é ligado diretamente aos terminais de uma fonte de 5 V.\n\nA corrente no resistor é de, aproximadamente,",
+   "alternativas": {
+    "A": "1,1 A.",
+    "B": "22,7 mA.",
+    "C": "44 mA.",
+    "D": "2,27 mA.",
+    "E": "227 mA."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Associação de resistores em série",
+   "enunciado": "Três resistores, de 100 Ω, 220 Ω e 330 Ω, são ligados em série.\n\nA resistência equivalente da associação é de",
+   "alternativas": {
+    "A": "57 Ω.",
+    "B": "330 Ω.",
+    "C": "650 Ω.",
+    "D": "220 Ω.",
+    "E": "1 000 Ω."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Potência elétrica",
+   "enunciado": "Um módulo de comunicação alimentado por 12 V consome corrente de 0,5 A.\n\nA potência consumida pelo módulo é de",
+   "alternativas": {
+    "A": "24 W.",
+    "B": "0,04 W.",
+    "C": "12,5 W.",
+    "D": "6 W.",
+    "E": "2,4 W."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Divisor de tensão",
+   "enunciado": "Para ler um sinal de 12 V com a entrada analógica de um microcontrolador, usa-se um divisor resistivo: R1 = 10 kΩ ligado entre o sinal e o ponto de leitura, e R2 = 2 kΩ ligado entre o ponto de leitura e o terra. Despreze a corrente drenada pela entrada do microcontrolador.\n\nA tensão no ponto de leitura é de",
+   "alternativas": {
+    "A": "10 V.",
+    "B": "6 V.",
+    "C": "1 V.",
+    "D": "2,4 V.",
+    "E": "2 V."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Constante de tempo de circuito RC",
+   "enunciado": "Um circuito de reset de um microcontrolador usa um resistor de 10 kΩ em série com um capacitor de 100 µF.\n\nA constante de tempo desse circuito RC é de",
+   "alternativas": {
+    "A": "1 s.",
+    "B": "0,1 s.",
+    "C": "10 s.",
+    "D": "1 ms.",
+    "E": "100 s."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Resistor limitador de LED",
+   "enunciado": "Um LED com queda de tensão direta de 2 V deve operar com corrente de 15 mA, alimentado por uma fonte de 5 V, por meio de um resistor em série.\n\nO valor do resistor limitador deve ser de",
+   "alternativas": {
+    "A": "333 Ω.",
+    "B": "200 Ω.",
+    "C": "133 Ω.",
+    "D": "150 Ω.",
+    "E": "75 Ω."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Amplificador operacional inversor e saturação",
+   "enunciado": "O sinal de um sensor é condicionado por um amplificador operacional na configuração inversora, com resistor de entrada de 4,7 kΩ e resistor de realimentação de 47 kΩ. O amplificador é alimentado com ±12 V, e a tensão de entrada é de 0,2 V. Considere o amplificador ideal dentro dos limites de alimentação.\n\nCom base nessas informações, avalie as afirmações a seguir.\n\nI. O ganho de tensão do circuito é −10.\nII. A tensão de saída é de −2 V.\nIII. Se a tensão de entrada passar a 1,5 V, a saída será de −15 V.\n\nÉ correto o que se afirma em",
+   "alternativas": {
+    "A": "I, apenas.",
+    "B": "III, apenas.",
+    "C": "I e II, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Indutores em corrente alternada",
+   "enunciado": "Indutores são usados em fontes chaveadas e em filtros de linha. Para dimensioná-los, o projetista precisa conhecer o comportamento de tensão e corrente no indutor em regime senoidal.\n\nNesse contexto, avalie as asserções a seguir e a relação proposta entre elas.\n\nI. Em um circuito de corrente alternada puramente indutivo, a corrente está adiantada 90° em relação à tensão.\n\nPORQUE\n\nII. A reatância indutiva cresce proporcionalmente à frequência do sinal, conforme X_L = 2πfL.\n\nA respeito dessas asserções, assinale a opção correta.",
+   "alternativas": {
+    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+    "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+    "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+    "E": "As asserções I e II são proposições falsas."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Análise de circuito série-paralelo",
+   "enunciado": "Uma fonte de 9 V alimenta um resistor R1 = 1 kΩ, ligado em série com a associação em paralelo de R2 = 2 kΩ e R3 = 2 kΩ.\n\nCom base nessas informações, avalie as afirmações a seguir.\n\nI. A corrente fornecida pela fonte é de 4,5 mA.\nII. A tensão sobre R2 é de 4,5 V.\nIII. A corrente em R3 é de 2,25 mA.\nIV. A potência total dissipada pelos resistores é de 40,5 mW.\n\nÉ correto o que se afirma em",
+   "alternativas": {
+    "A": "I e II, apenas.",
+    "B": "III e IV, apenas.",
+    "C": "I, II e III, apenas.",
+    "D": "II, III e IV, apenas.",
+    "E": "I, II, III e IV."
+   },
+   "gabarito": "E"
+  }
+ ]
+}

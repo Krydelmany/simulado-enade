@@ -13,7 +13,7 @@
  * altere JSON em `static/banco`** — é o que invalida a cache sem depender da
  * rede (um deploy novo sempre traz uma versão nova).
  */
-export const VERSAO_BANCO = 'e197e5f91048';
+export const VERSAO_BANCO = '64519b456c52';
 
 /** Arquivos do banco (um por edição+parte). Exportado para o preload. */
 export const ARQUIVOS_BANCO = [
@@ -24,7 +24,8 @@ export const ARQUIVOS_BANCO = [
 	'enade2014-fg.json',
 	'enade2014-ce.json',
 	'enade2017-fg.json',
-	'enade2017-ce.json'
+	'enade2017-ce.json',
+	'geradas.json'
 ];
 
 const CHAVE_CACHE = 'enade-banco';
@@ -33,7 +34,22 @@ const TTL_CACHE_MS = 6 * 60 * 60 * 1000; // 6 h: cobre o dia de estudo, não atr
 /** Tamanho mínimo de uma sessão por nível (as telas pedem 10 questões). */
 export const NIVEL_MINIMO = 10;
 
+/**
+ * Níveis do modo Estudo. Os três primeiros são as questões GERADAS para
+ * revisão (`fonte: 'gerada'`), separadas por dificuldade; o quarto é a prova
+ * oficial do INEP inteira, sem nível — a dificuldade de uma questão do ENADE
+ * é a da prova, não uma escada.
+ *
+ * O valor de `dificuldade` no JSON segue o vocabulário que o banco já usava
+ * ("Média", feminino: é a questão que é média); a tela mostra o nível.
+ */
+export const NIVEL_ENADE = 4;
 const ROTULO_NIVEL = { 1: 'Fácil', 2: 'Média', 3: 'Difícil' };
+
+/** Questão escrita para revisão (não é do INEP). Sem `fonte` = oficial. */
+export function ehGerada(q) {
+	return q?.fonte === 'gerada';
+}
 
 function session() {
 	if (typeof window === 'undefined') return null;
@@ -148,26 +164,31 @@ export function embaralhar(lista) {
 	return a;
 }
 
-/** Nível de estudo -> dificuldade. Sem dificuldade definida cai em todos (até a revisão). */
+/**
+ * A questão pertence ao nível? 1–3 = geradas daquela dificuldade; 4 = oficiais.
+ * Questão oficial nunca entra em 1–3, mesmo tendo `dificuldade` no JSON: o
+ * campo ficou como registro da revisão, não como nível de estudo.
+ */
 export function doNivel(q, nivel) {
-	if (!q.dificuldade) return true;
-	return q.dificuldade === ROTULO_NIVEL[nivel];
+	if (Number(nivel) === NIVEL_ENADE) return !ehGerada(q);
+	return ehGerada(q) && q.dificuldade === ROTULO_NIVEL[nivel];
 }
 
 /**
  * Quantas questões o banco oferece para um nível. A UI usa para avisar em vez
  * de montar sessão vazia/curta em silêncio.
  *
- * Verificado no banco real (12/10/2026): Fácil 19, Média 50, Difícil 54 —
- * todos ≥ 10 no banco inteiro, MAS por parte o FG tem só 9 "Fácil"; se um
- * filtro por parte for adicionado, o aviso passa a importar.
+ * No banco inteiro cada nível de geradas tem 60 (3 por matéria × 20) e o
+ * ENADE tem 158 — todos ≥ 10. Com o filtro de matéria do Estudo, um nível
+ * fica com 3: é aí que o aviso de sessão curta aparece.
  *
  * @returns {{ok: boolean, total: number, minimo: number, nivel: number, rotulo: string|null}}
  */
 export function nivelDisponivel(banco, nivel, minimo = NIVEL_MINIMO) {
 	const lista = Array.isArray(banco) ? banco : [];
 	const total = lista.filter((q) => doNivel(q, nivel)).length;
-	return { ok: total >= minimo, total, minimo, nivel, rotulo: ROTULO_NIVEL[nivel] ?? null };
+	const rotulo = Number(nivel) === NIVEL_ENADE ? 'ENADE' : (ROTULO_NIVEL[nivel] ?? null);
+	return { ok: total >= minimo, total, minimo, nivel, rotulo };
 }
 
 /**
@@ -176,11 +197,19 @@ export function nivelDisponivel(banco, nivel, minimo = NIVEL_MINIMO) {
  * grade "FG objetivas / CE objetivas / Discursivas", que não soma o total
  * porque a discursiva aparece nos dois eixos). `fgTotal`/`ceTotal` dão o
  * número completo por parte quando precisar.
+ *
+ * Tudo aqui é da prova OFICIAL — é o que a meta de 160 mede. As geradas vêm
+ * à parte em `geradas`/`geradasPorDificuldade`, para a home não anunciar
+ * "340 / 160 questões da prova".
  */
 export function contagens(banco) {
-	const lista = Array.isArray(banco) ? banco : [];
+	const todas = Array.isArray(banco) ? banco : [];
+	const lista = todas.filter((q) => !ehGerada(q));
+	const geradas = todas.filter(ehGerada);
 	const c = {
 		total: lista.length,
+		geradas: geradas.length,
+		geradasPorDificuldade: {},
 		objetivas: 0,
 		discursivas: 0,
 		fg: 0,
@@ -209,6 +238,10 @@ export function contagens(banco) {
 		const dif = q.dificuldade || 'Sem nível';
 		c.porDificuldade[dif] = (c.porDificuldade[dif] || 0) + 1;
 	}
+	for (const q of geradas) {
+		const dif = q.dificuldade || 'Sem nível';
+		c.geradasPorDificuldade[dif] = (c.geradasPorDificuldade[dif] || 0) + 1;
+	}
 	return c;
 }
 
@@ -230,6 +263,8 @@ export const idEstavel = chaveQuestao;
 
 export function rotuloQuestao(q) {
 	if (!q) return '';
+	// gerada não tem edição nem parte de prova: o id já diz tudo (GER-XVIII-F1)
+	if (ehGerada(q)) return `REF ${q.id}`;
 	// `numero` pode vir número em algum JSON — normaliza antes de montar o rótulo.
 	const numero = String(q.numero ?? '');
 	const n = q.tipo === 'discursiva' ? `D${numero}` : `Q${numero}`;

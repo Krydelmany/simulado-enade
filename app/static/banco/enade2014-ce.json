@@ -11,7 +11,7 @@
   "enunciado": "Um grafo orientado com n vértices pode ser armazenado na seguinte matriz de adjacência: para cada í, j, com <i, js aresta orientada (i, j) pertence ao conjunto de arestas do grafo; caso contrário, = 0. Com base nessas informações, faça o que se pede nos itens a seguir. a) Escreva um algoritmo que receba como entrada uma matriz de adjacência de um grafo orientado e produza a matriz de adjacência do grafo com as arestas reversas. O grafo representado pela matriz resultante deverá conter a aresta (i, se, e somente se, a aresta (j, i) pertence ao grafo representado pela matriz de entrada. (valor: 5,0 pontos) b) Escreva um algoritmo que receba como entrada uma matriz de adjacência de um grafo orientado e imprima todos os ciclos orientados de tamanho 3 desse grafo. Para isso, considere que o ciclo orientado (1,2,3) é o mesmo que (2,3,1), porém o ciclo orientado (1,2,3) é diferente do ciclo orientado (3,2,1), de forma que ambos devem ser impressos, caso pertençam ao grafo. (valor: 5,0 pontos) Observação: Qualquer notação em português estruturado, de forma imperativa ou orientada a objetos pode ser utilizada, assim como em uma linguagem de alto nível, como Pascal, C ou Java. QUESTÃO DISCURSIVA 4. A criação dos serviços em nuvens (clouds) teve como consequência o fato de as tarefas de processamento (como ferramentas para edição de documentos), armazenamento de dados (como arquivos e documentos) e mensagens (webmail) deixarem de ser executadas em estações cliente locais sem conexão à rede e passarem a ser delegadas a equipamentos remotos conectados através da Internet. Cada vez mais surgem empresas que oferecem nuvens de equipamentos conectados através da Internet, com clusters de equipamentos e redundância em múltiplos sites para prestação terceirizada desse tipo de serviço, de modo a oferecer maior desempenho e disponibilidade. Por outro lado, aumentam os riscos de quebra da privacidade dos dados armazenados. Nesse contexto de mudança de um sistema local para a adoção de serviços em nuvens, responda as questões a seguir. a) Como mudam os requisitos da plataforma do cliente? (valor: 2,5 pontos) b) Que requisitos devem ser atendidos pela infraestrutura local de rede e telecomunicações? (valor: 2,5 pontos) c) Como esse tipo de serviço pode apresentar melhor disponibilidade e menor risco de perda de dados? (valor: 2,5 pontos) d) Que benefícios são esperados com a adoção de serviços em nuvens? (valor: 2,5 pontos)",
   "alternativas": {},
   "padrao": "a) O estudante deve apresentar um algoritmo equivalente a um dos dois algoritmos\ndescritos abaixo que transpõem a matriz de adjacência. O algoritmo pode utilizar uma\nmatriz auxiliar ou ser in situ. O algoritmo deve funcionar corretamente quando o\ngrafo de entrada possui uma aresta (i, j) e a sua reversa (j, i).\nSolução 1: Com uma matriz auxiliar:\nAlgoritmo: Grafo reverso\nEntrada: M, uma matriz n por n\nSaída: M', uma matriz n por n\npara i=1 até n faça\npara j=1 até n faça\nM'[j][i] = M[i][j]\ndevolve M'\nSolução 2: Sem uma matriz auxiliar\nAlgoritmo: Grafo reverso\nEntrada: M, uma matriz n por n\nSaída: A matriz M transposta\npara i=1 até n-1 faça\npara j=i+1 até n faça\ntmp = M[i][j]\nM[i][j] = M[j][i]\nM[j][i] = tmp\ndevolve M\nb) O estudante deve apresentar um algoritmo cujo resultado seja idêntico ao dos\nalgoritmos abaixo:\nSolução 1:\nAlgoritmo: 3-ciclos\nEntrada: M, matriz de adjacência\nSaída: Imprime todos os 3-ciclos\npara i=1 até n faça\npara j=i+1 até n faça\nse M[i][j] = 1\nentão\npara k = j+1 até n faça\nse M[j][k] = 1 e M[k][i] = 1\nentão imprima (i, j, k)\nse M[j][i] = 1\nentão\npara k = j+1 até n faça\nse M[i][k] = 1 e M[k][j] = 1\nentão imprima (j, i, k)\nSolução 2:\nAlgoritmo: 3-ciclos\nEntrada: M, matriz de adjacência\nSaída: Imprime todos os 3-ciclos\npara i=1 até n faça\npara j=i+1 até n faça\npara k = j+1 até n faça\nse M[i][j] = 1 e M[j][k] = 1 e M[k][i] = 1\nentão imprima (i, j, k)\nse M[j][i] = 1 e M[i][k] = 1 e M[k][j] = 1\nentão imprima (j, i, k)\nOBS: Qualquer notação em português estruturado, de forma imperativa ou orientada a\nobjetos deve ser considerada, assim como em uma linguagem de alto nível, como\nPascal, C e Java.",
-  "materia_ava": "TEORIA DA COMPUTACAO"
+  "materia": "discreta"
  },
  {
   "id": "2014-CE-D05",
@@ -25,7 +25,7 @@
   "enunciado": "Um processo monitora três parâmetros para controle de qualidade: A, B, C. Cada parâmetro possui um valor na decisão final da qualidade. A existência do parâmetro A pesa 30% na decisão final, enquanto os parâmetros B e pesam 30% e 40%, respectivamente. O grau de aprovação do processo é dado pela soma dos percentuais desses três parâmetros. O produto gerado pelo processo é considerado aprovado, caso o grau de qualidade seja superior ou igual a 60%, e reprovado, se o grau de qualidade for inferior ou igual a 30%. Caso o grau de qualidade esteja entre 30% e 60%, a decisão de aprovação ou reprovação é indiferente. Por exemplo, se um produto apresentar os parâmetros A e B, terá grau de qualidade de 30%+30% = 60%, levando à sua aprovação. Com base na situação descrita, projete um circuito lógico com o menor número possível de portas lógicas, para determinar a aprovação ou não do produto de acordo com a presença de seus parâmetros. As entradas do circuito serão os sinais A, B, C, e a saída será um sinal Z. Para atingir esse objetivo, faça o que se pede nos itens a seguir. a) Monte uma tabela verdade do sistema com a formação ABC. (valor: 4,0 pontos) b) Desenhe o circuito final otimizado utilizando portas lógicas. (valor: 6,0 pontos)",
   "alternativas": {},
   "padrao": "a) O estudante deve apresentar uma tabela verdade conforme abaixo:\nA B C Z\n1 0 0 0\n1 1 0 1\n0 1 1 1\n1 0 1 1\n1 1 1 1\n0 0 0 0\n0 1 0 0\n0 0 1 x\nb) O estudante deve minimizar o circuito, por exemplo, elaborando o mapa de\nKarnaugh, e chegar à equação lógica do circuito a ser desenhado, conforme abaixo:\n\n\n```text\nequação: Z = (A.B) + C;\n```\n\n\ncircuito lógico:",
-  "materia_ava": "MATEMATICA APLICADA"
+  "materia": "sistemas-digitais"
  },
  {
   "id": "2014-CE-Q09",
@@ -45,7 +45,7 @@
    "E": "II, IV e V."
   },
   "gabarito": "E",
-  "materia_ava": "MATEMATICA APLICADA"
+  "materia": "matematica"
  },
  {
   "id": "2014-CE-Q10",
@@ -65,11 +65,11 @@
    "E": "somente L₁ ficará acesa, pois está em série com o capacitor. capacitor."
   },
   "gabarito": "D",
-  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS",
   "imagem": {
    "src": "/banco/img/2014-CE-Q10.png",
    "alt": "Circuito com a fonte de 12 V e as lâmpadas L1, L2 e L3."
-  }
+  },
+  "materia": "circuitos"
  },
  {
   "id": "2014-CE-Q11",
@@ -89,11 +89,11 @@
    "E": "T."
   },
   "gabarito": "E",
-  "materia_ava": "CIENCIAS DO AMBIENTE",
   "imagem": {
    "src": "/banco/img/2014-CE-Q11.png",
    "alt": "Quadro de classificação da DBO, imagem do rio com as seções X, Y, Z, W e T, e quadro dos resultados."
-  }
+  },
+  "materia": "ambiente"
  },
  {
   "id": "2014-CE-Q12",
@@ -113,11 +113,11 @@
    "E": "Placa de aglomerado de fibras de madeira."
   },
   "gabarito": "A",
-  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS",
   "imagem": {
    "src": "/banco/img/2014-CE-Q12.png",
    "alt": "Desenho da parede com as camadas e tabela de condutividade térmica dos materiais."
-  }
+  },
+  "materia": "fisica"
  },
  {
   "id": "2014-CE-Q13",
@@ -137,7 +137,7 @@
    "D": "II e IV."
   },
   "gabarito": "E",
-  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
+  "materia": "fisica"
  },
  {
   "id": "2014-CE-Q14",
@@ -157,11 +157,11 @@
    "E": "C B G H A D E J I F"
   },
   "gabarito": "B",
-  "materia_ava": null,
   "imagem": {
    "src": "/banco/img/2014-CE-Q14.png",
    "alt": "Fluxograma dos dez blocos do sistema."
-  }
+  },
+  "materia": "algoritmos"
  },
  {
   "id": "2014-CE-Q15",
@@ -181,11 +181,11 @@
    "E": "crescente, notas de alunos."
   },
   "gabarito": "C",
-  "materia_ava": "ESTRUTURA DE DADOS E ALGORITMOS",
   "imagem": {
    "src": "/banco/img/2014-CE-Q15.png",
    "alt": "Listagem do programa de ordenação, com as linhas numeradas."
-  }
+  },
+  "materia": "algoritmos"
  },
  {
   "id": "2014-CE-Q16",
@@ -205,7 +205,7 @@
    "E": "III e IV."
   },
   "gabarito": "D",
-  "materia_ava": "CIENCIAS DO AMBIENTE"
+  "materia": "ambiente"
  },
  {
   "id": "2014-CE-Q17",
@@ -225,11 +225,11 @@
    "E": "I, II e III."
   },
   "gabarito": "B",
-  "materia_ava": "MATEMATICA APLICADA",
   "imagem": {
    "src": "/banco/img/2014-CE-Q17.png",
    "alt": "Gráficos I e II com os candidatos A e B."
-  }
+  },
+  "materia": "matematica"
  },
  {
   "id": "2014-CE-Q18",
@@ -249,7 +249,7 @@
    "E": "Baixa plasticidade e alta soldabilidade."
   },
   "gabarito": "A",
-  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
+  "materia": "fisica"
  },
  {
   "id": "2014-CE-Q19",
@@ -269,7 +269,7 @@
    "E": "I, II e III."
   },
   "gabarito": "A",
-  "materia_ava": "TELECOMUNICACOES"
+  "materia": "redes"
  },
  {
   "id": "2014-CE-Q20",
@@ -289,7 +289,7 @@
    "E": "As asserções I e II são proposições falsas."
   },
   "gabarito": "B",
-  "materia_ava": "TELECOMUNICACOES"
+  "materia": "sinais"
  },
  {
   "id": "2014-CE-Q21",
@@ -309,7 +309,7 @@
    "E": "I, II e III."
   },
   "gabarito": "C",
-  "materia_ava": null
+  "materia": "sinais"
  },
  {
   "id": "2014-CE-Q22",
@@ -329,7 +329,7 @@
    "E": "I, II e III."
   },
   "gabarito": "A",
-  "materia_ava": "COMPUTACAO PARALELA"
+  "materia": "discreta"
  },
  {
   "id": "2014-CE-Q23",
@@ -349,11 +349,11 @@
    "E": "101 e 000."
   },
   "gabarito": "D",
-  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS",
   "imagem": {
    "src": "/banco/img/2014-CE-Q23.png",
    "alt": "Estrutura da matriz lógica programável, dos estágios AND e OR às saídas."
-  }
+  },
+  "materia": "sistemas-digitais"
  },
  {
   "id": "2014-CE-Q24",
@@ -373,11 +373,11 @@
    "E": "140. /17 /17"
   },
   "gabarito": "C",
-  "materia_ava": "TELECOMUNICACOES",
   "imagem": {
    "src": "/banco/img/2014-CE-Q24.png",
    "alt": "Diagramas de troca de mensagens do protocolo TCP."
-  }
+  },
+  "materia": "redes"
  },
  {
   "id": "2014-CE-Q25",
@@ -397,11 +397,11 @@
    "E": "As asserções I e II são proposições falsas."
   },
   "gabarito": "D",
-  "materia_ava": "TELECOMUNICACOES",
   "imagem": {
    "src": "/banco/img/2014-CE-Q25.png",
    "alt": "Lugar das raízes no plano complexo."
-  }
+  },
+  "materia": "controle"
  },
  {
   "id": "2014-CE-Q26",
@@ -421,11 +421,11 @@
    "E": "[1,1], [1,0], [1,0], [0,0], [0,0], [0,0]."
   },
   "gabarito": "A",
-  "materia_ava": "ROBOTICA INDUSTRIAL",
   "imagem": {
    "src": "/banco/img/2014-CE-Q26.png",
    "alt": "Quadros da rede neural: pesos, entradas e saídas."
-  }
+  },
+  "materia": "ia"
  },
  {
   "id": "2014-CE-Q27",
@@ -445,11 +445,11 @@
    "E": "Cliente (codcli, nome, email, telefone) Anuncio (codAnu, texto, codCliente, aceiteTermos) codCliente referencia Cliente Categoria (codCategoria, nome) Anuncio (codAnu, texto, codCategoria, codCli, aceiteTermos) codCategoria referencia Categoria codCli referencia Cliente Categoria (codCategoria, nome)"
   },
   "gabarito": "ANULADA",
-  "materia_ava": "IHC",
   "imagem": {
    "src": "/banco/img/2014-CE-Q27.png",
    "alt": "Protótipo de tela de classificados no celular."
-  }
+  },
+  "materia": "ihc"
  },
  {
   "id": "2014-CE-Q28",
@@ -469,11 +469,11 @@
    "E": "o Sample & Hold vai ser ligado no início da coleta de dados e desligado ao seu final, com a chave mantida fechada durante todos os 2 segundos de cada coleta."
   },
   "gabarito": "B",
-  "materia_ava": "ROBOTICA INDUSTRIAL",
   "imagem": {
    "src": "/banco/img/2014-CE-Q28.png",
    "alt": "Diagrama do sistema de aquisição de sinal, do sensor ao conversor."
-  }
+  },
+  "materia": "sinais"
  },
  {
   "id": "2014-CE-Q29",
@@ -493,7 +493,7 @@
    "A": "R₁ e R₄."
   },
   "gabarito": "A",
-  "materia_ava": "TEORIA DA COMPUTACAO"
+  "materia": "linguagens-formais"
  },
  {
   "id": "2014-CE-Q30",
@@ -513,7 +513,7 @@
    "E": "II, III e IV."
   },
   "gabarito": "ANULADA",
-  "materia_ava": null
+  "materia": "sistemas-operacionais"
  },
  {
   "id": "2014-CE-Q31",
@@ -533,7 +533,7 @@
    "C": "NP(1 − P)^(N−1)"
   },
   "gabarito": "C",
-  "materia_ava": "TELECOMUNICACOES"
+  "materia": "redes"
  },
  {
   "id": "2014-CE-Q32",
@@ -553,7 +553,7 @@
    "E": "8."
   },
   "gabarito": "B",
-  "materia_ava": "ESTRUTURA DE DADOS E ALGORITMOS"
+  "materia": "algoritmos"
  },
  {
   "id": "2014-CE-Q33",
@@ -573,7 +573,7 @@
    "E": "I, II e III."
   },
   "gabarito": "C",
-  "materia_ava": null
+  "materia": "economia"
  },
  {
   "id": "2014-CE-Q34",
@@ -593,7 +593,7 @@
    "D": "II e IV."
   },
   "gabarito": "ANULADA",
-  "materia_ava": "ECONOMIA"
+  "materia": "banco-dados"
  },
  {
   "id": "2014-CE-Q35",
@@ -613,6 +613,6 @@
    "E": "2 5 1 2 3 4 5."
   },
   "gabarito": "B",
-  "materia_ava": "PROGRAMACAO PARA CIENCIA DOS DADOS"
+  "materia": "algoritmos"
  }
 ]

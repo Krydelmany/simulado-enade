@@ -1,0 +1,32 @@
+{
+	"_": "Taxonomia de matérias do banco. Fonte única: o app importa este arquivo e o pipeline Python (banco/classificar.py, banco/validar.py, banco/geradas.py) também. `ce` são as 20 áreas do Componente Específico da Portaria INEP nº 161/2026, na ordem do inciso; `fg` são as matérias do AVA que não têm par nessa lista e ficaram como estavam. `ava` registra de qual matéria do AVA cada área herdou as questões.",
+	"ce": [
+		{ "id": "matematica", "inciso": "I", "nome": "Matemática e Estatística", "oficial": "matemática e estatística", "ava": ["MATEMATICA APLICADA"] },
+		{ "id": "fisica", "inciso": "II", "nome": "Física e Ciência dos Materiais", "oficial": "física e ciência dos materiais", "ava": [] },
+		{ "id": "discreta", "inciso": "III", "nome": "Matemática Discreta e Grafos", "oficial": "matemática discreta e teoria dos grafos", "ava": [] },
+		{ "id": "otimizacao", "inciso": "IV", "nome": "Pesquisa Operacional e Otimização", "oficial": "pesquisa operacional e otimização", "ava": [] },
+		{ "id": "algoritmos", "inciso": "V", "nome": "Algoritmos e Estruturas de Dados", "oficial": "algoritmos, fundamentos de programação e estruturas de dados", "ava": ["ESTRUTURA DE DADOS E ALGORITMOS"] },
+		{ "id": "linguagens-formais", "inciso": "VI", "nome": "Linguagens Formais e Autômatos", "oficial": "linguagens formais e autômatos", "ava": ["TEORIA DA COMPUTACAO"] },
+		{ "id": "eng-software", "inciso": "VII", "nome": "Engenharia de Software", "oficial": "engenharia de software", "ava": [] },
+		{ "id": "ihc", "inciso": "VIII", "nome": "Interação Humano-Computador", "oficial": "interação humano-computador", "ava": ["IHC"] },
+		{ "id": "banco-dados", "inciso": "IX", "nome": "Banco de Dados", "oficial": "banco de dados", "ava": [] },
+		{ "id": "circuitos", "inciso": "X", "nome": "Circuitos Elétricos e Eletrônicos", "oficial": "circuitos elétricos e eletrônicos", "ava": [] },
+		{ "id": "sistemas-digitais", "inciso": "XI", "nome": "Sistemas Digitais e Embarcados", "oficial": "sistemas digitais e sistemas embarcados", "ava": ["PROJETO DE SISTEMAS EMBARCADOS"] },
+		{ "id": "arquitetura", "inciso": "XII", "nome": "Arquitetura de Computadores", "oficial": "organização e arquitetura de computadores", "ava": [] },
+		{ "id": "sistemas-operacionais", "inciso": "XIII", "nome": "Sistemas Operacionais", "oficial": "sistemas operacionais", "ava": [] },
+		{ "id": "ciencia-dados", "inciso": "XIV", "nome": "Ciência de Dados", "oficial": "ciência de dados", "ava": ["PROGRAMACAO PARA CIENCIA DOS DADOS"] },
+		{ "id": "sinais", "inciso": "XV", "nome": "Processamento de Sinais", "oficial": "processamento de sinais", "ava": [] },
+		{ "id": "ia", "inciso": "XVI", "nome": "Inteligência Artificial", "oficial": "inteligência artificial", "ava": [] },
+		{ "id": "controle", "inciso": "XVII", "nome": "Automação e Controle", "oficial": "automação e sistemas de controle", "ava": ["ROBOTICA INDUSTRIAL"] },
+		{ "id": "redes", "inciso": "XVIII", "nome": "Redes de Computadores", "oficial": "redes de comunicação e redes de computadores", "ava": ["TELECOMUNICACOES"] },
+		{ "id": "seguranca", "inciso": "XIX", "nome": "Segurança da Computação", "oficial": "segurança de sistemas de computação", "ava": [] },
+		{ "id": "distribuidos", "inciso": "XX", "nome": "Sistemas Distribuídos e Paralelos", "oficial": "sistemas distribuídos e processamento paralelo", "ava": ["COMPUTACAO PARALELA"] }
+	],
+	"fg": [
+		{ "id": "ambiente", "nome": "Ciências do Ambiente", "ava": ["CIENCIAS DO AMBIENTE"] },
+		{ "id": "economia", "nome": "Economia e Gestão", "ava": ["ECONOMIA"] },
+		{ "id": "cultura", "nome": "História e Cultura Afro-Indígena", "ava": ["HISTORIA E CULTURA AFRO-INDIGENA"] },
+		{ "id": "textos", "nome": "Produção de Textos Científicos", "ava": ["PRODUCAO DE TEXTOS CIENTIFICOS"] },
+		{ "id": "formacao-geral", "nome": "Formação Geral", "ava": [] }
+	]
+}

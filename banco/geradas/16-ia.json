@@ -1,0 +1,122 @@
+{
+ "materia": "ia",
+ "questoes": [
+  {
+   "dificuldade": "Fácil",
+   "tema": "Busca em largura",
+   "enunciado": "Um agente procura a saída de um labirinto modelado como grafo, em que todos os movimentos têm o mesmo custo, e usa busca em largura (BFS).\n\nNa busca em largura, o agente",
+   "alternativas": {
+    "A": "expande todos os nós de uma profundidade antes de passar à profundidade seguinte.",
+    "B": "segue sempre o ramo mais profundo antes de retroceder.",
+    "C": "escolhe o nó com o menor valor de heurística, ignorando o custo já percorrido.",
+    "D": "sorteia o próximo nó a ser expandido.",
+    "E": "expande apenas os nós vizinhos do nó objetivo."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Limitações do perceptron simples",
+   "enunciado": "Um perceptron de uma única camada só consegue aprender funções cujas classes possam ser separadas por uma reta (ou hiperplano).\n\nA função lógica de duas entradas que um perceptron simples NÃO consegue aprender é a",
+   "alternativas": {
+    "A": "AND.",
+    "B": "XOR.",
+    "C": "OR.",
+    "D": "NAND.",
+    "E": "NOR."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Aprendizado por reforço",
+   "enunciado": "Um robô aprende a andar testando movimentos: recebe uma recompensa quando avança sem cair e uma penalidade quando cai, e ajusta seu comportamento para maximizar as recompensas acumuladas.\n\nEsse paradigma de aprendizado de máquina é o",
+   "alternativas": {
+    "A": "aprendizado supervisionado.",
+    "B": "aprendizado não supervisionado.",
+    "C": "aprendizado por reforço.",
+    "D": "agrupamento hierárquico.",
+    "E": "sistema especialista baseado em regras fixas."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Heurística admissível no A*",
+   "enunciado": "Um aplicativo de rotas usa o algoritmo A*, com a distância em linha reta até o destino como heurística, e encontra sempre o caminho de menor custo.\n\nPara que o A* garanta a solução ótima, a heurística deve ser admissível, isto é, deve",
+   "alternativas": {
+    "A": "sempre superestimar o custo real até o objetivo.",
+    "B": "valer zero em todos os nós.",
+    "C": "considerar apenas o custo já percorrido desde a origem.",
+    "D": "nunca superestimar o custo real até o objetivo.",
+    "E": "ser escolhida aleatoriamente a cada expansão."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Algoritmo minimax",
+   "enunciado": "Em um jogo de dois jogadores, a raiz da árvore de jogo é um nó MAX com dois filhos, ambos nós MIN. O filho da esquerda tem como folhas os valores 3 e 5; o filho da direita tem como folhas os valores 2 e 9.\n\nO valor minimax da raiz é",
+   "alternativas": {
+    "A": "9.",
+    "B": "2.",
+    "C": "5.",
+    "D": "4.",
+    "E": "3."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Saída de um perceptron",
+   "enunciado": "Um perceptron tem pesos w₁ = 0,5 e w₂ = −1, viés b = 0,2 e função de ativação degrau, que produz 1 quando a soma ponderada mais o viés é maior ou igual a zero e 0 caso contrário. A entrada é x₁ = 1 e x₂ = 0,5.\n\nA saída do perceptron é",
+   "alternativas": {
+    "A": "1, pois a soma ponderada mais o viés vale 0,2.",
+    "B": "0, pois a soma ponderada mais o viés vale −0,2.",
+    "C": "1, pois a soma ponderada mais o viés vale 1,2.",
+    "D": "0, pois a soma ponderada mais o viés vale 0.",
+    "E": "−1, pois o peso w₂ é negativo."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Viés em modelos de aprendizado de máquina",
+   "enunciado": "Uma empresa treinou um modelo para fazer a triagem automática de currículos usando como exemplos as contratações dos últimos dez anos, período em que quase todos os contratados para cargos técnicos eram homens. Para evitar discriminação, a equipe removeu a coluna gênero dos dados de treino.\n\nConsiderando essa situação, avalie as afirmações a seguir.\n\nI. O modelo pode reproduzir o viés histórico mesmo sem a coluna gênero, por meio de atributos correlacionados com ela.\nII. A remoção da coluna gênero garante que o modelo seja justo.\nIII. Comparar as taxas de aprovação do modelo entre grupos é uma forma de detectar discriminação.\n\nÉ correto o que se afirma em",
+   "alternativas": {
+    "A": "I, apenas.",
+    "B": "I e III, apenas.",
+    "C": "II, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Redes neurais e não linearidade",
+   "enunciado": "Um estudante tentou resolver o problema do XOR empilhando três camadas de neurônios, todas com função de ativação linear, e não conseguiu bons resultados. O professor sugeriu trocar a ativação das camadas ocultas por uma função não linear, como a ReLU.\n\nNesse contexto, avalie as asserções a seguir e a relação proposta entre elas.\n\nI. Redes neurais com camadas ocultas e funções de ativação não lineares podem aprender funções que não são linearmente separáveis, como o XOR.\n\nPORQUE\n\nII. A composição de várias camadas com funções de ativação lineares produz um modelo mais expressivo que uma única camada linear.\n\nA respeito dessas asserções, assinale a opção correta.",
+   "alternativas": {
+    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+    "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+    "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+    "E": "As asserções I e II são proposições falsas."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Classificador Naive Bayes",
+   "enunciado": "Um filtro de spam usa o classificador Naive Bayes. No conjunto de treino, 40% das mensagens são spam; a palavra “grátis” aparece em 50% das mensagens de spam e em 5% das mensagens legítimas. Chega uma mensagem que contém a palavra “grátis”, e considera-se apenas essa palavra.\n\nCom base nessas informações, avalie as afirmações a seguir.\n\nI. A probabilidade de a mensagem ser spam, dado que contém “grátis”, é de aproximadamente 87%.\nII. O classificador assume que as palavras são condicionalmente independentes, dada a classe da mensagem.\nIII. Se uma palavra nunca aparecer nas mensagens legítimas do treino, sem suavização (como a de Laplace), sua probabilidade nessa classe será zero e anulará o produto das verossimilhanças.\nIV. O Naive Bayes é um modelo não probabilístico, baseado em distâncias entre exemplos.\n\nÉ correto apenas o que se afirma em",
+   "alternativas": {
+    "A": "I e IV.",
+    "B": "II e IV.",
+    "C": "III e IV.",
+    "D": "I, II e III.",
+    "E": "II, III e IV."
+   },
+   "gabarito": "D"
+  }
+ ]
+}

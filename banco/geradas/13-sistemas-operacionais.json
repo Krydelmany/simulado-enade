@@ -1,0 +1,122 @@
+{
+ "materia": "sistemas-operacionais",
+ "questoes": [
+  {
+   "dificuldade": "Fácil",
+   "tema": "Estados de um processo",
+   "enunciado": "Um processo solicitou a leitura de um arquivo em disco e não pode continuar até que a operação de E/S termine.\n\nEnquanto aguarda, esse processo está no estado",
+   "alternativas": {
+    "A": "em execução.",
+    "B": "pronto.",
+    "C": "novo.",
+    "D": "bloqueado (em espera).",
+    "E": "terminado."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Troca de contexto",
+   "enunciado": "Em um sistema multitarefa, o escalonador interrompe o processo em execução e passa o processador para outro processo.\n\nA troca de contexto, nessa operação, consiste em",
+   "alternativas": {
+    "A": "compilar novamente o código do processo interrompido.",
+    "B": "apagar a memória do processo interrompido.",
+    "C": "transferir o processo interrompido para outro computador.",
+    "D": "reiniciar o sistema operacional.",
+    "E": "salvar o estado do processo em execução (registradores, contador de programa etc.) e carregar o estado do próximo processo."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Threads e processos",
+   "enunciado": "Um servidor web cria várias threads dentro de um mesmo processo para atender requisições simultâneas.\n\nAs threads de um mesmo processo compartilham",
+   "alternativas": {
+    "A": "o espaço de endereçamento e os recursos do processo, como arquivos abertos.",
+    "B": "a mesma pilha de execução.",
+    "C": "o mesmo contador de programa.",
+    "D": "os mesmos valores de registradores durante a execução.",
+    "E": "nenhum recurso, pois cada thread é isolada das demais."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Escalonamento SJF",
+   "enunciado": "Três processos chegam juntos ao sistema, no instante 0, com os seguintes tempos de CPU: P1 = 6 ms, P2 = 3 ms e P3 = 1 ms. O escalonamento é feito pelo algoritmo SJF (menor job primeiro), não preemptivo.\n\nO tempo médio de espera dos processos é de, aproximadamente,",
+   "alternativas": {
+    "A": "5,0 ms.",
+    "B": "1,67 ms.",
+    "C": "3,33 ms.",
+    "D": "2,0 ms.",
+    "E": "6,0 ms."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Paginação e divisão do endereço virtual",
+   "enunciado": "Um sistema com endereços virtuais de 32 bits usa paginação com páginas de 4 KB.\n\nO endereço virtual é dividido em",
+   "alternativas": {
+    "A": "12 bits para o número da página e 20 bits para o deslocamento.",
+    "B": "16 bits para o número da página e 16 bits para o deslocamento.",
+    "C": "20 bits para o número da página e 12 bits para o deslocamento.",
+    "D": "22 bits para o número da página e 10 bits para o deslocamento.",
+    "E": "32 bits para o número da página, sem deslocamento."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Condições para deadlock",
+   "enunciado": "Para que ocorra um impasse (deadlock) entre processos que disputam recursos, certas condições precisam valer ao mesmo tempo.\n\nA opção que NÃO é uma dessas condições necessárias é",
+   "alternativas": {
+    "A": "exclusão mútua.",
+    "B": "posse e espera.",
+    "C": "não preempção de recursos.",
+    "D": "escalonamento por prioridade.",
+    "E": "espera circular."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Produtor-consumidor com semáforos",
+   "enunciado": "Um sistema de aquisição de dados usa um buffer circular de N posições, compartilhado entre uma thread produtora, que insere leituras, e uma thread consumidora, que as grava em disco. A sincronização usa três semáforos: vazio, iniciado com N; cheio, iniciado com 0; e mutex, iniciado com 1.\n\nConsiderando essa solução, avalie as afirmações a seguir.\n\nI. O produtor deve executar down(vazio) antes de down(mutex), para não ficar bloqueado segurando o mutex quando o buffer estiver cheio.\nII. O semáforo mutex garante exclusão mútua no acesso aos índices e ao conteúdo do buffer.\nIII. Se o consumidor executar down(mutex) antes de down(cheio), pode ocorrer deadlock quando o buffer estiver vazio.\n\nÉ correto o que se afirma em",
+   "alternativas": {
+    "A": "I, apenas.",
+    "B": "II, apenas.",
+    "C": "I e III, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Memória virtual e paginação sob demanda",
+   "enunciado": "Em um computador com 8 GB de memória física, um engenheiro executa simultaneamente uma máquina virtual, um navegador e uma ferramenta de simulação cujos espaços de endereçamento somados ultrapassam 12 GB, e o sistema continua funcionando, ainda que mais lento.\n\nNesse contexto, avalie as asserções a seguir e a relação proposta entre elas.\n\nI. A memória virtual permite executar processos cujo tamanho total excede a memória física disponível.\n\nPORQUE\n\nII. Com paginação sob demanda, apenas as páginas efetivamente referenciadas precisam estar na memória física, e as demais permanecem em armazenamento secundário.\n\nA respeito dessas asserções, assinale a opção correta.",
+   "alternativas": {
+    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+    "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+    "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+    "E": "As asserções I e II são proposições falsas."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Algoritmos de substituição de páginas",
+   "enunciado": "Um processo faz referência às páginas na sequência 1, 2, 3, 1, 4, 1, 5, em um sistema com 3 quadros de memória física, inicialmente vazios. Cada referência a uma página ausente da memória conta como uma falta de página, inclusive as primeiras.\n\nCom base nessas informações, avalie as afirmações a seguir.\n\nI. Com o algoritmo FIFO, ocorrem 6 faltas de página.\nII. Com o algoritmo LRU, ocorrem 5 faltas de página.\nIII. Com o algoritmo ótimo, o número de faltas seria menor que 5.\nIV. No algoritmo FIFO, aumentar o número de quadros sempre reduz ou mantém o número de faltas de página.\n\nÉ correto apenas o que se afirma em",
+   "alternativas": {
+    "A": "I e III.",
+    "B": "I e II.",
+    "C": "II e IV.",
+    "D": "I, III e IV.",
+    "E": "II, III e IV."
+   },
+   "gabarito": "B"
+  }
+ ]
+}

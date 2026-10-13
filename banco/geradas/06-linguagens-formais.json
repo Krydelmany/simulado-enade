@@ -1,0 +1,122 @@
+{
+ "materia": "linguagens-formais",
+ "questoes": [
+  {
+   "dificuldade": "Fácil",
+   "tema": "Expressões regulares",
+   "enunciado": "Considere a expressão regular a(b|c)*, sobre o alfabeto {a, b, c}, que descreve cadeias formadas por um a seguido de zero ou mais símbolos b ou c.\n\nA cadeia que pertence à linguagem descrita por essa expressão é",
+   "alternativas": {
+    "A": "acbb.",
+    "B": "ba.",
+    "C": "aab.",
+    "D": "abca.",
+    "E": "cab."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Hierarquia de Chomsky",
+   "enunciado": "Na hierarquia de Chomsky, cada classe de linguagens está associada a um tipo de máquina reconhecedora.\n\nA classe de linguagens reconhecida pelos autômatos de pilha é a das linguagens",
+   "alternativas": {
+    "A": "regulares.",
+    "B": "livres de contexto.",
+    "C": "sensíveis ao contexto.",
+    "D": "recursivamente enumeráveis.",
+    "E": "finitas."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Autômato finito determinístico",
+   "enunciado": "Em um autômato finito determinístico (AFD), para cada estado e para cada símbolo do alfabeto,",
+   "alternativas": {
+    "A": "podem existir várias transições possíveis.",
+    "B": "podem existir transições vazias (ε), sem consumir símbolo.",
+    "C": "existe exatamente uma transição definida.",
+    "D": "só existe transição a partir do estado inicial.",
+    "E": "a transição depende do símbolo que está no topo de uma pilha."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Linguagem aceita por AFD",
+   "enunciado": "Um AFD sobre o alfabeto {0, 1} tem dois estados, P (inicial e de aceitação) e Q (não de aceitação). Ao ler 0, o autômato permanece no estado em que está; ao ler 1, alterna entre P e Q.\n\nA cadeia aceita por esse autômato é",
+   "alternativas": {
+    "A": "1.",
+    "B": "0111.",
+    "C": "10.",
+    "D": "1001.",
+    "E": "111."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Linguagens não regulares",
+   "enunciado": "O lema do bombeamento permite provar que certas linguagens não podem ser reconhecidas por nenhum autômato finito.\n\nEntre as linguagens a seguir, sobre o alfabeto {a, b}, a que NÃO é regular é",
+   "alternativas": {
+    "A": "{aⁿ | n ≥ 0}.",
+    "B": "o conjunto das cadeias que terminam em ab.",
+    "C": "{aᵐbⁿ | m ≥ 0 e n ≥ 0}.",
+    "D": "o conjunto das cadeias com número par de símbolos a.",
+    "E": "{aⁿbⁿ | n ≥ 0}."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Derivação em gramática livre de contexto",
+   "enunciado": "Considere a gramática livre de contexto com símbolo inicial S e as produções S → aSb | ε, em que ε é a cadeia vazia.\n\nA cadeia gerada por essa gramática é",
+   "alternativas": {
+    "A": "aabb.",
+    "B": "abab.",
+    "C": "aab.",
+    "D": "ba.",
+    "E": "abb."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Análise léxica e autômatos finitos",
+   "enunciado": "Ao implementar o analisador léxico de uma linguagem de configuração, uma equipe definiu que identificadores são formados por uma letra seguida de letras ou dígitos, que números são sequências de um ou mais dígitos e que algumas palavras são reservadas. A equipe também cogitou validar, já no analisador léxico, o balanceamento de parênteses aninhados nas expressões.\n\nConsiderando essa situação, avalie as afirmações a seguir.\n\nI. Os padrões de identificadores e de números podem ser especificados por expressões regulares e reconhecidos por autômatos finitos.\nII. O balanceamento de parênteses aninhados, com profundidade arbitrária, pode ser verificado por um autômato finito determinístico.\nIII. Todo autômato finito não determinístico pode ser convertido em um determinístico equivalente, possivelmente com um número exponencialmente maior de estados.\n\nÉ correto o que se afirma em",
+   "alternativas": {
+    "A": "I, apenas.",
+    "B": "I e III, apenas.",
+    "C": "II, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Palíndromos e autômatos de pilha",
+   "enunciado": "Ferramentas de verificação de sequências de DNA e de validação de textos simétricos frequentemente lidam com palíndromos, cadeias que são lidas da mesma forma da esquerda para a direita e da direita para a esquerda.\n\nNesse contexto, avalie as asserções a seguir e a relação proposta entre elas.\n\nI. A linguagem L = {w ∈ {a, b}* | w é palíndromo} é livre de contexto.\n\nPORQUE\n\nII. Toda linguagem livre de contexto é reconhecida por algum autômato de pilha determinístico.\n\nA respeito dessas asserções, assinale a opção correta.",
+   "alternativas": {
+    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+    "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+    "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+    "E": "As asserções I e II são proposições falsas."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Decidibilidade e problema da parada",
+   "enunciado": "Uma empresa de ferramentas de desenvolvimento pretende lançar um analisador que, dado o código-fonte de qualquer programa e uma entrada qualquer, informe com certeza se o programa termina ou se entra em execução infinita.\n\nConsiderando essa proposta, avalie as afirmações a seguir.\n\nI. O problema corresponde ao problema da parada, que é indecidível para máquinas de Turing.\nII. Seria possível construir esse analisador para qualquer programa, desde que houvesse memória suficiente disponível.\nIII. Ferramentas de análise estática podem detectar laços infinitos em casos particulares, embora não em todos.\nIV. A tese de Church-Turing afirma que as máquinas de Turing são mais poderosas que qualquer computador real.\n\nÉ correto apenas o que se afirma em",
+   "alternativas": {
+    "A": "I e II.",
+    "B": "II e IV.",
+    "C": "III e IV.",
+    "D": "I e III.",
+    "E": "I, II e III."
+   },
+   "gabarito": "D"
+  }
+ ]
+}

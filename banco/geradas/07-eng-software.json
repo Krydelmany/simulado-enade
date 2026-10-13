@@ -1,0 +1,122 @@
+{
+ "materia": "eng-software",
+ "questoes": [
+  {
+   "dificuldade": "Fácil",
+   "tema": "Modelos de processo de software",
+   "enunciado": "Em um modelo de processo de software, as fases de requisitos, projeto, implementação, testes e manutenção são executadas em sequência, e cada fase começa somente após a conclusão da anterior.\n\nEsse modelo é conhecido como",
+   "alternativas": {
+    "A": "Scrum.",
+    "B": "espiral.",
+    "C": "Extreme Programming (XP).",
+    "D": "Kanban.",
+    "E": "cascata."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Níveis de teste",
+   "enunciado": "Um desenvolvedor escreveu testes automatizados que verificam, de forma isolada, se a função que calcula o frete retorna os valores esperados para diferentes pesos e distâncias.\n\nEsse tipo de teste é denominado teste",
+   "alternativas": {
+    "A": "de unidade.",
+    "B": "de aceitação.",
+    "C": "de sistema.",
+    "D": "de usabilidade.",
+    "E": "de carga."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Requisitos funcionais e não funcionais",
+   "enunciado": "Durante o levantamento de requisitos de um sistema de vendas, a equipe listou várias necessidades.\n\nA necessidade que corresponde a um requisito NÃO funcional é:",
+   "alternativas": {
+    "A": "O sistema deve permitir cadastrar clientes.",
+    "B": "O sistema deve responder a 95% das consultas em menos de 2 segundos.",
+    "C": "O sistema deve emitir nota fiscal para cada venda.",
+    "D": "O usuário deve poder recuperar a senha por e-mail.",
+    "E": "O sistema deve gerar um relatório mensal de vendas."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Papéis no Scrum",
+   "enunciado": "Em um time que adota Scrum, uma pessoa é responsável por maximizar o valor do produto, gerenciar o Product Backlog e decidir a ordem de prioridade dos itens a desenvolver.\n\nEsse papel é o de",
+   "alternativas": {
+    "A": "Scrum Master.",
+    "B": "desenvolvedor.",
+    "C": "Product Owner.",
+    "D": "gerente de projeto.",
+    "E": "cliente final."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Acoplamento e coesão",
+   "enunciado": "Em um sistema, o módulo de relatórios lê e altera diretamente as variáveis internas do módulo de faturamento. Toda vez que a estrutura interna do faturamento muda, o módulo de relatórios quebra.\n\nEssa situação caracteriza",
+   "alternativas": {
+    "A": "alta coesão, desejável por concentrar responsabilidades relacionadas.",
+    "B": "baixo acoplamento, que facilita a reutilização dos módulos.",
+    "C": "alta coesão e baixo acoplamento, o que dispensa mudanças.",
+    "D": "alto acoplamento, sendo recomendável que a comunicação ocorra por meio de uma interface pública bem definida.",
+    "E": "baixa coesão, que se resolve unindo os dois módulos em um só."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Padrões de projeto: Singleton",
+   "enunciado": "Em uma aplicação, o objeto que gerencia o pool de conexões com o banco de dados deve existir em uma única instância, acessível a partir de qualquer parte do código.\n\nO padrão de projeto que atende a essa necessidade é o",
+   "alternativas": {
+    "A": "Observer.",
+    "B": "Strategy.",
+    "C": "Adapter.",
+    "D": "Factory Method.",
+    "E": "Singleton."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Integração contínua",
+   "enunciado": "Uma equipe de desenvolvimento adotou integração contínua: a cada push no repositório, um servidor compila o projeto e executa a suíte de testes automatizados, avisando a equipe quando algo falha. Em reunião, foram feitas algumas observações sobre a prática.\n\nConsiderando essa situação, avalie as afirmações a seguir.\n\nI. A integração contínua reduz o custo de corrigir defeitos de integração, porque eles são detectados logo após a alteração que os introduziu.\nII. Se todos os testes automatizados passam, está garantido que o software não tem defeitos.\nIII. Com integração contínua, os testes de unidade tornam-se dispensáveis, pois o servidor já verifica se o projeto compila.\n\nÉ correto o que se afirma em",
+   "alternativas": {
+    "A": "I, apenas.",
+    "B": "II, apenas.",
+    "C": "I e III, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Scrum e Manifesto Ágil",
+   "enunciado": "Uma empresa que desenvolvia software pelo modelo em cascata decidiu migrar para métodos ágeis, depois de vários projetos entregues com atraso e com funcionalidades que os clientes não usavam.\n\nNesse contexto, avalie as asserções a seguir e a relação proposta entre elas.\n\nI. No Scrum, o trabalho é organizado em sprints de duração fixa, ao final das quais se produz um incremento potencialmente utilizável do produto.\n\nPORQUE\n\nII. O Manifesto Ágil valoriza mais os indivíduos e as interações do que os processos e as ferramentas.\n\nA respeito dessas asserções, assinale a opção correta.",
+   "alternativas": {
+    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+    "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+    "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+    "E": "As asserções I e II são proposições falsas."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Projeto de casos de teste e valores-limite",
+   "enunciado": "O método a seguir, em Java, classifica a nota de um aluno: devolve −1 para nota inválida, 1 para aprovado e 0 para reprovado. Notas válidas vão de 0 a 100.\n\n```java\nint classificar(int nota) {\n    if (nota < 0 || nota > 100) {\n        return -1;\n    }\n    if (nota >= 60) {\n        return 1;\n    }\n    return 0;\n}\n```\n\nCom base nesse código, avalie as afirmações a seguir sobre o projeto de casos de teste.\n\nI. Os casos de teste com nota = 59 e nota = 60 exercitam o limite entre os retornos 0 e 1.\nII. Três casos de teste, com notas −5, 70 e 30, são suficientes para executar todos os comandos return do método.\nIII. O caso nota = 100 deve retornar −1, pois está no limite do intervalo válido.\n\nÉ correto o que se afirma em",
+   "alternativas": {
+    "A": "I, apenas.",
+    "B": "III, apenas.",
+    "C": "I e II, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+   },
+   "gabarito": "C"
+  }
+ ]
+}

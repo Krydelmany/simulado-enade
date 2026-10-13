@@ -11,7 +11,7 @@
   "enunciado": "Os autômatos celulares são sistemas dinâmicos discretos no espaço e no tempo que operam em uma rede regular finita ou infinita e são caracterizados por interações locais. Cada elemento, denominado célula, está associado a um dado estado em um conjunto discreto e é atualizado com base nos estados anteriores de suas células vizinhas imediatas, de acordo com um conjunto de regras locais. Os autômatos celulares geram um grande interesse na área de quando foi criado o Jogo da Vida, e agora são amplamente estudados para modelagem e simulação de processos espaço-temporais reais em uma ampla variedade de domínios de aplicação. SLIMI, R. et al. A cellular automata model for Chagas disease. Applied Mathematical Modelling, Amsterdã, v. 33, p. 1072-1085, 2009 (adaptado). As regras do Jogo da Vida são: e qualquer célula viva com menos de dois vizinhos vivos morre de solidão; e qualquer célula viva com mais de três vizinhos vivos morre de superpopulação; e qualquer célula viva com dois ou três vizinhos vivos continua no mesmo estado para a próxima geração; e qualquer célula morta com três vizinhos vivos torna-se uma célula viva. Nesse contexto, escreva uma rotina em C (ANSI) em que se utilizem as regras acima descritas para definir o estado atual de uma célula com base no seu estado anterior e no de suas vizinhas. Ao elaborar sua resposta, considere que: e as células são entradas de uma matriz; e os casos não cobertos pelas regras significam permanência no mesmo estado; e a rotina deve ter como parâmetros a matriz M, definida como “unsign ed char **M, e os índices 1, ) da posição da célula, definidos como inteiros; e arede é quadriculada, o valor 1 (um) na matriz significa célula viva e o valor O (zero) significa célula morta; e osvizinhos correspondem às 4 células que compartilham lados e às 4 diagonais da célula de interesse; e não há necessidade de se preocupar com os limites da matriz. (valor: 10,0 pontos)",
   "alternativas": {},
   "padrao": "O estudante deve apresentar uma solução que contenha uma contagem dos vizinhos vivos e, a\npartir dessa contagem, a implementação das condições de atualização da célula.\nA contagem pode ser realizada somando-se explicitamente as 8 posições da matriz em torno\nda posição atual (passada como parâmetro) ou utilizando repetições (que evitem ou\ncompensem a soma da posição atual).\na.\nO enunciado orienta para que a solução despreze os limites da matriz, o que, na\nverdade simplifica o problema para que se considere qualquer célula como tendo sempre 8\nvizinhos (1 superior, 1 inferior, 2 laterais e 4 diagonais\nb.\nPercorrer somando os oito vizinhos de uma posição (i, j) significa, portanto, somar os\nvalores contidos nas posições: (i-1, j-1), (i-1, j), (i-1, j+1), (i, j-1), (i, j+1), (i+1, j-1), (i+1, j), (i+1,\nj+1).\nc.\nA lógica da solução para a soma indicada pode variar, incluindo o loop de acúmulo da\nsoma da célula central com as 8 vizinhas seguida da subtração dessa posição central, ou a\nsoma explícita das posições indicadas.\nA implementação das condições de atualização deve seguir a lógica da tabela a seguir:\nCelula\nNova\nqtd_viz_vivos\nModifica?\nAtual\ngeração\n<2\nSIM\n==2\nNÃO\n==3\nNÃO\n>3\nSIM\n<2\nNÃO\n==2\nNÃO\n==3\nSIM\n>3\nNÃO\nExemplos de respostas possíveis:\n\n```c\nvoid jogo (unsigned char **M, int i, int j) {\nunsigned char qtd_viz_vivos = 0;\n```\n\nint p, q;\n\n```c\nfor (p=-1; p<=1; p++)\nfor (q=-1; q<=1; q++)\n```\n\nqtd_viz_vivos+= M[i+p][j+q];\n\n```c\nqtd_viz_vivos-= M[i][q]; // subtrai a central\nif (qtd_viz_vivos<2 || qtd_viz_vivos>3)\nM[i][j]=0;\nelse if (qtd_viz_vivos==3)\n```\n\nM[i][j]=1\n\n```c\n}\nunsigned char jogo (unsigned char **M, int i, int j) {\nunsigned char qtd_viz_vivos = 0;\n```\n\nint p, q;\n\n```c\nfor (p=i-1; p<=i+1; p++)\nfor (q=j-1; q<=j+1; q++)\nif ( !(p==i && q==j) ) // não soma atual\n```\n\nqtd_viz_vivos+= M[i][j];\n\n```c\nif ( (M[i][j] && qtd_viz_vivos<2) ||\n(M[i][j] && qtd_viz_vivos>3) )\nM[i][j] = 0;\nelse if( (M[i][j] && qtd_viz_vivos==2) ||\n```\n\nqtd_viz_vivos==3 )\n\n```c\nM[i][j] = 1;\nreturn M[i][j]; // Bastaria atualizar M, pois é passada\n// como referência, mas como foi declarada\n// diferente de void, deve retornar o valor\n}\nvoid jogo (unsigned char **M, int i, int j) {\nunsigned char qtd_viz_vivos = 0;\n```\n\nint p, q;\n\n```c\nfor (p=i-1; p<=i+1; p++)\nfor (q=j-1; q<=j+1; q++)\nif (p==i && q==j)\ncontinue; // não soma atual\n```\n\nelse qtd_viz_vivos+= M[i][j];\n\n```c\nif (M[i][j])\nif (qtd_viz_vivos<2 || qtd_viz_vivos>3)\nM[i][j] = 0;\nelse if (qtd_viz_vivos == 3)\nM[i][j] = 1;\n}\nvoid jogo (unsigned char **M, int i, int j) {\n```\n\nunsigned char qtd_viz_vivos;\nqtd_viz_vivos = M[i-1][j-1]+M[i-1][j]+\nM[i-1][j+1]+M[i][j-1]+\nM[i][j+1]+M[i+1][j-1]+\nM[i+1][j]+M[i+1][j+1];\n\n```c\nif ( (M[i][j] && qtd_viz_vivos<2) ||\n(M[i][j] && qtd_viz_vivos>3) )\nM[i][j] = 0;\nelse if ( qtd_viz_vivos == 3 )\nM[i][j] = 1;\n}\n```",
-  "materia_ava": "TEORIA DA COMPUTACAO"
+  "materia": "algoritmos"
  },
  {
   "id": "2017-CE-D04",
@@ -25,11 +25,11 @@
   "enunciado": "O monitoramento ambiental é um processo de coleta de dados, estudo e acompanhamento contínuo e sistemático das variáveis ambientais. No contexto da realização de um monitoramento ambiental, é projetado um coletor das seguintes variáveis climáticas: radiação solar, temperatura do ambiente, pressão atmosférica e umidade. Esse coletor utiliza um microcontrolador de 32 bits provido de um módulo de comunicação RS-232, um de comunicação 12C, um de conversão analógico-digital de 12 bits, dois temporizadores, um controlador de interrupção e uma memória estática de 8 Kbytes. As informações das variáveis ambientais devem ser registradas pelo coletor em intervalos de 30 min e cada dado deve ser armazenado, em resolução de 16 bits, pelo período de um mês. Para medir a temperatura do ambiente, foi selecionado um termistor do tipo NTC (negative temperature coefficient). A figura a seguir apresenta o circuito projetado para realizar a interface entre este termistor e o pino de entrada analógica do microcontrolador, de forma que a resistência variável R do termistor seja convertida em tensão compatível com a faixa de tensão de trabalho [0, Vref] do conversor analógico-digital do microcontrolador. 10K E, Termistores Símbolos Circuito de interface Com base nesse projeto, faça o que se pede nos itens a seguir. a) Cite duas características que devem ser consideradas na escolha do microcontrolador. (valor: 2,0 pontos) b) Obtenha uma equação que relacione a resistência variável R do termistor com o valor digital \"x\" gerado pelo conversor analógico-digital. (valor: 4,0 pontos) c) Calcule o tamanho dos dados a serem preservados, em Kbits, e, com base nesse valor, indique qual o tamanho mínimo de memória que deve ser utilizado para armazenar os dados. (valor: 4,0 pontos)",
   "alternativas": {},
   "padrao": "a) O estudante deve citar quaisquer dois dos aspectos e/ou características apresentadas no\nquadro a seguir.\nAspecto\nCaracterística\n\nVelocidade\n\nArquitetura\nDesempenho da\nUnidade de \nTamanho da palavra\nProcessamento\n\nRepertório de Instruções\n\nNível de paralelismo\n\nUnidades de memória\nFuncionalidades\n\nMódulo de interfaceamento com periféricos\npresentes\n\nMecanismos de Interrupção\n\nPeriféricos Integrados\n\nInterface com Hardware\nTestabilidade \nSuporte à Depuração\n\nViabilidade econômico-financeira\n\nViabilidade Operacional\nViabilidade\n\nViabilidade de Mercado\n\nViabilidade Conceitual\n\nAdequação à temperatura do ambiente\nAdequação ao \nAdequação à radiação solar do ambiente\nambiente de\nAdequação à pressão atmosférica do ambiente\noperação \n\nAdequação à umidade do ambiente\nb) O estudante deve mencionar (1) a tensão de entrada no microcontrolador e (2) a relação\nentre esta tensão de entrada e o valor digital gerado pelo conversor analógico-digital.\n(1) A tensão Vo amostrada no pino analógico do microcontrolador é\n(2) Como a relação é linear e a resolução do conversor é de 12 bits, temos a seguinte\nproporção linear entre o valor analógico V₀ e o valor digital x:\nOu seja, uma solução para a questão é\nO estudante pode substituir ainda Vref pela primeira equação e chegar a uma segunda possível\nsolução\nc) O estudante deve mostrar (1) a quantidade total de bits que corresponde ao volume de\ndados coletados ao longo de um mês, e (2) o critério utilizado para seleção do tamanho de\nmemória apropriado.\n(1) Para armazenar os 4 dados de 16 bits (2 bytes × 8 bits/byte) amostrados na frequência de\n2 amostras por hora por 31 dias (quantidade máxima de dias por mês), são necessários\n(2) Deve-se escolher uma memória com capacidade igual ou maior que 93 Kbits. Portanto, a\nescolha deve ser uma memória de 128 Kbits.",
-  "materia_ava": "CIENCIAS DO AMBIENTE",
   "imagem": {
    "src": "/banco/img/2017-CE-D04.png",
    "alt": "Termistores NTC e circuito de interface com a resistência de referência."
-  }
+  },
+  "materia": "sistemas-digitais"
  },
  {
   "id": "2017-CE-D05",
@@ -43,7 +43,7 @@
   "enunciado": "A gerência de memória é a parte do sistema operacional que tem por finalidade gerir os recursos de memória e colocá-los à disposição dos usuários da maneira mais eficiente possível. Uma técnica de alocação de memória amplamente utilizada é a alocação particionada dinâmica, em que cada programa utiliza o espaço de que necessita, passando a ser este espaço a sua partição. Considere um sistema que, em um dado momento, possua, em sua memória principal, áreas livres com os seguintes tamanhos: 10 KB, 4 KB, 20 KB, 19 KB, 27 KB, 9 KB, 12 KB, 13 KB e 15 KB. Considere, ainda, que um programa de 12 KB será carregado na memória desse sistema. Com base nesse contexto, faça O que se pede nos itens a seguir. a) Indique em qual partição do sistema esse programa seria alocado, no caso do uso de cada uma das seguintes estratégias: first-fit, best-fit e worst-fit. Justifique sua resposta. (valor: 6,0 pontos) b) Indique, dentre as estratégias first-fit, best-fit e worst-fit, a que conduz à menor fragmentação da memória no contexto apresentado. Em seguida, descreva uma situação em que a estratégia indicada não é a melhor opção para minimizar problemas de fragmentação da memória. (valor: 4,0 pontos)",
   "alternativas": {},
   "padrao": "a) O estudante deve mencionar que a estratégia first-fit escolhe a primeira partição em que o\nprograma possa ser alocado. Nesse caso seria a 3ª partição: 20K. A estratégia best-fit escolhe a\npartição que irá produzir a menor área livre após a alocação. Nesse caso, seria a 7ª partição:\n12K. A estratégia worst-fit escolhe a partição que irá produzir a maior área livre após a\nalocação. Nesse caso seria 5ª partição: 27K.\nb) O estudante deve mencionar que a estratégia best-fit é a mais indicada, pois produz a\nmenor fragmentação no contexto apresentado. O estudante deve descrever qualquer situação\nem que a escolha da partição (ainda suficiente para acomodar o programa) deixe um espaço\nmuito pequeno para alocações subsequentes, produzindo vários pequenos espaços difíceis de\nalocar.",
-  "materia_ava": null
+  "materia": "sistemas-operacionais"
  },
  {
   "id": "2017-CE-Q10",
@@ -51,7 +51,7 @@
   "parte": "CE",
   "numero": "10",
   "tipo": "objetiva",
-  "tema": "Diagrama de tensão e comercial",
+  "tema": "Comércio internacional e política ambiental",
   "dificuldade": "Difícil",
   "figura": null,
   "enunciado": "A forte inserção brasileira no comércio internacional e a crescente preocupação mundial com os problemas ambientais desafiam o Brasil para construir uma política de integração entre o setor produtivo e o meio ambiente. Disponível em: <http://www.mma.gov.br>. Acesso em: 17 jul. 2017 (adaptado). O meio ambiente é fornecedor de matéria- prima e, ao mesmo tempo, receptor de resíduos oriundos das atividades produtivas, o que deve ser necessariamente considerado para o estabelecimento de políticas ambientais e econômicas mais eficientes na gestão e uso dos recursos naturais. MOURA, A. M.; ROMA, J. C.; SACCARO, N. Problemas econômicos, soluções ambientais. Boletim regional, urbano e ambiental. Brasília: Ipea, n. 15, jul./dez. 2015 (adaptado). A partir desses textos, avalie as afirmações a seguir. | Os benefícios da biodiversidade e dos serviços ecossistêmicos são de difícil valoração econômica. ll. As mudanças climáticas resultantes da emissão de gases de efeito estufa têm gerado oportunidades para o desenvolvimento e a utilização de fontes renováveis de energia, como alternativas ao uso de combustíveis fósseis. HI. A degradação ambiental pode ocasionar limitações ao crescimento econômico sustentável. IV. A geração de riqueza e desenvolvimento sem a elevação do padrão de consumo dos recursos naturais constitui impedimento para o crescimento de países em desenvolvimento. V. Os tratados internacionais ambientais exigem entrelaçamento entre lucros obtidos, desenvolvimento social de comunidades tradicionais e conservação dos ecossistemas. É correto apenas o que se afirma em lelv.",
@@ -63,7 +63,7 @@
    "E": "II, III, IV e V."
   },
   "gabarito": "D",
-  "materia_ava": "MATEMATICA APLICADA"
+  "materia": "ambiente"
  },
  {
   "id": "2017-CE-Q11",
@@ -71,7 +71,7 @@
   "parte": "CE",
   "numero": "11",
   "tipo": "objetiva",
-  "tema": "Conceitos de resistência térmica",
+  "tema": "Sistema Toyota de produção",
   "dificuldade": "Média",
   "figura": null,
   "enunciado": "O sistema Toyota de produção apresenta-se como uma alternativa mais eficiente ao modelo fordista de produção, que explora as vantagens de produção em série. O modelo toyotista consiste em cadeia de suprimentos enxuta, flexível e altamente terceirizada, que prevê a eliminação quase total dos estoques e a busca constante pela agilização do processo produtivo. SOBRAL, F.; PECI, A. Administração: teoria e prática no contexto brasileiro. São Paulo: Pearson, 2013 (adaptado). O sistema logístico e produtivo conhecido como just in time é uma filosofia de administração da produção baseada no modelo Toyota de produção. Esse novo enfoque na administração da manufatura surgiu de uma visão estratégica e inovadora das pessoas envolvidas na gestão empresarial, buscando vantagem competitiva por intermédio de uma melhor utilização do processo produtivo. Com base nas informações apresentadas, avalie as afirmações a seguir, a respeito do sistema produtivo just in time. |. Estimula o desenvolvimento de melhorias constantes, não apenas dos procedimentos e processos, mas também do homem dentro da empresa, o que permite desenvolver o potencial humano dentro das organizações e ampliar a base de confiança obtida pela transparência e honestidade das ações. Il. A implementação dos princípios da organização começa pela fábrica e suas repercussões estendem-se por toda a empresa, o que caracteriza O princípio da visibilidade, fundamentado no objetivo de tornar visíveis os problemas onde quer que possam existir. Tem como objetivo administrar a manufatura de forma bem simples e eficiente, otimizando o uso dos recursos de capital, equipamento e mão de obra, o que resulta em um sistema capaz de atender às exigências do cliente, em termos de qualidade e prazo de entrega, ao menor custo. É correto o que se afirma em",
@@ -83,7 +83,7 @@
    "E": "I, II e III."
   },
   "gabarito": "C",
-  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
+  "materia": "economia"
  },
  {
   "id": "2017-CE-Q12",
@@ -91,7 +91,7 @@
   "parte": "CE",
   "numero": "12",
   "tipo": "objetiva",
-  "tema": "Sistema Toyota de produção e lei de resfriamento",
+  "tema": "Lei de resfriamento e equações diferenciais",
   "dificuldade": "Média",
   "figura": null,
   "enunciado": "De acordo com a Lei de Resfriamento de Corpos, a taxa de variação da temperatura de um corpo em relação ao tempo é proporcional à diferença entre a temperatura do corpo e a temperatura ambiente. Considere que T(t) é a temperatura do corpo em função do tempo, 4 é a temperatura do ambiente, té e ké a constante de proporcionalidade. Nesse contexto, o modelo matemático correspondente à Lei de Resfriamento de Corpos e à função resultante de sua resolução são dados, respectivamente, por",
@@ -103,7 +103,7 @@
    "E": "dT/dt = k(T − A); T(t) = e^(kt) + A"
   },
   "gabarito": "A",
-  "materia_ava": "COMPUTACAO PARALELA"
+  "materia": "matematica"
  },
  {
   "id": "2017-CE-Q13",
@@ -123,7 +123,7 @@
    "E": "cerâmico poroso, em razão de seu baixo coeficiente de dilatação térmica e de sua baixa condutividade térmica."
   },
   "gabarito": "E",
-  "materia_ava": null
+  "materia": "fisica"
  },
  {
   "id": "2017-CE-Q14",
@@ -143,7 +143,7 @@
    "E": "000 S 2000 Profundidade Ee) MM E á 10 055 20 111 30 166 40 221 Pressão (kPa)"
   },
   "gabarito": "A",
-  "materia_ava": "MATEMATICA APLICADA"
+  "materia": "fisica"
  },
  {
   "id": "2017-CE-Q15",
@@ -151,7 +151,7 @@
   "parte": "CE",
   "numero": "15",
   "tipo": "objetiva",
-  "tema": "Sensores eGrandezas físicas",
+  "tema": "Média, desvio-padrão e dispersão relativa",
   "dificuldade": "Média",
   "figura": null,
   "enunciado": "Suponha que determinado programa de computador seja executado por meio de 13 etapas, com tempo médio de 50 segundos ao todo e dispersão relativa de 10% em torno da média. Considere que uma equipe de engenharia propõe um novo algoritmo que reduz em 30% o tempo de execução de todas as 13 etapas desse programa. Nesse contexto, avalie as afirmações a seguir, a respeito do tempo de execução do novo algoritmo. |. O tempo médio por etapa será de 32,5 segundos. Il. O desvio-padrão permanecerá inalterado. Il. A dispersão relativa em torno da média permanecerá inalterada. É correto o que se afirma em",
@@ -163,7 +163,7 @@
    "E": "Lite."
   },
   "gabarito": "B",
-  "materia_ava": "ROBOTICA INDUSTRIAL"
+  "materia": "matematica"
  },
  {
   "id": "2017-CE-Q16",
@@ -171,7 +171,7 @@
   "parte": "CE",
   "numero": "16",
   "tipo": "objetiva",
-  "tema": "Campanha publicitária e execução de programa",
+  "tema": "Eficiência energética em residências",
   "dificuldade": "Fácil",
   "figura": null,
   "enunciado": "Em uma campanha publicitária que visa à redução do consumo de energia elétrica em residências, identificam-se as recomendações a seguir: e substitua lâmpadas incandescentes por fluorescentes compactas ou lâmpadas de LED; e evite usar o chuveiro elétrico com a chave na posição “inverno” ou “quente”; e acumule grande quantidade de roupa para ser passada a ferro elétrico de uma só vez; e evite o uso de tomadas múltiplas para ligar vários aparelhos simultaneamente; e utilize, na instalação elétrica, fios de diâmetros recomendados às suas finalidades. A característica comum a essas recomendações é a proposta de economizar energia por intermédio da redução",
@@ -183,7 +183,7 @@
    "E": "do consumo de energia térmica convertida em energia elétrica."
   },
   "gabarito": "C",
-  "materia_ava": null
+  "materia": "circuitos"
  },
  {
   "id": "2017-CE-Q17",
@@ -191,7 +191,7 @@
   "parte": "CE",
   "numero": "17",
   "tipo": "objetiva",
-  "tema": "Estruturas de dados e automação",
+  "tema": "Otimização com multiplicadores de Lagrange",
   "dificuldade": "Média",
   "figura": null,
   "enunciado": "A importância da otimização no processo produtivo é inegável. Do ponto de vista matemático, para otimizar determinada grandeza, é necessário modelá-la de acordo com uma função e, a partir daí, conforme a situação, procurar um máximo ou um mínimo. Uma das formas usadas para minimizar funções é o método dos multiplicadores de Lagrange. Um fabricante de latinhas de refrigerante deve propor uma lata cilíndrica de volume V, . Essa lata será fabricada usando-se duas ligas metálicas distintas, sendo uma para a parte lateral e outra para a base e a tampa. Ele deseja calcular o raio (7) e a altura (A) da lata para que o custo de sua produção seja o menor possível. Sabe-se que a área total da lata é dada por A(r, h) e que o custo total de produção da lata, que depende apenas do material utilizado na sua produção, é C(r, h). Para a solução desse problema, será utilizado o método dos multiplicadores de Lagrange. Com base nessa situação, avalie as afirmações a seguir, acerca da solução desse problema. | O custo de produção da lata pode ser expresso por + em que K, e K, são constantes que dependem do custo de cada uma das ligas metálicas por unidade de área. Il. A função a ser minimizada da área total da lata é A(r, h) = + 2x7”. HI. O vínculo na minimização, relacionado ao volume da lata, é dado 9(7, h) = — V, . | por Iv. O sistema de equações a ser montado é VC(r, h) = AVg(r, h), no qual À é denominado | multiplicador de Lagrange. É correto apenas o que se afirma em",
@@ -203,7 +203,7 @@
    "D": "I, III e IV."
   },
   "gabarito": "D",
-  "materia_ava": "ESTRUTURA DE DADOS E ALGORITMOS"
+  "materia": "otimizacao"
  },
  {
   "id": "2017-CE-Q18",
@@ -223,7 +223,7 @@
    "E": "200%"
   },
   "gabarito": "B",
-  "materia_ava": "ROBOTICA INDUSTRIAL"
+  "materia": "fisica"
  },
  {
   "id": "2017-CE-Q19",
@@ -237,12 +237,12 @@
   "enunciado": "Considere que o gestor do restaurante de uma universidade pretenda implantar um sistema de catracas eletrônicas utilizando circuitos combinatórios para o acesso dos clientes à sala de alimentação. O funcionamento básico desse sistema é descrito a seguir. Deve haver quatro filas de espera: A, B, Ce D; deve haver sensores que indiquem a presença de clientes nas filas, sendo atribuído o valor 1 quando houver cliente na fila, e O quando a fila estiver vazia; quando determinada fila estiver vazia, sua catraca deverá ficar travada, e as filas devem estar na ordem de prioridade a seguir: A>B>C>D; no máximo, duas catracas poderão estar abertas em um mesmo instante, respeitando-se a ordem de prioridade; as catracas das filas A, B, Ce D devem ser representadas pelas variáveis C₁, C₂, C₃ e C₄, respectivamente; o valor de saída 1 deverá indicar que a catraca está aberta, e o valor O, que a catraca está fechada. Nesse contexto, qual circuito combinatório deverá resolver o problema (ver as alternativas na imagem).",
   "alternativas": {},
   "gabarito": "C",
-  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS",
   "imagem": {
    "src": "/banco/img/2017-CE-Q19.png",
    "alt": "Alternativas A a E: circuitos combinatórios candidatos, com as entradas A a D e as saídas C1 a C4."
   },
-  "alternativas_visuais": true
+  "alternativas_visuais": true,
+  "materia": "sistemas-digitais"
  },
  {
   "id": "2017-CE-Q20",
@@ -250,7 +250,7 @@
   "parte": "CE",
   "numero": "20",
   "tipo": "objetiva",
-  "tema": "Programa de computador e campanha",
+  "tema": "Expressões regulares e linguagens regulares",
   "dificuldade": "Média",
   "figura": null,
   "enunciado": "Um compilador transforma uma linguagem, em geral textual, em outra linguagem. Um dos tipos de linguagens que um compilador pode transformar são as linguagens regulares, que podem ser descritas utilizando-se expressões regulares compostas por símbolos isolados agrupados operadores * U organizadas com e e com auxílio de parênteses. Nesse contexto, avalie as afirmações a seguir. |. A palavra 10010100 pertence à linguagem representada por (100*)*. A palavra 10010 pertence à linguagem representada por (1(10)*0)*. II. Existe somente uma expressão regular para representar uma linguagem regular. É correto o que se afirma em",
@@ -262,7 +262,7 @@
    "E": "I, II e III."
   },
   "gabarito": "A",
-  "materia_ava": null
+  "materia": "linguagens-formais"
  },
  {
   "id": "2017-CE-Q21",
@@ -270,7 +270,7 @@
   "parte": "CE",
   "numero": "21",
   "tipo": "objetiva",
-  "tema": "Compilador e microcontrolador",
+  "tema": "Registradores de microcontrolador e operações bit a bit",
   "dificuldade": "Difícil",
   "figura": null,
   "enunciado": "Um microcontrolador controla o dispositivo em que ele se encontra embutido através da sua interface de programação de aplicativos (API). Essencialmente, essa interface consiste em um conjunto de registradores de dados, de controle e de estado. Em um microcontrolador hipotético, os bits 5, 4 e 3 do registrador de controle MODOEVENTO de 16 bits controlam a configuração do tipo de evento que gera um gatilho em um específico, conforme a seguinte codificação binária: 000 = desabilitado; 001 = sensível a borda de subida; 010 = sensível a borda de descida; 011 = sensível a ambas as bordas; 100 = sensível a nível alto; 101 = sensível a nível baixo. O bit O, à extrema direita, é o menos significativo, e o bit 15, o mais significativo. Considerando-se essa situação e sabendo-se que, em linguagem C, os símbolos & e - |, correspondem aos operadores lógicos bit a bit OR, AND e NOT, respectivamente, qual instrução em C deve ser utilizada para configurar o pino, de forma que ele fique sensível a ambas as bordas?",
@@ -282,7 +282,7 @@
    "E": "MODOEVENTO = (MODOEVENTO &.0x0038) | 0x0018"
   },
   "gabarito": "E",
-  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
+  "materia": "sistemas-digitais"
  },
  {
   "id": "2017-CE-Q22",
@@ -296,12 +296,12 @@
   "enunciado": "Considere o código em C, a seguir, compilado em um sistema computacional de 32 bits, que exemplifica o uso do tipo de dados ponteiro. tinclude <stdio.h> void main(void) int salariol, salarioZ; int *ptr; salariol = 6750; ptr = &salariol; = *ptr + 1000; ) A partir das informações apresentadas, assinale a opção que apresenta a memória principal e seu conteúdo, após o programa ser executado (ver as alternativas na imagem).",
   "alternativas": {},
   "gabarito": "A",
-  "materia_ava": "PROGRAMACAO PARA CIENCIA DOS DADOS",
   "imagem": {
    "src": "/banco/img/2017-CE-Q22.png",
    "alt": "Alternativas A a E: mapas de memória principal, com endereço, dado e nome da variável."
   },
-  "alternativas_visuais": true
+  "alternativas_visuais": true,
+  "materia": "algoritmos"
  },
  {
   "id": "2017-CE-Q23",
@@ -321,7 +321,7 @@
    "E": "le Il são proposições falsas."
   },
   "gabarito": "B",
-  "materia_ava": "TELECOMUNICACOES"
+  "materia": "sinais"
  },
  {
   "id": "2017-CE-Q24",
@@ -329,7 +329,7 @@
   "parte": "CE",
   "numero": "24",
   "tipo": "objetiva",
-  "tema": "Rede neural e reconhecimento",
+  "tema": "Heurísticas e busca informada",
   "dificuldade": "Média",
   "figura": null,
   "enunciado": "Heurísticas são regras para escolher aquelas alternativas que têm maior probabilidade de levar a uma solução aceitável para um problema. O grau de informação de uma heurística permite avaliar em que sentido uma heurística é melhor que outra. LUGER, G. F. Inteligência Artificial. São Paulo: Pearson, 2013 (adaptado). Para configurar os movimentos de um robô em uma linha de montagem, foram construídas duas heurísticas, hi e h₂. Ambas são admissíveis, têm como objetivo encontrar a sequência de montagem de menor custo a ser realizada pelo robô e estão baseadas em parâmetros, como quantidade e complexidade de movimentos e custo de mudança de direção. A partir das informações apresentadas, assinale a opção correta.",
@@ -341,7 +341,7 @@
    "E": "Se a heurística h₁ possuir um grau de informação igual a zero, o algoritmo de busca A* irá se comportar como um algoritmo de busca guloso (greedysearch), do tipo melhor primeiro (best first). de Desempenho informação igual a zero, o algoritmo de busca A* irá se comportar como um algoritmo de busca guloso (greedysearch), do tipo melhor primeiro (best first)."
   },
   "gabarito": "B",
-  "materia_ava": "ROBOTICA INDUSTRIAL"
+  "materia": "ia"
  },
  {
   "id": "2017-CE-Q25",
@@ -349,7 +349,7 @@
   "parte": "CE",
   "numero": "25",
   "tipo": "objetiva",
-  "tema": "Heurísticas e provedor de segurança",
+  "tema": "Firewall, IDS/IPS e antivírus de rede",
   "dificuldade": "Média",
   "figura": null,
   "enunciado": "Um provedor de serviços de segurança de redes e sistemas distribuídos enumerou três componentes de rede essenciais para a garantia da segurança dos dados corporativos: firewall de rede; sistemas de prevenção e detecção de intrusão; e gateways antivírus. Acerca desses componentes de rede, assinale a opção correta.",
@@ -361,7 +361,7 @@
    "E": "O sistema de detecção de intrusão é capaz de identificar ataques iniciados dentro da rede protegida e agir proativamente para neutralizar a ameaça. identificar ataques iniciados dentro da rede protegida e agir proativamente para neutralizar a ameaça."
   },
   "gabarito": "D",
-  "materia_ava": "TELECOMUNICACOES"
+  "materia": "seguranca"
  },
  {
   "id": "2017-CE-Q26",
@@ -381,7 +381,7 @@
    "E": "uma fila que processa os eventos de acordo com seu respectivo grau de prioridade."
   },
   "gabarito": "A",
-  "materia_ava": "ESTRUTURA DE DADOS E ALGORITMOS"
+  "materia": "algoritmos"
  },
  {
   "id": "2017-CE-Q27",
@@ -401,7 +401,7 @@
    "E": "I, III e IV."
   },
   "gabarito": "D",
-  "materia_ava": null
+  "materia": "distribuidos"
  },
  {
   "id": "2017-CE-Q28",
@@ -409,7 +409,7 @@
   "parte": "CE",
   "numero": "28",
   "tipo": "objetiva",
-  "tema": "Computação verde e programación linear",
+  "tema": "Programação linear: problema do transporte",
   "dificuldade": "Difícil",
   "figura": null,
   "enunciado": "Em pesquisa operacional, problemas de Programação Linear (PL) são aqueles para os quais a função objetivo e as restrições são todas lineares. Um importante problema prático modelado com PL é o problema do transporte. Suponha uma situação em que tenhamos K portos, P, P, Po que irão suprir J mercados, M, M, M, Com um certo produto. O porto.., P possui uma quantidade S, do produto, sendo i=1,2, .., K, e o mercado M, deve receber pelo menos uma quantidade do produto, sendo = 1 2, J. Considere que b, é o custo de.., transporte de uma unidade do produto do porto P. paraomercadoM, e é a quantidade de produtos despachados do porto P para o mercado M.. O problema é suprir as necessidades dos mercados com o custo de transporte mínimo. Com base na situação apresentada, avalie as afirmações a seguir. K J |. A expressão a ser minimizada é i=lj=1 J Il. São restrições do problema: >, <s, para j=1 K HI. São restrições do problema: > y, <r, para i=1 IV. A quantidade total despachada para o mercado M éK - Yi É correto apenas o que se afirma em",
@@ -421,7 +421,7 @@
    "A": "I e II."
   },
   "gabarito": "A",
-  "materia_ava": "COMPUTACAO PARALELA"
+  "materia": "otimizacao"
  },
  {
   "id": "2017-CE-Q29",
@@ -429,7 +429,7 @@
   "parte": "CE",
   "numero": "29",
   "tipo": "objetiva",
-  "tema": "Programação linear e computação verde",
+  "tema": "Computação verde e virtualização",
   "dificuldade": "Difícil",
   "figura": null,
   "enunciado": "A computação verde refere-se ao uso ambientalmente responsável de computadores e recursos relacionados. Essas práticas incluem a implementação da eficiência energética em servidores e periféricos, bem como o consumo reduzido de recursos e a destinação adequada de lixo eletrônico. HARRIS, J. G. Computing and green IT best practices on regulations and industry initiatives, virtualization, power management, materials recycling and telecommuting. London: Emereo Pty Ltd, 2008 (adaptado). Nesse contexto, avalie as asserções a seguir e a relação proposta entre elas. | Embora a virtualização contribua para a computação verde, o projeto e a gerência de uma arquitetura virtualizada apresentam problemas. PORQUE |. Da virtualização podem decorrer problemas de segurança a partir de vulnerabilidades no hospedeiro, além de potencialmente haver maior desgaste das máquinas servidoras e, portanto, maior custo de manutenção. A respeito dessas asserções, assinale a opção correta.",
@@ -441,7 +441,7 @@
    "E": "As asserções I e II são proposições falsas."
   },
   "gabarito": "A",
-  "materia_ava": "COMPUTACAO PARALELA"
+  "materia": "distribuidos"
  },
  {
   "id": "2017-CE-Q30",
@@ -449,7 +449,7 @@
   "parte": "CE",
   "numero": "30",
   "tipo": "objetiva",
-  "tema": "Programação linear e pesquisa operacional",
+  "tema": "Marco Civil da Internet e responsabilidade do provedor",
   "dificuldade": "Difícil",
   "figura": null,
   "enunciado": "Considere que tenha ocorrido o vazamento de imagens íntimas, por meio de aplicativo de comunicação instantânea de celular, disponibilizado por provedor de aplicações, sem autorização das pessoas que aparecem nas imagens. Nesse contexto, de acordo coma Lein. 12.965/2014, conhecida popularmente como Marco Civil da Internet, o provedor de aplicações de internet poderá",
@@ -461,7 +461,7 @@
    "E": "encerrar seu contrato com a vítima devido à falha de segurança ocorrida. de Desempenho falha de segurança ocorrida."
   },
   "gabarito": "A",
-  "materia_ava": "COMPUTACAO PARALELA"
+  "materia": "seguranca"
  },
  {
   "id": "2017-CE-Q31",
@@ -469,7 +469,7 @@
   "parte": "CE",
   "numero": "31",
   "tipo": "objetiva",
-  "tema": "Vazamento de dados e imagens íntimas",
+  "tema": "Métodos ágeis e gerenciamento de projetos",
   "dificuldade": "Média",
   "figura": null,
   "enunciado": "Um dos maiores problemas identificados na área de gerenciamento de projetos de software é o fato de que muitos desses projetos falham em atender ao cronograma, ao orçamento e à qualidade do produto. Métodos ágeis vêm sendo cada vez mais utilizados para evitar esse tipo de problema, pois se baseiam em princípios de adaptação e comunicação, ao contrário de métodos mais antigos, conhecidos como prescritivos, que priorizam a definição de processos bem detalhados que sejam seguidos por toda a equipe. Considerando esse contexto, avalie as asserções a seguir e a relação proposta entre elas. |. A técnica de timeboxing consiste na fixação prévia, pela equipe, dos prazos para execução do projeto, independentemente do seu ciclo de desenvolvimento. PORQUE Il. É preferível ter os requisitos mais importantes incorporados ao projeto, no prazo definido, a tentar incorporar todos eles e perder o controle do prazo, visto que os requisitos menos importantes podem ser tratados nas etapas finais do ciclo de desenvolvimento do projeto. A respeito dessas asserções, assinale a opção correta.",
@@ -481,7 +481,7 @@
    "E": "As asserções I e II são proposições falsas."
   },
   "gabarito": "D",
-  "materia_ava": null
+  "materia": "eng-software"
  },
  {
   "id": "2017-CE-Q32",
@@ -501,11 +501,11 @@
    "E": "as informações referentes a posições, cores, vetores normais da superfície, coeficientes do"
   },
   "gabarito": "B",
-  "materia_ava": "COMPUTACAO PARALELA",
   "imagem": {
    "src": "/banco/img/2017-CE-Q32.png",
    "alt": "Diagrama das etapas do pipeline de renderização gráfica."
-  }
+  },
+  "materia": "arquitetura"
  },
  {
   "id": "2017-CE-Q33",
@@ -525,7 +525,7 @@
    "E": "I, II e III."
   },
   "gabarito": "A",
-  "materia_ava": null
+  "materia": "banco-dados"
  },
  {
   "id": "2017-CE-Q34",
@@ -545,7 +545,7 @@
    "E": "le Il são proposições falsas."
   },
   "gabarito": "D",
-  "materia_ava": null
+  "materia": "ihc"
  },
  {
   "id": "2017-CE-Q35",
@@ -565,10 +565,10 @@
    "E": "2,1,1,4,2e1."
   },
   "gabarito": "C",
-  "materia_ava": "TELECOMUNICACOES",
   "imagem": {
    "src": "/banco/img/2017-CE-Q35.png",
    "alt": "Grafo de roteadores usado no cálculo do caminho mais curto."
-  }
+  },
+  "materia": "redes"
  }
 ]

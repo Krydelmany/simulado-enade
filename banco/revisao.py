@@ -18,7 +18,7 @@ def questoes(ano):
 def markdown(ano, qs, titulo, observacoes=''):
     L = [f'# {titulo}', '']
     L.append('Estado: extração automática conferida item a item contra o PDF '
-             'original. `tema` / `dificuldade` / `materia_ava` são propostas — '
+             'original. `tema` / `dificuldade` / `materia` são propostas — '
              'ajuste se discordar.')
     if observacoes:
         L += ['', observacoes]
@@ -29,7 +29,7 @@ def markdown(ano, qs, titulo, observacoes=''):
             cab.append(f"- **Gabarito:** {q['gabarito']}")
         cab += [
             f"- Dificuldade proposta: **{q['dificuldade'] or '—'}**",
-            f"- Matéria do AVA: **{q['materia_ava'] or '— (FG transversal)'}**",
+            f"- Matéria: **{q.get('materia') or '—'}**",
         ]
         L += cab + ['']
         if q.get('enunciado'):

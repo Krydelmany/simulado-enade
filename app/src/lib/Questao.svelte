@@ -1,6 +1,7 @@
 <script>
 	import { fly } from 'svelte/transition';
-	import { rotuloQuestao } from './banco.js';
+	import { ehGerada, rotuloQuestao } from './banco.js';
+	import { nomeMateria } from './materias.js';
 	import { DUR, REDUCED } from './motion.js';
 	import {
 		Atom,
@@ -208,13 +209,18 @@
 		<p class="font-code text-[11px] font-bold tracking-[0.14em] text-accent-ink uppercase">
 			{rotuloQuestao(q)}
 		</p>
-		{#if q.materia_ava}
+		{#if q.materia}
 			<p class="flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-[11px] font-bold text-accent-ink">
 				<Atom size={12} weight="bold" aria-hidden="true" />
-				{q.materia_ava}
+				{nomeMateria(q.materia)}
 			</p>
 		{/if}
-		{#if q.parte}
+		{#if ehGerada(q)}
+			<!-- gerada não é prova: o que importa ao aluno é o nível, não a parte -->
+			<p class="rounded-full border border-line px-2.5 py-0.5 text-[11px] font-bold text-ink-soft">
+				Revisão · {q.dificuldade === 'Média' ? 'Médio' : q.dificuldade}
+			</p>
+		{:else if q.parte}
 			<p class="rounded-full border border-line px-2.5 py-0.5 text-[11px] font-bold text-ink-soft">
 				{q.parte === 'FG' ? 'Formação Geral' : q.parte}
 			</p>

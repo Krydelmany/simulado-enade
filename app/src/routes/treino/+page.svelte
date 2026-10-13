@@ -7,6 +7,7 @@
 	import BarraAcao from '$lib/BarraAcao.svelte';
 	import Contador from '$lib/Contador.svelte';
 	import { carregarBanco, embaralhar } from '$lib/banco.js';
+	import { GRUPOS_MATERIA, materiaExiste, nomeMateria } from '$lib/materias.js';
 	import {
 		somarXP,
 		getXP,
@@ -71,20 +72,20 @@
 	});
 
 	let revisao = $derived($page.url.searchParams.get('modo') === 'revisao');
-	// O filtro é por MATÉRIA do AVA, não por tema. No banco cada questão tem
-	// um tema próprio (113 temas para 113 questões), então filtrar por tema
-	// devolvia sempre UMA questão — o controle mais visível da tela não
-	// filtrava nada. Matéria são 14 grupos que fazem sentido de filtrar.
-	let materias = $derived(
-		[...new Set(banco.map((q) => materia(q)))].sort((a, b) => {
-			if (a === 'Geral') return 1;
-			if (b === 'Geral') return -1;
-			return a.localeCompare(b, 'pt-BR');
-		})
-	);
-	let contagem = $derived(
-		materias.map((m) => [m, banco.filter((q) => materia(q) === m).length])
-	);
+	// O filtro é por MATÉRIA, não por tema. No banco cada questão tem um tema
+	// próprio, então filtrar por tema devolvia sempre UMA questão — o controle
+	// mais visível da tela não filtrava nada. As matérias são as 20 áreas da
+	// Portaria + as de Formação Geral (`materias.json`), na ordem do inciso;
+	// matéria sem questão nenhuma fica fora do select em vez de levar a uma
+	// fila vazia.
+	let gruposFiltro = $derived.by(() => {
+		const n = new Map();
+		for (const q of banco) n.set(materia(q), (n.get(materia(q)) || 0) + 1);
+		return GRUPOS_MATERIA.map((g) => ({
+			rotulo: g.rotulo,
+			materias: g.materias.filter((m) => n.get(m.id)).map((m) => ({ ...m, n: n.get(m.id) }))
+		})).filter((g) => g.materias.length);
+	});
 
 	// contadores derivados do log — assim navegar para frente/voltar nunca conta duas vezes
 	let feitas = $derived(log.filter((r) => !r.pulada).length);
@@ -130,7 +131,7 @@
 	});
 
 	function materia(q) {
-		return q.materia_ava || 'Geral';
+		return q.materia || 'formacao-geral';
 	}
 
 	function base() {
@@ -158,7 +159,9 @@
 			xpGanho = salva.xpGanho || 0;
 			inicio = salva.inicio || Date.now();
 			// restaura também o filtro com que a sessão foi montada
-			if (salva.filtro) {
+			// sessão salva antes da troca de matérias guarda o nome do AVA
+			// ("TELECOMUNICACOES"), que não filtra mais nada — volta a "todos"
+			if (salva.filtro && (salva.filtro === 'todos' || materiaExiste(salva.filtro))) {
 				filtro = salva.filtro;
 				filtroAnterior = salva.filtro;
 			}
@@ -217,7 +220,7 @@
 			certa: !!r.certa,
 			parcial: !!r.parcial,
 			anulada: !!r.anulada,
-			materia: q?.materia_ava,
+			materia: q?.materia,
 			tema: q?.tema,
 			duracaoMs: Date.now() - (ultimoToque || inicio)
 		});
@@ -226,7 +229,7 @@
 		respostas[i] = { ...r, respondida: true };
 		registrar(i, {
 			id: r.id,
-			materia: q?.materia_ava || q?.tema || '?',
+			materia: q?.materia || '?',
 			certa: !!r.certa,
 			parcial: !!r.parcial,
 			anulada: !!r.anulada,
@@ -259,7 +262,7 @@
 		respostas[i] = { id, pulada: true };
 		registrar(i, {
 			id,
-			materia: q?.materia_ava || q?.tema || '?',
+			materia: q?.materia || '?',
 			certa: false,
 			parcial: false,
 			anulada: false,
@@ -431,7 +434,7 @@
 		<p class="font-code text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">Sessão pausada</p>
 		<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight">Continuar de onde parou?</h2>
 		<p class="nums mt-2 text-sm text-ink-soft">
-			Questão {salva.i + 1} · {salva.certas}/{salva.feitas} certas{salva.filtro !== 'todos' ? ` · ${salva.filtro}` : ''}
+			Questão {salva.i + 1} · {salva.certas}/{salva.feitas} certas{salva.filtro && salva.filtro !== 'todos' ? ` · ${nomeMateria(salva.filtro)}` : ''}
 		</p>
 		<button type="button" onclick={() => montar(false)} class="btn3d duo-accent mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
 			<Play size={20} weight="fill" aria-hidden="true" /> Continuar sessão
@@ -473,7 +476,7 @@
 				{#each porMateria() as [m, d] (m)}
 					<div>
 						<div class="flex items-baseline justify-between gap-3 text-sm">
-							<p class="truncate font-semibold">{m}</p>
+							<p class="truncate font-semibold">{nomeMateria(m)}</p>
 							<p class="nums shrink-0 font-bold">{d.ok}/{d.n}</p>
 						</div>
 						<div class="mt-1 h-2 overflow-hidden rounded-full bg-track">
@@ -519,7 +522,7 @@
 					<button
 						type="button"
 						onclick={() => {
-							confirmarFiltro = null;
+							confirmaFiltro = null;
 							filtro = 'todos';
 							montar();
 						}}
@@ -540,8 +543,12 @@
 				<span class="sr-only">Filtrar por matéria</span>
 				<select bind:value={filtro} onchange={aoTrocarFiltro} class="w-full bg-transparent py-3 text-sm font-semibold text-ink">
 					<option value="todos">Todas as matérias</option>
-					{#each materias as m (m)}
-						<option value={m}>{m}</option>
+					{#each gruposFiltro as g (g.rotulo)}
+						<optgroup label={g.rotulo}>
+							{#each g.materias as m (m.id)}
+								<option value={m.id}>{m.nome} ({m.n})</option>
+							{/each}
+						</optgroup>
 					{/each}
 				</select>
 			</label>

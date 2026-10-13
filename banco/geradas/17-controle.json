@@ -1,0 +1,122 @@
+{
+ "materia": "controle",
+ "questoes": [
+  {
+   "dificuldade": "Fácil",
+   "tema": "Controle em malha fechada",
+   "enunciado": "O sistema de climatização de uma sala mede continuamente a temperatura ambiente, compara a medição com a temperatura desejada e ajusta a potência do equipamento conforme a diferença.\n\nEsse sistema é um exemplo de controle",
+   "alternativas": {
+    "A": "em malha aberta, pois não depende da saída.",
+    "B": "manual, pois exige operador.",
+    "C": "por tempo, como o de um temporizador de máquina de lavar.",
+    "D": "sequencial, pois executa passos fixos.",
+    "E": "em malha fechada, pois usa a realimentação da saída medida."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Ações de controle PID",
+   "enunciado": "Em um controlador PID, uma das ações acumula o erro ao longo do tempo e, com isso, elimina o erro em regime permanente para uma referência em degrau.\n\nEssa ação é a",
+   "alternativas": {
+    "A": "integral.",
+    "B": "proporcional.",
+    "C": "derivativa.",
+    "D": "liga-desliga.",
+    "E": "de antecipação (feedforward)."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Linguagens de CLP",
+   "enunciado": "Entre as linguagens de programação de controladores lógicos programáveis (CLP) definidas pela norma IEC 61131-3, uma é gráfica e baseada na representação de contatos e bobinas dos antigos diagramas de relés.\n\nEssa linguagem é a",
+   "alternativas": {
+    "A": "Texto Estruturado (ST).",
+    "B": "Ladder (LD).",
+    "C": "Lista de Instruções (IL).",
+    "D": "Python.",
+    "E": "linguagem de máquina do processador."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Sistemas de primeira ordem",
+   "enunciado": "A velocidade de um motor é modelada pela função de transferência G(s) = 5 / (2s + 1). Aplica-se à entrada um degrau unitário, com o sistema inicialmente em repouso.\n\nO valor final da saída e a constante de tempo do sistema são, respectivamente,",
+   "alternativas": {
+    "A": "1 e 2 s.",
+    "B": "5 e 0,5 s.",
+    "C": "5 e 2 s.",
+    "D": "2,5 e 1 s.",
+    "E": "0 e 2 s."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Estabilidade pela posição dos polos",
+   "enunciado": "Os polos de um sistema de controle em malha fechada estão em s = −1, s = −3 + j2, s = −3 − j2 e s = 0,5.\n\nSobre a estabilidade desse sistema, é correto afirmar que ele é",
+   "alternativas": {
+    "A": "estável, pois a maioria dos polos tem parte real negativa.",
+    "B": "marginalmente estável, pois há polos complexos conjugados.",
+    "C": "estável, pois nenhum polo está sobre o eixo imaginário.",
+    "D": "instável, pois há um polo com parte real positiva.",
+    "E": "estável, pois o polo em s = 0,5 é muito próximo da origem."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Erro em regime permanente",
+   "enunciado": "Um sistema com função de transferência de malha aberta G(s) = 10 / (s + 1) é ligado em malha fechada com realimentação unitária e recebe uma referência em degrau unitário.\n\nO erro em regime permanente é de, aproximadamente,",
+   "alternativas": {
+    "A": "0.",
+    "B": "0,1.",
+    "C": "1.",
+    "D": "0,5.",
+    "E": "0,091 (isto é, 1/11)."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Sintonia de controlador PID",
+   "enunciado": "Ao sintonizar o controlador PID de temperatura de um forno industrial, a equipe aumentou o ganho proporcional e observou resposta mais rápida, mas com sobressinal maior. Em seguida, analisou os efeitos das demais ações. O aquecedor tem potência máxima limitada.\n\nConsiderando essa situação, avalie as afirmações a seguir.\n\nI. O aumento do ganho proporcional tende a reduzir o tempo de subida, mas pode aumentar o sobressinal.\nII. A ação derivativa tende a amortecer a resposta, mas amplifica o ruído de medição de alta frequência.\nIII. Com a saturação do aquecedor, a ação integral pode causar o efeito windup, que é tratado com técnicas anti-windup.\n\nÉ correto o que se afirma em",
+   "alternativas": {
+    "A": "I, II e III.",
+    "B": "I, apenas.",
+    "C": "II, apenas.",
+    "D": "I e III, apenas.",
+    "E": "II e III, apenas."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "CLP e sensores industriais",
+   "enunciado": "Em uma linha de envase, um controlador lógico programável (CLP) aciona esteiras e válvulas a partir de sinais de sensores que detectam a passagem de latas de alumínio e de tampas de aço.\n\nNesse contexto, avalie as asserções a seguir e a relação proposta entre elas.\n\nI. O CLP executa seu programa de forma cíclica: lê as entradas, executa a lógica e, em seguida, atualiza as saídas.\n\nPORQUE\n\nII. Sensores indutivos detectam a presença de objetos metálicos sem contato físico.\n\nA respeito dessas asserções, assinale a opção correta.",
+   "alternativas": {
+    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+    "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+    "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+    "E": "As asserções I e II são proposições falsas."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "PID digital em software",
+   "enunciado": "O trecho a seguir, em C, é executado a cada período de amostragem dt pelo firmware de um controlador de velocidade.\n\n```c\nerro = ref - medida;\nintegral += erro * dt;\nderivada = (erro - erro_ant) / dt;\nu = Kp * erro + Ki * integral + Kd * derivada;\nerro_ant = erro;\n```\n\nCom base nesse código, avalie as afirmações a seguir.\n\nI. O termo integral é aproximado pela soma dos erros multiplicados pelo período de amostragem (aproximação retangular).\nII. O termo derivativo é aproximado pela diferença regressiva entre o erro atual e o anterior.\nIII. O período dt deve ser constante, ou corretamente medido, para que os ganhos Ki e Kd tenham o efeito projetado.\nIV. O código dispensa a escolha de um período de amostragem, pois o controle implementado é contínuo.\n\nÉ correto apenas o que se afirma em",
+   "alternativas": {
+    "A": "I e IV.",
+    "B": "II e IV.",
+    "C": "I, II e III.",
+    "D": "I, III e IV.",
+    "E": "II, III e IV."
+   },
+   "gabarito": "C"
+  }
+ ]
+}
