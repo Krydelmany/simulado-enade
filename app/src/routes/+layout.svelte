@@ -4,6 +4,7 @@
 	import { page } from '$app/stores';
 	import { Infinity as InfinityIcon, Moon, Stairs, Sun, Timer } from 'phosphor-svelte';
 	import { alternarTema, iniciarTema, temaAtual } from '$lib/tema.js';
+	import VigiaDevTools from '$lib/VigiaDevTools.svelte';
 
 	const tabs = [
 		{ href: '/treino/', label: 'Treino', icone: InfinityIcon },
@@ -127,3 +128,7 @@
 	</nav>
 	<div class="h-20 sm:hidden" aria-hidden="true"></div>
 {/if}
+
+<!-- Aviso de DevTools aberto. Fica fora do fluxo e depois do rodapé: é a
+     última coisa da página, e só aparece quando o sinal dispara. -->
+<VigiaDevTools />

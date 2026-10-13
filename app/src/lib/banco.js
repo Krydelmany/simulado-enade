@@ -13,7 +13,7 @@
  * altere JSON em `static/banco`** — é o que invalida a cache sem depender da
  * rede (um deploy novo sempre traz uma versão nova).
  */
-export const VERSAO_BANCO = '64b80e7ac1d6';
+export const VERSAO_BANCO = '7b6629db0240';
 
 /** Arquivos do banco (um por edição+parte). Exportado para o preload. */
 export const ARQUIVOS_BANCO = [

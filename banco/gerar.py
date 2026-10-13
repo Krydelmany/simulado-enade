@@ -14,6 +14,7 @@ import sys
 sys.path.insert(0, '/root/enade-simulado/banco')
 import arruma
 import classificar
+import formato
 import qualidade
 import montar
 
@@ -108,11 +109,23 @@ def main(ano, parte):
             q['imagem'] = {'src': f'/banco/img/{q["id"]}.png', 'alt': alt}
     qs = [q for q in qs if q['parte'] == parte]
 
+    # A ordem importa e não é negociável:
+    #
+    #   arruma   → tira lixo de OCR, mantendo a quebra de linha do PDF;
+    #   formato  → precisa DA quebra de linha para achar onde acaba o código
+    #              e começa a frase (é a única pista de onde é bloco);
+    #   qualidade→ colapsa a quebra em parágrafo e corta o rodapé, preservando
+    #              o que está dentro dos ``` que o formato marcou;
+    #   problema → decide se a questão sai.
+    #
+    # Rodar `formato` depois de `qualidade` não erra o texto: faz a detecção
+    # não ver linha nenhuma, porque `qualidade` já colapsou tudo numa.
+    #
     # Porta de qualidade (ver qualidade.py): uma objetiva com alternativa
     # faltando, vazia ou com pedaço de enunciado é PIOR que não existir — o
     # aluno marcaria uma letra e levaria o resultado errado sem perceber.
     boas, pendentes = [], []
-    for q in (qualidade.limpa(arruma.limpa(q)) for q in qs):
+    for q in (qualidade.limpa(formato.formata(arruma.limpa(q))) for q in qs):
         motivo = qualidade.problema(q)
         if motivo:
             pendentes.append((q, motivo))
@@ -176,7 +189,8 @@ def main(ano, parte):
         if q.get('imagem'):
             L += [f"Imagem: `{q['imagem']['src']}` — {q['imagem']['alt']}", '']
         if q['enunciado']:
-            L += ['```', q['enunciado'], '```', '']
+            # cercado de 4 crases: o enunciado pode conter bloco de codigo
+            L += ['````', q['enunciado'], '````', '']
         if q['tipo'] == 'objetiva' and q.get('alternativas'):
             L.append('**Alternativas**')
             for letra, txt in q['alternativas'].items():
@@ -214,7 +228,8 @@ def resumo():
         qs = montar.aplicar_figuras(
             classificar.aplicar(montar.extrair(ano)), FIGURAS
         )
-        qs = [qualidade.limpa(arruma.limpa(q)) for q in qs]
+        qs = [qualidade.limpa(formato.formata(arruma.limpa(q)))
+              for q in qs]
         ok = [q for q in qs if not qualidade.problema(q)]
         bad = [(q, qualidade.problema(q)) for q in qs if qualidade.problema(q)]
         entrada += len(ok)

@@ -8,9 +8,9 @@
   "tema": "Algoritmos de eliminação de registros duplicados",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Considere que uma rede de varejo resolva consolidar a base de dados de suas M lojas, o que resulta em uma tabela X não ordenada com N registros de clientes, possivelmente repetidos. Devido à necessidade de se criar uma tabela Y contendo os clientes da tabela X com as repetições eliminadas, cogita-se utilizar dois possíveis algoritmos, os quais são apresentados a seguir. Algoritmo A, que executa as seguintes ações: 1. Cria uma tabela Y inicialmente vazia; 2. Percorre a tabela X, cliente por cliente, verificando se cada um deles já está na tabela Y. Caso não esteja, insere na tabela Y o cliente que está faltando. Algoritmo B, que executa as seguintes ações: 1. Cria uma tabela Y inicialmente vazia; 2. Ordena a tabela X usando o algoritmo quicksort; 3. Insere, na tabela Y, o cliente da primeira posição da tabela X; 4. Percorre a tabela X, cliente por cliente, a partir do segundo cliente, verificando se cada cliente é igual ao anterior. Caso não seja, insere o cliente na tabela Y. Como resultado das ações tanto do algoritmo A quanto do algoritmo B, a tabela Y gerada ao final conterá os clientes da tabela X com as repetições eliminadas. A partir dessas informações, observe o código em linguagem C apresentado a seguir. void quicksort(int *v, int ini, int fim) { // v é o vetor a ser ordenado // ini é o índice do primeiro elemento a ser ordenado // fim é o índice do último elemento a ser ordenado if(ini < fim) { x = particiona(v, ini, fim,(ini+fim)/2); // atribuir os valores para a, b, c e d quicksort(v,a,b); quicksort(v,c,d); } } int particiona (int *vetor, int ini, int fim, int pivot){ // implementar uma função que reorganiza o vetor e retorna a posição final x do pivot. Ao final do processo, os elementos menores ou iguais a vetor[pivot] devem ter índice menor do que x; os elementos maiores que vetor[pivot] devem ter índice maior do que x. } void troca (int *vetor, int i, int j) { // função auxiliar que permuta os conteúdos das posições i e j do vetor aux = vetor[i]; vetor[i] = vetor[j]; vetor[j] = aux; } Com base nos dados apresentados, faça o que se pede nos itens a seguir. a) Determine o número máximo de comparações executadas no passo 2 do algoritmo A. (valor: 2,0 pontos) b) Determine o número máximo de comparações executadas no passo 4 do algoritmo B. (valor: 2,0 pontos) c) Na implementação recursiva do programa apresentado, quais são os valores dos parâmetros a, b, c e d? (valor: 2,0 pontos) d) Escreva o corpo da função particiona em linguagem C utilizando a função auxiliar troca, a qual foi definida anteriormente. (valor: 4,0 pontos)",
+  "enunciado": "Considere que uma rede de varejo resolva consolidar a base de dados de suas M lojas, o que resulta em uma tabela X não ordenada com N registros de clientes, possivelmente repetidos. Devido à necessidade de se criar uma tabela Y contendo os clientes da tabela X com as repetições eliminadas, cogita-se utilizar dois possíveis algoritmos, os quais são apresentados a seguir. Algoritmo A, que executa as seguintes ações: 1. Cria uma tabela Y inicialmente vazia; 2. Percorre a tabela X, cliente por cliente, verificando se cada um deles já está na tabela Y. Caso não esteja, insere na tabela Y o cliente que está faltando. Algoritmo B, que executa as seguintes ações: 1. Cria uma tabela Y inicialmente vazia; 2. Ordena a tabela X usando o algoritmo quicksort; 3. Insere, na tabela Y, o cliente da primeira posição da tabela X; 4. Percorre a tabela X, cliente por cliente, a partir do segundo cliente, verificando se cada cliente é igual ao anterior. Caso não seja, insere o cliente na tabela Y. Como resultado das ações tanto do algoritmo A quanto do algoritmo B, a tabela Y gerada ao final conterá os clientes da tabela X com as repetições eliminadas. A partir dessas informações, observe o código em linguagem C apresentado a seguir.\n```c\nvoid quicksort(int *v, int ini, int fim) {\n// v é o vetor a ser ordenado\n// ini é o índice do primeiro elemento a ser ordenado\n// fim é o índice do último elemento a ser ordenado\nif(ini < fim) {\nx = particiona(v, ini, fim,(ini+fim)/2);\n// atribuir os valores para a, b, c e d\n```\nquicksort(v, a, b); quicksort(v, c, d);\n```c\n}\n}\nint particiona (int *vetor, int ini, int fim, int pivot){\n// implementar uma função que reorganiza o vetor e retorna a posição\n```\nfinal x do pivot. Ao final do processo, os elementos menores ou iguais a vetor[pivot] devem ter índice menor do que x; os elementos maiores que vetor[pivot] devem ter índice maior do que x.\n```c\n}\nvoid troca (int *vetor, int i, int j) {\n// função auxiliar que permuta os conteúdos das posições i e j do\n```\nvetor\n```c\naux = vetor[i];\nvetor[i] = vetor[j];\nvetor[j] = aux;\n}\n```\nCom base nos dados apresentados, faça o que se pede nos itens a seguir. a) Determine o número máximo de comparações executadas no passo 2 do algoritmo A. (valor: 2,0 pontos) b) Determine o número máximo de comparações executadas no passo 4 do algoritmo B. (valor: 2,0 pontos) c) Na implementação recursiva do programa apresentado, quais são os valores dos parâmetros a, b, c e d? (valor: 2,0 pontos) d) Escreva o corpo da função particiona em linguagem C utilizando a função auxiliar troca, a qual foi definida anteriormente. (valor: 4,0 pontos)",
   "alternativas": {},
-  "padrao": "a) Em sua resposta, o estudante deverá determinar o seguinte:\nQue o número máximo de comparações ocorrerá quando todos os clientes forem diferentes, ou seja,\nquando não houver repetição de clientes. Nesse caso, serão feitas 0 + 1 + 2 + ... + (N - 2) + (N - 1)\ncomparações, resultando em N.(N - 1)/2 comparações.\nResposta alternativa: São feitas O(N²) comparações.\nb) Em sua resposta, o estudante deverá determinar o seguinte:\nQue serão feitas (N - 1) comparações.\nResposta alternativa: São feitas O(N) comparações.\nc) Em sua resposta, o estudante deverá responder o seguinte:\na = ini; b=x-1 ou b=x; c= x+1 ou c=x; d=fim\nd) Em sua resposta, o estudante deverá escrever a seguinte função:\nNa linguagem C\ntroca(v, ini, pivot);\npivot = ini;\nini=ini+1;\nwhile (ini <= fim)\nif(vetor[ini] <= vetor [pivot])\nini = ini+1;\nelse {\ntroca(v, ini, fim);\nfim=fim-1;\n}\ntroca(v,pivot,fim);\nreturn fim;\nObs.: o espaço previsto para a resposta na prova pode ser livremente utilizado pelo respondente, inclusive\ncom a divisão do espaço em colunas.",
+  "padrao": "a) Em sua resposta, o estudante deverá determinar o seguinte:\nQue o número máximo de comparações ocorrerá quando todos os clientes forem diferentes, ou seja,\nquando não houver repetição de clientes. Nesse caso, serão feitas 0 + 1 + 2 +... + (N - 2) + (N - 1)\ncomparações, resultando em N.(N - 1)/2 comparações.\nResposta alternativa: São feitas O(N²) comparações.\nb) Em sua resposta, o estudante deverá determinar o seguinte:\nQue serão feitas (N - 1) comparações.\nResposta alternativa: São feitas O(N) comparações.\nc) Em sua resposta, o estudante deverá responder o seguinte:\na = ini; b=x-1 ou b=x; c= x+1 ou c=x; d=fim\nd) Em sua resposta, o estudante deverá escrever a seguinte função:\nNa linguagem C\n\n```c\ntroca(v, ini, pivot);\npivot = ini;\n```\n\nini=ini+1;\n\n```c\nwhile (ini <= fim)\n```\n\nif(vetor[ini] <= vetor [pivot])\n\n```c\nini = ini+1;\nelse {\ntroca(v, ini, fim);\n```\n\nfim=fim-1;\n\n```c\n}\n```\n\ntroca(v, pivot, fim);\nreturn fim;\nObs.: o espaço previsto para a resposta na prova pode ser livremente utilizado pelo respondente, inclusive\ncom a divisão do espaço em colunas.",
   "materia_ava": "COMPUTACAO PARALELA"
  },
  {
@@ -22,7 +22,7 @@
   "tema": "Resistores em série e paralelo",
   "dificuldade": "Fácil",
   "figura": null,
-  "enunciado": "Os resistores são dispositivos utilizados com finalidade de limitar a corrente elétrica em um circuito elétrico. Eles conseguem desempenhar essa função por apresentarem a propriedade da resistência elétrica, que é a capacidade de um corpo se opor à passagem de corrente elétrica. Diversos materiais podem ser utilizados como resistores, tais como níquel-cromo, carbono e grafite. Diante disso, considere uma situação hipotética em que seja preciso construir resistores cilíndricos na forma da figura a seguir, a fim de serem utilizados em um circuito de corrente contínua que possui tensão igual a 12 V. Na figura, L representa o comprimento do material e A representa a área de seção transversal. A L Observe, também, a tabela a seguir, a qual especifica características de três tipos de materiais utilizados para fabricação dos resistores hipotéticos, como a resistividade r , o comprimento L e a área A. r [ohm.mm2/m]",
+  "enunciado": "Os resistores são dispositivos utilizados com finalidade de limitar a corrente elétrica em um circuito elétrico. Eles conseguem desempenhar essa função por apresentarem a propriedade da resistência elétrica, que é a capacidade de um corpo se opor à passagem de corrente elétrica. Diversos materiais podem ser utilizados como resistores, tais como níquel-cromo, carbono e grafite. Diante disso, considere uma situação hipotética em que seja preciso construir resistores cilíndricos na forma da figura a seguir, a fim de serem utilizados em um circuito de corrente contínua que possui tensão igual a 12 V. Na figura, L representa o comprimento do material e A representa a área de seção transversal. A L Observe, também, a tabela a seguir, a qual especifica características de três tipos de materiais utilizados para fabricação dos resistores hipotéticos, como a resistividade r, o comprimento L e a área A. r [ohm.mm2/m]",
   "alternativas": {
    "A": "2 resistores de grafite em série.",
    "B": "3 resistores de carbono em série.",
@@ -88,11 +88,11 @@
   "figura": null,
   "enunciado": "Uma forma sistemática de analisar circuitos elétricos de qualquer tamanho, visando à simulação em computadores, consiste em representá-los por meio de grafos. Essa representação implica a substituição dos elementos do ramo do circuito por uma conexão orientada (arco) e de nós do circuito por vértices, resultando em um grafo orientado. A orientação dos arcos coincide com a orientação dos sentidos de referência associados de tensão e corrente, adotados pela convenção passiva. Grafos são ditos conexos se existir, ao menos, um caminho entre quaisquer dois nós. Corte refere-se a um conjunto de arcos que, se removido, divide o grafo (tornando-o desconexo). A lei de Kirchoff das correntes, usando a nomenclatura de grafos, pode ser enunciada como “para qualquer rede de parâmetros concentrados e para qualquer de seus cortes, a soma algébrica de todas as correntes através dos arcos do corte é zero.” Disponível em: http://www.peb.ufrj.br/. Acesso em: 16 jun. 2023 (adaptado).",
   "alternativas": {
-   "A": "I1 + I4 - I5 = 0 e I1 + I2 + I3 - I5 =",
-   "B": "I1 + I4 + I5 = 0 e I1 + I2 + I3 + I5 =",
-   "C": "I1 + I4 + I5 = 0 e I1 + I3 + I4 - I6 =",
-   "D": "I1 + I2 - I3 - I5 = 0 e I1 + I3 + I4 - I6 =",
-   "E": "I1 + I2 - I3 - I5 = 0 e I1 - I3 + I4 - I6 ="
+   "A": "I1 + I4 - I5 = 0 e I1 + I2 + I3 - I5 = 0",
+   "B": "I1 + I4 + I5 = 0 e I1 + I2 + I3 + I5 = 0",
+   "C": "I1 + I4 + I5 = 0 e I1 + I3 + I4 - I6 = 0",
+   "D": "I1 + I2 - I3 - I5 = 0 e I1 + I3 + I4 - I6 = 0",
+   "E": "I1 + I2 - I3 - I5 = 0 e I1 - I3 + I4 - I6 = 0"
   },
   "gabarito": "D",
   "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS",
@@ -110,7 +110,7 @@
   "tema": "Listas, cabeça e cauda em programação funcional",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Uma lista pode ser dividida em duas partes: o primeiro elemento (a cabeça da lista) e os demais elementos (sua cauda). Por exemplo, em uma lista de inteiros [1, 2, 3, 4], a cabeça dessa lista é o valor inteiro 1, enquanto sua cauda é a lista de inteiros [2, 3, 4]. Uma lista vazia é representada por []. O código a seguir define duas funções descritas em uma linguagem de programação funcional que manipulam listas de inteiros. A função enade recebe uma lista de inteiros e produz uma nova lista de inteiros. A função auxiliar é chamada pela função enade e possui dois parâmetros: um número inteiro e uma lista de inteiros. Essa função produz uma lista de inteiros. enade :: [Int] -> [Int] enade [] = [] enade (cabeca:cauda) = auxiliar cabeca (enade cauda) auxiliar :: Int -> [Int] -> [Int] auxiliar x [] = [x] auxiliar x (cabeca:cauda) | (x `mod` 2 == 0) = x:cabeca:cauda | otherwise = cabeca:auxiliar x cauda Considerando o código apresentado, é correto afirmar que se a função enade for executada recebendo como parâmetro de entrada a lista [1, 2, 3, 4, 5, 6, 7, 8], o resultado será",
+  "enunciado": "Uma lista pode ser dividida em duas partes: o primeiro elemento (a cabeça da lista) e os demais elementos (sua cauda). Por exemplo, em uma lista de inteiros [1, 2, 3, 4], a cabeça dessa lista é o valor inteiro 1, enquanto sua cauda é a lista de inteiros [2, 3, 4]. Uma lista vazia é representada por []. O código a seguir define duas funções descritas em uma linguagem de programação funcional que manipulam listas de inteiros. A função enade recebe uma lista de inteiros e produz uma nova lista de inteiros. A função auxiliar é chamada pela função enade e possui dois parâmetros: um número inteiro e uma lista de inteiros. Essa função produz uma lista de inteiros.\n```text\nenade :: [Int] -> [Int]\n```\nenade [] = [] enade (cabeca: cauda) = auxiliar cabeca (enade cauda)\n```text\nauxiliar :: Int -> [Int] -> [Int]\n```\nauxiliar x [] = [x] auxiliar x (cabeca: cauda) | (x `mod` 2 == 0) = x: cabeca: cauda | otherwise = cabeca: auxiliar x cauda Considerando o código apresentado, é correto afirmar que se a função enade for executada recebendo como parâmetro de entrada a lista [1, 2, 3, 4, 5, 6, 7, 8], o resultado será",
   "alternativas": {
    "A": "[].",
    "B": "[2, 4, 6, 8].",
@@ -132,14 +132,34 @@
   "figura": null,
   "enunciado": "Memory leak, ou vazamento de memória, é um problema que ocorre em sistemas computacionais quando uma parte da memória, alocada para uma determinada operação, não é liberada quando se torna desnecessária. Na linguagem C, esse tipo de problema é quase sempre relacionado ao uso incorreto das funções malloc( ) e free( ). Esse erro de programação pode levar a falhas no sistema se a memória for completamente consumida.",
   "alternativas": {
-   "A": "void f( ){ void",
-   "B": "int f( ){ float",
-   "C": "int f(char",
-   "D": "int",
-   "E": "void f(int n){ char"
+   "A": "```c\nvoid f( ){ void *s; s = malloc(50); free(s); }\n```",
+   "B": "```c\nint f( ){ float *a; return 0; }\n```",
+   "C": "```c\nint f(char *data){ void *s; s = malloc(50); int size = strlen(data); if (size > 50) return(-1); free(s); return 0; }\n```",
+   "D": "```c\nint *f(int n){ int *num = malloc(sizeof(int)*n); return num; } int main(void){ int *num; num = f(10); free(num); return 0; }\n```",
+   "E": "```c\nvoid f(int n){ char *m = malloc(10); char *n = malloc(10); free(m); m = n; free(m); free(n); }\n```"
   },
   "gabarito": "C",
   "materia_ava": "PROGRAMACAO PARA CIENCIA DOS DADOS"
+ },
+ {
+  "id": "2023-CE-Q16",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "16",
+  "tipo": "objetiva",
+  "tema": "Álgebra booleana e operações binárias",
+  "dificuldade": "Média",
+  "figura": null,
+  "enunciado": "Na programação de sistemas embarcados, algumas posições de memória servem para diferentes propósitos, não apenas para armazenar valores. Em algumas dessas memórias, cada um dos bits possui um significado diferente, sendo necessário manipulá-los individualmente ou em pequenos grupos. Por isso, o conhecimento da álgebra booliana, bem como dos operadores utilizados para realizar operações binárias nas linguagens de programação, é essencial para o desenvolvimento desse tipo de sistema. ALMEIDA, R. M.; MORAES, C. H. V.; SERAPHIM, T. F. P. Programação de Sistemas Embarcados: desenvolvendo software para microcontroladores em linguagem C. Rio de Janeiro: Elsevier, 2016 (adaptado).",
+  "alternativas": {
+   "A": "1010",
+   "B": "10111",
+   "C": "111111",
+   "D": "15122",
+   "E": "15130"
+  },
+  "gabarito": "E",
+  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
  },
  {
   "id": "2023-CE-Q17",
@@ -150,7 +170,7 @@
   "tema": "Subsequências e prefixos de sequências",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Dada uma sequência de caracteres S = s1, s2, ..., sn, uma subsequência de S é dada pela remoção de zero ou mais caracteres de S. Formalmente, a sequência X = x1, x2, ..., xk é subsequência de S se existe uma sequência crescente de índices i1, ..., ik de S, tal que xj = Sij para todo j = 1, 2, ..., k. Define-se, também, um prefixo da sequência S com comprimento i para i = 0, ..., n, como Si = s1, s2, ..., si. O problema da Subsequência Comum Mais Longa (LCS) e suas variações, definido a seguir, pode ser utilizado em análise de textos e em bioinformática. O problema da LCS pressupõe duas sequências de caracteres A = a1, a2, ..., an e B = b1, b2, ..., bm, de comprimentos n e m, respectivamente. Dadas essas duas sequências, é preciso encontrar uma sequência de maior comprimento possível que seja, simultaneamente, subsequência de A e de B.",
+  "enunciado": "Dada uma sequência de caracteres S = s₁, s₂, ..., sn, uma subsequência de S é dada pela remoção de zero ou mais caracteres de S. Formalmente, a sequência X = x₁, x₂, ..., xk é subsequência de S se existe uma sequência crescente de índices i₁, ..., ik de S, tal que xj = Sij para todo j = 1, 2, ..., k. Define-se, também, um prefixo da sequência S com comprimento i para i = 0, ..., n, como Si = s₁, s₂, ..., si. O problema da Subsequência Comum Mais Longa (LCS) e suas variações, definido a seguir, pode ser utilizado em análise de textos e em bioinformática. O problema da LCS pressupõe duas sequências de caracteres A = a₁, a₂, ..., an e B = b₁, b₂, ..., bm, de comprimentos n e m, respectivamente. Dadas essas duas sequências, é preciso encontrar uma sequência de maior comprimento possível que seja, simultaneamente, subsequência de A e de B.",
   "alternativas": {
    "A": "I e III.",
    "B": "I e IV.",
@@ -173,9 +193,9 @@
   "enunciado": "Vetores de tamanho dinâmico são muito utilizados como estruturas de dados para armazenar listas e tabelas de dispersão (tabelas hash). Essa representação permite que o número máximo de elementos a ser inserido não precise ser pré-determinado. Uma técnica para implementar vetores de tamanho dinâmico é aquela que dobra o tamanho do vetor quando o número de itens a ser armazenado ultrapassa o tamanho atual do vetor. Essa operação requer uma alocação de memória para conter o vetor com o dobro do tamanho atual e a realização de cópia dos elementos para o novo vetor. Com base nessas informações, considere uma lista linear implementada com um vetor dinâmico. Assuma que todos os itens inseridos na lista tenham o mesmo tamanho e que o vetor tenha tamanho inicial para comportar apenas 1 item. Considerando uma sequência de n inserções no final dessa lista, o tempo médio por inserção e o tempo total gasto para executar todas as n operações são, respectivamente, da ordem de Q(logn) e Q(n logn).",
   "alternativas": {
    "A": "Q(1) e Q(n).",
-   "B": "Q(1) e Q(n2).",
-   "C": "Q(n) e Q(n2).",
-   "D": "Q( n ) e Q(n3/2).",
+   "B": "Q(1) e Q(n₂).",
+   "C": "Q(n) e Q(n₂).",
+   "D": "Q( n ) e Q(n₃/2).",
    "E": "Θ(√n) e Θ(n^(3/2))."
   },
   "gabarito": "B",
@@ -190,7 +210,7 @@
   "tema": "Compiladores: análise léxica, sintática e semântica",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "É chamado de compilação o processo de conversão do código escrito pelo programador para um arquivo binário que o computador consegue executar. Esse processo é realizado por um programa chamado compilador. Entre as diversas tarefas de um compilador, destaca-se a de identificar os possíveis erros sintáticos e semânticos. Com base nessas informações, considere uma linguagem de programação em que a sintaxe de uma operação aritmética seja dada pela seguinte gramática livre de contexto: S → var = E; | var = E; S E → E + E | E - E | E",
+  "enunciado": "É chamado de compilação o processo de conversão do código escrito pelo programador para um arquivo binário que o computador consegue executar. Esse processo é realizado por um programa chamado compilador. Entre as diversas tarefas de um compilador, destaca-se a de identificar os possíveis erros sintáticos e semânticos. Com base nessas informações, considere uma linguagem de programação em que a sintaxe de uma operação aritmética seja dada pela seguinte gramática livre de contexto: S → var = E; | var = E; S E → E + E | E - E | E * E | E/E | E(E) | var Inspirado nessa gramática, um profissional submete a seguinte sentença ao compilador dessa linguagem de programação:\n```text\na = a / (b - b);\n```\nCom base na gramática da linguagem de programação e acerca do processo de análise sintática e semântica da sentença proposta pelo profissional, é correto afirmar que",
   "alternativas": {
    "A": "a gramática gera a sentença apresentada e o erro presente na expressão está fora do escopo das análises sintática e semântica.",
    "B": "a gramática gera a sentença apresentada, porém o analisador semântico transmitirá uma mensagem de erro.",
@@ -252,7 +272,7 @@
   "figura": null,
   "enunciado": "Considere um banco de dados relacional formado por três tabelas, conforme é apresentado na figura a seguir. As chaves primárias das tabelas cliente e funcionario são chaves estrangeiras da tabela pessoa. cliente funcionario funcionário id_cliente: int id_funcionario: int data_cadastro: date data_cadastro: date limite_credito: decimal(10, 0) cntps: varchar(255) saldo_compras: decimal(10, 0) matricula: varchar(255) saldo_devedor: decimal(10, 0) pis: varchar(255) salario: decimal(10, 0) pessoa id_pessoa: int nome: varchar(255) cpf: varchar(255) rg: varchar(255) data_cadastro: date",
   "alternativas": {
-   "A": "SELECT",
+   "A": "SELECT * FROM cliente as c INNER JOIN pessoa as p, funcionario as f WHERE c.saldo_devedor > f.salario AND c.id_cliente=p.id_pessoa AND f.id_funcionario=p.id_pessoa ORDER BY c.saldo_devedor ASC",
    "B": "SELECT p.nome, c.saldo_devedor FROM cliente as c, pessoa as p WHERE c.saldo_devedor > f.salario AND c.id_cliente=p.id_pessoa AND f.id_funcionario=p.id_pessoa ORDER BY c.saldo_devedor DESC",
    "C": "SELECT p.nome, c.saldo_devedor FROM cliente as c, pessoa as p, funcionario as f WHERE c.saldo_devedor < f.salario AND c.id_cliente=p.id_pessoa AND f.id_funcionario=p.id_pessoa ORDER BY c.saldo_devedor ASC",
    "D": "SELECT p.nome, c.saldo_devedor FROM cliente as c LEFT OUTER JOIN pessoa as p on c.id_cliente=p.id_pessoa LEFT OUTER JOIN funcionario as f on p.id_pessoa=f.id_funcionario WHERE c.saldo_devedor > f.salario ORDER BY f.salario, c.saldo_devedor ASC",
@@ -298,7 +318,7 @@
   "tema": "Porta paralela e registrador de direção",
   "dificuldade": "Média",
   "figura": null,
-  "enunciado": "Um determinado sistema embarcado possui uma porta paralela de 8 bits, na qual cada pino pode ser configurado individualmente como interface de entrada ou de saída. A direção de cada pino da porta é definida pelo bit correspondente do registrador de direção de 8 bits PORT_DIR da seguinte forma: valor 0 para configuração como entrada e valor 1 para configuração como saída. Os bits de entrada da porta são armazenados no registrador PORT_IN e os bits de saída da porta são armazenados no registrador PORT_OUT, ambos de 8 bits. Os pinos que correspondem ao nibble (conjunto de 4 bits) menos significativo da porta de I/O são conectados aos seguintes dispositivos externos: alarme (SPK1), chave 2 (CH2), LED (LED1) e chave 1 (CH1), conforme a figura a seguir. VDD VDD VDD SPK1 CH2 LED1 CH1 P2 P3 P1 P0 Pinos 3, 2, 1 e 0 da Porta de I/O Considere que uma tensão VDD na porta corresponda ao valor lógico 1 e que uma tensão próxima a 0 V corresponda ao valor lógico 0. Com base nas informações apresentadas e no esquema da figura, avalie as afirmações a seguir. I. O nibble menos significativo do registrador PORT_DIR deverá ser carregado com o valor 9 (decimal) pelo software do sistema para configuração adequada da porta de I/O. II. Quando ambas as chaves (1 e 2) estiverem fechadas simultaneamente, o registrador PORT_IN possuirá o valor binário X1X0 no nibble menos significativo (X significa irrelevante). III. Para acionar o alarme e o LED, simultaneamente, o registrador PORT_OUT deverá ser carregado com o valor binário 1X0X no nibble menos significativo (X significa irrelevante). É correto o que se afirma em",
+  "enunciado": "Um determinado sistema embarcado possui uma porta paralela de 8 bits, na qual cada pino pode ser configurado individualmente como interface de entrada ou de saída. A direção de cada pino da porta é definida pelo bit correspondente do registrador de direção de 8 bits PORT_DIR da seguinte forma: valor 0 para configuração como entrada e valor 1 para configuração como saída. Os bits de entrada da porta são armazenados no registrador PORT_IN e os bits de saída da porta são armazenados no registrador PORT_OUT, ambos de 8 bits. Os pinos que correspondem ao nibble (conjunto de 4 bits) menos significativo da porta de I/O são conectados aos seguintes dispositivos externos: alarme (SPK₁), chave 2 (CH₂), LED (LED₁) e chave 1 (CH₁), conforme a figura a seguir. VDD VDD VDD SPK₁ CH₂ LED₁ CH₁ P₂ P₃ P₁ P₀ Pinos 3, 2, 1 e 0 da Porta de I/O Considere que uma tensão VDD na porta corresponda ao valor lógico 1 e que uma tensão próxima a 0 V corresponda ao valor lógico 0. Com base nas informações apresentadas e no esquema da figura, avalie as afirmações a seguir. I. O nibble menos significativo do registrador PORT_DIR deverá ser carregado com o valor 9 (decimal) pelo software do sistema para configuração adequada da porta de I/O. II. Quando ambas as chaves (1 e 2) estiverem fechadas simultaneamente, o registrador PORT_IN possuirá o valor binário X₁X0 no nibble menos significativo (X significa irrelevante). III. Para acionar o alarme e o LED, simultaneamente, o registrador PORT_OUT deverá ser carregado com o valor binário 1X0X no nibble menos significativo (X significa irrelevante). É correto o que se afirma em",
   "alternativas": {
    "A": "I, apenas.",
    "B": "II, apenas.",
@@ -318,7 +338,7 @@
   "tema": "HDL: descrição de circuitos digitais",
   "dificuldade": "Média",
   "figura": null,
-  "enunciado": "Os sistemas digitais são componentes essenciais em uma ampla variedade de aplicações, desde dispositivos eletrônicos portáteis até sistemas de controle industrial. Um dos principais aspectos do projeto desse tipo de sistema é a descrição do circuito em uma Hardware Description Language (HDL), como Verilog ou VHDL. Essas linguagens permitem descrever o comportamento e a estrutura do circuito de forma abstrata, viabilizando a síntese e a simulação do sistema. Um exemplo de circuito sequencial é o contador de 4 bits assíncrono, mostrado na figura a seguir, o qual foi implementado utilizando flip-flops JK. count 3 count 2 count 1 count 0 J Q J Q J Q J Q Clk Clk Clk Clk K K K K Q Q Q Q CLR CLR CLR CLR reset clk Nesse contexto, considere que um engenheiro proponha as duas traduções desse circuito em Verilog e VHDL, equivalentes entre si, conforme observado a seguir. Verilog: //----------------------------------------------- module contador_4bits ( input wire clk, input wire reset, output reg [1:0] count ); always @(posedge clk or posedge reset) begin if (reset) count <= 0; else count <= count + 1; end endmodule //----------------------------------------------- VHDL: //----------------------------------------------- library ieee; use ieee.std_logic_1164.all; entity contador_4bits is port ( clk : in std_logic; reset : in std_logic; count : out integer range 0 to 3 ); end entity contador_4bits; architecture behavioral of contador_4bits is begin process(clk, reset) variable q : integer range 0 to 3; begin if reset = '1' then q := 0; elsif rising_edge(clk) then q := q + 1; end if; count <= q; end process; end architecture behavioral; //----------------------------------------------- Considerando as informações apresentadas, avalie as asserções a seguir e a relação proposta entre elas. I. Qualquer um dos códigos corresponde ao circuito contador de 4 bits mostrado na figura. PORQUE II. Ao atingir o valor máximo da contagem, o valor da saída será zerado no próximo ciclo de clock e o processo será reiniciado.",
+  "enunciado": "Os sistemas digitais são componentes essenciais em uma ampla variedade de aplicações, desde dispositivos eletrônicos portáteis até sistemas de controle industrial. Um dos principais aspectos do projeto desse tipo de sistema é a descrição do circuito em uma Hardware Description Language (HDL), como Verilog ou VHDL. Essas linguagens permitem descrever o comportamento e a estrutura do circuito de forma abstrata, viabilizando a síntese e a simulação do sistema. Um exemplo de circuito sequencial é o contador de 4 bits assíncrono, mostrado na figura a seguir, o qual foi implementado utilizando flip-flops JK. count 3 count 2 count 1 count 0 J Q J Q J Q J Q Clk Clk Clk Clk K K K K Q Q Q Q CLR CLR CLR CLR reset clk Nesse contexto, considere que um engenheiro proponha as duas traduções desse circuito em Verilog e VHDL, equivalentes entre si, conforme observado a seguir. Verilog: module contador_4bits (\n```vhdl\ninput wire clk,\ninput wire reset,\noutput reg [1:0] count\n```\n);\n```vhdl\nalways @(posedge clk or posedge reset) begin\nif (reset)\ncount <= 0;\nelse\ncount <= count + 1;\nend\nendmodule\n```\nVHDL: library ieee;\n```vhdl\nuse ieee.std_logic_1164.all;\nentity contador_4bits is\nport (\nclk : in std_logic;\nreset : in std_logic;\ncount : out integer range 0 to 3\n```\n); end entity contador_4bits; architecture behavioral of contador_4bits is begin process(clk, reset)\n```vhdl\nvariable q : integer range 0 to 3;\nbegin\n```\nif reset = '1' then\n```vhdl\nq := 0;\nelsif rising_edge(clk) then\nq := q + 1;\nend if;\ncount <= q;\nend process;\nend architecture behavioral;\n```\nConsiderando as informações apresentadas, avalie as asserções a seguir e a relação proposta entre elas. I. Qualquer um dos códigos corresponde ao circuito contador de 4 bits mostrado na figura. PORQUE II. Ao atingir o valor máximo da contagem, o valor da saída será zerado no próximo ciclo de clock e o processo será reiniciado.",
   "alternativas": {
    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
@@ -402,7 +422,7 @@
   "tema": "Máquinas de vetores de suporte (SVM)",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Considere que uma equipe de engenheiros projete um sistema robótico para reciclagem de resíduos sólidos, o qual utiliza visão computacional para separar objetos de plástico e de vidro. Com o objetivo de automatizar o processo de classificação, opta-se pela técnica support vector machine (SVM). No método SVM, i é o índice do vetor suporte (1 ≤ i ≤ 5), w é o coeficiente angular (peso) e b é o coeficiente linear (polarização) da reta de separação. O par ordenado (x, y) é a saída do sistema de Visão Computacional que representa os vetores de características dos supostos materiais, plástico ou vidro, com classificação normalizada em ƒ (i) Î {-1, +1} . A separação linear do material é resultado da diferença entre os pontos P1 = w.x + b e P2 = y, conforme a equação a seguir. +1, se w xi + b − yi ≥ 0 f (i) =   −1, se w xi + b − yi < 0  O pseudocódigo apresentado a seguir foi projetado para solucionar o problema de classificação com valores de w e b obtidos a partir de um conjunto de dados de treinamento. Início w <- 0.4 b <- 2.7 para i de 1 até 5 faça yr <- w * x[i] + b se yr - y[i] > 0 então f[i] <- 1 senão f[i] <- -1 fimse fimpara para i de 1 até 5 faça se f[i] = -1 então escreva(\"Plástico\") senão escreva(\"Vidro\") fimse fimpara Fim Observe a seguinte tabela com dados de teste. i 1 2 3 4 5 x 3 6 4 5 1 y 7 6 4 3 2 Considerando essas informações, assinale a opção que apresenta a classificação correta da sequência dos",
+  "enunciado": "Considere que uma equipe de engenheiros projete um sistema robótico para reciclagem de resíduos sólidos, o qual utiliza visão computacional para separar objetos de plástico e de vidro. Com o objetivo de automatizar o processo de classificação, opta-se pela técnica support vector machine (SVM). No método SVM, i é o índice do vetor suporte (1 ≤ i ≤ 5), w é o coeficiente angular (peso) e b é o coeficiente linear (polarização) da reta de separação. O par ordenado (x, y) é a saída do sistema de Visão Computacional que representa os vetores de características dos supostos materiais, plástico ou vidro, com classificação normalizada em ƒ (i) Î {-1, +1}. A separação linear do material é resultado da diferença entre os pontos P₁ = w.x + b e P₂ = y, conforme a equação a seguir. +1, se w xi + b − yi ≥ 0 f (i) =   −1, se w xi + b − yi < 0  O pseudocódigo apresentado a seguir foi projetado para solucionar o problema de classificação com valores de w e b obtidos a partir de um conjunto de dados de treinamento. Início w <- 0.4 b <- 2.7 para i de 1 até 5 faça yr <- w * x[i] + b se yr - y[i] > 0 então f[i] <- 1 senão f[i] <- -1 fimse fimpara para i de 1 até 5 faça se f[i] = -1 então escreva(\"Plástico\") senão escreva(\"Vidro\") fimse fimpara Fim Observe a seguinte tabela com dados de teste. i 1 2 3 4 5 x 3 6 4 5 1 y 7 6 4 3 2 Considerando essas informações, assinale a opção que apresenta a classificação correta da sequência dos",
   "alternativas": {
    "A": "Plástico, Vidro, Vidro, Plástico, Vidro.",
    "B": "Plástico, Plástico, Vidro, Vidro, Vidro.",
@@ -412,6 +432,26 @@
   },
   "gabarito": "B",
   "materia_ava": "ROBOTICA INDUSTRIAL"
+ },
+ {
+  "id": "2023-CE-Q30",
+  "edicao": 2023,
+  "parte": "CE",
+  "numero": "30",
+  "tipo": "objetiva",
+  "tema": "Paralelismo e dependência de dados",
+  "dificuldade": "Difícil",
+  "figura": null,
+  "enunciado": "Considere que, para melhorar o desempenho de sistemas computacionais, projetistas de hardware decidam aumentar o número de processadores em vez de aumentar a frequência de clock. Dessa forma, surge a necessidade de utilizar softwares que explorem o paralelismo. Um problema típico encontrado no desenvolvimento desse tipo de software é a dependência de dados. Nesse contexto, considere que dois processadores precisem realizar, simultaneamente, o acesso a uma mesma matriz A. Com base nas informações apresentadas, com relação aos trechos de código em linguagem C apresentados a seguir, assinale a opção que apresenta uma situação de conflito de dados.",
+  "alternativas": {
+   "A": "```c\nProcessador 1: int a = &A[0][0]; Processador 2: int b = &A[0][0];\n```",
+   "B": "```c\nProcessador 1: *A[0][0] = 10; Processador 2: *A[0][1] = 20;\n```",
+   "C": "```c\nProcessador 1: *A[0][0] = 10; Processador 2: int b = &A[0][0];\n```",
+   "D": "```c\nProcessador 1: int a = &A[0][0]; Processador 2: *A[0][0] = 20;\n```",
+   "E": "```c\nProcessador 1: *A[0][0] = 10; Processador 2: *A[0][0] = 20;\n```"
+  },
+  "gabarito": "E",
+  "materia_ava": "COMPUTACAO PARALELA"
  },
  {
   "id": "2023-CE-Q31",

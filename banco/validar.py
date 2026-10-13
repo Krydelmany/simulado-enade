@@ -30,6 +30,50 @@ LIXO = re.compile(
     re.I,
 )
 
+# linguagens que o `formato.py` pode marcar — o `TextoRico.svelte` só usa isto
+# para escolher a fonte, então qualquer outra string é fence colado na frase
+LINGUAGENS = {'c', 'java', 'python', 'sql', 'vhdl', 'html', 'xml', 'text'}
+
+
+# O mesmo regex do `TextoRico.svelte`. Tem que ser IDÊNTICO ao renderizador:
+# a validação só vale se olhar exatamente o que o navegador vai olhar.
+FENCE_RENDER = re.compile(r'```([^\n`]*)\n?([\s\S]*?)```')
+
+
+def checa_blocos(nome, qid, campo, txt, problemas):
+    """Todo ``` tem que entrar num bloco, e a linguagem tem que ser conhecida.
+
+    O renderizador casa ```` ```lang … ``` ```` a partir da primeira occurrence
+    e segue. Se sobrar ``` por fora, é fence torto — e fence torto não dá
+    aviso: o `TextoRico` simplesmente mostra o ``` como texto e perde o
+    pedaço de código junto. Foi assim que `…no vetor a[lo..hi].```SEDGEWICK`
+    sumiu da tela sem erro nenhum no build.
+
+    Além disso, a "linguagem" é o resto da linha depois do ``` de abertura, sem
+    limite de tamanho: se for uma frase, o fence está colado no texto.
+    """
+    if not txt or '```' not in txt:
+        return
+
+    usados = [m.span() for m in FENCE_RENDER.finditer(txt)]
+    for m in FENCE_RENDER.finditer(txt):
+        lang = m.group(1).strip()
+        if lang and lang not in LINGUAGENS:
+            problemas.append((
+                nome, qid,
+                f'{campo} com bloco de código de linguagem desconhecida '
+                f'"{lang[:34]}" — o ``` está colado no texto'
+            ))
+    # cada bloco casa DOIS ``` (abre e fecha). Sobrar um significa bloco sem
+    # par — o `TextoRico` não renderiza nada e deixa o ``` solto como texto.
+    soltos = txt.count('```') - 2 * len(usados)
+    if soltos:
+        problemas.append((
+            nome, qid,
+            f'{campo} com {soltos} ``` fora de um bloco — o código deste '
+            'trecho não vai aparecer na tela'
+        ))
+
 
 def main():
     arquivos = sorted(glob.glob(os.path.join(BANCO, 'enade*.json')))
@@ -54,6 +98,11 @@ def main():
             for campo in ('edicao', 'parte', 'numero', 'tipo', 'tema', 'enunciado'):
                 if not q.get(campo):
                     problemas.append((nome, qid, f'sem {campo}'))
+
+            checa_blocos(nome, qid, 'enunciado', q.get('enunciado'), problemas)
+            checa_blocos(nome, qid, 'padrão', q.get('padrao'), problemas)
+            for letra, alt in (q.get('alternativas') or {}).items():
+                checa_blocos(nome, qid, f'alternativa {letra}', alt, problemas)
 
             if q['tipo'] == 'objetiva':
                 alt = q.get('alternativas') or {}

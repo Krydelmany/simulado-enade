@@ -35,6 +35,10 @@ LIXO_PROVA = re.compile(
     re.I,
 )
 
+# Bloco de código cercado por ``` — o `formato.py` marca antes deste módulo
+# rodar, e a quebra de linha dentro dele é informação, não ruído.
+FENCE = re.compile(r'```[^\n`]*\n[\s\S]*?```')
+
 # A prova de 2023 CE tem alternativas muito verborrágicas (a maior tem 352
 # caracteres); enunciado vazado na alternativa passa de 470. O corte fica no
 # meio, e o teste de "trecho de enunciado" pega o resto.
@@ -56,11 +60,45 @@ SUFIXO_RODAPE = re.compile(
     r'|\d{4}\s+enade'
     r'|enade'
     r'|Exame\s+Nacional.*'
-    r'|\*[^.]{4,}\*?'
-    r'|\d{1,3}\s*$'
+    # Marcador de fonte do INEP: `*R0820235**8*`. Tem `R` + dígitos logo
+    # depois — é isso que distingue do `*` de ponteiro em C (`void *s`),
+    # do `*` de Kleene em linguagem formal (`{0,1}*`) e do `SELECT *`.
+    #
+    # NÃO existe regra "número de página no fim" aqui. Já houve uma
+    # (`\d{1,3}\s*$`) e ela cortava dado bom: `= 0` virava `=`, `I1` virava
+    # `I`, os binários `1010`/`111111` viravam `10`/`111`. O rodapé real
+    # ("COMPUTAÇÃO 23", "LOGO", "ENGENHARIA DE COMPUTAÇÃO") já é pego pelas
+    # alternativas acima, que vem antes na alternância.
+    r'|\*R\d{5,}\*?\d*\*?'
     r').*$',
     re.I,
 )
+
+
+def _normaliza_texto(t):
+    """Colapsa espaço em branco fora dos blocos de código.
+
+    O texto extraído do PDF vem com quebra de linha a cada linha da coluna, e
+    isso some quando o enunciado vira parágrafo. DENTRO de um bloco ``` a
+    quebra é a informação — é ela que separa uma linha de código da
+    seguinte —, então os blocos ficam intactos.
+
+    O bloco volta com `\n` nas duas pontas. Sem isso o ``` fecha colado na
+    frase seguinte, e o renderizador lê ```SEDGEWICK, como se fosse o nome da
+    linguagem do bloco — o código some da tela.
+    """
+    if not t:
+        return t
+    partes = []
+    ultimo = 0
+    for m in FENCE.finditer(t):
+        if m.start() > ultimo:
+            partes.append(' '.join(t[ultimo:m.start()].split()))
+        partes.append(m.group(0))
+        ultimo = m.end()
+    if ultimo < len(t):
+        partes.append(' '.join(t[ultimo:].split()))
+    return '\n'.join(p for p in partes if p).strip()
 
 
 def limpa(q):
@@ -70,12 +108,13 @@ def limpa(q):
     novo = {}
     for letra, txt in alt.items():
         t = SUFIXO_RODAPE.sub('', (txt or '').strip()).strip()
-        t = ' '.join(t.split())
+        t = _normaliza_texto(t)
         if t:
             novo[letra] = t
     q['alternativas'] = novo
-    enun = SUFIXO_RODAPE.sub('', (q.get('enunciado') or '').strip()).strip()
-    q['enunciado'] = ' '.join(enun.split())
+    q['enunciado'] = _normaliza_texto(
+        SUFIXO_RODAPE.sub('', (q.get('enunciado') or '').strip()).strip()
+    )
     return q
 
 
