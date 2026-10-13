@@ -2,7 +2,7 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import { GraduationCap, Infinity as InfinityIcon, Moon, Stairs, Sun, Timer } from 'phosphor-svelte';
+	import { Infinity as InfinityIcon, Moon, Stairs, Sun, Timer } from 'phosphor-svelte';
 	import { alternarTema, iniciarTema, temaAtual } from '$lib/tema.js';
 
 	const tabs = [
@@ -36,10 +36,7 @@
 
 <header class="bg-bar text-white">
 	<nav class="mx-auto flex h-16 w-full max-w-3xl items-center gap-1 px-4 lg:max-w-5xl" aria-label="Principal">
-		<a href="/" class="mr-2 flex items-center gap-2">
-			<span class="flex h-9 w-9 items-center justify-center rounded-xl bg-accent" aria-hidden="true">
-				<GraduationCap size={22} weight="bold" class="text-white" aria-hidden="true" />
-			</span>
+		<a href="/" class="mr-2">
 			<span class="leading-tight">
 				<span class="block font-display text-[15px] font-bold tracking-tight">Simulado ENADE</span>
 				<span class="block text-[11px] font-medium text-bar-fg">Eng. de Computação</span>
