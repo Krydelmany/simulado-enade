@@ -2,6 +2,10 @@
 	import { Lightning, X } from 'phosphor-svelte';
 
 	let { titulo, detalhe = '', progresso = 0, xp = 0, aoFechar } = $props();
+
+	// posição real da sessão em % — substitui a etiqueta decorativa fixa
+	// ("SIM-ENADE // REV A"), que só ocupava espaço e era igual em toda sessão.
+	let pct = $derived(Math.round(progresso * 100));
 </script>
 
 <div class="blueprint -mx-4 -mt-6 bg-bar px-4 pt-4 pb-5 text-white" style="border-radius: 0 0 26px 26px;">
@@ -24,12 +28,12 @@
 			</p>
 		</div>
 		<div class="mt-3 flex items-baseline justify-between gap-3">
-			<p class="text-[17px] font-bold">{titulo}</p>
+			<p class="font-display text-[17px] font-bold">{titulo}</p>
 			<div class="shrink-0 text-right">
 				{#if detalhe}
 					<p class="text-sm font-medium text-bar-fg">{detalhe}</p>
 				{/if}
-				<p class="font-code text-[10px] tracking-[0.12em] text-white/40" aria-hidden="true">SIM-ENADE // REV A</p>
+				<p class="nums font-code text-label font-bold text-white/55">{pct}% concluído</p>
 			</div>
 		</div>
 		<div
@@ -38,11 +42,11 @@
 			aria-label="Progresso da sessão"
 			aria-valuemin="0"
 			aria-valuemax="100"
-			aria-valuenow={Math.round(progresso * 100)}
+			aria-valuenow={pct}
 		>
 			<div
-				class="h-full rounded-full bg-accent transition-[width] duration-500 ease-out"
-				style="width: {Math.round(progresso * 100)}%"
+				class="h-full rounded-full bg-accent-bar transition-[width] duration-500 ease-out"
+				style="width: {pct}%"
 			></div>
 		</div>
 	</div>

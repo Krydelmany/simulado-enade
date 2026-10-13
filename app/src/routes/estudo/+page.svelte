@@ -6,13 +6,19 @@
 	import Contador from '$lib/Contador.svelte';
 	import { carregarBanco, embaralhar, doNivel } from '$lib/banco.js';
 	import {
-		somarXP,
-		getXP,
-		getErros,
-		registrarErro,
-		removerErro
-	} from '$lib/stats.js';
-	import { ArrowsClockwise, Lightning, Target, Timer, Trophy } from 'phosphor-svelte';
+	somarXP,
+	getXP,
+	getErros,
+	registrarErro,
+	removerErro,
+	getRevisar,
+	marcarRevisar,
+	desmarcarRevisar,
+	getParaRevisar,
+	registrarResposta,
+	registrarSessao
+} from '$lib/stats.js';
+	import { ArrowLeft, ArrowsClockwise, Info, Lightning, Play, Target, Timer, Trophy } from 'phosphor-svelte';
 
 	const TOTAL = 10;
 	const NIVEIS = {
@@ -20,23 +26,46 @@
 		2: { nome: 'N2 · Intermediário', desc: 'Misto, ritmo de prova.' },
 		3: { nome: 'N3 · Avançado', desc: 'Misto + discursiva com autoavaliação.' }
 	};
+	// sessão de estudo pausada — chave própria para não colidir com a sessão do treino
+	const CHAVE = 'enade-sessao-estudo';
 
 	let banco = $state([]);
 	let nivel = $state(null);
 	let sessao = $state([]);
 	let i = $state(0);
-	let certas = $state(0);
-	let parciais = $state(0);
-	let fim = $state(false);
-	let pronto = $state(false);
-	let respondidaAqui = $state(false);
+	// respostas[i] guarda a resposta da questão i (para voltar e reexibir o veredito)
+	let respostas = $state([]);
 	let log = $state([]);
+	let fim = $state(false);
 	let inicio = $state(Date.now());
 	let xp = $state(0);
 	let xpGanho = $state(0);
 	let xpPing = $state(0);
+	let ultimoToque = $state(0);
+	let xpValor = $state(10);
 	let carregou = $state(false);
 	let falhou = $state(false);
+	let vazioNivel = $state(null);
+	let escolhaE = $state(false);
+	let salvaE = $state(null);
+	let confirmaSaida = $state(false);
+	let zoomAberto = $state(false);
+	let refSaida = $state(null);
+
+	// contadores derivados do log — navegar para frente/voltar nunca conta duas vezes
+	let feitas = $derived(log.filter((r) => !r.pulada).length);
+	let certas = $derived(log.filter((r) => r.certa).length);
+	let parciais = $derived(log.filter((r) => r.parcial).length);
+	let ultima = $derived(i + 1 >= sessao.length);
+	let podeAvancar = $derived(!!respostas[i]);
+	// quantas questões cada nível tem de verdade (para não prometer 10 vazias)
+	let contagens = $derived.by(() => {
+		const c = {};
+		for (const n of [1, 2, 3]) c[n] = banco.filter((q) => doNivel(q, n)).length;
+		return c;
+	});
+	let salvaEfeitas = $derived(salvaE ? (salvaE.log || []).filter((r) => !r.pulada).length : 0);
+	let salvaECertas = $derived(salvaE ? (salvaE.log || []).filter((r) => r.certa).length : 0);
 
 	onMount(async () => {
 		try {
@@ -47,50 +76,243 @@
 		} finally {
 			carregou = true;
 		}
+		const s = lerSessao();
+		if (s?.ids?.length) {
+			const ordem = s.ids.map((id) => banco.find((q) => q.id === id)).filter(Boolean);
+			if (ordem.length) {
+				salvaE = { ...s, sessao: ordem };
+				escolhaE = true;
+			}
+		}
+	});
+
+	$effect(() => {
+		if (confirmaSaida && refSaida) refSaida.focus();
 	});
 
 	function comecar(n) {
+		const pool = embaralhar(banco.filter((q) => doNivel(q, n)));
+		if (!pool.length) {
+			vazioNivel = n;
+			return;
+		}
+		vazioNivel = null;
 		nivel = n;
-		sessao = embaralhar(banco.filter((q) => doNivel(q, n))).slice(0, TOTAL);
+		sessao = pool.slice(0, TOTAL);
 		i = 0;
-		certas = 0;
-		parciais = 0;
+		respostas = [];
 		log = [];
 		fim = false;
-		pronto = false;
-		respondidaAqui = false;
 		xpGanho = 0;
 		xpPing = 0;
 		inicio = Date.now();
+		limparSessao();
+		persistir();
+	}
+
+	function registrar(idx, dados) {
+		log = [...log.filter((r) => r.idx !== idx), { idx, ...dados }];
 	}
 
 	function aoResponder(r) {
-		respondidaAqui = true;
-		const q = sessao.find((x) => x.id === r.id);
-		log = [...log, { materia: q?.materia_ava || q?.tema || '?', certa: !!r.certa }];
-		if (r.certa) {
-			certas++;
+		const q = sessao[i];
+		// histórico persistente — ver nota equivalente em `treino/+page.svelte`
+		registrarResposta({
+			id: r.id,
+			certa: !!r.certa,
+			parcial: !!r.parcial,
+			anulada: !!r.anulada,
+			materia: q?.materia_ava,
+			tema: q?.tema,
+			duracaoMs: Date.now() - (ultimoToque || inicio)
+		});
+		ultimoToque = Date.now();
+		// guarda também `respondida: true` para o Questao reexibir o veredito ao voltar
+		respostas[i] = { ...r, respondida: true };
+		registrar(i, {
+			id: r.id,
+			materia: q?.materia_ava || q?.tema || '?',
+			certa: !!r.certa,
+			parcial: !!r.parcial,
+			anulada: !!r.anulada,
+			pulada: false
+		});
+		if (r.anulada) {
+			// ponto para todos: conta como acerto, mas não rende XP (não houve mérito)
+		} else if (r.certa) {
 			somarXP(10);
 			xp = getXP();
 			xpGanho += 10;
 			xpPing++;
+			xpValor = 10;
 			removerErro(r.id);
 		} else if (r.parcial) {
-			parciais++;
 			somarXP(5);
 			xp = getXP();
 			xpGanho += 5;
-		} else if (!r.anulada) {
+			xpPing++;
+			xpValor = 5;
+		} else {
 			registrarErro(r.id);
 		}
-		if (i + 1 >= sessao.length) pronto = true;
+		persistir();
+	}
+
+	function aoPular(id) {
+		const q = sessao[i];
+		respostas[i] = { id, pulada: true };
+		registrar(i, {
+			id,
+			materia: q?.materia_ava || q?.tema || '?',
+			certa: false,
+			parcial: false,
+			anulada: false,
+			pulada: true
+		});
+		avancar();
+	}
+
+	// Bucket próprio: "marcar para rever" e "errar" são fatos diferentes — ver
+	// o mesmo comentário em `treino/+page.svelte`.
+	function aoRevisar(id, marcado) {
+		// reaproveita a lista de erros do stats, que alimenta o modo "Revisar erros"
+		if (marcado) marcarRevisar(id);
+		else desmarcarRevisar(id);
 	}
 
 	function avancar() {
 		xpPing = 0;
-		respondidaAqui = false;
-		if (i + 1 >= sessao.length) fim = true;
-		else i++;
+		if (ultima) {
+			fim = true;
+			limparSessao(); // sessão terminou: não há mais o que retomar
+			registrarSessao({
+				modo: 'estudo',
+				nivel,
+				respondidas: feitas,
+				certas,
+				duracaoMs: Date.now() - inicio
+			});
+			return;
+		}
+		i++;
+		persistir();
+	}
+
+	function voltar() {
+		if (i === 0) return;
+		xpPing = 0;
+		i--;
+		persistir();
+	}
+
+	function sair() {
+		// antes descartava 10 questões em silêncio; agora salva e avisa
+		if (feitas === 0) {
+			nivel = null;
+			return;
+		}
+		confirmaSaida = true;
+	}
+
+	function sairAgora() {
+		persistir();
+		confirmaSaida = false;
+		nivel = null;
+	}
+
+	function continuar() {
+		if (!salvaE) return;
+		nivel = salvaE.nivel;
+		sessao = salvaE.sessao;
+		i = Math.min(salvaE.i ?? 0, sessao.length - 1);
+		respostas = Array.isArray(salvaE.respostas) ? salvaE.respostas : [];
+		log = salvaE.log || [];
+		inicio = salvaE.inicio || Date.now();
+		xpGanho = salvaE.xpGanho || 0;
+		fim = false;
+		xpPing = 0;
+		escolhaE = false;
+	}
+
+	function descartar() {
+		limparSessao();
+		escolhaE = false;
+		salvaE = null;
+		nivel = null;
+	}
+
+	function persistir() {
+		// não salva sessão vazia (evita oferecer "continuar" de 0 respostas)
+		if (!sessao.length || fim || !log.length) return;
+		try {
+			localStorage.setItem(
+				CHAVE,
+				JSON.stringify({
+					v: 1,
+					nivel,
+					i,
+					respostas,
+					log,
+					inicio,
+					xpGanho,
+					ids: sessao.map((q) => q.id)
+				})
+			);
+		} catch {
+			// armazenamento bloqueado/cheio — segue sem salvar
+		}
+	}
+
+	function lerSessao() {
+		try {
+			const v = localStorage.getItem(CHAVE);
+			return v ? JSON.parse(v) : null;
+		} catch {
+			return null;
+		}
+	}
+
+	function limparSessao() {
+		try {
+			localStorage.removeItem(CHAVE);
+		} catch {
+			// ignora
+		}
+	}
+
+	function ehCampo(t) {
+		return (
+			t instanceof HTMLElement &&
+			(t.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(t.tagName))
+		);
+	}
+
+	function aoTecla(e) {
+		if (e.metaKey || e.ctrlKey || e.altKey) return;
+		if (ehCampo(e.target)) return;
+		if (e.key === 'Escape') {
+			if (confirmaSaida) {
+				confirmaSaida = false;
+				return;
+			}
+			if (zoomAberto) return; // deixa o Esc fechar o zoom da figura
+			if (nivel !== null && !fim) sair();
+			return;
+		}
+		if (confirmaSaida || nivel === null || fim || escolhaE || zoomAberto) return;
+		if (e.key === 'ArrowLeft') {
+			e.preventDefault();
+			voltar();
+			return;
+		}
+		if (e.key === 'ArrowRight' || e.key === 'Enter') {
+			// com foco num botão/link, deixa a ativação nativa cuidar (evita avançar 2x)
+			if (e.key === 'Enter' && e.target instanceof HTMLElement && ['BUTTON', 'A'].includes(e.target.tagName))
+				return;
+			if (!podeAvancar) return;
+			e.preventDefault();
+			avancar();
+		}
 	}
 
 	function mmss() {
@@ -101,6 +323,7 @@
 	function porMateria() {
 		const mapa = new Map();
 		for (const r of log) {
+			if (r.pulada || !r.materia) continue;
 			if (!mapa.has(r.materia)) mapa.set(r.materia, { n: 0, ok: 0 });
 			const m = mapa.get(r.materia);
 			m.n++;
@@ -108,9 +331,20 @@
 		}
 		return [...mapa.entries()].sort((a, b) => b[1].n - a[1].n).slice(0, 3);
 	}
+
+	function bolinha(k) {
+		if (k === i) return 'bg-accent';
+		const r = respostas[k];
+		if (r?.pulada) return 'bg-track';
+		if (r?.certa) return 'bg-ok-solid';
+		if (r) return 'bg-bad-solid';
+		return 'bg-line';
+	}
 </script>
 
-<div class="mx-auto w-full max-w-3xl">
+<svelte:window onkeydown={aoTecla} />
+
+<div class="mx-auto w-full max-w-3xl" style="padding-bottom: calc(1rem + env(safe-area-inset-bottom));">
 {#if !carregou}
 	<div class="space-y-3" role="status" aria-label="Carregando questões">
 		<div class="h-40 animate-pulse rounded-3xl bg-skel"></div>
@@ -125,11 +359,34 @@
 			Tentar de novo
 		</button>
 	</div>
+{:else if escolhaE && salvaE}
+	<div class="rise rounded-3xl bg-card p-6 text-center shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]">
+		<p class="font-code text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">Sessão de estudo pausada</p>
+		<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight">Continuar de onde parou?</h2>
+		<p class="nums mt-2 text-sm text-ink-soft">
+			{NIVEIS[salvaE.nivel]?.nome ?? 'Sessão'} · questão {salvaE.i + 1} de {salvaE.sessao.length} · {salvaECertas}/{salvaEfeitas} certas
+		</p>
+		<button type="button" onclick={continuar} class="btn3d duo-accent mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
+			<Play size={20} weight="fill" aria-hidden="true" /> Continuar sessão
+		</button>
+		<button type="button" onclick={descartar} class="mt-2 w-full rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
+			Começar outra
+		</button>
+	</div>
 {:else if nivel === null}
 	<div class="mb-4">
 		<h1 class="font-display text-2xl font-extrabold tracking-tight">Sessão de estudo</h1>
-		<p class="mt-1 text-sm text-ink-soft">10 questões. Escolha o nível e comece.</p>
+		<p class="mt-1 text-sm text-ink-soft">Até 10 questões por sessão. Escolha o nível e comece.</p>
 	</div>
+	{#if vazioNivel}
+		<div class="mb-3 flex items-start gap-2 rounded-2xl bg-warn-bg p-3 text-sm font-semibold text-warn-fg" role="alert">
+			<Info size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
+			<span>
+				O nível {vazioNivel} ainda não tem questões no banco. Tente outro nível ou o
+				<a href="/treino/" class="font-bold underline">treino livre</a>.
+			</span>
+		</div>
+	{/if}
 	<div class="space-y-3">
 		{#each Object.entries(NIVEIS) as [n, info], k (n)}
 			<button
@@ -144,6 +401,7 @@
 				<span class="min-w-0 flex-1">
 					<span class="block font-display text-[17px] font-bold tracking-tight">{info.nome}</span>
 					<span class="block text-sm text-ink-soft">{info.desc}</span>
+					<span class="nums block text-xs font-semibold text-ink-soft">{contagens[n]} {contagens[n] === 1 ? 'questão' : 'questões'} disponíveis</span>
 				</span>
 				<span class="flex shrink-0 gap-1" aria-hidden="true">
 					{#each [1, 2, 3] as d (d)}
@@ -164,10 +422,13 @@
 			<Contador valor={certas} />/{sessao.length}
 		</p>
 		<p class="mt-1 text-sm text-bar-fg">acertos nesta sessão</p>
+		{#if parciais > 0}
+			<p class="nums mt-1 text-xs font-semibold text-bar-fg">{parciais} {parciais === 1 ? 'parcial' : 'parciais'} · meio ponto</p>
+		{/if}
 	</div>
 	<div class="mx-auto -mt-0 grid max-w-xs grid-cols-3 gap-2 pt-4 text-center">
 		<div class="rounded-2xl bg-card p-3 shadow-sm">
-			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold"><Target size={17} weight="bold" class="text-accent" aria-hidden="true" />{Math.round((certas / sessao.length) * 100)}%</p>
+			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold"><Target size={17} weight="bold" class="text-accent" aria-hidden="true" />{feitas ? Math.round((certas / feitas) * 100) : 0}%</p>
 			<p class="text-[11px] font-semibold text-ink-soft">Precisão</p>
 		</div>
 		<div class="rounded-2xl bg-card p-3 shadow-sm">
@@ -201,9 +462,9 @@
 		<button type="button" onclick={() => (nivel = null)} class="btn3d duo-accent flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
 			<ArrowsClockwise size={20} weight="bold" aria-hidden="true" /> Outra sessão
 		</button>
-		{#if getErros().length}
+		{#if getParaRevisar().length}
 			<a href="/treino/?modo=revisao" class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
-				Revisar erros ({getErros().length})
+				Revisar erros e marcadas ({getParaRevisar().length})
 			</a>
 		{/if}
 	</div>
@@ -211,22 +472,100 @@
 	<SessaoTopo
 		titulo={`Questão ${i + 1} de ${sessao.length}`}
 		detalhe={NIVEIS[nivel].nome.split(' · ')[0]}
-		progresso={(i + 1) / sessao.length}
+		progresso={sessao.length ? (i + 1) / sessao.length : 0}
 		{xp}
-		aoFechar={() => (nivel = null)}
+		aoFechar={sair}
 	/>
+	{#if sessao.length < TOTAL}
+		<p class="mt-4 flex items-start gap-2 rounded-2xl bg-warn-bg p-3 text-xs font-semibold text-warn-fg" role="status">
+			<Info size={16} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
+			<span>Só há {sessao.length} {sessao.length === 1 ? 'questão' : 'questões'} neste nível — a sessão é mais curta que o normal.</span>
+		</p>
+	{/if}
 	<div class="mt-4">
 		{#if sessao[i]}
-			{#key sessao[i].id}
-				<Questao q={sessao[i]} onResponder={aoResponder} />
+			{#key sessao[i].id + '-' + i}
+				<Questao
+					q={sessao[i]}
+					onResponder={aoResponder}
+					onPular={aoPular}
+					onRevisar={aoRevisar}
+					revisarInicial={getRevisar().includes(sessao[i].id)}
+					inicial={respostas[i]?.pulada ? null : (respostas[i] ?? null)}
+					bind:zoomAberto
+				/>
 			{/key}
-			{#if respondidaAqui && !pronto}
-				<BarraAcao rotulo="Continuar" mostrarXP={xpPing > 0} onClick={avancar} />
-			{:else if pronto}
-				<BarraAcao rotulo="Ver resultado" mostrarXP={false} onClick={() => (fim = true)} />
-			{/if}
+			<BarraAcao
+				rotulo={ultima ? 'Ver resultado' : 'Próxima'}
+				mostrarXP={xpPing > 0}
+				xpValor={xpValor}
+				desabilitado={!podeAvancar}
+				aviso="Responda (ou pule) para continuar."
+				onClick={avancar}
+			>
+				<nav class="flex items-center gap-2" aria-label="Navegação da sessão">
+					<button
+						type="button"
+						onclick={voltar}
+						disabled={i === 0}
+						aria-label="Questão anterior"
+						class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line bg-card text-ink transition-transform active:scale-95 disabled:opacity-40"
+					>
+						<ArrowLeft size={20} weight="bold" aria-hidden="true" />
+					</button>
+					<p class="nums flex-1 text-center text-sm font-bold text-ink-soft" role="status" aria-live="polite">
+						Questão {i + 1} de {sessao.length}
+					</p>
+					<span class="h-11 w-11 shrink-0" aria-hidden="true"></span>
+				</nav>
+				{#if sessao.length <= 12}
+					<div class="mt-1.5 flex justify-center gap-1" aria-hidden="true">
+						{#each sessao as _q, k (k)}
+							<span class="h-1.5 w-2.5 rounded-full {bolinha(k)}"></span>
+						{/each}
+					</div>
+				{/if}
+			</BarraAcao>
 		{/if}
 	</div>
 {/if}
 
+	{#if confirmaSaida}
+		<div class="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
+			<button
+				type="button"
+				onclick={() => (confirmaSaida = false)}
+				aria-label="Fechar e continuar estudando"
+				class="absolute inset-0 cursor-default bg-black/50"
+			></button>
+			<div
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="estudo-saida-titulo"
+				class="relative w-full max-w-sm rounded-3xl bg-card p-5 shadow"
+			>
+				<h2 id="estudo-saida-titulo" class="font-display text-xl font-extrabold tracking-tight">Sair da sessão?</h2>
+				<p class="mt-1 text-sm text-ink-soft">
+					Seu progresso ({feitas} respondidas) fica salvo para continuar depois.
+				</p>
+				<div class="mt-4 space-y-2">
+					<button
+						type="button"
+						bind:this={refSaida}
+						onclick={sairAgora}
+						class="btn3d duo-accent w-full rounded-[14px] p-3.5 font-display text-base font-bold"
+					>
+						Sair e salvar
+					</button>
+					<button
+						type="button"
+						onclick={() => (confirmaSaida = false)}
+						class="w-full rounded-[14px] border-2 border-line bg-card p-3 font-display text-base font-bold"
+					>
+						Continuar estudando
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
 </div>

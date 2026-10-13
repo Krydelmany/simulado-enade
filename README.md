@@ -75,6 +75,14 @@ Regras de extração que já doeram:
   Renderizar com **mutool**, não com `pdftoppm` — a fonte substituída pelo
   poppler sai com glifos que o tesseract lê errado de forma sistemática
   (toda maiúscula vira minúscula);
+- **depois de gerar, rode `python3 banco/versao.py --escrever`.** A versão
+  do banco embutida em `banco.js` é o que invalida a cache do
+  `sessionStorage`; sem isso o aluno vê o banco velho por até 6 horas sem
+  nenhum sinal. O script deriva a versão do conteúdo, então não dá para
+  esquecer;
+- **`python3 banco/validar.py` precisa sair limpo.** Ele pega o que nenhuma
+  tela acusa: alternativa repetida, gabarito fora das letras, imagem que não
+  existe, `padrao` que é placeholder, lixo de página;
 - **nada entra no banco sem passar em `banco/qualidade.py`.** Questão com
   alternativa faltando, enunciado vazado para dentro das alternativas ou
   gabarito fora das letras lidas fica de fora — com uma opção a menos, o

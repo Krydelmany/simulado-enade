@@ -13,44 +13,93 @@
 		getErros,
 		registrarErro,
 		removerErro,
+		getRevisar,
+		registrarResposta,
+		registrarSessao,
+		marcarRevisar,
+		desmarcarRevisar,
+		getParaRevisar,
 		salvarSessao,
 		carregarSessao,
 		limparSessao
 	} from '$lib/stats.js';
-	import { ArrowsClockwise, Flag, Lightning, Play, Tag, Target, Timer, Trophy } from 'phosphor-svelte';
+	import { ArrowLeft, ArrowsClockwise, Flag, Lightning, Play, Tag, Target, Timer, Trophy } from 'phosphor-svelte';
 
 	let banco = $state([]);
 	let fila = $state([]);
 	let i = $state(0);
-	let certas = $state(0);
-	let feitas = $state(0);
+	let volta = $state(0);
+	let filtro = $state('todos');
+	let filtroAnterior = $state('todos');
+	// respostas[i] guarda a resposta da questão i da volta atual (para a navegação voltar e reexibir)
+	let respostas = $state([]);
+	// log acumula o histórico da sessão (todas as voltas) e alimenta os contadores
 	let log = $state([]);
-	let tema = $state('todos');
 	let encerrada = $state(false);
+	let fimVolta = $state(false);
 	let inicio = $state(Date.now());
 	let xp = $state(0);
 	let xpGanho = $state(0);
 	let xpPing = $state(0);
+	let xpValor = $state(10);
 	let carregou = $state(false);
 	let falhou = $state(false);
 	let escolha = $state(false);
 	let salva = $state(null);
 	let prontoModo = $state(null);
+	let confirmaFiltro = $state(null);
+	let confirmaSaida = $state(false);
+	let zoomAberto = $state(false);
+	let ultimoToque = $state(0);
+	let refTema = $state(null);
+	let refSaida = $state(null);
 
 	$effect(() => {
 		if (!carregou || !banco.length) return;
 		const m = revisao ? 'rev' : 'nor';
 		if (prontoModo === m) return;
 		prontoModo = m;
-		if (m === 'rev') {
-			escolha = false;
-			encerrada = false;
-			montar();
-		}
+		// Remonta nos DOIS sentidos. Antes só o modo revisão remontava: sair
+		// dela pela aba "Treino" trocava o título e a URL mas mantinha a fila
+		// de revisão — e, se ela estava vazia, deixava a tela num "nada por
+		// aqui" sem o botão de sair. Era justamente o caminho de recuperação
+		// que não funcionava.
+		escolha = false;
+		encerrada = false;
+		filtro = 'todos';
+		montar();
 	});
 
 	let revisao = $derived($page.url.searchParams.get('modo') === 'revisao');
-	let temas = $derived([...new Set(banco.map((q) => q.tema))].sort());
+	// O filtro é por MATÉRIA do AVA, não por tema. No banco cada questão tem
+	// um tema próprio (113 temas para 113 questões), então filtrar por tema
+	// devolvia sempre UMA questão — o controle mais visível da tela não
+	// filtrava nada. Matéria são 14 grupos que fazem sentido de filtrar.
+	let materias = $derived(
+		[...new Set(banco.map((q) => materia(q)))].sort((a, b) => {
+			if (a === 'Geral') return 1;
+			if (b === 'Geral') return -1;
+			return a.localeCompare(b, 'pt-BR');
+		})
+	);
+	let contagem = $derived(
+		materias.map((m) => [m, banco.filter((q) => materia(q) === m).length])
+	);
+
+	// contadores derivados do log — assim navegar para frente/voltar nunca conta duas vezes
+	let feitas = $derived(log.filter((r) => !r.pulada).length);
+	let certas = $derived(log.filter((r) => r.certa).length);
+	let ultima = $derived(i + 1 >= fila.length);
+	let podeAvancar = $derived(!!respostas[i]);
+	// estatísticas só da volta atual, para o aviso de fim de volta
+	let resumoVolta = $derived.by(() => {
+		const l = log.filter((r) => (r.volta ?? 0) === volta);
+		return {
+			feitas: l.filter((r) => !r.pulada).length,
+			certas: l.filter((r) => r.certa).length,
+			puladas: l.filter((r) => r.pulada).length
+		};
+	});
 
 	onMount(async () => {
 		try {
@@ -73,9 +122,20 @@
 		montar();
 	});
 
+	$effect(() => {
+		if (confirmaFiltro && refTema) refTema.focus();
+	});
+	$effect(() => {
+		if (confirmaSaida && refSaida) refSaida.focus();
+	});
+
+	function materia(q) {
+		return q.materia_ava || 'Geral';
+	}
+
 	function base() {
-		let lista = revisao ? banco.filter((q) => getErros().includes(q.id)) : banco;
-		if (tema !== 'todos') lista = lista.filter((q) => q.tema === tema);
+		let lista = revisao ? banco.filter((q) => getParaRevisar().includes(q.id)) : banco;
+		if (filtro !== 'todos') lista = lista.filter((q) => materia(q) === filtro);
 		return lista;
 	}
 
@@ -84,54 +144,242 @@
 			limparSessao();
 			fila = embaralhar(base());
 			i = 0;
-			certas = 0;
-			feitas = 0;
+			volta = 0;
+			respostas = [];
 			log = [];
 			xpGanho = 0;
 			inicio = Date.now();
 		} else if (salva) {
 			fila = salva.fila;
-			i = Math.min(salva.i, fila.length - 1);
-			certas = salva.certas;
-			feitas = salva.feitas;
+			i = Math.min(salva.i ?? 0, fila.length - 1);
+			volta = salva.volta ?? 0;
+			respostas = Array.isArray(salva.respostas) ? salva.respostas : [];
 			log = salva.log || [];
 			xpGanho = salva.xpGanho || 0;
 			inicio = salva.inicio || Date.now();
+			// restaura também o filtro com que a sessão foi montada
+			if (salva.filtro) {
+				filtro = salva.filtro;
+				filtroAnterior = salva.filtro;
+			}
 		}
 		xpPing = 0;
 		escolha = false;
 		encerrada = false;
+		fimVolta = false;
 	}
 
 	function persistir() {
 		if (revisao || !fila.length) return;
 		salvarSessao({
-			v: 1, i, certas, feitas, log, tema,
+			v: 2,
+			i,
+			volta,
+			certas,
+			feitas,
+			filtro,
 			ids: fila.map((q) => q.id),
-			inicio, xpGanho
+			respostas,
+			log,
+			inicio,
+			xpGanho
 		});
 	}
 
 	function sair() {
+		// em revisão nada é salvo; no treino normal, avisa antes de sair com progresso
+		if (revisao || feitas === 0) {
+			goto('/');
+			return;
+		}
+		confirmaSaida = true;
+	}
+
+	function sairAgora() {
 		persistir();
 		goto('/');
 	}
 
+	// registra/atualiza uma resposta para (idx, volta) — reescrever evita contar duas vezes
+	// quando o aluno pula e depois volta para responder a mesma questão
+	function registrar(idx, dados) {
+		const chave = (r) => `${r.volta ?? 0}:${r.idx ?? -1}`;
+		const k = `${volta}:${idx}`;
+		log = [...log.filter((r) => chave(r) !== k), { idx, volta, ...dados }];
+	}
+
 	function aoResponder(r) {
-		feitas++;
-		const q = fila.find((x) => x.id === r.id);
-		log = [...log, { materia: q?.materia_ava || q?.tema || '?', certa: !!r.certa }];
-		if (r.certa) {
-			certas++;
+		const q = fila[i];
+		// histórico persistente — sem esta chamada o módulo de progresso
+		// escrevia em vazio e a home mostrava zeros para sempre
+		registrarResposta({
+			id: r.id,
+			certa: !!r.certa,
+			parcial: !!r.parcial,
+			anulada: !!r.anulada,
+			materia: q?.materia_ava,
+			tema: q?.tema,
+			duracaoMs: Date.now() - (ultimoToque || inicio)
+		});
+		ultimoToque = Date.now();
+		// guarda também `respondida: true` para o Questao reexibir o veredito ao voltar
+		respostas[i] = { ...r, respondida: true };
+		registrar(i, {
+			id: r.id,
+			materia: q?.materia_ava || q?.tema || '?',
+			certa: !!r.certa,
+			parcial: !!r.parcial,
+			anulada: !!r.anulada,
+			pulada: false
+		});
+		if (r.anulada) {
+			// ponto para todos: conta como acerto, mas não rende XP (não houve mérito)
+		} else if (r.certa) {
 			somarXP(10);
 			xp = getXP();
 			xpGanho += 10;
 			xpPing++;
+			xpValor = 10;
 			removerErro(r.id);
-		} else if (!r.anulada) {
+		} else if (r.parcial) {
+			somarXP(5);
+			xp = getXP();
+			xpGanho += 5;
+			xpPing++;
+			xpValor = 5;
+		} else {
 			registrarErro(r.id);
 		}
 		persistir();
+	}
+
+	function aoPular(id) {
+		const q = fila[i];
+		// pular não é erro: só marca como vista e avança
+		respostas[i] = { id, pulada: true };
+		registrar(i, {
+			id,
+			materia: q?.materia_ava || q?.tema || '?',
+			certa: false,
+			parcial: false,
+			anulada: false,
+			pulada: true
+		});
+		avancar();
+	}
+
+	function aoRevisar(id, marcado) {
+		// Bucket próprio: "marcar para rever" e "errar" são fatos diferentes,
+		// e guardar os dois na mesma lista fazia o aluno desmarcar uma questão
+		// errada e ela sumir da revisão de erros.
+		if (marcado) marcarRevisar(id);
+		else desmarcarRevisar(id);
+	}
+
+	function avancar() {
+		xpPing = 0;
+		if (ultima) {
+			// fim da fila: avisa em vez de dar a volta em silêncio
+			fimVolta = true;
+			persistir();
+			return;
+		}
+		i++;
+		persistir();
+	}
+
+	function voltar() {
+		if (i === 0) return;
+		xpPing = 0;
+		i--;
+		persistir();
+	}
+
+	function continuarVolta() {
+		volta++;
+		i = 0;
+		respostas = [];
+		fimVolta = false;
+		persistir();
+	}
+
+	function encerrar() {
+		limparSessao();
+		encerrada = true;
+		// fecha a sessão no histórico: sem isso a home nunca sabe que a
+		// pessoa estudou, mesmo tendo respondido 40 questões
+		if (feitas > 0) {
+			registrarSessao({
+				modo: revisao ? 'revisao' : 'treino',
+				nivel: null,
+				respondidas: feitas,
+				certas,
+				duracaoMs: Date.now() - inicio
+			});
+		}
+	}
+
+	// troca de filtro nunca descarta trabalho em silêncio: pede confirmação
+	function aoTrocarFiltro() {
+		if (feitas === 0) {
+			filtroAnterior = filtro;
+			montar();
+			return;
+		}
+		confirmaFiltro = filtro;
+		filtro = filtroAnterior; // devolve o select ao filtro em vigor até confirmar
+	}
+
+	function aplicarTema() {
+		if (!confirmaFiltro) return;
+		filtro = confirmaFiltro;
+		filtroAnterior = confirmaFiltro;
+		confirmaFiltro = null;
+		montar();
+	}
+
+	function ehCampo(t) {
+		return (
+			t instanceof HTMLElement &&
+			(t.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(t.tagName))
+		);
+	}
+
+	function aoTecla(e) {
+		if (e.metaKey || e.ctrlKey || e.altKey) return;
+		if (ehCampo(e.target)) return;
+		if (e.key === 'Escape') {
+			if (confirmaFiltro) {
+				confirmaFiltro = null;
+				return;
+			}
+			if (confirmaSaida) {
+				confirmaSaida = false;
+				return;
+			}
+			if (fimVolta) {
+				fimVolta = false;
+				return;
+			}
+			if (zoomAberto) return; // deixa o Esc fechar o zoom da figura
+			if (escolha || encerrada) return; // fora da sessão não há o que encerrar
+			sair();
+			return;
+		}
+		if (confirmaSaida || confirmaFiltro || fimVolta || escolha || encerrada || zoomAberto) return;
+		if (e.key === 'ArrowLeft') {
+			e.preventDefault();
+			voltar();
+			return;
+		}
+		if (e.key === 'ArrowRight' || e.key === 'Enter') {
+			// com foco num botão/link, deixa a ativação nativa cuidar (evita avançar 2x)
+			if (e.key === 'Enter' && e.target instanceof HTMLElement && ['BUTTON', 'A'].includes(e.target.tagName))
+				return;
+			if (!podeAvancar) return;
+			e.preventDefault();
+			avancar();
+		}
 	}
 
 	function mmss() {
@@ -142,6 +390,7 @@
 	function porMateria() {
 		const mapa = new Map();
 		for (const r of log) {
+			if (r.pulada || !r.materia) continue;
 			if (!mapa.has(r.materia)) mapa.set(r.materia, { n: 0, ok: 0 });
 			const m = mapa.get(r.materia);
 			m.n++;
@@ -149,9 +398,20 @@
 		}
 		return [...mapa.entries()].sort((a, b) => b[1].n - a[1].n).slice(0, 3);
 	}
+
+	function bolinha(k) {
+		if (k === i) return 'bg-accent';
+		const r = respostas[k];
+		if (r?.pulada) return 'bg-track';
+		if (r?.certa) return 'bg-ok-solid';
+		if (r) return 'bg-bad-solid';
+		return 'bg-line';
+	}
 </script>
 
-<div class="mx-auto w-full max-w-3xl">
+<svelte:window onkeydown={aoTecla} />
+
+<div class="mx-auto w-full max-w-3xl" style="padding-bottom: calc(1rem + env(safe-area-inset-bottom));">
 {#if !carregou}
 	<div class="space-y-3" role="status" aria-label="Carregando questões">
 		<div class="h-40 animate-pulse rounded-3xl bg-skel"></div>
@@ -166,12 +426,12 @@
 			Tentar de novo
 		</button>
 	</div>
- {:else if escolha && salva}
+{:else if escolha && salva}
 	<div class="rise rounded-3xl bg-card p-6 text-center shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]">
 		<p class="font-code text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">Sessão pausada</p>
 		<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight">Continuar de onde parou?</h2>
 		<p class="nums mt-2 text-sm text-ink-soft">
-			Questão {salva.i + 1} · {salva.certas}/{salva.feitas} certas{salva.tema !== 'todos' ? ` · ${salva.tema}` : ''}
+			Questão {salva.i + 1} · {salva.certas}/{salva.feitas} certas{salva.filtro !== 'todos' ? ` · ${salva.filtro}` : ''}
 		</p>
 		<button type="button" onclick={() => montar(false)} class="btn3d duo-accent mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
 			<Play size={20} weight="fill" aria-hidden="true" /> Continuar sessão
@@ -230,14 +490,16 @@
 		</button>
 		{#if getErros().length}
 			<a href="/treino/?modo=revisao" class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
-				Revisar erros ({getErros().length})
+				Revisar erros e marcadas ({getParaRevisar().length})
 			</a>
 		{/if}
 	</div>
 {:else}
 	<SessaoTopo
 		titulo={revisao ? 'Revisar erros' : `${i + 1}ª questão`}
-		detalhe={revisao ? `${certas}/${feitas}` : `${certas}/${feitas} certas`}
+		detalhe={revisao
+			? `${certas}/${feitas}`
+			: `${certas}/${feitas} certas${volta > 0 ? ` · volta ${volta + 1}` : ''}`}
 		progresso={fila.length ? (i + 1) / fila.length : 0}
 		{xp}
 		aoFechar={sair}
@@ -246,43 +508,206 @@
 		<div class="mt-6 rounded-3xl bg-card p-6 text-center shadow-sm">
 			<p class="font-display text-lg font-bold">Nada por aqui</p>
 			<p class="mt-1 text-sm text-ink-soft">
-				{revisao ? 'Sem erros acumulados — quando errar, a questão aparece aqui.' : 'Nenhuma questão neste filtro.'}
+				{revisao ? 'Sem erros acumulados — quando errar, a questão aparece aqui.' : 'Nenhuma questão nesta matéria.'}
 			</p>
-			{#if revisao}
-				<a href="/treino/" class="btn3d duo-accent mt-4 flex w-full items-center justify-center rounded-[14px] p-3.5 font-display text-lg font-bold">
-					Treinar tudo
+			<div class="mt-4 flex w-full flex-col gap-2">
+				{#if revisao}
+					<a href="/treino/" class="btn3d duo-accent flex w-full items-center justify-center rounded-[14px] p-3.5 font-display text-lg font-bold">
+						Treinar tudo
+					</a>
+				{:else if filtro !== 'todos'}
+					<button
+						type="button"
+						onclick={() => {
+							confirmarFiltro = null;
+							filtro = 'todos';
+							montar();
+						}}
+						class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold"
+					>
+						Ver todas as matérias
+					</button>
+				{/if}
+				<a href="/estudo/" class="flex w-full items-center justify-center rounded-[14px] p-3 text-sm font-bold text-ink-soft">
+					Estudo por níveis
 				</a>
-			{/if}
+			</div>
 		</div>
 	{:else}
 		<div class="mt-4 mb-3 flex items-center gap-2">
 			<label class="flex flex-1 items-center gap-2 rounded-2xl border border-line bg-card px-3">
 				<Tag size={17} weight="bold" class="shrink-0 text-ink-soft" aria-hidden="true" />
-				<span class="sr-only">Filtrar por tema</span>
-				<select bind:value={tema} onchange={montar} class="w-full bg-transparent py-3 text-sm font-semibold text-ink">
-					<option value="todos">Todos os temas</option>
-					{#each temas as t (t)}
-						<option value={t}>{t}</option>
+				<span class="sr-only">Filtrar por matéria</span>
+				<select bind:value={filtro} onchange={aoTrocarFiltro} class="w-full bg-transparent py-3 text-sm font-semibold text-ink">
+					<option value="todos">Todas as matérias</option>
+					{#each materias as m (m)}
+						<option value={m}>{m}</option>
 					{/each}
 				</select>
 			</label>
 			<button
 				type="button"
-				onclick={() => { limparSessao(); encerrada = true; }}
+				onclick={encerrar}
 				title="Encerrar sessão e ver o resumo"
 				aria-label="Encerrar sessão e ver o resumo"
-				class="nums flex items-center gap-1.5 rounded-2xl bg-card px-3 py-3 text-sm font-bold transition-transform active:scale-95"
+				class="nums flex min-h-11 items-center gap-1.5 rounded-2xl bg-card px-3 py-3 text-sm font-bold transition-transform active:scale-95"
 			>
 				<Flag size={16} weight="bold" class="text-accent" aria-hidden="true" />{certas}/{feitas}
 			</button>
 		</div>
-		{#if fila[i]}
-			{#key fila[i].id + '-' + i}
-				<Questao q={fila[i]} onResponder={aoResponder} />
+		{#if fimVolta}
+			<div class="rise rounded-3xl bg-card p-5 shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]">
+				<p class="font-code text-[11px] font-bold tracking-[0.14em] text-accent-ink uppercase">Volta {volta + 1} concluída</p>
+				<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight">Você deu a volta na fila</h2>
+				<p class="nums mt-2 text-sm text-ink-soft">
+					Nesta volta: {resumoVolta.feitas} respondidas · {resumoVolta.certas} certas · {resumoVolta.puladas} puladas
+				</p>
+				{#if getErros().length}
+					<p class="mt-2 text-sm text-ink-soft">Vale revisar os erros antes de encarar a fila de novo.</p>
+				{/if}
+				<div class="mt-4 space-y-2">
+					<button
+						type="button"
+						onclick={continuarVolta}
+						class="btn3d duo-accent flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold"
+					>
+						<Play size={20} weight="fill" aria-hidden="true" /> Começar a volta {volta + 2}
+					</button>
+					{#if getErros().length}
+						<a href="/treino/?modo=revisao" class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
+							Revisar erros e marcadas ({getParaRevisar().length})
+						</a>
+					{/if}
+					<button type="button" onclick={() => montar()} class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
+						Nova sessão embaralhada
+					</button>
+					<button type="button" onclick={() => (fimVolta = false)} class="w-full rounded-[14px] p-3 text-sm font-bold text-ink-soft">
+						Voltar à última questão
+					</button>
+				</div>
+			</div>
+		{:else if fila[i]}
+			{#key fila[i].id + '-' + volta + '-' + i}
+				<Questao
+					q={fila[i]}
+					onResponder={aoResponder}
+					onPular={aoPular}
+					onRevisar={aoRevisar}
+					revisarInicial={getRevisar().includes(fila[i].id)}
+					inicial={respostas[i]?.pulada ? null : (respostas[i] ?? null)}
+					bind:zoomAberto
+				/>
 			{/key}
-			<BarraAcao rotulo="Próxima" mostrarXP={xpPing > 0} onClick={() => { xpPing = 0; i = (i + 1) % fila.length; }} />
+			<BarraAcao
+				rotulo={ultima ? 'Concluir volta' : 'Próxima'}
+				mostrarXP={xpPing > 0}
+				xpValor={xpValor}
+				desabilitado={!podeAvancar}
+				aviso="Escolha uma alternativa para continuar — ou use Pular questão."
+				onClick={avancar}
+			>
+				<nav class="flex items-center gap-2" aria-label="Navegação da sessão">
+					<button
+						type="button"
+						onclick={voltar}
+						disabled={i === 0}
+						aria-label="Questão anterior"
+						class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line bg-card text-ink transition-transform active:scale-95 disabled:opacity-40"
+					>
+						<ArrowLeft size={20} weight="bold" aria-hidden="true" />
+					</button>
+					<p class="nums flex-1 text-center text-sm font-bold text-ink-soft" role="status" aria-live="polite">
+						Questão {i + 1} de {fila.length}{volta > 0 ? ` · volta ${volta + 1}` : ''}
+					</p>
+					<span class="h-11 w-11 shrink-0" aria-hidden="true"></span>
+				</nav>
+				{#if fila.length <= 12}
+					<div class="mt-1.5 flex justify-center gap-1" aria-hidden="true">
+						{#each fila as _q, k (k)}
+							<span class="h-1.5 w-2.5 rounded-full {bolinha(k)}"></span>
+						{/each}
+					</div>
+				{/if}
+			</BarraAcao>
 		{/if}
 	{/if}
 {/if}
 
+	{#if confirmaFiltro}
+		<div class="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
+			<button
+				type="button"
+				onclick={() => (confirmaFiltro = null)}
+				aria-label="Fechar e manter a matéria atual"
+				class="absolute inset-0 cursor-default bg-black/50"
+			></button>
+			<div
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="confirma-filtro-titulo"
+				class="relative w-full max-w-sm rounded-3xl bg-card p-5 shadow"
+			>
+				<h2 id="confirma-filtro-titulo" class="font-display text-xl font-extrabold tracking-tight">Trocar de filtro?</h2>
+				<p class="mt-1 text-sm text-ink-soft">
+					Você já respondeu {feitas} {feitas === 1 ? 'questão' : 'questões'}. Trocar a matéria reinicia a fila e o placar.
+				</p>
+				<div class="mt-4 space-y-2">
+					<button
+						type="button"
+						bind:this={refTema}
+						onclick={aplicarTema}
+						class="btn3d duo-accent w-full rounded-[14px] p-3.5 font-display text-base font-bold"
+					>
+						Trocar e reiniciar
+					</button>
+					<button
+						type="button"
+						onclick={() => (confirmaFiltro = null)}
+						class="w-full rounded-[14px] border-2 border-line bg-card p-3 font-display text-base font-bold"
+					>
+						Manter o filtro atual
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+	{#if confirmaSaida}
+		<div class="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
+			<button
+				type="button"
+				onclick={() => (confirmaSaida = false)}
+				aria-label="Fechar e continuar treinando"
+				class="absolute inset-0 cursor-default bg-black/50"
+			></button>
+			<div
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="confirma-saida-titulo"
+				class="relative w-full max-w-sm rounded-3xl bg-card p-5 shadow"
+			>
+				<h2 id="confirma-saida-titulo" class="font-display text-xl font-extrabold tracking-tight">Sair da sessão?</h2>
+				<p class="mt-1 text-sm text-ink-soft">
+					Seu progresso ({feitas} respondidas) fica salvo para continuar depois.
+				</p>
+				<div class="mt-4 space-y-2">
+					<button
+						type="button"
+						bind:this={refSaida}
+						onclick={sairAgora}
+						class="btn3d duo-accent w-full rounded-[14px] p-3.5 font-display text-base font-bold"
+					>
+						Sair e salvar
+					</button>
+					<button
+						type="button"
+						onclick={() => (confirmaSaida = false)}
+						class="w-full rounded-[14px] border-2 border-line bg-card p-3 font-display text-base font-bold"
+					>
+						Continuar treinando
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
 </div>

@@ -8,7 +8,7 @@
   "tema": "Autômatos celulares e simulação",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Os autômatos celulares são sistemas dinâmicos discretos no espaço e no tempo que operam em uma rede regular finita ou infinita e são caracterizados por interações locais. Cada elemento, denominado célula, está associado a um dado estado em um conjunto discreto e é atualizado com base nos estados anteriores de suas células vizinhas imediatas, de acordo com um conjunto de regras locais. Os autômatos celulares geram um grande interesse na área de quando foi criado o Jogo da Vida, e agora são amplamente estudados para modelagem e simulação de processos espaço-temporais reais em uma ampla variedade de domínios de aplicação. SLIMI, R. et al. A cellular automata model for Chagas disease. Applied Mathematical Modelling, Amsterdã, v. 33, p. 1072-1085, 2009 (adaptado). As regras do Jogo da Vida são: e qualquer célula viva com menos de dois vizinhos vivos morre de solidão; e qualquer célula viva com mais de três vizinhos vivos morre de superpopulação; e qualquer célula viva com dois ou três vizinhos vivos continua no mesmo estado para a próxima geração; e qualquer célula morta com três vizinhos vivos torna-se uma célula viva. Nesse contexto, escreva uma rotina em C (ANSI) em que se utilizem as regras acima descritas para definir o estado atual de uma célula com base no seu estado anterior e no de suas vizinhas. Ao elaborar sua resposta, considere que: e as células são entradas de uma matriz; e os casos não cobertos pelas regras significam permanência no mesmo estado; e a rotina deve ter como parâmetros a matriz M, definida como “unsign ed char **M, e os índices 1, ) da posição da célula, definidos como inteiros; e arede é quadriculada, o valor 1 (um) na matriz significa célula viva e o valor O (zero) significa célula morta; e osvizinhos correspondem às 4 células que compartilham lados e às 4 diagonais da célula de interesse; e não há necessidade de se preocupar com os limites da matriz. (valor: 10,0 pontos) RASCUNHO A",
+  "enunciado": "Os autômatos celulares são sistemas dinâmicos discretos no espaço e no tempo que operam em uma rede regular finita ou infinita e são caracterizados por interações locais. Cada elemento, denominado célula, está associado a um dado estado em um conjunto discreto e é atualizado com base nos estados anteriores de suas células vizinhas imediatas, de acordo com um conjunto de regras locais. Os autômatos celulares geram um grande interesse na área de quando foi criado o Jogo da Vida, e agora são amplamente estudados para modelagem e simulação de processos espaço-temporais reais em uma ampla variedade de domínios de aplicação. SLIMI, R. et al. A cellular automata model for Chagas disease. Applied Mathematical Modelling, Amsterdã, v. 33, p. 1072-1085, 2009 (adaptado). As regras do Jogo da Vida são: e qualquer célula viva com menos de dois vizinhos vivos morre de solidão; e qualquer célula viva com mais de três vizinhos vivos morre de superpopulação; e qualquer célula viva com dois ou três vizinhos vivos continua no mesmo estado para a próxima geração; e qualquer célula morta com três vizinhos vivos torna-se uma célula viva. Nesse contexto, escreva uma rotina em C (ANSI) em que se utilizem as regras acima descritas para definir o estado atual de uma célula com base no seu estado anterior e no de suas vizinhas. Ao elaborar sua resposta, considere que: e as células são entradas de uma matriz; e os casos não cobertos pelas regras significam permanência no mesmo estado; e a rotina deve ter como parâmetros a matriz M, definida como “unsign ed char **M, e os índices 1, ) da posição da célula, definidos como inteiros; e arede é quadriculada, o valor 1 (um) na matriz significa célula viva e o valor O (zero) significa célula morta; e osvizinhos correspondem às 4 células que compartilham lados e às 4 diagonais da célula de interesse; e não há necessidade de se preocupar com os limites da matriz. (valor: 10,0 pontos)",
   "alternativas": {},
   "padrao": "O estudante deve apresentar uma solução que contenha uma contagem dos vizinhos vivos e, a\npartir dessa contagem, a implementação das condições de atualização da célula.\nA contagem pode ser realizada somando-se explicitamente as 8 posições da matriz em torno\nda posição atual (passada como parâmetro) ou utilizando repetições (que evitem ou\ncompensem a soma da posição atual).\na.\nO enunciado orienta para que a solução despreze os limites da matriz, o que, na\nverdade simplifica o problema para que se considere qualquer célula como tendo sempre 8\nvizinhos (1 superior, 1 inferior, 2 laterais e 4 diagonais\nb.\nPercorrer somando os oito vizinhos de uma posição (i, j) significa, portanto, somar os\nvalores contidos nas posições: (i-1, j-1), (i-1, j), (i-1, j+1), (i, j-1), (i, j+1), (i+1, j-1), (i+1, j), (i+1,\nj+1).\nc.\nA lógica da solução para a soma indicada pode variar, incluindo o loop de acúmulo da\nsoma da célula central com as 8 vizinhas seguida da subtração dessa posição central, ou a\nsoma explícita das posições indicadas.\nA implementação das condições de atualização deve seguir a lógica da tabela a seguir:\nCelula\nNova\nqtd_viz_vivos\nModifica?\nAtual\ngeração\n<2\nSIM\n==2\nNÃO\n==3\nNÃO\n>3\nSIM\n<2\nNÃO\n==2\nNÃO\n==3\nSIM\n>3\nNÃO\nExemplos de respostas possíveis:\nvoid jogo (unsigned char **M, int i, int j) {\nunsigned char qtd_viz_vivos = 0;\nint p, q;\nfor (p=-1; p<=1; p++)\nfor (q=-1; q<=1; q++)\nqtd_viz_vivos+= M[i+p][j+q];\nqtd_viz_vivos-= M[i][q]; // subtrai a central\nif (qtd_viz_vivos<2 || qtd_viz_vivos>3)\nM[i][j]=0;\nelse if (qtd_viz_vivos==3)\nM[i][j]=1\n}\nunsigned char jogo (unsigned char **M, int i, int j) {\nunsigned char qtd_viz_vivos = 0;\nint p, q;\nfor (p=i-1; p<=i+1; p++)\nfor (q=j-1; q<=j+1; q++)\nif ( !(p==i && q==j) ) // não soma atual\nqtd_viz_vivos+= M[i][j];\nif ( (M[i][j] && qtd_viz_vivos<2) ||\n(M[i][j] && qtd_viz_vivos>3) )\nM[i][j] = 0;\nelse if( (M[i][j] && qtd_viz_vivos==2) ||\nqtd_viz_vivos==3 )\nM[i][j] = 1;\nreturn M[i][j]; // Bastaria atualizar M, pois é passada\n// como referência, mas como foi declarada\n// diferente de void, deve retornar o valor\n}\nvoid jogo (unsigned char **M, int i, int j) {\nunsigned char qtd_viz_vivos = 0;\nint p, q;\nfor (p=i-1; p<=i+1; p++)\nfor (q=j-1; q<=j+1; q++)\nif (p==i && q==j)\ncontinue; // não soma atual\nelse qtd_viz_vivos+= M[i][j];\nif (M[i][j])\nif (qtd_viz_vivos<2 || qtd_viz_vivos>3)\nM[i][j] = 0;\nelse if (qtd_viz_vivos == 3)\nM[i][j] = 1;\n}\nvoid jogo (unsigned char **M, int i, int j) {\nunsigned char qtd_viz_vivos;\nqtd_viz_vivos = M[i-1][j-1]+M[i-1][j]+\nM[i-1][j+1]+M[i][j-1]+\nM[i][j+1]+M[i+1][j-1]+\nM[i+1][j]+M[i+1][j+1];\nif ( (M[i][j] && qtd_viz_vivos<2) ||\n(M[i][j] && qtd_viz_vivos>3) )\nM[i][j] = 0;\nelse if ( qtd_viz_vivos == 3 )\nM[i][j] = 1;\n}",
   "materia_ava": "TEORIA DA COMPUTACAO"
@@ -22,7 +22,7 @@
   "tema": "Monitoramento ambiental e variáveis",
   "dificuldade": "Média",
   "figura": null,
-  "enunciado": "O monitoramento ambiental é um processo de coleta de dados, estudo e acompanhamento contínuo e sistemático das variáveis ambientais. No contexto da realização de um monitoramento ambiental, é projetado um coletor das seguintes variáveis climáticas: radiação solar, temperatura do ambiente, pressão atmosférica e umidade. Esse coletor utiliza um microcontrolador de 32 bits provido de um módulo de comunicação RS-232, um de comunicação 12C, um de conversão analógico-digital de 12 bits, dois temporizadores, um controlador de interrupção e uma memória estática de 8 Kbytes. As informações das variáveis ambientais devem ser registradas pelo coletor em intervalos de 30 min e cada dado deve ser armazenado, em resolução de 16 bits, pelo período de um mês. Para medir a temperatura do ambiente, foi selecionado um termistor do tipo NTC (negative temperature coefficient). A figura a seguir apresenta o circuito projetado para realizar a interface entre este termistor e o pino de entrada analógica do microcontrolador, de forma que a resistência variável R do termistor seja convertida em tensão compatível com a faixa de tensão de trabalho [0, Vref] do conversor analógico-digital do microcontrolador. 10K E , Termistores Símbolos Circuito de interface Com base nesse projeto, faça o que se pede nos itens a seguir. a) Cite duas características que devem ser consideradas na escolha do microcontrolador. (valor: 2,0 pontos) b) Obtenha uma equação que relacione a resistência variável R do termistor com o valor digital \"x\" gerado pelo conversor analógico-digital. (valor: 4,0 pontos) c) Calcule o tamanho dos dados a serem preservados, em Kbits, e, com base nesse valor, indique qual o tamanho mínimo de memória que deve ser utilizado para armazenar os dados. (valor: 4,0 pontos) RASCUNHO",
+  "enunciado": "O monitoramento ambiental é um processo de coleta de dados, estudo e acompanhamento contínuo e sistemático das variáveis ambientais. No contexto da realização de um monitoramento ambiental, é projetado um coletor das seguintes variáveis climáticas: radiação solar, temperatura do ambiente, pressão atmosférica e umidade. Esse coletor utiliza um microcontrolador de 32 bits provido de um módulo de comunicação RS-232, um de comunicação 12C, um de conversão analógico-digital de 12 bits, dois temporizadores, um controlador de interrupção e uma memória estática de 8 Kbytes. As informações das variáveis ambientais devem ser registradas pelo coletor em intervalos de 30 min e cada dado deve ser armazenado, em resolução de 16 bits, pelo período de um mês. Para medir a temperatura do ambiente, foi selecionado um termistor do tipo NTC (negative temperature coefficient). A figura a seguir apresenta o circuito projetado para realizar a interface entre este termistor e o pino de entrada analógica do microcontrolador, de forma que a resistência variável R do termistor seja convertida em tensão compatível com a faixa de tensão de trabalho [0, Vref] do conversor analógico-digital do microcontrolador. 10K E , Termistores Símbolos Circuito de interface Com base nesse projeto, faça o que se pede nos itens a seguir. a) Cite duas características que devem ser consideradas na escolha do microcontrolador. (valor: 2,0 pontos) b) Obtenha uma equação que relacione a resistência variável R do termistor com o valor digital \"x\" gerado pelo conversor analógico-digital. (valor: 4,0 pontos) c) Calcule o tamanho dos dados a serem preservados, em Kbits, e, com base nesse valor, indique qual o tamanho mínimo de memória que deve ser utilizado para armazenar os dados. (valor: 4,0 pontos)",
   "alternativas": {},
   "padrao": "a) O estudante deve citar quaisquer dois dos aspectos e/ou características apresentadas no\nquadro a seguir.\nAspecto\nCaracterística\n\nVelocidade\n\nArquitetura\nDesempenho da\nUnidade de \nTamanho da palavra\nProcessamento\n\nRepertório de Instruções\n\nNível de paralelismo\n\nUnidades de memória\nFuncionalidades\n\nMódulo de interfaceamento com periféricos\npresentes\n\nMecanismos de Interrupção\n\nPeriféricos Integrados\n\nInterface com Hardware\nTestabilidade \nSuporte à Depuração\n\nViabilidade econômico-financeira\n\nViabilidade Operacional\nViabilidade\n\nViabilidade de Mercado\n\nViabilidade Conceitual\n\nAdequação à temperatura do ambiente\nAdequação ao \nAdequação à radiação solar do ambiente\nambiente de\nAdequação à pressão atmosférica do ambiente\noperação \n\nAdequação à umidade do ambiente\nb) O estudante deve mencionar (1) a tensão de entrada no microcontrolador e (2) a relação\nentre esta tensão de entrada e o valor digital gerado pelo conversor analógico-digital.\n(1) A tensão Vo amostrada no pino analógico do microcontrolador é\n(2) Como a relação é linear e a resolução do conversor é de 12 bits, temos a seguinte\nproporção linear entre o valor analógico V0 e o valor digital x:\nOu seja, uma solução para a questão é\nO estudante pode substituir ainda Vref pela primeira equação e chegar a uma segunda possível\nsolução\nc) O estudante deve mostrar (1) a quantidade total de bits que corresponde ao volume de\ndados coletados ao longo de um mês, e (2) o critério utilizado para seleção do tamanho de\nmemória apropriado.\n(1) Para armazenar os 4 dados de 16 bits (2 bytes × 8 bits/byte) amostrados na frequência de\n2 amostras por hora por 31 dias (quantidade máxima de dias por mês), são necessários\n(2) Deve-se escolher uma memória com capacidade igual ou maior que 93 Kbits. Portanto, a\nescolha deve ser uma memória de 128 Kbits.",
   "materia_ava": "CIENCIAS DO AMBIENTE",
@@ -40,30 +40,10 @@
   "tema": "Gerência de memória e paginação",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "A gerência de memória é a parte do sistema operacional que tem por finalidade gerir os recursos de memória e colocá-los à disposição dos usuários da maneira mais eficiente possível. Uma técnica de alocação de memória amplamente utilizada é a alocação particionada dinâmica, em que cada programa utiliza o espaço de que necessita, passando a ser este espaço a sua partição. Considere um sistema que, em um dado momento, possua, em sua memória principal, áreas livres com os seguintes tamanhos: 10 KB, 4 KB, 20 KB, 19 KB, 27 KB, 9 KB, 12 KB, 13 KB e 15 KB. Considere, ainda, que um programa de 12 KB será carregado na memória desse sistema. Com base nesse contexto, faça O que se pede nos itens a seguir. a) Indique em qual partição do sistema esse programa seria alocado, no caso do uso de cada uma das seguintes estratégias: first-fit, best-fit e worst-fit. Justifique sua resposta. (valor: 6,0 pontos) b) Indique, dentre as estratégias first-fit, best-fit e worst-fit, a que conduz à menor fragmentação da memória no contexto apresentado. Em seguida, descreva uma situação em que a estratégia indicada não é a melhor opção para minimizar problemas de fragmentação da memória. (valor: 4,0 pontos) RASCUNHO",
+  "enunciado": "A gerência de memória é a parte do sistema operacional que tem por finalidade gerir os recursos de memória e colocá-los à disposição dos usuários da maneira mais eficiente possível. Uma técnica de alocação de memória amplamente utilizada é a alocação particionada dinâmica, em que cada programa utiliza o espaço de que necessita, passando a ser este espaço a sua partição. Considere um sistema que, em um dado momento, possua, em sua memória principal, áreas livres com os seguintes tamanhos: 10 KB, 4 KB, 20 KB, 19 KB, 27 KB, 9 KB, 12 KB, 13 KB e 15 KB. Considere, ainda, que um programa de 12 KB será carregado na memória desse sistema. Com base nesse contexto, faça O que se pede nos itens a seguir. a) Indique em qual partição do sistema esse programa seria alocado, no caso do uso de cada uma das seguintes estratégias: first-fit, best-fit e worst-fit. Justifique sua resposta. (valor: 6,0 pontos) b) Indique, dentre as estratégias first-fit, best-fit e worst-fit, a que conduz à menor fragmentação da memória no contexto apresentado. Em seguida, descreva uma situação em que a estratégia indicada não é a melhor opção para minimizar problemas de fragmentação da memória. (valor: 4,0 pontos)",
   "alternativas": {},
   "padrao": "a) O estudante deve mencionar que a estratégia first-fit escolhe a primeira partição em que o\nprograma possa ser alocado. Nesse caso seria a 3ª partição: 20K. A estratégia best-fit escolhe a\npartição que irá produzir a menor área livre após a alocação. Nesse caso, seria a 7ª partição:\n12K. A estratégia worst-fit escolhe a partição que irá produzir a maior área livre após a\nalocação. Nesse caso seria 5ª partição: 27K.\nb) O estudante deve mencionar que a estratégia best-fit é a mais indicada, pois produz a\nmenor fragmentação no contexto apresentado. O estudante deve descrever qualquer situação\nem que a escolha da partição (ainda suficiente para acomodar o programa) deixe um espaço\nmuito pequeno para alocações subsequentes, produzindo vários pequenos espaços difíceis de\nalocar.",
   "materia_ava": null
- },
- {
-  "id": "2017-CE-Q11",
-  "edicao": 2017,
-  "parte": "CE",
-  "numero": "11",
-  "tipo": "objetiva",
-  "tema": "Conceitos de resistência térmica",
-  "dificuldade": "Média",
-  "figura": null,
-  "enunciado": "O sistema Toyota de produção apresenta-se como uma alternativa mais eficiente ao modelo fordista de produção, que explora as vantagens de produção em série. O modelo toyotista consiste em cadeia de suprimentos enxuta, flexível e altamente terceirizada, que prevê a eliminação quase total dos estoques e a busca constante pela agilização do processo produtivo. SOBRAL, F.; PECI, A. Administração: teoria e prática no contexto brasileiro. São Paulo: Pearson, 2013 (adaptado). O sistema logístico e produtivo conhecido como just in time é uma filosofia de administração da produção baseada no modelo Toyota de produção. Esse novo enfoque na administração da manufatura surgiu de uma visão estratégica e inovadora das pessoas envolvidas na gestão empresarial, buscando vantagem competitiva por intermédio de uma melhor utilização do processo produtivo. Com base nas informações apresentadas, avalie as afirmações a seguir, a respeito do sistema produtivo just in time. |. Estimula o desenvolvimento de melhorias constantes, não apenas dos procedimentos e processos, mas também do homem dentro da empresa, o que permite desenvolver o potencial humano dentro das organizações e ampliar a base de confiança obtida pela transparência e honestidade das ações. Il. A implementação dos princípios da organização começa pela fábrica e suas repercussões estendem-se por toda a empresa, o que caracteriza O princípio da visibilidade, fundamentado no objetivo de tornar visíveis os problemas onde quer que possam existir. Tem como objetivo administrar a manufatura de forma bem simples e eficiente, otimizando o uso dos recursos de capital, equipamento e mão de obra, o que resulta em um sistema capaz de atender às exigências do cliente, em termos de qualidade e prazo de entrega, ao menor custo. É correto o que se afirma em",
-  "alternativas": {
-   "A": "|, apenas.",
-   "B": "Il, apenas.",
-   "C": "lell, apenas.",
-   "D": "Ile Ill, apenas.",
-   "E": "de Desempenho de Desempenho"
-  },
-  "gabarito": "C",
-  "materia_ava": "PROJETO DE SISTEMAS EMBARCADOS"
  },
  {
   "id": "2017-CE-Q14",
@@ -84,66 +64,6 @@
   },
   "gabarito": "A",
   "materia_ava": "MATEMATICA APLICADA"
- },
- {
-  "id": "2017-CE-Q15",
-  "edicao": 2017,
-  "parte": "CE",
-  "numero": "15",
-  "tipo": "objetiva",
-  "tema": "Sensores eGrandezas físicas",
-  "dificuldade": "Média",
-  "figura": null,
-  "enunciado": "Suponha que determinado programa de computador seja executado por meio de 13 etapas, com tempo médio de 50 segundos ao todo e dispersão relativa de 10% em torno da média. Considere que uma equipe de engenharia propõe um novo algoritmo que reduz em 30% o tempo de execução de todas as 13 etapas desse programa. Nesse contexto, avalie as afirmações a seguir, a respeito do tempo de execução do novo algoritmo. |. O tempo médio por etapa será de 32,5 segundos. Il. O desvio-padrão permanecerá inalterado. Il. A dispersão relativa em torno da média permanecerá inalterada. É correto o que se afirma em",
-  "alternativas": {
-   "A": "|, apenas.",
-   "B": "Ill, apenas.",
-   "C": "apenas.",
-   "D": "Ile Ill, apenas.",
-   "E": "Lite. de Desempenho de Desempenho"
-  },
-  "gabarito": "B",
-  "materia_ava": "ROBOTICA INDUSTRIAL"
- },
- {
-  "id": "2017-CE-Q18",
-  "edicao": 2017,
-  "parte": "CE",
-  "numero": "18",
-  "tipo": "objetiva",
-  "tema": "Ensaio de flexão e otimização de materiais",
-  "dificuldade": "Média",
-  "figura": null,
-  "enunciado": "O ensaio de flexão é utilizado em materiais frágeis ou de alta dureza, tais como cerâmicas estruturais ou aços-ferramenta. Em uma de suas modalidades mais comuns, o ensaio de flexão a 3 pontos, é provocada uma flexão ao se aplicar o carregamento em 3 pontos, o que causa uma tensão de tração surgida no ponto central e inferior da amostra, onde a fratura do material terá início. Assumindo-se um comportamento de tensão- deformação linear, a tensão de flexão o do material pode ser obtida por meio da fórmula: 3Fd 0) 2 em que Fé a carga, d é a distância entre os pontos de apoio, w é a largura do corpo de prova e hé a espessura do corpo de prova. Considere dois corpos de prova A e B do mesmo compósito reforçado com fibras de vidro, cuja resistência à flexão é de 290 MPa. O corpo de prova A tem o triplo da largura e a metade da espessura do corpo de prova B e ambos são submetidos ao mesmo ensaio de flexão. Nessa situação, qual porcentagem da força necessária para o rompimento do corpo de prova B deverá ser aplicada ao corpo de prova A para que este também se rompa?",
-  "alternativas": {
-   "A": "50%",
-   "B": "75%",
-   "C": "100%",
-   "D": "125%",
-   "E": "200%"
-  },
-  "gabarito": "B",
-  "materia_ava": "ROBOTICA INDUSTRIAL"
- },
- {
-  "id": "2017-CE-Q20",
-  "edicao": 2017,
-  "parte": "CE",
-  "numero": "20",
-  "tipo": "objetiva",
-  "tema": "Programa de computador e campanha",
-  "dificuldade": "Média",
-  "figura": null,
-  "enunciado": "Um compilador transforma uma linguagem, em geral textual, em outra linguagem. Um dos tipos de linguagens que um compilador pode transformar são as linguagens regulares, que podem ser descritas utilizando-se expressões regulares compostas por símbolos isolados agrupados operadores * U organizadas com e e com auxílio de parênteses. Nesse contexto, avalie as afirmações a seguir. |. A palavra 10010100 pertence à linguagem representada por (100*)*. A palavra 10010 pertence à linguagem representada por (1(10)*0)*. II. Existe somente uma expressão regular para representar uma linguagem regular. É correto o que se afirma em",
-  "alternativas": {
-   "A": "|, apenas.",
-   "B": "Il, apenas.",
-   "C": "apenas.",
-   "D": "Ile Ill, apenas.",
-   "E": "de Desempenho % de Desempenho %"
-  },
-  "gabarito": "A",
-  "materia_ava": null
  },
  {
   "id": "2017-CE-Q21",
@@ -176,10 +96,10 @@
   "figura": null,
   "enunciado": "Os filtros digitais são de grande importância em tratamento de sinais. Com códigos relativamente pequenos, é possível implementar filtros de ordem bastante elevada, o que em circuitos analógicos demandaria uma quantidade considerável de amplificadores operacionais. A seguir, reproduz-se um fragmento de código que implementa um filtro digital estruturado. inicio defina u, Y, numérico; //Entrada e saída respectivas do sistema defina x1, x2, xt, numérico; // Variáveis auxiliares escreva y; fim-repita fim Considerando as informações apresentadas, avalie as asserções a seguir e a relação proposta entre elas. |. O algoritmo forma um sistema assintoticamente estável, linear, invariante e discreto no tempo. PORQUE |. Os polos do sistema formado pelo algoritmo estão no semiplano complexo esquerdo, excluindo-se o eixo imaginário. A respeito dessas asserções, assinale a opção correta.",
   "alternativas": {
-   "A": "As asserções le Il são proposições verdadeiras, e a Il é uma justificativa correta da |.",
-   "B": "As asserções le Il são proposições verdadeiras, mas a II não é uma justificativa correta da |.",
-   "C": "A asserção | é uma proposição verdadeira, e a Il é uma proposição falsa.",
-   "D": "A asserção | é uma proposição falsa, e a Il é uma proposição verdadeira.",
+   "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+   "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+   "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+   "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
    "E": "le Il são proposições falsas."
   },
   "gabarito": "B",
@@ -236,11 +156,11 @@
   "figura": null,
   "enunciado": "A computação verde refere-se ao uso ambientalmente responsável de computadores e recursos relacionados. Essas práticas incluem a implementação da eficiência energética em servidores e periféricos, bem como o consumo reduzido de recursos e a destinação adequada de lixo eletrônico. HARRIS, J. G. Computing and green IT best practices on regulations and industry initiatives, virtualization, power management, materials recycling and telecommuting. London: Emereo Pty Ltd, 2008 (adaptado). Nesse contexto, avalie as asserções a seguir e a relação proposta entre elas. | Embora a virtualização contribua para a computação verde, o projeto e a gerência de uma arquitetura virtualizada apresentam problemas. PORQUE |. Da virtualização podem decorrer problemas de segurança a partir de vulnerabilidades no hospedeiro, além de potencialmente haver maior desgaste das máquinas servidoras e, portanto, maior custo de manutenção. A respeito dessas asserções, assinale a opção correta.",
   "alternativas": {
-   "A": "As asserções le Il são proposições verdadeiras, e a Il é uma justificativa correta da |.",
-   "B": "As asserções le Il são proposições verdadeiras, mas a Il não é uma justificativa correta da |.",
-   "C": "A asserção | é uma proposição verdadeira, e a Il é uma proposição falsa.",
-   "D": "A asserção | é uma proposição falsa, e a Il é uma çã verdadeira. | proposição",
-   "E": "As asserções le Il são proposições falsas."
+   "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+   "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+   "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+   "D": "A asserção I é uma proposição falsa, e a II é uma çã verdadeira. | proposição",
+   "E": "As asserções I e II são proposições falsas."
   },
   "gabarito": "A",
   "materia_ava": "COMPUTACAO PARALELA"
@@ -260,7 +180,7 @@
    "B": "ser declarado inocente, caso fique provado que as imagens foram disponibilizadas à pedido da vítima.",
    "C": "mover uma ação contra a vítima, pelo uso indevido de seus serviços, por ela ter disponibilizado imagens íntimas na rede.",
    "D": "tornar indisponíveis todas as imagens da vítima compartilhadas e disponíveis na internet.",
-   "E": "encerrar seu contrato com a vítima devido à falha de segurança ocorrida. de Desempenho falha de segurança ocorrida. de Desempenho"
+   "E": "encerrar seu contrato com a vítima devido à falha de segurança ocorrida. de Desempenho falha de segurança ocorrida."
   },
   "gabarito": "A",
   "materia_ava": "COMPUTACAO PARALELA"
@@ -276,11 +196,11 @@
   "figura": null,
   "enunciado": "Um dos maiores problemas identificados na área de gerenciamento de projetos de software é o fato de que muitos desses projetos falham em atender ao cronograma, ao orçamento e à qualidade do produto. Métodos ágeis vêm sendo cada vez mais utilizados para evitar esse tipo de problema, pois se baseiam em princípios de adaptação e comunicação, ao contrário de métodos mais antigos, conhecidos como prescritivos, que priorizam a definição de processos bem detalhados que sejam seguidos por toda a equipe. Considerando esse contexto, avalie as asserções a seguir e a relação proposta entre elas. |. A técnica de timeboxing consiste na fixação prévia, pela equipe, dos prazos para execução do projeto, independentemente do seu ciclo de desenvolvimento. PORQUE Il. É preferível ter os requisitos mais importantes incorporados ao projeto, no prazo definido, a tentar incorporar todos eles e perder o controle do prazo, visto que os requisitos menos importantes podem ser tratados nas etapas finais do ciclo de desenvolvimento do projeto. A respeito dessas asserções, assinale a opção correta.",
   "alternativas": {
-   "A": "As asserções le Il são proposições verdadeiras, e a Il é uma justificativa correta da |.",
-   "B": "As asserções le Il são proposições verdadeiras, mas a Il não é justificativa correta da |.",
-   "C": "A asserção | é uma proposição verdadeira, e a Il é uma proposição falsa.",
-   "D": "A asserção | é uma proposição falsa, e a Il é uma proposição verdadeira.",
-   "E": "As asserções le Il são proposições falsas."
+   "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+   "B": "As asserções I e II são proposições verdadeiras, mas a II não é justificativa correta da I.",
+   "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+   "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+   "E": "As asserções I e II são proposições falsas."
   },
   "gabarito": "D",
   "materia_ava": null
@@ -310,26 +230,6 @@
   }
  },
  {
-  "id": "2017-CE-Q33",
-  "edicao": 2017,
-  "parte": "CE",
-  "numero": "33",
-  "tipo": "objetiva",
-  "tema": "Segurança em banco de dados",
-  "dificuldade": "Difícil",
-  "figura": null,
-  "enunciado": "A política de segurança e as ferramentas para sua implementação em um banco de dados é, atualmente, um assunto de grande importância para toda organização que faz uso de sistemas computacionais no seu dia a dia. Não somente a vulnerabilidade a ataques de hackers ou usuários não autorizados, mas também o controle sobre o acesso restrito a determinadas informações são uma constante preocupação dos responsáveis por garantir a segurança e a confidencialidade das informações em um banco de dados. Nesse contexto, avalie as afirmações a seguir. | Os comandos GRANT, DENY e REVOXKE são responsáveis por definir as permissões de acesso dos usuários e grupos aos diversos elementos do esquema de um banco de dados. Il. Caso o usuário Usera, integrante do grupo Group1, receba a permissão GRANT SELECT em uma tabela tblDados, e o Group1 receba uma permissão DENY SELECT na mesma tabela tblDados, o usuário UserA conseguirá realizar consultas nessa tabela. É vedado a um usuário, tendo recebido determinado grupo de permissões em uma tabela, transmitir esses privilégios para outros usuários. É correto o que se afirma em",
-  "alternativas": {
-   "A": "|, apenas.",
-   "B": "Il, apenas.",
-   "C": "apenas.",
-   "D": "Ile Ill, apenas.",
-   "E": "A A"
-  },
-  "gabarito": "A",
-  "materia_ava": null
- },
- {
   "id": "2017-CE-Q34",
   "edicao": 2017,
   "parte": "CE",
@@ -340,10 +240,10 @@
   "figura": null,
   "enunciado": "O envelhecimento é um conjunto de alterações físicas e fisiológicas, como perda de memória, perda de coordenação e habilidades motoras finas, diminuição da capacidade auditiva, da sensibilidade tátil e da acuidade visual. Levando em consideração os principais elementos de interface dos modelos de smartphones dominantes no mercado, como tela sensível ao toque, gavetas de aplicativos representados por ícones e realimentação auditiva, a usabilidade desses modelos pode dificultar a acessibilidade dos idosos ao ambiente hipermídia móvel proporcionado por eles. Disponível em: <http://www.periodicos.puc-rio.br>. Acesso em: 6 jul. 2017 (adaptado). Considerando esse contexto, avalie as asserções a seguir e a relação proposta entre elas. |. O baixo nível de acessibilidade da população idosa aos smartphones revela a exclusão social na terceira idade. PORQUE Os tipos de possibilidades de interação, também conhecidos como affordance, providos pelos smartphones, têm um impacto negativo nos idosos em termos de usabilidade. A respeito dessas asserções, assinale a opção correta.",
   "alternativas": {
-   "A": "As asserções le Il são proposições verdadeiras, e a Il é uma justificativa correta da |.",
-   "B": "As asserções le Il são proposições verdadeiras, mas a II não é uma justificativa correta da |.",
-   "C": "A asserção | é uma proposição verdadeira, e a Il é uma proposição falsa.",
-   "D": "A asserção | é uma proposição falsa, e a Il é uma proposição verdadeira.",
+   "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+   "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+   "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+   "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
    "E": "le Il são proposições falsas."
   },
   "gabarito": "D",

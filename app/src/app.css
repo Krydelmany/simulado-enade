@@ -33,10 +33,31 @@
 	--color-warn-bg: var(--warn-bg);
 	--color-warn-fg: var(--warn-fg);
 	--color-warn-line: var(--warn-line);
+	/* preenchimento das barras de progresso — separado do acento sólido porque
+	   no escuro o vermelho #b3271e fica com ~1,8:1 sobre o trilho navy; a barra
+	   usa um vermelho mais claro e o botão sólido segue com branco por cima. */
+	--color-accent-bar: var(--accent-bar);
+	--color-accent-edge: var(--accent-edge);
 
 	--font-display: 'Archivo Variable', 'Outfit Variable', ui-sans-serif, system-ui, sans-serif;
 	--font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
 	--font-code: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, monospace;
+
+	/* Escala tipográfica explícita. Antes cada tela inventava um text-[42px]/
+	   tracking-tight; agora há 3 degraus de display + 1 etiqueta mono.
+	   O hero usa clamp() para valer de 390 px ao desktop sem classes extras. */
+	--text-hero: clamp(2.3rem, 1.65rem + 3vw, 3.25rem);
+	--text-hero--line-height: 0.98;
+	--text-hero--letter-spacing: -0.02em;
+	--text-title: 1.6rem;
+	--text-title--line-height: 1.15;
+	--text-title--letter-spacing: -0.01em;
+	--text-heading: 1.2rem;
+	--text-heading--line-height: 1.25;
+	--text-heading--letter-spacing: -0.005em;
+	--text-label: 0.6875rem;
+	--text-label--line-height: 1.1;
+	--text-label--letter-spacing: 0.16em;
 }
 
 :root {
@@ -55,6 +76,8 @@
 	--accent: #b3271e;
 	--accent-ink: #8f1f1f;
 	--accent-soft: #f9e2d7;
+	--accent-bar: var(--accent);
+	--accent-edge: #7c1a1a;
 	--btn: #1c2434;
 	--btn-fg: #ffffff;
 	--ok-bg: #e7f7ef;
@@ -81,17 +104,19 @@
 	--ink-soft: #b3a99b;
 	--bar: #0c0a10;
 	--bar-fg: #cbd5e1;
-	--accent: #b3271e;
+	--accent: #c8412f;
 	--accent-ink: #f0a08a;
 	--accent-soft: rgba(194, 65, 12, 0.25);
+	--accent-bar: #e0533f;
+	--accent-edge: #6f2114;
 	--btn: #f2ede2;
 	--btn-fg: #1c2434;
 	--ok-bg: rgba(4, 120, 87, 0.2);
 	--ok-fg: #6ee7b7;
-	--ok-solid: #10b981;
+	--ok-solid: #047857;
 	--bad-bg: rgba(190, 18, 60, 0.2);
 	--bad-fg: #fda4af;
-	--bad-solid: #f43f5e;
+	--bad-solid: #e11d48;
 	--warn-bg: rgba(217, 119, 6, 0.14);
 	--warn-fg: #fcd34d;
 	--warn-line: #d97706;
@@ -104,6 +129,27 @@ body {
 .enunciado {
 	white-space: pre-line;
 	overflow-wrap: anywhere;
+}
+
+/* Trecho de código do enunciado: mono, com QUEBRA em vez de rolagem própria —
+   o overflow horizontal em 390 px vem justamente de linha de código comprida.
+   `display:block` porque o elemento é <code> (phrasing) para caber no <p> da
+   questão sem o parser fechar o parágrafo. */
+.codeblock {
+	display: block;
+	margin: 0.5rem 0;
+	padding: 0.7rem 0.85rem;
+	border: 1px solid var(--line);
+	border-radius: 0.75rem;
+	background: var(--panel);
+	color: var(--ink);
+	font-family: var(--font-code, 'JetBrains Mono Variable', ui-monospace, monospace);
+	font-size: 0.8125rem;
+	line-height: 1.55;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+	word-break: break-word;
+	tab-size: 2;
 }
 
 figcaption {
@@ -148,7 +194,7 @@ html.dark {
 }
 .duo-accent {
 	background: var(--accent);
-	border-color: #7c1a1a;
+	border-color: var(--accent-edge);
 	color: #fff;
 }
 .duo-accent:hover {

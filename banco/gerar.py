@@ -12,6 +12,7 @@ import os
 import sys
 
 sys.path.insert(0, '/root/enade-simulado/banco')
+import arruma
 import classificar
 import qualidade
 import montar
@@ -111,7 +112,7 @@ def main(ano, parte):
     # faltando, vazia ou com pedaço de enunciado é PIOR que não existir — o
     # aluno marcaria uma letra e levaria o resultado errado sem perceber.
     boas, pendentes = [], []
-    for q in (qualidade.limpa(q) for q in qs):
+    for q in (qualidade.limpa(arruma.limpa(q)) for q in qs):
         motivo = qualidade.problema(q)
         if motivo:
             pendentes.append((q, motivo))
@@ -213,7 +214,7 @@ def resumo():
         qs = montar.aplicar_figuras(
             classificar.aplicar(montar.extrair(ano)), FIGURAS
         )
-        qs = [qualidade.limpa(q) for q in qs]
+        qs = [qualidade.limpa(arruma.limpa(q)) for q in qs]
         ok = [q for q in qs if not qualidade.problema(q)]
         bad = [(q, qualidade.problema(q)) for q in qs if qualidade.problema(q)]
         entrada += len(ok)

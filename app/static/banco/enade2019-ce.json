@@ -8,10 +8,11 @@
   "tema": "Árvores AVL: balanceamento e inserção",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Uma árvore binária de busca é uma árvore ordenada que pode apresentar prejuízos no desempenho de determinados algoritmos em função do desbalanceamento causado pela ordem de inserção dos elementos na estrutura. Uma árvore AVL é uma árvore binária de busca balanceada em que a diferença em módulo entre a altura da subárvore esquerda e a altura da subárvore direita de cada nó é, no máximo, de uma unidade. Nesse contexto, faça o que se pede nos itens a seguir. a) Apresente uma árvore binária de busca balanceada com os elementos 2, 9, 15, 21, 27, 36 e 50 em que o nó raiz principal contém o elemento 21 e o balanceamento de cada nó seja no máximo uma unidade. (valor: 3,0 pontos) b) Considerando as inserções dos elementos 9, 27 e 50, nesta ordem, em uma árvore AVL inicialmente vazia, apresente a árvore resultante. (valor: 3,0 pontos) c) Considerando as inserções dos elementos 9, 27, 50, 15, 2, 21 e 36, nesta ordem, em uma árvore AVL inicialmente vazia, apresente a árvore resultante. (valor: 4,0 pontos) RASCUNHO",
+  "enunciado": "Uma árvore binária de busca é uma árvore ordenada que pode apresentar prejuízos no desempenho de determinados algoritmos em função do desbalanceamento causado pela ordem de inserção dos elementos na estrutura. Uma árvore AVL é uma árvore binária de busca balanceada em que a diferença em módulo entre a altura da subárvore esquerda e a altura da subárvore direita de cada nó é, no máximo, de uma unidade. Nesse contexto, faça o que se pede nos itens a seguir. a) Apresente uma árvore binária de busca balanceada com os elementos 2, 9, 15, 21, 27, 36 e 50 em que o nó raiz principal contém o elemento 21 e o balanceamento de cada nó seja no máximo uma unidade. (valor: 3,0 pontos) b) Considerando as inserções dos elementos 9, 27 e 50, nesta ordem, em uma árvore AVL inicialmente vazia, apresente a árvore resultante. (valor: 3,0 pontos) c) Considerando as inserções dos elementos 9, 27, 50, 15, 2, 21 e 36, nesta ordem, em uma árvore AVL inicialmente vazia, apresente a árvore resultante. (valor: 4,0 pontos)",
   "alternativas": {},
   "padrao": "a) o estudante deve apresentar um desenho tal como:\nb) o estudante deve apresentar um desenho tal como:\nc) o estudante deve apresentar um desenho tal como:",
-  "materia_ava": "ESTRUTURA DE DADOS E ALGORITMOS"
+  "materia_ava": "ESTRUTURA DE DADOS E ALGORITMOS",
+  "padrao_placeholder": true
  },
  {
   "id": "2019-CE-D04",
@@ -22,7 +23,7 @@
   "tema": "Funções iterativa e recursiva em C",
   "dificuldade": "Difícil",
   "figura": null,
-  "enunciado": "Na matemática, um produtório é definido como: n x x \u001b x \u001b xm 2 \u001b \u001a\u001b xn 1 \u001b xn. m 1 i m i m Com base nessa equação, e considerando que xi i , com i > 0 , faça o que se pede nos itens a seguir. i a) Escreva uma função iterativa, em linguagem C, que receba os parâmetros de limite inferior m e de limite superior n, calcule e retorne o resultado do produtório. (valor: 5,0 pontos). b) Escreva uma função recursiva, em linguagem C, que receba os parâmetros de limite inferior m e de limite superior n, calcule e retorne o resultado do produtório. (valor: 5,0 pontos). RASCUNHO",
+  "enunciado": "Na matemática, um produtório é definido como: n x x \u001b x \u001b xm 2 \u001b \u001a\u001b xn 1 \u001b xn. m 1 i m i m Com base nessa equação, e considerando que xi i , com i > 0 , faça o que se pede nos itens a seguir. i a) Escreva uma função iterativa, em linguagem C, que receba os parâmetros de limite inferior m e de limite superior n, calcule e retorne o resultado do produtório. (valor: 5,0 pontos). b) Escreva uma função recursiva, em linguagem C, que receba os parâmetros de limite inferior m e de limite superior n, calcule e retorne o resultado do produtório. (valor: 5,0 pontos).",
   "alternativas": {},
   "padrao": "O estudante deve elaborar algoritmos tais como:\nfloat pode ser intercambiável por double.\n•\na)\no\nSolução 1:\nfloat produtorio(int m, int n)\n{\nfloat i = 1; // contador como ponto flutuante\nfloat r = 1.0; // necessário resultado como ponto flutuante\nfor(i = m; i <= n; i+=1) // incremento com soma\nr *= i + 1/i;\nreturn r;\n}\no\nSolução 2:\nfloat produtorio(int m, int n)\n{\nint i = 1; // contador como inteiro\nfloat r = 1.0; // necessário resultado como ponto flutuante\nfor(i = m; i <= n; i++) // incremento (INC)\nr *= i + 1.0/i; // necessário realizar a divisão como valor ponto\nflutuante, caso contrário o resultado estará incorreto\nreturn r;\n}\n•\nb):\no\nSolução 1:\nfloat produtorio(int m, int n)\n{\nif(m == n)\nreturn (n + 1.0/n); // pode ser (m + 1.0/m)\nelse\nreturn (m + 1.0/m)*produtorio(m+1,n);\n}\no\nSolução 2:\nfloat produtorio(int m, int n)\n{\nif(m == n)\nreturn (n + 1.0/n); // pode ser (m + 1.0/m)\nelse\nreturn (n + 1.0/n)*produtorio(m,n-1);\n}",
   "materia_ava": "PROGRAMACAO PARA CIENCIA DOS DADOS"
@@ -36,7 +37,7 @@
   "tema": "Corrente alternada e fator de potência",
   "dificuldade": "Média",
   "figura": null,
-  "enunciado": "Um circuito elétrico de corrente contínua é aquele em que todas as tensões são constantes no tempo. Circuitos de corrente alternada, por sua vez, possuem valores de tensão variantes no tempo. As variações de tensão senoidal são expressas pela equação V(t) = Vmsen(2pft) em que Vm representa o valor de pico, f representa a frequência do sinal e t o tempo. Os gráficos a seguir mostram a tensão e a corrente em uma carga. Tensão senoidal v(t) V(volts) -5 -10 -15 0,01 0,02 0,03 0,04 0,05 0,06 t (segundos) Corrente senoidal i(t) i(Ampères) -5 0,01 0,02 0,03 0,04 0,05 0,06 t (segundos) Com base nas informações e nos gráficos, faça o que se pede nos itens a seguir. a) Determine a natureza da carga (resistiva, capacitiva ou indutiva) e justifique. (valor: 2,5 pontos) b) Calcule o valor da impedância da carga. (valor: 2,5 pontos) c) Apresente a equação da forma de onda da corrente alternada. (valor: 2,5 pontos) d) Calcule a tensão eficaz (RMS) do circuito de corrente alternada. (valor: 2,5 pontos) RASCUNHO",
+  "enunciado": "Um circuito elétrico de corrente contínua é aquele em que todas as tensões são constantes no tempo. Circuitos de corrente alternada, por sua vez, possuem valores de tensão variantes no tempo. As variações de tensão senoidal são expressas pela equação V(t) = Vmsen(2pft) em que Vm representa o valor de pico, f representa a frequência do sinal e t o tempo. Os gráficos a seguir mostram a tensão e a corrente em uma carga. Tensão senoidal v(t) V(volts) -5 -10 -15 0,01 0,02 0,03 0,04 0,05 0,06 t (segundos) Corrente senoidal i(t) i(Ampères) -5 0,01 0,02 0,03 0,04 0,05 0,06 t (segundos) Com base nas informações e nos gráficos, faça o que se pede nos itens a seguir. a) Determine a natureza da carga (resistiva, capacitiva ou indutiva) e justifique. (valor: 2,5 pontos) b) Calcule o valor da impedância da carga. (valor: 2,5 pontos) c) Apresente a equação da forma de onda da corrente alternada. (valor: 2,5 pontos) d) Calcule a tensão eficaz (RMS) do circuito de corrente alternada. (valor: 2,5 pontos)",
   "alternativas": {},
   "padrao": "O estudante deve apresentar respostas tais como:\na) resistiva, pois não há defasagem entre corrente e a tensão na carga conforme pode ser visto\nnos gráficos.\nb) Pela lei de ohm, o valor da resistência pode ser encontrado a partir de\nc) Inicialmente o estudante deverá analisar o gráfico a fim de obter as grandezas necessárias\npara a resolução da questão, como frequência e valores máximo da tensão e corrente.\nA frequência pode ser obtida dividindo-se o número de ciclos pelo tempo levado para a\nexecução destes ciclos.\nO valor máximo da corrente alternada pode ser obtido por inspeção no gráfico, sendo o maior\nvalor apresentado no eixo das ordenadas, igual a 5A.\nA equação da forma de onda da corrente alternada é da forma\n.\nSubstituindo-se os valores obtidos graficamente, pode-se obter\nd) A tensão eficaz será\nou 10, 61 V",
   "materia_ava": "ROBOTICA INDUSTRIAL"
@@ -339,30 +340,6 @@
   "alternativas_visuais": true
  },
  {
-  "id": "2019-CE-Q23",
-  "edicao": 2019,
-  "parte": "CE",
-  "numero": "23",
-  "tipo": "objetiva",
-  "tema": "Autômatos de estados finitos e linguagens regulares",
-  "dificuldade": "Difícil",
-  "figura": null,
-  "enunciado": "Considere o autômato de estados finitos determinístico representado na figura a seguir. P 1,0 1,0 O autômato representado reconhece a seguinte linguagem regular",
-  "alternativas": {
-   "A": "{w ∈ {0,1}",
-   "B": "{w ∈ {0,1}",
-   "C": "{w ∈ {0,1}",
-   "D": "{w ∈ {0,1}",
-   "E": "{w ∈ {0,1}"
-  },
-  "gabarito": "B",
-  "materia_ava": "TEORIA DA COMPUTACAO",
-  "imagem": {
-   "src": "/banco/img/2019-CE-Q23.png",
-   "alt": "Autômato de estados finitos com os estados P, I1 e I0."
-  }
- },
- {
   "id": "2019-CE-Q24",
   "edicao": 2019,
   "parte": "CE",
@@ -405,26 +382,6 @@
   },
   "gabarito": "C",
   "materia_ava": "PROGRAMACAO PARA CIENCIA DOS DADOS"
- },
- {
-  "id": "2019-CE-Q26",
-  "edicao": 2019,
-  "parte": "CE",
-  "numero": "26",
-  "tipo": "objetiva",
-  "tema": "Controlador PID e controlador de processo",
-  "dificuldade": "Média",
-  "figura": null,
-  "enunciado": "Proporcional-Integral-Derivativo (PID) é o algoritmo de controle que mais tem sido utilizado na indústria e no mundo para sistemas de controle industrial. A popularidade de controladores PID pode ser parcialmente atribuída ao seu desempenho robusto em uma ampla gama de condições de funcionamento e parcialmente à sua simplicidade funcional, que permite aos engenheiros operá-los de forma simples e direta. Disponível em: <https://www.ni.com/pt-br/innovations/white-papers/06/pid-theory-explained.html >. Acesso em 20 jun. 2019 (adaptado).",
-  "alternativas": {
-   "A": "kp",
-   "B": "ki/kp",
-   "C": "kp",
-   "D": "kp",
-   "E": "kp"
-  },
-  "gabarito": "D",
-  "materia_ava": "ROBOTICA INDUSTRIAL"
  },
  {
   "id": "2019-CE-Q27",

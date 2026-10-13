@@ -86,7 +86,26 @@ FORA = {
                    'texto de Milton Nascimento com a de asserções '
                    'verdadeiro/falso); as alternativas são da segunda e as '
                    'asserções sumiram',
+    '2014-CE-Q09': 'as cinco alternativas saíram ilegíveis do OCR ("|.", '
+                   '"leiv.", "llelll."); precisa de digitação manual',
+    # As de numeral romano: o enunciado está bom, mas as alternativas são
+    # "|, apenas." / "Ill, apenas." / "Ile Ill, apenas." — o tesseract leu "I"
+    # como "|" e "II" como "Il". Reconstruir qual romano ia com qual letra
+    # exigiria abrir o PDF de cada uma; chutar erraria a alternativa sem
+    # nenhum sintoma visível, que é o pior jeito de errar.
+    '2017-CE-Q11': 'alternativas com numerais romanos ilegíveis ("|, apenas.")',
+    '2017-CE-Q15': 'alternativas com numerais romanos ilegíveis',
+    '2017-CE-Q20': 'alternativas com numerais romanos ilegíveis',
+    '2017-CE-Q33': 'alternativas com numerais romanos ilegíveis',
+    '2017-FG-Q02': 'alternativas com numerais romanos ilegíveis',
 }
+
+# Questionário de alternativas em que duas ou mais são IDÊNTICAS. O
+# gabarito aponta para uma delas, então o acerto vira sorteio — e o aluno é
+#CommandsHOW punido por um defeito do dado, não por não saber a matéria.
+def _duplicadas(alts):
+    vals = [(v or '').strip() for v in alts.values() if (v or '').strip()]
+    return len(vals) != len(set(vals))
 
 
 def problema(q):
@@ -114,6 +133,8 @@ def problema(q):
 
     if len(alts) != 5:
         return f'só {len(alts)} de 5 alternativas'
+    if _duplicadas(alts):
+        return 'alternativas repetidas (o acerto viraria sorteio)'
     for letra, txt in sorted(alts.items()):
         t = (txt or '').strip()
         if not t:

@@ -17,6 +17,8 @@
 		$page.url.pathname.startsWith('/treino/') || $page.url.pathname.startsWith('/estudo/')
 	);
 
+	let { children } = $props();
+
 	let escuro = $state(false);
 	onMount(() => {
 		iniciarTema();
@@ -36,7 +38,7 @@
 	<nav class="mx-auto flex h-16 w-full max-w-3xl items-center gap-1 px-4 lg:max-w-5xl" aria-label="Principal">
 		<a href="/" class="mr-2 flex items-center gap-2">
 			<span class="flex h-9 w-9 items-center justify-center rounded-xl bg-accent" aria-hidden="true">
-				<GraduationCap size={22} weight="bold" color="#fff" aria-hidden="true" />
+				<GraduationCap size={22} weight="bold" class="text-white" aria-hidden="true" />
 			</span>
 			<span class="leading-tight">
 				<span class="block font-display text-[15px] font-bold tracking-tight">Simulado ENADE</span>
@@ -73,20 +75,20 @@
 </header>
 
 <main id="conteudo" class="mx-auto w-full max-w-3xl px-4 pt-6 lg:max-w-5xl {emQuiz ? 'pb-32' : 'pb-10'}">
-	<slot />
+	{@render children()}
 </main>
 
 {#if !emQuiz}
 	<footer class="border-t border-line">
-		<div class="mx-auto grid w-full max-w-3xl gap-6 px-4 py-8 sm:grid-cols-3 lg:max-w-5xl">
+		<div class="mx-auto grid w-full max-w-3xl gap-8 px-4 py-10 sm:grid-cols-3 lg:max-w-5xl">
 			<div>
 				<p class="font-display text-sm font-extrabold tracking-tight">Simulado ENADE</p>
-				<p class="mt-1 text-xs leading-relaxed text-ink-soft">
+				<p class="mt-1 text-xs leading-relaxed text-pretty text-ink-soft">
 					Estudo para a prova com questões oficiais do INEP. Sem conta, sem servidor.
 				</p>
 			</div>
 			<nav aria-label="Modos">
-				<p class="text-xs font-bold tracking-wide text-ink-soft uppercase">Modos</p>
+				<p class="text-label font-bold text-ink-soft uppercase">Modos</p>
 				<ul class="mt-2 space-y-1 text-sm font-semibold">
 					<li><a href="/treino/" class="hover:text-accent-ink">Treino livre</a></li>
 					<li><a href="/estudo/" class="hover:text-accent-ink">Estudo por níveis</a></li>
@@ -94,12 +96,12 @@
 				</ul>
 			</nav>
 			<div>
-				<p class="text-xs font-bold tracking-wide text-ink-soft uppercase">Fonte</p>
-				<p class="mt-2 text-xs leading-relaxed text-ink-soft">
+				<p class="text-label font-bold text-ink-soft uppercase">Fonte</p>
+				<p class="mt-2 text-xs leading-relaxed text-pretty text-ink-soft">
 					Provas ENADE Engenharia de Computação (INEP) + simulado da turma. Formato 2026:
 					Portaria INEP nº 161.
 				</p>
-				<p class="mt-2 font-code text-[10px] tracking-[0.12em] text-ink-soft/70" aria-hidden="true">
+				<p class="mt-2 font-code text-label text-ink-soft" aria-hidden="true">
 					REV A · GERADO DE PROVAS INEP · 2014/2017/2019/2023
 				</p>
 			</div>
