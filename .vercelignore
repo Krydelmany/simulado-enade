@@ -2,11 +2,19 @@
 # O resto é material de trabalho — e `fontes/` são os PDFs oficiais do INEP,
 # 20 MB que não entram no site de jeito nenhum. Mandar tudo junto só paga
 # download a cada push.
+#
+# Os caminhos começam com "/" DE PROPÓSITO: sem isso o padrão casa em
+# qualquer nível e `banco` derrubava também `app/static/banco` — que é O BANCO
+# DE QUESTÕES. O site ia ao ar sem uma única questão e sem nenhum erro.
 
-fontes
-banco
-revisao
-design
-testes-mob
-*.md
-.gitignore
+/fontes
+/banco
+/revisao
+/design
+/testes-mob
+/*.md
+/.gitignore
+/PLANO.md
+/ROADMAP.md
+/INVENTARIO.md
+/README.md
