@@ -2,801 +2,801 @@
  "2019-CE-D03": [
   "Árvores AVL: balanceamento e inserção",
   "Difícil",
-  "ESTRUTURA DE DADOS E ALGORITMOS"
+  "algoritmos"
  ],
  "2019-CE-D04": [
   "Funções iterativa e recursiva em C",
   "Difícil",
-  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+  "algoritmos"
  ],
  "2019-CE-D05": [
   "Corrente alternada e fator de potência",
   "Média",
-  "ROBOTICA INDUSTRIAL"
+  "circuitos"
  ],
  "2019-CE-Q09": [
   "Ordenação e recursão: MergeSort",
   "Difícil",
-  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+  "algoritmos"
  ],
  "2019-CE-Q10": [
   "Aprendizado de máquina: classificação e seleção de características",
   "Média",
-  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+  "ciencia-dados"
  ],
  "2019-CE-Q11": [
   "Coloração de grafos e alocação de recursos",
   "Difícil",
-  "COMPUTACAO PARALELA"
+  "discreta"
  ],
  "2019-CE-Q12": [
   "Programação linear e região viável",
   "Difícil",
-  "MATEMATICA APLICADA"
+  "otimizacao"
  ],
  "2019-CE-Q13": [
   "Resposta em frequência e função de transferência",
   "Difícil",
-  "TELECOMUNICACOES"
+  "sinais"
  ],
  "2019-CE-Q14": [
   "Filtros digitais e normalização de frequência",
   "Difícil",
-  "TELECOMUNICACOES"
+  "sinais"
  ],
  "2019-CE-Q15": [
   "Mínimos quadrados e ajuste de reta",
   "Média",
-  "MATEMATICA APLICADA"
+  "matematica"
  ],
  "2019-CE-Q16": [
   "Circuitos lógicos: demultiplexador com CIs 7404 e 7411",
   "Difícil",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "sistemas-digitais"
  ],
  "2019-CE-Q17": [
   "Amplificador operacional e sensor NTC",
   "Difícil",
-  "ROBOTICA INDUSTRIAL"
+  "circuitos"
  ],
  "2019-CE-Q18": [
   "Criptografia DES e 3DES",
   "Média",
-  null
+  "seguranca"
  ],
  "2019-CE-Q19": [
   "Hardware trojan e segurança de sistemas",
   "Média",
-  null
+  "seguranca"
  ],
  "2019-CE-Q20": [
   "Rigidez de software e acoplamento entre módulos",
   "Difícil",
-  null
+  "eng-software"
  ],
  "2019-CE-Q21": [
   "Critérios de decisão multicritério (HP)",
   "Média",
-  "MATEMATICA APLICADA"
+  "banco-dados"
  ],
  "2019-CE-Q22": [
   "Redes bayesianas e inferência probabilística",
   "Difícil",
-  "ROBOTICA INDUSTRIAL"
+  "ia"
  ],
  "2019-CE-Q23": [
   "Autômatos de estados finitos e linguagens regulares",
   "Difícil",
-  "TEORIA DA COMPUTACAO"
+  "linguagens-formais"
  ],
  "2019-CE-Q24": [
   "Difusão em redes e spanning tree",
   "Difícil",
-  "TELECOMUNICACOES"
+  "redes"
  ],
  "2019-CE-Q25": [
   "Recursão em cauda e otimização em Python",
   "Difícil",
-  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+  "algoritmos"
  ],
  "2019-CE-Q26": [
   "Controlador PID e controlador de processo",
   "Média",
-  "ROBOTICA INDUSTRIAL"
+  "controle"
  ],
  "2019-CE-Q27": [
   "Padrões de projeto: Strategy",
   "Média",
-  null
+  "eng-software"
  ],
  "2019-CE-Q28": [
   "Atraso de propagação em circuitos lógicos",
   "Difícil",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "sistemas-digitais"
  ],
  "2019-CE-Q29": [
   "Internet das Coisas e sistemas distribuídos",
   "Fácil",
-  "TELECOMUNICACOES"
+  "distribuidos"
  ],
  "2019-CE-Q30": [
   "Contêiner de servlets e ciclo de requisição",
   "Média",
-  null
+  "distribuidos"
  ],
  "2019-CE-Q31": [
   "Estados de processos e sistema operacional",
   "Média",
-  null
+  "sistemas-operacionais"
  ],
  "2019-CE-Q32": [
   "Quantização de sinal e desvio padrão",
   "Média",
-  "ROBOTICA INDUSTRIAL"
+  "sinais"
  ],
  "2019-CE-Q33": [
   "Impedância em trilhas de PCB (stripline)",
   "Difícil",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "circuitos"
  ],
  "2019-CE-Q34": [
   "Escalonamento Round Robin e troca de contexto",
   "Média",
-  "COMPUTACAO PARALELA"
+  "sistemas-operacionais"
  ],
  "2019-CE-Q35": [
   "Usabilidade: inteligibilidade e apagar",
   "Fácil",
-  "IHC"
+  "ihc"
  ],
  "2023-FG-D01": [
   "Desigualdade social e segurança alimentar",
   "Média",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2023-FG-Q01": [
   "Fome, insegurança alimentar e desigualdade",
   "Média",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2023-FG-Q02": [
   "Saneamento básico e urbanização",
   "Média",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2023-FG-Q03": [
   "Cobertura vacinal infantil e saúde pública",
   "Fácil",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2023-FG-Q04": [
   "IA generativa e impactos socioeconômicos",
   "Média",
-  null
+  "formacao-geral"
  ],
  "2023-FG-Q05": [
   "Mobilidade urbana e percepção de risco",
   "Média",
-  null
+  "formacao-geral"
  ],
  "2023-FG-Q06": [
   "Racismo, literatura e relações de poder",
   "Difícil",
-  "HISTORIA E CULTURA AFRO-INDIGENA"
+  "cultura"
  ],
  "2023-FG-Q07": [
   "Reforma previdenciária e trabalho do idoso",
   "Média",
-  "ECONOMIA"
+  "economia"
  ],
  "2023-FG-Q08": [
   "Sistema prisional e população negra",
   "Difícil",
-  null
+  "formacao-geral"
  ],
  "2023-FG-Q09": [
   "Sociedade do desempenho e saúde mental",
   "Média",
-  "PRODUCAO DE TEXTOS CIENTIFICOS"
+  "textos"
  ],
  "2023-CE-D02": [
   "Algoritmos de eliminação de registros duplicados",
   "Difícil",
-  "COMPUTACAO PARALELA"
+  "algoritmos"
  ],
  "2023-CE-Q10": [
   "Resistores em série e paralelo",
   "Fácil",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "circuitos"
  ],
  "2023-CE-Q11": [
   "Protocolo OSPF e grafos",
   "Difícil",
-  "TELECOMUNICACOES"
+  "redes"
  ],
  "2023-CE-Q12": [
   "Relações de equivalência e partições",
   "Difícil",
-  "MATEMATICA APLICADA"
+  "discreta"
  ],
  "2023-CE-Q13": [
   "Leis de Kirchhoff em circuitos",
   "Difícil",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "circuitos"
  ],
  "2023-CE-Q14": [
   "Listas, cabeça e cauda em programação funcional",
   "Difícil",
-  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+  "algoritmos"
  ],
  "2023-CE-Q15": [
   "Vazamento de memória em C (malloc/free)",
   "Média",
-  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+  "algoritmos"
  ],
  "2023-CE-Q16": [
   "Álgebra booleana e operações binárias",
   "Média",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "sistemas-digitais"
  ],
  "2023-CE-Q17": [
   "Subsequências e prefixos de sequências",
   "Difícil",
-  "TEORIA DA COMPUTACAO"
+  "algoritmos"
  ],
  "2023-CE-Q18": [
   "Vetores de tamanho dinâmico e custo amortizado",
   "Difícil",
-  "ESTRUTURA DE DADOS E ALGORITMOS"
+  "algoritmos"
  ],
  "2023-CE-Q19": [
   "Compiladores: análise léxica, sintática e semântica",
   "Difícil",
-  null
+  "linguagens-formais"
  ],
  "2023-CE-Q20": [
   "Computação em nuvem: pública e privada",
   "Fácil",
-  null
+  "distribuidos"
  ],
  "2023-CE-Q21": [
   "Governo digital e eficiência de serviços",
   "Fácil",
-  null
+  "ihc"
  ],
  "2023-CE-Q22": [
   "Consultas SQL com junções",
   "Difícil",
-  null
+  "banco-dados"
  ],
  "2023-CE-Q23": [
   "Filtros RC com amplificadores operacionais",
   "Difícil",
-  "TELECOMUNICACOES"
+  "circuitos"
  ],
  "2023-CE-Q24": [
   "Porta paralela e registrador de direção",
   "Média",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "sistemas-digitais"
  ],
  "2023-CE-Q25": [
   "HDL: descrição de circuitos digitais",
   "Média",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "sistemas-digitais"
  ],
  "2023-CE-Q26": [
   "Multiprocessadores, threads e exclusão mútua",
   "Difícil",
-  "COMPUTACAO PARALELA"
+  "sistemas-operacionais"
  ],
  "2023-CE-Q27": [
   "Virtualização de hardware",
   "Média",
-  null
+  "sistemas-operacionais"
  ],
  "2023-CE-Q28": [
   "Memória virtual e paginação",
   "Difícil",
-  "COMPUTACAO PARALELA"
+  "sistemas-operacionais"
  ],
  "2023-CE-Q29": [
   "Máquinas de vetores de suporte (SVM)",
   "Difícil",
-  "ROBOTICA INDUSTRIAL"
+  "ia"
  ],
  "2023-CE-Q30": [
   "Paralelismo e dependência de dados",
   "Difícil",
-  "COMPUTACAO PARALELA"
+  "distribuidos"
  ],
  "2023-CE-Q31": [
   "Teorema da amostragem e taxa de amostragem",
   "Média",
-  "TELECOMUNICACOES"
+  "sinais"
  ],
  "2023-CE-Q32": [
   "Busca gulosa em grafos",
   "Média",
-  "ROBOTICA INDUSTRIAL"
+  "ia"
  ],
  "2023-CE-Q33": [
   "Implementação de controlador PID em software",
   "Média",
-  "ROBOTICA INDUSTRIAL"
+  "controle"
  ],
  "2023-CE-Q34": [
   "Enfileiramento em roteadores e buffer",
   "Difícil",
-  "TELECOMUNICACOES"
+  "redes"
  ],
  "2023-CE-Q35": [
   "TCP e UDP: transferência de dados",
   "Média",
-  "TELECOMUNICACOES"
+  "redes"
  ],
  "2023-CE-Q36": [
   "Desempenho: threads e núcleos de processamento",
   "Difícil",
-  "COMPUTACAO PARALELA"
+  "arquitetura"
  ],
  "2023-CE-Q37": [
   "Mecanismos de segurança de sistemas",
   "Fácil",
-  null
+  "seguranca"
  ],
  "2023-CE-Q38": [
   "Microsserviços e sistemas distribuídos",
   "Média",
-  null
+  "distribuidos"
  ],
  "2019-FG-D01": [
   "Desastres naturais e ação do Estado",
   "Média",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2019-FG-D02": [
   "Hélice tríplice: universidade–empresa–governo",
   "Média",
-  "ECONOMIA"
+  "economia"
  ],
  "2019-FG-Q01": [
   "Mudanças climáticas e cooperação internacional",
   "Fácil",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2019-FG-Q02": [
   "Poesia concreta e interpretação",
   "Difícil",
-  "PRODUCAO DE TEXTOS CIENTIFICOS"
+  "textos"
  ],
  "2019-FG-Q03": [
   "Agricultura, demografia e segurança alimentar",
   "Média",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2019-FG-Q04": [
   "Saneamento básico e abastecimento de água",
   "Fácil",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2019-FG-Q05": [
   "Povos indígenas e território",
   "Média",
-  "HISTORIA E CULTURA AFRO-INDIGENA"
+  "cultura"
  ],
  "2019-FG-Q06": [
   "Violência contra a mulher e raça/cor",
   "Difícil",
-  "HISTORIA E CULTURA AFRO-INDIGENA"
+  "cultura"
  ],
  "2019-FG-Q07": [
   "Acessibilidade e desenho universal",
   "Média",
-  null
+  "formacao-geral"
  ],
  "2019-FG-Q08": [
   "Síndrome de Burnout e saúde do trabalhador",
   "Fácil",
-  null
+  "formacao-geral"
  ],
  "2014-FG-D01": [
   "Mobilidade urbana e desenvolvimento sustentável",
   "Média",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2014-FG-D02": [
   "Direitos humanos,-apps e segurança de jovens",
   "Difícil",
-  null
+  "formacao-geral"
  ],
  "2014-FG-Q01": [
   "Cultura popular e-industria fonográfica",
   "Média",
-  null
+  "formacao-geral"
  ],
  "2014-FG-Q02": [
   "Globalização, ONGs e políticas públicas",
   "Média",
-  "ECONOMIA"
+  "economia"
  ],
  "2014-FG-Q03": [
   "Pegada ecológica e biocapacidade",
   "Difícil",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2014-FG-Q04": [
   "Redes sociais e recrutamento profissional",
   "Fácil",
-  null
+  "formacao-geral"
  ],
  "2014-FG-Q05": [
   "Inovação tecnológica e saúde (parto)",
   "Fácil",
-  null
+  "formacao-geral"
  ],
  "2014-FG-Q06": [
   "Trabalho feminino, cuidado não remunerado e escolarização",
   "Difícil",
-  null
+  "formacao-geral"
  ],
  "2014-FG-Q07": [
   "Deslocamento casa-trabalho e mobilidade",
   "Média",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2014-FG-Q08": [
   "Transformações sociais no campo e na cidade",
   "Média",
-  null
+  "formacao-geral"
  ],
  "2014-CE-D03": [
   "Matriz de adjacência e ciclos em grafos",
   "Difícil",
-  "TEORIA DA COMPUTACAO"
+  "discreta"
  ],
  "2014-CE-D04": [
   "Computação em nuvem e requisitos de infraestrutura",
   "Média",
-  null
+  "distribuidos"
  ],
  "2014-CE-D05": [
   "Controle de qualidade com pesos e notas",
   "Média",
-  "MATEMATICA APLICADA"
+  "sistemas-digitais"
  ],
  "2014-CE-Q09": [
   "Variável aleatória e distribuição de distância percorrida",
   "Média",
-  "MATEMATICA APLICADA"
+  "matematica"
  ],
  "2014-CE-Q10": [
   "Cargas elétrica e resistores",
   "Fácil",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "circuitos"
  ],
  "2014-CE-Q11": [
   "DBO, autodepuração e qualidade da água",
   "Difícil",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2014-CE-Q12": [
   "Conforto térmico em edificações",
   "Difícil",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "fisica"
  ],
  "2014-CE-Q13": [
   "Elevadores e grupos de motores",
   "Média",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "fisica"
  ],
  "2014-CE-Q14": [
   "Perda de carga e fator de atrito em tubulações",
   "Difícil",
-  null
+  "algoritmos"
  ],
  "2014-CE-Q15": [
   "Algoritmo de ordenação por seleção (sort)",
   "Média",
-  "ESTRUTURA DE DADOS E ALGORITMOS"
+  "algoritmos"
  ],
  "2014-CE-Q16": [
   "Biomassa como fonte de energia",
   "Fácil",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2014-CE-Q17": [
   "Pesquisa eleitoral e margem de erro",
   "Média",
-  "MATEMATICA APLICADA"
+  "matematica"
  ],
  "2014-CE-Q18": [
   "Materiais e fabricação de cadeira de rodas",
   "Média",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "fisica"
  ],
  "2014-CE-Q19": [
   "Marco Civil da Internet e neutralidade da rede",
   "Média",
-  "TELECOMUNICACOES"
+  "redes"
  ],
  "2014-CE-Q20": [
   "Filtros digitais FIR e IIR",
   "Difícil",
-  "TELECOMUNICACOES"
+  "sinais"
  ],
  "2014-CE-Q21": [
   "Compressão de dados e algoritmos",
   "Média",
-  null
+  "sinais"
  ],
  "2014-CE-Q22": [
   "Pesquisa operacional: transporte e alocação",
   "Difícil",
-  "COMPUTACAO PARALELA"
+  "discreta"
  ],
  "2014-CE-Q23": [
   "Matriz lógica programável (PLA)",
   "Média",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "sistemas-digitais"
  ],
  "2014-CE-Q24": [
   "Protocolo TCP e controle de conexão",
   "Difícil",
-  "TELECOMUNICACOES"
+  "redes"
  ],
  "2014-CE-Q25": [
   "Root locus e síntese de compensadores",
   "Difícil",
-  "TELECOMUNICACOES"
+  "controle"
  ],
  "2014-CE-Q26": [
   "Rede neural perceptron e classificação",
   "Média",
-  "ROBOTICA INDUSTRIAL"
+  "ia"
  ],
  "2014-CE-Q27": [
   "Protótipo de tela de classificados e usabilidade",
   "Fácil",
-  "IHC"
+  "ihc"
  ],
  "2014-CE-Q28": [
   "Aquisição de sinal com amplificador e vibração",
   "Difícil",
-  "ROBOTICA INDUSTRIAL"
+  "sinais"
  ],
  "2014-CE-Q29": [
   "Expressões regulares e reconhecimento de padrões",
   "Média",
-  "TEORIA DA COMPUTACAO"
+  "linguagens-formais"
  ],
  "2014-CE-Q30": [
   "Endereçamento de memória de 32 bits",
   "Difícil",
-  null
+  "sistemas-operacionais"
  ],
  "2014-CE-Q31": [
   "CSMA/CD em redes locais",
   "Difícil",
-  "TELECOMUNICACOES"
+  "redes"
  ],
  "2014-CE-Q32": [
   "Índice com 999 999 chaves e estrutura de dados",
   "Difícil",
-  "ESTRUTURA DE DADOS E ALGORITMOS"
+  "algoritmos"
  ],
  "2014-CE-Q33": [
   "Indústria de alta tecnologia e microeletrônica",
   "Fácil",
-  null
+  "economia"
  ],
  "2014-CE-Q34": [
   "Sistemas de investimento e modelagem",
   "Média",
-  "ECONOMIA"
+  "banco-dados"
  ],
  "2014-CE-Q35": [
   "Troca de valores em Java",
   "Fácil",
-  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+  "algoritmos"
  ],
  "2017-FG-D01": [
   "Sífilis congênita e saúde pública",
   "Difícil",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2017-FG-D02": [
   "Identidade de gênero e direito à_rectificação",
   "Média",
-  null
+  "formacao-geral"
  ],
  "2017-FG-Q01": [
   "Brexit e mercados financeiros",
   "Fácil",
-  "ECONOMIA"
+  "economia"
  ],
  "2017-FG-Q02": [
   "Agricultura familiar e sustentabilidade",
   "Fácil",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2017-FG-Q03": [
   "Tarifação de energia elétrica e bandeiras",
   "Fácil",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2017-FG-Q04": [
   "Tirinha e leitura crítica",
   "Fácil",
-  "PRODUCAO DE TEXTOS CIENTIFICOS"
+  "textos"
  ],
  "2017-FG-Q05": [
   "Hidrogéis e aplicação agrícola",
   "Fácil",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2017-FG-Q06": [
   "Imigração haitiana e xenofobia",
   "Difícil",
-  "HISTORIA E CULTURA AFRO-INDIGENA"
+  "cultura"
  ],
  "2017-FG-Q07": [
   "Cultura popular e produção artesanal",
   "Fácil",
-  null
+  "formacao-geral"
  ],
  "2017-FG-Q08": [
   "Objetivos de Desenvolvimento Sustentável",
   "Fácil",
-  "CIENCIAS DO AMBIENTE"
+  "ambiente"
  ],
  "2017-CE-D03": [
   "Autômatos celulares e simulação",
   "Difícil",
-  "TEORIA DA COMPUTACAO"
+  "algoritmos"
  ],
  "2017-CE-D04": [
   "Monitoramento ambiental e variáveis",
   "Média",
-  "CIENCIAS DO AMBIENTE"
+  "sistemas-digitais"
  ],
  "2017-CE-D05": [
   "Gerência de memória e paginação",
   "Difícil",
-  null
+  "sistemas-operacionais"
  ],
  "2017-CE-Q09": [
   "Sistema de archivos e armazenamento",
   "Média",
-  null
+  "fisica"
  ],
  "2017-CE-Q10": [
-  "Diagrama de tensão e comercial",
+  "Comércio internacional e política ambiental",
   "Difícil",
-  "MATEMATICA APLICADA"
+  "ambiente"
  ],
  "2017-CE-Q11": [
-  "Conceitos de resistência térmica",
+  "Sistema Toyota de produção",
   "Média",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "economia"
  ],
  "2017-CE-Q12": [
-  "Sistema Toyota de produção e lei de resfriamento",
+  "Lei de resfriamento e equações diferenciais",
   "Média",
-  "COMPUTACAO PARALELA"
+  "matematica"
  ],
  "2017-CE-Q13": [
   "Veículos espaciais e estrutura",
   "Fácil",
-  null
+  "fisica"
  ],
  "2017-CE-Q14": [
   "Pressão hidrostática e profundidade",
   "Fácil",
-  "MATEMATICA APLICADA"
+  "fisica"
  ],
  "2017-CE-Q15": [
-  "Sensores eGrandezas físicas",
+  "Média, desvio-padrão e dispersão relativa",
   "Média",
-  "ROBOTICA INDUSTRIAL"
+  "matematica"
  ],
  "2017-CE-Q16": [
-  "Campanha publicitária e execução de programa",
+  "Eficiência energética em residências",
   "Fácil",
-  null
+  "circuitos"
  ],
  "2017-CE-Q17": [
-  "Estruturas de dados e automação",
+  "Otimização com multiplicadores de Lagrange",
   "Média",
-  "ESTRUTURA DE DADOS E ALGORITMOS"
+  "otimizacao"
  ],
  "2017-CE-Q18": [
   "Ensaio de flexão e otimização de materiais",
   "Média",
-  "ROBOTICA INDUSTRIAL"
+  "fisica"
  ],
  "2017-CE-Q19": [
   "Sistema de catracas e controle de acesso",
   "Difícil",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "sistemas-digitais"
  ],
  "2017-CE-Q20": [
-  "Programa de computador e campanha",
+  "Expressões regulares e linguagens regulares",
   "Média",
-  null
+  "linguagens-formais"
  ],
  "2017-CE-Q21": [
-  "Compilador e microcontrolador",
+  "Registradores de microcontrolador e operações bit a bit",
   "Difícil",
-  "PROJETO DE SISTEMAS EMBARCADOS"
+  "sistemas-digitais"
  ],
  "2017-CE-Q22": [
   "Tipos em C e memória de 32 bits",
   "Difícil",
-  "PROGRAMACAO PARA CIENCIA DOS DADOS"
+  "algoritmos"
  ],
  "2017-CE-Q23": [
   "Filtros digitais e FIR",
   "Difícil",
-  "TELECOMUNICACOES"
+  "sinais"
  ],
  "2017-CE-Q24": [
-  "Rede neural e reconhecimento",
+  "Heurísticas e busca informada",
   "Média",
-  "ROBOTICA INDUSTRIAL"
+  "ia"
  ],
  "2017-CE-Q25": [
-  "Heurísticas e provedor de segurança",
+  "Firewall, IDS/IPS e antivírus de rede",
   "Média",
-  "TELECOMUNICACOES"
+  "seguranca"
  ],
  "2017-CE-Q26": [
   "Filas e pilhas em automação",
   "Fácil",
-  "ESTRUTURA DE DADOS E ALGORITMOS"
+  "algoritmos"
  ],
  "2017-CE-Q27": [
   "Monitoramento de deslocamento e banco de dados",
   "Média",
-  null
+  "distribuidos"
  ],
  "2017-CE-Q28": [
-  "Computação verde e programación linear",
+  "Programação linear: problema do transporte",
   "Difícil",
-  "COMPUTACAO PARALELA"
+  "otimizacao"
  ],
  "2017-CE-Q29": [
-  "Programação linear e computação verde",
+  "Computação verde e virtualização",
   "Difícil",
-  "COMPUTACAO PARALELA"
+  "distribuidos"
  ],
  "2017-CE-Q30": [
-  "Programação linear e pesquisa operacional",
+  "Marco Civil da Internet e responsabilidade do provedor",
   "Difícil",
-  "COMPUTACAO PARALELA"
+  "seguranca"
  ],
  "2017-CE-Q31": [
-  "Vazamento de dados e imagens íntimas",
+  "Métodos ágeis e gerenciamento de projetos",
   "Média",
-  null
+  "eng-software"
  ],
  "2017-CE-Q32": [
   "GPU e computação de alto desempenho",
   "Difícil",
-  "COMPUTACAO PARALELA"
+  "arquitetura"
  ],
  "2017-CE-Q33": [
   "Segurança em banco de dados",
   "Difícil",
-  null
+  "banco-dados"
  ],
  "2017-CE-Q34": [
   "Envelhecimento e mudanças fisiológicas",
   "Fácil",
-  null
+  "ihc"
  ],
  "2017-CE-Q35": [
   "Roteamento de estado de enlace (ISPF)",
   "Difícil",
-  "TELECOMUNICACOES"
+  "redes"
  ]
 }

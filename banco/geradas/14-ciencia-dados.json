@@ -1,0 +1,122 @@
+{
+ "materia": "ciencia-dados",
+ "questoes": [
+  {
+   "dificuldade": "Fácil",
+   "tema": "Medidas resistentes a valores extremos",
+   "enunciado": "Um analista resume a renda dos clientes de um banco digital. Alguns poucos clientes têm renda muito acima dos demais e distorcem a análise.\n\nA medida de tendência central menos sensível a esses valores extremos é a",
+   "alternativas": {
+    "A": "média aritmética.",
+    "B": "amplitude.",
+    "C": "mediana.",
+    "D": "variância.",
+    "E": "média ponderada pela renda."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Aprendizado supervisionado e não supervisionado",
+   "enunciado": "Uma loja virtual quer separar seus clientes em grupos com perfis de compra semelhantes, sem dispor de nenhuma classificação prévia desses clientes.\n\nA técnica adequada para essa tarefa é",
+   "alternativas": {
+    "A": "a regressão linear, um método supervisionado.",
+    "B": "a classificação supervisionada.",
+    "C": "o aprendizado por reforço.",
+    "D": "o agrupamento (clustering), um método não supervisionado.",
+    "E": "a validação cruzada."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Agrupamento de dados com pandas",
+   "enunciado": "Um DataFrame df, da biblioteca pandas, tem as colunas estado e vendas, com uma linha por venda realizada.\n\n```python\nresultado = df.groupby('estado')['vendas'].sum()\n```\n\nA variável resultado contém",
+   "alternativas": {
+    "A": "a média das vendas de cada estado.",
+    "B": "o número de linhas de cada estado.",
+    "C": "o DataFrame sem a coluna estado.",
+    "D": "as vendas ordenadas por estado.",
+    "E": "a soma das vendas de cada estado."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Precisão e revocação",
+   "enunciado": "Um classificador de transações fraudulentas foi avaliado em 200 casos, com o seguinte resultado: 40 verdadeiros positivos, 10 falsos positivos, 20 falsos negativos e 130 verdadeiros negativos.\n\nA precisão e a revocação (recall) do classificador são, respectivamente, de aproximadamente",
+   "alternativas": {
+    "A": "0,80 e 0,67.",
+    "B": "0,67 e 0,80.",
+    "C": "0,85 e 0,80.",
+    "D": "0,40 e 0,20.",
+    "E": "0,80 e 0,80."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Sobreajuste (overfitting)",
+   "enunciado": "Um modelo de previsão de demanda apresentou erro de 2% nos dados de treino e de 25% nos dados de validação.\n\nEsse comportamento indica",
+   "alternativas": {
+    "A": "subajuste (underfitting); deve-se aumentar a complexidade do modelo.",
+    "B": "sobreajuste (overfitting); pode-se usar regularização, mais dados de treino ou um modelo mais simples.",
+    "C": "um modelo bem ajustado, pronto para produção.",
+    "D": "que os dados de validação devem ser incluídos no treino para reduzir o erro.",
+    "E": "que a métrica de erro escolhida é inadequada para o problema."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Normalização min-max",
+   "enunciado": "Em um pré-processamento, o atributo idade é normalizado pela técnica min-max para o intervalo [0, 1]. No conjunto de dados, a menor idade é 10 anos e a maior, 60 anos.\n\nO valor normalizado de uma idade de 30 anos é",
+   "alternativas": {
+    "A": "0,5.",
+    "B": "0,6.",
+    "C": "0,4.",
+    "D": "0,3.",
+    "E": "20."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Vazamento de dados (data leakage)",
+   "enunciado": "Uma equipe desenvolveu um modelo para prever a inadimplência de clientes no mês seguinte. Antes de separar os dados em treino e teste, normalizou todas as colunas com a média e o desvio-padrão do conjunto completo. Entre os atributos de entrada, incluiu a coluna data_cobranca_judicial, preenchida quando o cliente já está em cobrança na Justiça. O modelo obteve 99% de acerto no teste, mas teve desempenho fraco em produção.\n\nConsiderando essa situação, avalie as afirmações a seguir.\n\nI. Normalizar com estatísticas do conjunto completo, antes da divisão, pode vazar informação do conjunto de teste para o treino.\nII. A coluna data_cobranca_judicial só é conhecida depois da inadimplência e pode inflar artificialmente o desempenho medido.\nIII. O uso de validação cruzada elimina qualquer risco de vazamento de dados, independentemente do pré-processamento.\n\nÉ correto o que se afirma em",
+   "alternativas": {
+    "A": "I, apenas.",
+    "B": "III, apenas.",
+    "C": "I e III, apenas.",
+    "D": "I e II, apenas.",
+    "E": "I, II e III."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Correlação de Pearson",
+   "enunciado": "Ao explorar um conjunto de dados de sensores, um analista calculou o coeficiente de correlação de Pearson entre a temperatura de um equipamento e o seu consumo de energia e obteve r = 0. O gráfico de dispersão, porém, mostrava os pontos dispostos em forma de parábola.\n\nNesse contexto, avalie as asserções a seguir e a relação proposta entre elas.\n\nI. Um coeficiente de Pearson igual a zero indica que não há nenhuma relação entre as duas variáveis.\n\nPORQUE\n\nII. O coeficiente de Pearson mede qualquer tipo de relação entre duas variáveis, linear ou não linear.\n\nA respeito dessas asserções, assinale a opção correta.",
+   "alternativas": {
+    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+    "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+    "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+    "E": "As asserções I e II são proposições falsas."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Agrupamento com k-means",
+   "enunciado": "Uma empresa de energia aplicou o algoritmo k-means, com k = 3, para segmentar seus clientes a partir de dois atributos: renda mensal, em reais (de 1 000 a 50 000), e número de moradores da residência (de 1 a 8). Os atributos não foram padronizados antes do agrupamento.\n\nConsiderando essa situação, avalie as afirmações a seguir.\n\nI. Sem padronização, a renda tende a dominar o cálculo das distâncias, e o número de moradores pouco influencia os grupos.\nII. O resultado do k-means pode variar conforme a inicialização dos centróides.\nIII. O método do cotovelo pode auxiliar na escolha do número de grupos k.\nIV. O k-means garante encontrar o agrupamento ótimo global, que minimiza a soma das distâncias quadráticas aos centróides.\n\nÉ correto apenas o que se afirma em",
+   "alternativas": {
+    "A": "I, II e III.",
+    "B": "I e IV.",
+    "C": "II e IV.",
+    "D": "I, III e IV.",
+    "E": "II, III e IV."
+   },
+   "gabarito": "A"
+  }
+ ]
+}

@@ -1,0 +1,122 @@
+{
+ "materia": "matematica",
+ "questoes": [
+  {
+   "dificuldade": "Fácil",
+   "tema": "Média e mediana",
+   "enunciado": "Os tempos de resposta de um servidor, em milissegundos, foram medidos cinco vezes: 12, 15, 15, 18 e 40.\n\nA mediana desses tempos é igual a",
+   "alternativas": {
+    "A": "15 ms.",
+    "B": "20 ms.",
+    "C": "18 ms.",
+    "D": "12 ms.",
+    "E": "16 ms."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Derivada de polinômio",
+   "enunciado": "Considere a função f(x) = 3x² + 2x.\n\nO valor da derivada f'(x) no ponto x = 1 é",
+   "alternativas": {
+    "A": "5.",
+    "B": "8.",
+    "C": "6.",
+    "D": "11.",
+    "E": "2."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Probabilidade clássica",
+   "enunciado": "Um dado honesto de seis faces é lançado uma vez.\n\nA probabilidade de o resultado ser um número par maior que 2 é",
+   "alternativas": {
+    "A": "1/2.",
+    "B": "1/6.",
+    "C": "1/3.",
+    "D": "2/3.",
+    "E": "1/4."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Distribuição binomial",
+   "enunciado": "Em uma linha de montagem de placas, 10% das unidades saem com defeito, de forma independente umas das outras. Um inspetor retira 3 placas ao acaso.\n\nA probabilidade de exatamente uma das 3 placas ser defeituosa é",
+   "alternativas": {
+    "A": "0,100.",
+    "B": "0,300.",
+    "C": "0,081.",
+    "D": "0,243.",
+    "E": "0,271."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Integral definida como acumulação",
+   "enunciado": "A taxa de chegada de requisições a um servidor, nos primeiros segundos após um pico, é modelada por r(t) = 6t requisições por segundo, com t em segundos.\n\nO número total de requisições recebidas entre t = 0 s e t = 2 s é",
+   "alternativas": {
+    "A": "6.",
+    "B": "24.",
+    "C": "3.",
+    "D": "18.",
+    "E": "12."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Distribuição normal e regra empírica",
+   "enunciado": "A duração das baterias de um modelo de sensor segue distribuição aproximadamente normal, com média de 500 horas e desvio-padrão de 50 horas.\n\nO percentual aproximado de baterias com duração entre 450 h e 550 h é",
+   "alternativas": {
+    "A": "68%.",
+    "B": "95%.",
+    "C": "50%.",
+    "D": "34%.",
+    "E": "99,7%."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Regressão linear e coeficiente de determinação",
+   "enunciado": "Uma equipe de infraestrutura mediu a latência média de uma aplicação web sob diferentes cargas. Com os dados coletados, ajustou-se, pelo método dos mínimos quadrados, a reta y = 2,5x + 10, em que x é o número de usuários simultâneos, em centenas, e y é a latência média, em milissegundos. As medições cobriram cargas de 1 a 8 centenas de usuários, e o coeficiente de correlação linear obtido foi r = 0,9.\n\nCom base nessas informações, avalie as afirmações a seguir.\n\nI. Cada centena adicional de usuários está associada, em média, a um aumento de 2,5 ms na latência.\nII. Cerca de 81% da variabilidade observada na latência é explicada pelo modelo linear.\nIII. O modelo garante que, com 50 centenas de usuários, a latência média será de 135 ms.\n\nÉ correto o que se afirma em",
+   "alternativas": {
+    "A": "I, apenas.",
+    "B": "I e II, apenas.",
+    "C": "I e III, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Probabilidade condicional e teorema de Bayes",
+   "enunciado": "Um sistema de detecção de intrusão analisa conexões de rede. Sabe-se que 1% das conexões são ataques. Quando há ataque, o sistema emite alerta em 99% dos casos; quando não há ataque, emite alerta falso em 5% dos casos.\n\nNesse contexto, avalie as asserções a seguir e a relação proposta entre elas.\n\nI. Mesmo com 99% de sensibilidade, a maior parte dos alertas emitidos pelo sistema corresponde a conexões legítimas.\n\nPORQUE\n\nII. A probabilidade de uma conexão ser um ataque, dado que ela gerou um alerta, é igual à sensibilidade do detector.\n\nA respeito dessas asserções, assinale a opção correta.",
+   "alternativas": {
+    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+    "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+    "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+    "E": "As asserções I e II são proposições falsas."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Processo de Poisson e distribuição exponencial",
+   "enunciado": "Um serviço de autenticação recebe requisições segundo um processo de Poisson, com taxa média de 4 requisições por segundo. A equipe de operações precisa dimensionar filas e alarmes com base nesse modelo.\n\nConsiderando essa situação, avalie as afirmações a seguir.\n\nI. O número esperado de requisições em um intervalo de 2 segundos é 8.\nII. A probabilidade de não chegar nenhuma requisição em um intervalo de 1 segundo é e⁻⁴.\nIII. O tempo entre chegadas consecutivas segue distribuição exponencial com média de 0,25 segundo.\nIV. A variância do número de requisições em um intervalo de 1 segundo é 2.\n\nÉ correto apenas o que se afirma em",
+   "alternativas": {
+    "A": "I e IV.",
+    "B": "II e III.",
+    "C": "I, II e IV.",
+    "D": "I, II e III.",
+    "E": "II, III e IV."
+   },
+   "gabarito": "D"
+  }
+ ]
+}

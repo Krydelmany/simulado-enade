@@ -1,0 +1,122 @@
+{
+ "materia": "otimizacao",
+ "questoes": [
+  {
+   "dificuldade": "Fácil",
+   "tema": "Região viável em programação linear",
+   "enunciado": "Em um problema de programação linear, a região viável é",
+   "alternativas": {
+    "A": "o único ponto que maximiza ou minimiza a função objetivo.",
+    "B": "o conjunto dos valores que a função objetivo pode assumir.",
+    "C": "o conjunto dos pontos que satisfazem simultaneamente todas as restrições do problema.",
+    "D": "a reta que representa a função objetivo no plano.",
+    "E": "o conjunto das restrições que podem ser removidas sem alterar a solução."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Solução ótima nos vértices",
+   "enunciado": "A região viável de um problema de maximização de Z = 3x + 2y é um polígono convexo cujos vértices são (0, 0), (4, 0), (3, 3) e (0, 5).\n\nO valor máximo de Z e o ponto em que ele ocorre são",
+   "alternativas": {
+    "A": "12, em (4, 0).",
+    "B": "10, em (0, 5).",
+    "C": "0, em (0, 0).",
+    "D": "15, em (3, 3).",
+    "E": "18, em (6, 0)."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Caminho mínimo em grafos ponderados",
+   "enunciado": "Uma transportadora precisa calcular a rota de menor distância entre o depósito e cada cliente em uma malha viária modelada como grafo, em que todas as distâncias (pesos das arestas) são não negativas.\n\nUm algoritmo clássico adequado para esse cálculo é o de",
+   "alternativas": {
+    "A": "Kruskal.",
+    "B": "Prim.",
+    "C": "Ford-Fulkerson.",
+    "D": "busca em profundidade.",
+    "E": "Dijkstra."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Modelagem de problema de programação linear",
+   "enunciado": "Uma fábrica produz dois tipos de placa eletrônica, X e Y, com lucro unitário de R$ 40 e R$ 30, respectivamente. Cada placa X consome 2 horas de montagem e 1 hora de teste; cada placa Y consome 1 hora de montagem e 1 hora de teste. Por semana, há 100 horas de montagem e 80 horas de teste disponíveis. Sejam x e y as quantidades semanais produzidas de X e Y.\n\nO modelo de programação linear que maximiza o lucro semanal é",
+   "alternativas": {
+    "A": "maximizar 40x + 30y, sujeito a 2x + y ≤ 100, x + y ≤ 80, x ≥ 0 e y ≥ 0.",
+    "B": "minimizar 40x + 30y, sujeito a 2x + y ≤ 100, x + y ≤ 80, x ≥ 0 e y ≥ 0.",
+    "C": "maximizar 40x + 30y, sujeito a 2x + y ≥ 100, x + y ≥ 80, x ≥ 0 e y ≥ 0.",
+    "D": "maximizar 40x + 30y, sujeito a x + 2y ≤ 100, x + y ≤ 80, x ≥ 0 e y ≥ 0.",
+    "E": "maximizar 2x + y, sujeito a 40x + 30y ≤ 100, x + y ≤ 80, x ≥ 0 e y ≥ 0."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Solução gráfica de programação linear",
+   "enunciado": "Considere o problema: maximizar Z = 40x + 30y, sujeito a 2x + y ≤ 100, x + y ≤ 80, x ≥ 0 e y ≥ 0.\n\nO valor ótimo de Z é",
+   "alternativas": {
+    "A": "2 000.",
+    "B": "2 600.",
+    "C": "2 400.",
+    "D": "3 000.",
+    "E": "2 800."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Variáveis de folga no simplex",
+   "enunciado": "Para aplicar o método simplex, as restrições de desigualdade são convertidas em igualdades por meio de variáveis auxiliares.\n\nAo introduzir a variável de folga s na restrição 2x + y ≤ 100, a restrição passa a ser escrita como",
+   "alternativas": {
+    "A": "2x + y − s = 100, com s ≥ 0.",
+    "B": "2x + y + s ≤ 100, com s livre.",
+    "C": "2x + y + s = 100, com s ≥ 0.",
+    "D": "2x + y + s = 0, com s ≥ 0.",
+    "E": "2x + y = 100, com s = 0."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Problema de designação",
+   "enunciado": "Uma empresa de suporte técnico precisa designar 4 técnicos a 4 chamados abertos. Cada técnico atende exatamente um chamado, e cada chamado é atendido por exatamente um técnico. O tempo estimado de cada técnico em cada chamado é conhecido, e o objetivo é minimizar o tempo total de atendimento.\n\nConsiderando essa situação, avalie as afirmações a seguir.\n\nI. O problema pode ser modelado como programação linear inteira com variáveis binárias xᵢⱼ, com restrições que impõem um chamado por técnico e um técnico por chamado.\nII. Uma estratégia gulosa que, a cada passo, escolhe o par técnico-chamado de menor tempo ainda disponível garante a solução ótima.\nIII. O método húngaro resolve esse problema de designação em tempo polinomial.\nIV. Por haver 4 técnicos e 4 chamados, existem 16 designações possíveis a avaliar por enumeração completa.\n\nÉ correto apenas o que se afirma em",
+   "alternativas": {
+    "A": "I e II.",
+    "B": "II e IV.",
+    "C": "I, II e III.",
+    "D": "I e III.",
+    "E": "III e IV."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Existência de solução ótima em programação linear",
+   "enunciado": "Ao modelar problemas de alocação de recursos como programação linear, o engenheiro precisa saber em que condições o solver devolverá uma solução ótima e onde ela se encontra.\n\nNesse contexto, avalie as asserções a seguir e a relação proposta entre elas.\n\nI. Todo problema de programação linear com região viável não vazia possui solução ótima finita.\n\nPORQUE\n\nII. Uma função objetivo linear atinge seu valor ótimo em um ponto interior da região viável.\n\nA respeito dessas asserções, assinale a opção correta.",
+   "alternativas": {
+    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+    "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+    "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+    "E": "As asserções I e II são proposições falsas."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Caminho crítico (CPM)",
+   "enunciado": "O cronograma de um projeto de software tem as atividades a seguir, com durações em dias e suas predecessoras.\n\nA: 3 dias, sem predecessora\nB: 2 dias, após A\nC: 4 dias, após A\nD: 3 dias, após B e C\nE: 2 dias, após B\n\nO projeto termina quando todas as atividades terminam. Com base nessas informações, avalie as afirmações a seguir.\n\nI. A duração mínima do projeto é de 10 dias.\nII. O caminho crítico é A–C–D.\nIII. A atividade B pode atrasar até 2 dias sem atrasar o término do projeto.\nIV. A atividade E é uma atividade crítica.\n\nÉ correto apenas o que se afirma em",
+   "alternativas": {
+    "A": "I, II e III.",
+    "B": "I e IV.",
+    "C": "II e III.",
+    "D": "I, III e IV.",
+    "E": "II, III e IV."
+   },
+   "gabarito": "A"
+  }
+ ]
+}

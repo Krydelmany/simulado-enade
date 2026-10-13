@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { carregarBanco, contagens, nivelDisponivel } from '$lib/banco.js';
+	import { carregarBanco, contagens, ehGerada } from '$lib/banco.js';
 	import { getXP, getParaRevisar } from '$lib/stats.js';
 	import { resumoProgresso } from '$lib/resumo.js';
 	import {
@@ -19,6 +19,7 @@
 	let fg = $state(0);
 	let ce = $state(0);
 	let disc = $state(0);
+	let geradas = $state(0);
 	let edicoes = $state([]);
 	let xp = $state(0);
 	let pronto = $state(false);
@@ -44,7 +45,7 @@
 			href: '/estudo/',
 			icone: Stairs,
 			titulo: 'Estudo',
-			desc: 'Sessões de 10 questões em N1, N2 e N3.',
+			desc: 'Sessões de 10 por matéria: Fácil, Médio, Difícil ou ENADE.',
 			cta: 'Começar'
 		},
 		{
@@ -66,7 +67,8 @@
 			fg = c.fg;
 			ce = c.ce;
 			disc = c.discursivas;
-			edicoes = [...new Set(b.map((q) => q.edicao))].sort();
+			geradas = c.geradas;
+			edicoes = [...new Set(b.filter((q) => !ehGerada(q)).map((q) => q.edicao))].sort();
 			xp = getXP();
 			prog = resumoProgresso();
 			paraRevisar = getParaRevisar();
@@ -192,6 +194,9 @@
 				{:else if edicoes.length}
 					<p class="mt-4 text-xs leading-relaxed text-pretty text-ink-soft">
 						Edições no banco: {edicoes.join(' · ')}. Cada questão aprovada entra aqui.
+						{#if geradas}
+							Mais {geradas} questões de revisão por matéria, em três níveis, no modo Estudo.
+						{/if}
 					</p>
 				{/if}
 

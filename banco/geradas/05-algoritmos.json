@@ -1,0 +1,122 @@
+{
+ "materia": "algoritmos",
+ "questoes": [
+  {
+   "dificuldade": "Fácil",
+   "tema": "Pilha (LIFO)",
+   "enunciado": "O recurso “desfazer” de um editor de texto recupera sempre a última alteração feita, depois a penúltima, e assim por diante.\n\nA estrutura de dados que segue essa política, em que o último elemento inserido é o primeiro a ser removido, é a",
+   "alternativas": {
+    "A": "fila.",
+    "B": "pilha.",
+    "C": "lista circular.",
+    "D": "árvore binária de busca.",
+    "E": "tabela hash."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Complexidade da busca binária",
+   "enunciado": "Um vetor com n elementos ordenados é consultado por busca binária.\n\nNo pior caso, a complexidade de tempo dessa busca é",
+   "alternativas": {
+    "A": "O(1).",
+    "B": "O(n).",
+    "C": "O(log n).",
+    "D": "O(n log n).",
+    "E": "O(n²)."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Fácil",
+   "tema": "Rastreamento de laço",
+   "enunciado": "Considere o trecho de código em Python a seguir.\n\n```python\nsoma = 0\nfor i in range(1, 5):\n    if i % 2 == 0:\n        soma += i\nprint(soma)\n```\n\nO valor impresso é",
+   "alternativas": {
+    "A": "4.",
+    "B": "10.",
+    "C": "2.",
+    "D": "6.",
+    "E": "0."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Operações em fila (FIFO)",
+   "enunciado": "Uma fila, inicialmente vazia, recebe a seguinte sequência de operações:\n\nenfileira(3), enfileira(7), desenfileira(), enfileira(5), enfileira(1), desenfileira()\n\nAo final, o elemento que está na frente da fila é",
+   "alternativas": {
+    "A": "3.",
+    "B": "7.",
+    "C": "1.",
+    "D": "nenhum, pois a fila está vazia.",
+    "E": "5."
+   },
+   "gabarito": "E"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Árvore binária de busca e percurso em pré-ordem",
+   "enunciado": "Os valores 50, 30, 70, 20, 40, 60 e 80 são inseridos, nessa ordem, em uma árvore binária de busca inicialmente vazia, sem balanceamento.\n\nO percurso em pré-ordem (raiz, subárvore esquerda, subárvore direita) dessa árvore é",
+   "alternativas": {
+    "A": "50, 30, 20, 40, 70, 60, 80.",
+    "B": "20, 30, 40, 50, 60, 70, 80.",
+    "C": "20, 40, 30, 60, 80, 70, 50.",
+    "D": "50, 30, 70, 20, 40, 60, 80.",
+    "E": "50, 70, 80, 60, 30, 40, 20."
+   },
+   "gabarito": "A"
+  },
+  {
+   "dificuldade": "Média",
+   "tema": "Recursão",
+   "enunciado": "Considere a função recursiva em C a seguir.\n\n```c\nint f(int n) {\n    if (n <= 1) return 1;\n    return n * f(n - 2);\n}\n```\n\nO valor retornado pela chamada f(7) é",
+   "alternativas": {
+    "A": "5040.",
+    "B": "105.",
+    "C": "48.",
+    "D": "15.",
+    "E": "35."
+   },
+   "gabarito": "B"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Tabela hash com encadeamento",
+   "enunciado": "Um serviço de cache armazena 3 000 chaves em uma tabela hash com encadeamento separado: cada uma das 1 000 posições da tabela aponta para uma lista com as chaves que caíram naquela posição. A função de dispersão distribui as chaves de forma aproximadamente uniforme.\n\nConsiderando essa situação, avalie as afirmações a seguir.\n\nI. O fator de carga da tabela é 3, de modo que cada lista tem, em média, 3 chaves.\nII. No pior caso, se todas as chaves colidirem na mesma posição, uma busca custa O(n), em que n é o número de chaves.\nIII. No encadeamento separado, o fator de carga não pode ultrapassar 1.\n\nÉ correto o que se afirma em",
+   "alternativas": {
+    "A": "I, apenas.",
+    "B": "III, apenas.",
+    "C": "I e II, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+   },
+   "gabarito": "C"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Merge sort: tempo e memória",
+   "enunciado": "Uma equipe precisa ordenar registros de log em um dispositivo com pouca memória RAM e avalia o uso do Merge Sort, que divide o vetor ao meio, ordena recursivamente cada metade e intercala as metades ordenadas.\n\nNesse contexto, avalie as asserções a seguir e a relação proposta entre elas.\n\nI. O Merge Sort ordena um vetor de n elementos em tempo O(n log n) no pior caso, usando apenas memória auxiliar constante, O(1).\n\nPORQUE\n\nII. A etapa de intercalação percorre as duas metades ordenadas e as combina em tempo linear no tamanho delas.\n\nA respeito dessas asserções, assinale a opção correta.",
+   "alternativas": {
+    "A": "As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.",
+    "B": "As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.",
+    "C": "A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.",
+    "D": "A asserção I é uma proposição falsa, e a II é uma proposição verdadeira.",
+    "E": "As asserções I e II são proposições falsas."
+   },
+   "gabarito": "D"
+  },
+  {
+   "dificuldade": "Difícil",
+   "tema": "Programação dinâmica e memoização",
+   "enunciado": "Para acelerar o cálculo da sequência de Fibonacci, em que fib(0) = 0 e fib(1) = 1, um desenvolvedor escreveu a função a seguir, que guarda resultados já calculados em um dicionário.\n\n```python\nmemo = {}\n\ndef fib(n):\n    if n <= 1:\n        return n\n    if n in memo:\n        return memo[n]\n    memo[n] = fib(n - 1) + fib(n - 2)\n    return memo[n]\n```\n\nCom base nesse código, avalie as afirmações a seguir.\n\nI. Sem o dicionário memo, a mesma função recursiva teria complexidade de tempo exponencial em n.\nII. Com o dicionário memo, cada valor fib(k), para k ≤ n, é calculado uma única vez, e a complexidade de tempo passa a ser O(n).\nIII. A chamada fib(10) retorna 55.\n\nÉ correto o que se afirma em",
+   "alternativas": {
+    "A": "I, apenas.",
+    "B": "II, apenas.",
+    "C": "I e III, apenas.",
+    "D": "II e III, apenas.",
+    "E": "I, II e III."
+   },
+   "gabarito": "E"
+  }
+ ]
+}

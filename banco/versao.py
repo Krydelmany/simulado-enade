@@ -35,10 +35,11 @@ def versao():
         caminho = os.path.join(BANCO, arq)
         with open(caminho, 'rb') as fh:
             dados = json.load(fh)
-        # só o que muda o que o aluno vê: quantas são e os ids
-        resumo = [(q.get('id'), q.get('gabarito'), q.get('enunciado')) for q in dados]
+        # a questão INTEIRA: antes eram só id/gabarito/enunciado, e trocar a
+        # matéria ou o tema de uma questão deixava a cache velha no ar — o
+        # filtro de matéria some com a questão e ninguém vê erro nenhum
         h.update(arq.encode())
-        h.update(json.dumps(resumo, ensure_ascii=False, sort_keys=True).encode())
+        h.update(json.dumps(dados, ensure_ascii=False, sort_keys=True).encode())
     return h.hexdigest()[:12]
 
 

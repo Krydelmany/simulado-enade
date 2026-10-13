@@ -1,7 +1,7 @@
 """Monta o rascunho do banco (JSON) a partir do texto de uma prova.
 
 Gera a estrutura com enunciado/alternativas/gabarito; `tema`, `dificuldade`
-e `materia_ava` entram depois, na revisão (ver revisao/).
+e `materia` entram depois, na revisão (ver revisao/).
 """
 
 import json
@@ -101,7 +101,7 @@ def extrair(ano):
             q['gabarito'] = gab.get(num, '')
         else:
             q['padrao'] = padroes.get(q['id'], '')
-        q['materia_ava'] = None
+        q['materia'] = None
         out.append(q)
     return out
 

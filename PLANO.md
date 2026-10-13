@@ -1,14 +1,18 @@
 # Direção do produto (10/10/2026, dono)
 
-**É uma versão de ESTUDO para o simulado, focada nas questões das matérias
-do AVA.** Cada questão carrega `materia_ava` (qual matéria do AVA estudar
-para acertá-la). Questão sem correspondência direta fica com `null`
-(= Formação Geral transversal).
+**É uma versão de ESTUDO para o simulado, organizada por matéria.** Cada
+questão carrega `materia`: uma das 20 áreas do Componente Específico da
+Portaria INEP nº 161/2026 ou uma matéria de Formação Geral
+(`app/src/lib/materias.json`). As matérias do AVA que tinham par na lista da
+Portaria foram absorvidas por ela (ex.: TELECOMUNICACOES → Redes de
+Computadores); as de FG sem par continuam como estavam. (13/10/2026)
 
 ## Modos
 
-- **Treino livre** — fila infinita, filtro por tema, para quando quiser.
-- **Estudo · 10 questões** — N1/N2/N3 por dificuldade (definida na revisão).
+- **Treino livre** — fila infinita, filtro por matéria, para quando quiser.
+- **Estudo · 10 questões** — filtro de matéria + quatro categorias:
+  **Fácil / Médio / Difícil** (questões geradas para revisão, do contexto
+  simples ao modelo da prova) e **ENADE oficial** (todas as do INEP).
 - **Simulado real** — FG 15 + CE 30 + 1 disc, 4h (abre com o banco completo).
 
 ## Linguagem visual e motion (inspirado no Duolingo, sem personagens)
@@ -24,7 +28,7 @@ para acertá-la). Questão sem correspondência direta fica com `null`
 
 ## Regras do banco (`app/static/banco/*.json`)
 
-- `id, edicao, parte, numero, tipo, tema, dificuldade, materia_ava`,
+- `id, edicao, parte, numero, tipo, tema, dificuldade, materia`,
   `enunciado, alternativas, gabarito | padrao`,
   `imagem {src, alt} | figura {desc, status}`.
 - Figura = crop da página renderizada (`pdftoppm -r 150` + PIL), validada

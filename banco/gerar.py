@@ -162,7 +162,7 @@ def main(ano, parte):
     L.append(
         f'{len(qs)} questão(ões) extraída(s) do PDF oficial do INEP. '
         'Gabarito vem do gabarito definitivo; `tema`, `dificuldade` e '
-        '`materia_ava` são propostas — ajuste o que discordar e o banco é '
+        '`materia` são propostas — ajuste o que discordar e o banco é '
         'regenerado.'
     )
     sem_tema = [q['id'] for q in qs if not q['tema']]
@@ -196,7 +196,7 @@ def main(ano, parte):
             L.append(f"- **Gabarito:** {q['gabarito'] or '⚠️ não encontrado'}")
         L += [
             f"- Dificuldade proposta: **{q['dificuldade'] or '—'}**",
-            f"- Matéria do AVA: **{q['materia_ava'] or '— (FG transversal)'}**",
+            f"- Matéria: **{q.get('materia') or '—'}**",
             '',
         ]
         if q.get('imagem'):

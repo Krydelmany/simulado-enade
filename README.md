@@ -1,8 +1,9 @@
 # Simulado ENADE — Engenharia de Computação
 
 Site de estudo para a prova do ENADE com questões oficiais do INEP:
-**treino livre** (fila infinita), **estudo em 10 questões com níveis N1–N3**
-e **simulado no formato real da prova** (Portaria INEP nº 161/2026:
+**treino livre** (fila infinita), **estudo em sessões de 10 por matéria** —
+questões de revisão em três níveis (Fácil, Médio, Difícil) ou a prova oficial
+— e **simulado no formato real da prova** (Portaria INEP nº 161/2026:
 FG 15 + CE 30 + 1 discursiva, 4h).
 
 ## Subir o projeto
@@ -67,17 +68,39 @@ PLANO.md              direção do produto · ROADMAP.md → fases e status
 1. A fonte vai em `fontes/` (prova + gabarito + padrão de resposta).
 2. Extrai em lote de 10 para `revisao/lote-NN-<edicao>-<parte>.md` com:
    enunciado limpo, alternativas, gabarito, padrão da discursiva,
-   `tema`, `dificuldade` (Fácil/Média/Difícil) e `materia_ava`
-   (qual matéria do AVA estudar — `null` se for FG transversal).
+   `tema`, `dificuldade` (Fácil/Média/Difícil) e `materia` — o id de uma
+   matéria de `app/src/lib/materias.json` (as 20 áreas do CE da Portaria
+   nº 161/2026, ou uma das matérias de Formação Geral).
 3. Alguém revisa o lote; só o aprovado vira JSON em
    `app/static/banco/*.json` no formato:
-   `id, edicao, parte, numero, tipo, tema, dificuldade, materia_ava,
+   `id, edicao, parte, numero, tipo, tema, dificuldade, materia,
    enunciado, alternativas, gabarito | padrao, imagem? {src, alt, legenda?}`.
+   A classificação mora em `banco/classificacao.json`; para trocar a matéria
+   ou o tema de uma questão sem reextrair a prova:
+   `python3 banco/classificar.py --banco`.
 4. Figura = recorte da página renderizada (`pdftoppm -r 150` + corte),
    validado a olho. Foto → JPG q82; linha/gráfico → PNG. Nada de baixar
    vídeo — vídeo é link, nunca arquivo (regra do projeto).
 5. Questão `ANULADA` no gabarito (`"gabarito": "ANULADA"`) = ponto p/ todos,
    como faz o INEP.
+
+## Questões geradas (níveis Fácil / Médio / Difícil)
+
+Os três níveis do modo Estudo NÃO usam as questões do INEP — elas ficam
+juntas na categoria **ENADE oficial**. Os níveis são de questões escritas
+para revisão, 3 por nível em cada uma das 20 matérias do CE:
+
+- **Fácil**: conceito direto, contexto de uma ou duas frases;
+- **Médio**: aplicação — cenário curto, uma conta ou um traço de código;
+- **Difícil**: o modelo da prova — texto-base com afirmações I/II/III ou
+  asserção-razão (I PORQUE II).
+
+A fonte é `banco/geradas/NN-<materia>.json` (só o conteúdo); o
+`python3 banco/geradas.py` monta `app/static/banco/geradas.json` no mesmo
+formato das oficiais, com `fonte: "gerada"` e id `GER-<inciso>-<F|M|D><n>`,
+e escreve o markdown de revisão em `revisao/geradas/`. Questão nova entra no
+FIM do arquivo da matéria — reordenar troca os ids e o histórico do aluno é
+guardado por id. Depois, `validar.py` e `versao.py --escrever`, como sempre.
 
 Regras de extração que já doeram:
 
