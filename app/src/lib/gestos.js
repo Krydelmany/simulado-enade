@@ -103,6 +103,10 @@ function rastrear(no, { eixo, comecar, mover, soltar, cancelar }) {
 	}
 
 	function inicio(e) {
+		// segundo dedo no meio de um gesto já decidido (a pinça): devolve o
+		// cartão ao lugar antes de largar — sem isso ele ficava preso no
+		// translateX, cortado na borda e com o zoom da figura fora do lugar
+		if (ativo && decidido) cancelar();
 		abandonar();
 		if (e.touches.length !== 1 || !toqueLivre(e)) return;
 		const t = e.touches[0];
