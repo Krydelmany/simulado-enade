@@ -13,7 +13,7 @@ Computadores); as de FG sem par continuam como estavam. (13/10/2026)
 - **Estudo · 10 questões** — filtro de matéria + quatro categorias:
   **Fácil / Médio / Difícil** (questões geradas para revisão, do contexto
   simples ao modelo da prova) e **ENADE oficial** (todas as do INEP).
-- **Simulado real** — FG 15 + CE 30 + 1 disc, 4h (abre com o banco completo).
+- **Simulado real** — FG 15 + CE 30 + 1 disc, 4h: sorteio espalhado pelas matérias, cartão-resposta, pausa, correção só na entrega.
 
 ## Linguagem visual e motion (inspirado no Duolingo, sem personagens)
 
