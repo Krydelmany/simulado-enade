@@ -6,16 +6,20 @@
 	import {
 		Atom,
 		BookmarkSimple,
+		Check,
 		CheckCircle,
+		Copy,
 		Image as ImageIcon,
 		Info,
 		MagnifyingGlassPlus,
 		MinusCircle,
 		SealCheck,
 		SkipForward,
+		Warning,
 		XCircle
 	} from 'phosphor-svelte';
 	import TextoRico from './TextoRico.svelte';
+	import { copiarQuestao } from './copiar.js';
 
 	/**
 	 * `inicial` restaura o estado de uma questão já respondida quando o aluno volta
@@ -124,6 +128,17 @@
 		if (respondida) return;
 		onPular?.(q.id);
 	}
+
+	// 'ok' | 'erro' por 2 s depois de copiar; o ícone e o aviso mudam juntos
+	let copia = $state(null);
+	let timerCopia;
+	async function copiar() {
+		const ok = await copiarQuestao(q);
+		copia = ok ? 'ok' : 'erro';
+		clearTimeout(timerCopia);
+		timerCopia = setTimeout(() => (copia = null), 2000);
+	}
+	$effect(() => () => clearTimeout(timerCopia));
 
 	function alternarRevisar() {
 		revisar = !revisar;
@@ -254,18 +269,46 @@
 				{q.parte === 'FG' ? 'Formação Geral' : q.parte}
 			</p>
 		{/if}
-		<button
-			type="button"
-			onclick={alternarRevisar}
-			aria-pressed={revisar}
-			aria-label={revisar ? 'Remover marcação de revisar' : 'Marcar para revisar depois'}
-			title={revisar ? 'Remover marcação de revisar' : 'Marcar para revisar depois'}
-			class="ml-auto flex h-11 min-w-11 items-center justify-center rounded-full border transition-transform active:scale-95 {revisar
-				? 'border-line bg-accent-soft text-accent-ink'
-				: 'border-line bg-card text-ink-soft'}"
-		>
-			<BookmarkSimple size={20} weight={revisar ? 'fill' : 'bold'} aria-hidden="true" />
-		</button>
+		<!-- os dois botões andam juntos: soltos, quando as etiquetas enchiam a
+		     linha o de revisar caía sozinho para a esquerda da linha de baixo -->
+		<div class="ml-auto flex items-center gap-2">
+			<!-- copia enunciado, figura e alternativas (sem gabarito) para colar fora do site -->
+			<button
+				type="button"
+				onclick={copiar}
+				aria-label="Copiar questão"
+				title={copia === 'erro' ? 'O navegador não deixou copiar' : 'Copiar questão'}
+				class="flex h-11 min-w-11 items-center justify-center rounded-full border border-line transition-transform active:scale-95 {copia ===
+				'ok'
+					? 'bg-ok-bg text-ok-fg'
+					: copia === 'erro'
+						? 'bg-bad-bg text-bad-fg'
+						: 'bg-card text-ink-soft'}"
+			>
+				{#if copia === 'ok'}
+					<Check size={20} weight="bold" aria-hidden="true" />
+				{:else if copia === 'erro'}
+					<Warning size={20} weight="bold" aria-hidden="true" />
+				{:else}
+					<Copy size={20} weight="bold" aria-hidden="true" />
+				{/if}
+			</button>
+			<span class="sr-only" role="status">
+				{copia === 'ok' ? 'Questão copiada' : copia === 'erro' ? 'Não deu para copiar a questão' : ''}
+			</span>
+			<button
+				type="button"
+				onclick={alternarRevisar}
+				aria-pressed={revisar}
+				aria-label={revisar ? 'Remover marcação de revisar' : 'Marcar para revisar depois'}
+				title={revisar ? 'Remover marcação de revisar' : 'Marcar para revisar depois'}
+				class="flex h-11 min-w-11 items-center justify-center rounded-full border transition-transform active:scale-95 {revisar
+					? 'border-line bg-accent-soft text-accent-ink'
+					: 'border-line bg-card text-ink-soft'}"
+			>
+				<BookmarkSimple size={20} weight={revisar ? 'fill' : 'bold'} aria-hidden="true" />
+			</button>
+		</div>
 	</div>
 	<h2 class="mt-1 text-base font-bold tracking-tight">{q.tema}</h2>
 
