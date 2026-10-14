@@ -12,6 +12,7 @@ import os
 import sys
 
 sys.path.insert(0, '/root/enade-simulado/banco')
+import anuladas
 import arruma
 import classificar
 import digita
@@ -160,6 +161,12 @@ def main(ano, parte):
 
     ordem = {'discursiva': 0, 'objetiva': 1}
     qs = sorted(boas, key=lambda q: (ordem.get(q['tipo'], 9), q['numero']))
+
+    # Anulada pelo INEP não tem letra certa: vai para `banco/anuladas.json`,
+    # fora do site (ver anuladas.py). Grava lá ANTES do JSON do site, para a
+    # questão nunca ficar sem estar em lugar nenhum.
+    qs, fora = anuladas.separar(qs)
+    anuladas.guardar(fora)
 
     # --- JSON do site -------------------------------------------------
     destino = f'{BANCO}/enade{ano}-{parte.lower()}.json'

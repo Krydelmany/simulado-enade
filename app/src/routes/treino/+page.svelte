@@ -25,6 +25,7 @@
 		marcarRevisar,
 		desmarcarRevisar,
 		getParaRevisar,
+		contarParaRevisar,
 		salvarSessao,
 		carregarSessao,
 		limparSessao
@@ -580,7 +581,7 @@
 		</button>
 		{#if getErros().length}
 			<a href="/treino/?modo=revisao" class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
-				Revisar erros e marcadas ({getParaRevisar().length})
+				Revisar erros e marcadas ({contarParaRevisar(banco)})
 			</a>
 		{/if}
 	</div>
@@ -669,7 +670,7 @@
 					</button>
 					{#if getErros().length}
 						<a href="/treino/?modo=revisao" class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
-							Revisar erros e marcadas ({getParaRevisar().length})
+							Revisar erros e marcadas ({contarParaRevisar(banco)})
 						</a>
 					{/if}
 					<button type="button" onclick={() => montar()} class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">

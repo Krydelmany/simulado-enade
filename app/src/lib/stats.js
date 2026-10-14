@@ -205,6 +205,21 @@ export function getParaRevisar() {
 	return [...erros];
 }
 
+/**
+ * Quantas questões a revisão do treino abre de fato: só os ids a revisar
+ * que ainda estão no banco. Uma questão que saiu do banco (as anuladas, um id
+ * de gerada renumerado) continua no aparelho do aluno, e o botão "Revisar"
+ * mostrava um número maior do que a revisão abria — ou aparecia e levava a
+ * uma revisão vazia.
+ *
+ * @param {Array<{id: string}>} banco
+ * @returns {number}
+ */
+export function contarParaRevisar(banco) {
+	const ids = new Set(getParaRevisar());
+	return (Array.isArray(banco) ? banco : []).filter((q) => ids.has(q.id)).length;
+}
+
 // ---------------------------------------------------------------------------
 // Sessão de treino pausada (contrato antigo)
 // ---------------------------------------------------------------------------

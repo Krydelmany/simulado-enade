@@ -81,8 +81,9 @@ PLANO.md              direção do produto · ROADMAP.md → fases e status
 4. Figura = recorte da página renderizada (`pdftoppm -r 150` + corte),
    validado a olho. Foto → JPG q82; linha/gráfico → PNG. Nada de baixar
    vídeo — vídeo é link, nunca arquivo (regra do projeto).
-5. Questão `ANULADA` no gabarito (`"gabarito": "ANULADA"`) = ponto p/ todos,
-   como faz o INEP.
+5. Questão `ANULADA` no gabarito (`"gabarito": "ANULADA"`) não vai para o
+   site: `banco/anuladas.py` a separa em `banco/anuladas.json` (o `gerar.py`
+   e o `digita.py --banco` fazem isso sozinhos).
 
 ## Questões geradas (níveis Fácil / Médio / Difícil)
 
