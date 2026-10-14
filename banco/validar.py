@@ -35,9 +35,11 @@ LIXO = re.compile(
     re.I,
 )
 
-# linguagens que o `formato.py` pode marcar — o `TextoRico.svelte` só usa isto
+# linguagens que o `formato.py` pode marcar, mais as dos blocos lidos do PDF em
+# `digitadas.json` (cpp, haskell, verilog) — o `TextoRico.svelte` só usa isto
 # para escolher a fonte, então qualquer outra string é fence colado na frase
-LINGUAGENS = {'c', 'java', 'python', 'sql', 'vhdl', 'html', 'xml', 'text'}
+LINGUAGENS = {'c', 'cpp', 'java', 'python', 'sql', 'vhdl', 'verilog', 'haskell',
+              'html', 'xml', 'text'}
 
 
 # O mesmo regex do `TextoRico.svelte`. Tem que ser IDÊNTICO ao renderizador:
@@ -94,6 +96,11 @@ def main():
     problemas = []
     vistos = set()
     total = 0
+    digitadas = os.path.join(RAIZ, 'banco', 'digitadas.json')
+    lidos_do_pdf = set()
+    if os.path.exists(digitadas):
+        lidos_do_pdf = {k for k, v in json.load(open(digitadas, encoding='utf-8')).items()
+                        if isinstance(v, dict) and v.get('_enunciado')}
     # (materia, dificuldade) -> n, e letra -> n, só das geradas: o Estudo
     # promete os três níveis em toda matéria, e um gabarito concentrado numa
     # letra ensina o aluno a chutar, não a matéria
@@ -194,7 +201,10 @@ def main():
                     ))
 
             enunciado = q.get('enunciado') or ''
-            if not gerada and (LIXO.search(enunciado) or CABECALHO.search(enunciado)):
+            # texto lido da imagem do PDF (digitadas.json) não é lixo de
+            # página: "na área de Engenharia de Computação" é frase de verdade
+            lido = qid in lidos_do_pdf
+            if not gerada and not lido and (LIXO.search(enunciado) or CABECALHO.search(enunciado)):
                 problemas.append((nome, qid, 'enunciado com lixo da página'))
 
             img = q.get('imagem')

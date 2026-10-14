@@ -13,7 +13,7 @@
  * altere JSON em `static/banco`** — é o que invalida a cache sem depender da
  * rede (um deploy novo sempre traz uma versão nova).
  */
-export const VERSAO_BANCO = '64519b456c52';
+export const VERSAO_BANCO = 'cf6a96df6b5a';
 
 /** Arquivos do banco (um por edição+parte). Exportado para o preload. */
 export const ARQUIVOS_BANCO = [
@@ -179,7 +179,7 @@ export function doNivel(q, nivel) {
  * de montar sessão vazia/curta em silêncio.
  *
  * No banco inteiro cada nível de geradas tem 60 (3 por matéria × 20) e o
- * ENADE tem 158 — todos ≥ 10. Com o filtro de matéria do Estudo, um nível
+ * ENADE tem 160 — todos ≥ 10. Com o filtro de matéria do Estudo, um nível
  * fica com 3: é aí que o aviso de sessão curta aparece.
  *
  * @returns {{ok: boolean, total: number, minimo: number, nivel: number, rotulo: string|null}}

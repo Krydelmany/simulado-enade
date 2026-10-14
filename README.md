@@ -102,6 +102,30 @@ e escreve o markdown de revisão em `revisao/geradas/`. Questão nova entra no
 FIM do arquivo da matéria — reordenar troca os ids e o histórico do aluno é
 guardado por id. Depois, `validar.py` e `versao.py --escrever`, como sempre.
 
+## Parágrafos e espaçamento do texto
+
+O app desenha `\n` como quebra (`white-space: pre-line` no `.enunciado`),
+então o JSON precisa trazer os parágrafos. Quem monta é o `banco/paragrafo.py`,
+chamado pela `qualidade.limpa` na extração:
+
+- **linhas do PDF → parágrafos** (`reflui`): linha cheia emenda com a de
+  baixo; linha curta com ponto fecha parágrafo; linha curta sem ponto
+  (tabela, código, título) fica sozinha; "•" sozinho junta com a linha
+  seguinte;
+- **estrutura da prova** (`estrutura`): fonte ("Disponível em", "SOBRENOME,
+  X.") e comando ("Considerando…", "É correto…") em parágrafo próprio,
+  afirmações I., II. e itens a), b) um por linha, `PORQUE` isolado, pergunta
+  final sem ponto separada do texto-base;
+- **só espaço em branco muda** — exceto a tabela `GRUDADAS` (palavras que o
+  poppler colou em 2019) e o "•" da fonte Symbol (``, que o navegador
+  mostra como quadradinho). Rótulo lido errado pelo OCR ("|." por "I.") NÃO
+  é trocado aqui — "Il." pode ser II ou III; quem decide é a leitura da
+  página, em `digitadas.json` (abaixo).
+
+Para reaplicar no banco sem reextrair: `python3 banco/paragrafo.py --banco`
+(confere texto visível e idempotência antes de gravar); casos de teste em
+`python3 banco/testes.py`.
+
 Regras de extração que já doeram:
 
 - **rodapé do PDF** (`Área livre`, nº de página, `ENGENHARIA DE…`) vaza para
@@ -126,6 +150,47 @@ Regras de extração que já doeram:
   gabarito fora das letras lidas fica de fora — com uma opção a menos, o
   gabarito aponta para a letra errada e o aluno erra sem saber por quê. O
   que sobrou está em `revisao/pendencias.md`.
+
+## Texto lido do PDF (`banco/digitadas.json`)
+
+Onde a extração não dá conta — OCR de 2014/2017, fórmula e figura achatadas
+em 2019/2023, enunciado cortado — o texto é lido da página renderizada e
+digitado em `banco/digitadas.json`, uma entrada por id:
+
+- `A`…`E`: alternativas (com as cinco, as cinco substituem as da extração);
+- `_enunciado` / `_padrao`: texto inteiro, já com parágrafos, listas e
+  blocos ```` ``` ```` de código;
+- `_imagem` `{src, alt}`: recorte da página (200 dpi) em
+  `app/static/banco/img/`;
+- `_alternativas_visuais: true`: as alternativas são desenho (gráfico,
+  circuito) e vêm no recorte;
+- `_nova` `{edicao, parte, numero, tipo, gabarito?, imagem?}`: questão que a
+  extração nem produziu (2014-CE-D04, colada na D03 pelo OCR).
+
+A regra é a do `digita.py`: **nunca preencher por dedução** — o que não deu
+para ler fica de fora. A letra do gabarito vem sempre da folha oficial.
+
+`digita.aplica` entra no começo da cadeia do `gerar.py` e `digita.finaliza`
+no fim: `arruma`/`formato`/`qualidade` consertam camada de texto e OCR, e
+passados sobre um texto já digitado desmontam bloco de código e indentação.
+Para aplicar sem reextrair (sem poppler/tesseract):
+
+```bash
+python3 banco/digita.py --banco      # entra no JSON do site
+python3 banco/paragrafo.py --banco   # tem de dizer "0 de N reformatadas"
+python3 banco/validar.py && python3 banco/testes.py
+python3 banco/versao.py --escrever
+```
+
+O `testes.py` passa cada entrada pela cadeia inteira do `gerar.py` e exige o
+mesmo texto que está no banco.
+
+Dois defeitos de extração que esse arquivo corrige e que valem conferir em
+prova nova: em 2019/2023 a frase que começa com "A " ("A partir dessas
+informações…", "A respeito dessas asserções…") era lida como a alternativa
+A, e o que vinha depois dela — afirmações, código, a própria pergunta —
+sumia; e alternativas deslocadas em uma letra, que mostram como certa a
+opção errada sem nenhum sintoma (2014-CE-Q35, 2017-CE-Q35, 2023-CE-Q18).
 
 ## Convenções do código (seguir para não quebrar o visual)
 
