@@ -25,7 +25,8 @@ de arquivos JSON publicados junto com o site, e o progresso do aluno fica no
   erradas e as marcadas para revisar.
 - **Estudo** (`/estudo/`): sessões de até 10 questões, com filtro opcional de
   matéria. Os níveis Fácil, Médio e Difícil usam as questões **geradas** para
-  revisão, e a categoria **ENADE oficial** usa as 160 questões do INEP. Com
+  revisão, e a categoria **ENADE oficial** usa as 156 questões do INEP (as
+  160 das quatro provas menos as 4 anuladas, que ficam fora do site). Com
   uma matéria filtrada, cada nível de geradas tem só 3 questões.
 - **Simulado** (`/simulado/`): reproduz a prova de 2026 (Portaria INEP nº
   161/2026), com 15 objetivas de Formação Geral (FG), 30 do Componente
@@ -54,7 +55,8 @@ app/                       o site: SvelteKit 2 + Svelte 5 + Tailwind 4 + Vite 6
   vercel.json              build e cache headers (tem de ficar em app/)
 banco/                     scripts Python que produzem e conferem o banco, mais as
                            FONTES editáveis: classificacao.json, digitadas.json,
-                           geradas/NN-<materia>.json
+                           geradas/NN-<materia>.json; e anuladas.json (as
+                           questões anuladas, fora do site ← SAÍDA de script)
 fontes/                    PDFs oficiais do INEP (prova, gabarito, padrão de resposta)
                            + simulado-prof-2026.pdf (relatório da turma, não é banco)
 revisao/                   markdown de revisão: lotes da extração (histórico) e
@@ -145,8 +147,9 @@ some na próxima gravação.
 ### Simulado (`src/lib/simulado.js` + `routes/simulado/+page.svelte`)
 
 - **Sorteio:**
-  - Entram só oficiais, sem `ANULADA` e sem `padrao_placeholder`, e só
-    discursivas do CE.
+  - Entram só oficiais, sem `padrao_placeholder`, e só discursivas do CE.
+    As anuladas nem estão no banco do site; o filtro de `ANULADA` em
+    `disponiveis` continua só por defesa.
   - O sorteio é balanceado por matéria (uma de cada matéria por rodada), com
     `Math.random` e sem semente.
   - A ordem é FG 1–15, CE 16–45 e a discursiva por último.
@@ -224,9 +227,28 @@ do sistema fechar a camada certa.
 
 ### Questão ANULADA
 
-`"gabarito": "ANULADA"` dá ponto para todos no treino e no estudo: qualquer
-letra conta como `certa`, sem XP e sem mexer na lista de erros. No simulado,
-a anulada fica **fora do sorteio**.
+Questão anulada pelo INEP (`"gabarito": "ANULADA"`) **não vai para o site**:
+sem letra certa, qualquer resposta dava acerto e ela não ensinava nada. As 4
+de hoje (2014-CE-Q27, Q30 e Q34, e 2019-FG-Q01) ficam em
+`banco/anuladas.json`, fora de `app/static`.
+
+- **A separação é automática.** `banco/anuladas.py` tira as anuladas dos
+  `enade*.json` e as junta em `anuladas.json` (por id; a versão nova
+  substitui). O `gerar.py` e o `digita.py --banco` fazem o mesmo antes de
+  gravar, então uma anulada que volte ao banco (reextração, `_nova`) sai de
+  novo sozinha. O `validar.py` reprova anulada no banco do site e id
+  repetido nos dois lugares.
+- Só a anulação conta: objetiva sem gabarito é barrada antes, pela porta de
+  qualidade, e discursiva com `padrao_placeholder` continua no site.
+- `anuladas.json` é saída de script: para corrigir uma anulada, mude a fonte
+  e rode o script de novo, como no resto do banco. O `digita.py --banco` só
+  alcança as que vêm de `_nova`; as outras só mudam com um `gerar.py`.
+- O app ainda trata `ANULADA` (qualquer letra conta como `certa` no treino e
+  no estudo; o simulado a corrige como certa e a tira do sorteio). Hoje é só
+  defesa: não remova sem tirar também a regra do `validar.py`.
+- O id de uma anulada continua no aparelho de quem já a respondeu ou
+  marcou. Ele fica órfão e é ignorado: a revisão e as contagens de
+  "Revisar" (home e treino) só contam o que está no banco.
 
 ## O banco de questões
 
@@ -243,6 +265,7 @@ fonte e rode o script correspondente:
 | questões geradas (Fácil/Médio/Difícil) | `banco/geradas/NN-<materia>.json` | `python banco/geradas.py` (reescreve `geradas.json` e `revisao/geradas/*.md`) |
 | taxonomia de matérias | `app/src/lib/materias.json` | lida pelo app e pelos scripts (veja as regras abaixo) |
 | reextrair uma prova inteira do PDF | `fontes/*.pdf` | `banco/gerar.py` (só Linux, veja "Extração") |
+| tirar as anuladas do site | (automático: gabarito `ANULADA`) | `python banco/anuladas.py` (o `gerar.py` e o `digita.py --banco` já chamam); vão para `banco/anuladas.json` |
 
 Depois de **qualquer** mudança no banco, rode nesta ordem:
 
@@ -355,7 +378,8 @@ Ordem dentro dos arquivos:
 3. Cada id ganha uma linha em `classificacao.json`.
 4. Rode `digita.py --banco`, `paragrafo.py --banco` e depois
    validar/testes/versão.
-5. Atualize os textos fixos na tela: o `META = 160` da home, o
+5. Atualize os textos fixos na tela: o `META` da home (oficiais menos as
+   anuladas; hoje 156), o
    "2014/2017/2019/2023" do rodapé do layout e o "provas de 2014 a 2023" do
    simulado.
 
@@ -365,7 +389,8 @@ Ordem dentro dos arquivos:
 daquela parte. A cadeia é `montar.extrair` → `digita.acrescenta` →
 `classificar.aplicar` → figuras/imagens → por questão `digita.aplica →
 arruma.limpa → formato.formata → qualidade.limpa → digita.finaliza` → porta
-`qualidade.problema` → JSON + `revisao/lote-*.md`. Antes de mexer nela, saiba:
+`qualidade.problema` → anuladas para `banco/anuladas.json` → JSON +
+`revisao/lote-*.md`. Antes de mexer nela, saiba:
 
 - **A parte vai em maiúsculas.** `fg` em minúsculas grava `[]` no JSON antes
   de quebrar.
@@ -672,7 +697,8 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
 - **`PLANO.md` e `ROADMAP.md`:**
   - Falam em Outfit, "navy + laranja" e streak. Hoje é Archivo + Plus
     Jakarta, o acento é vermelho e o streak foi removido.
-  - "Anulada = ponto para todos" não vale no simulado.
+  - "Anulada = ponto para todos" não vale mais: as anuladas saíram do site
+    (`banco/anuladas.json`).
   - O `ROADMAP.md` cita um "preview LAN :8123" que não existe e deixa o
     deploy em aberto, mas o site já está no ar.
 - **`banco.js`:** o comentário de `VERSAO_BANCO` manda "Bumpe a cada deploy",

@@ -13,14 +13,17 @@ Fontes em `fontes/`. Provas oficiais do INEP (RIEP + GitHub `geacc/enade`)
 | 2023 | FG 1–9 + CE 10–38 | 38 | 2 (D1–D2) | ok | ok | — | pdftotext + leitura da página — 40/40 no banco |
 
 **Total: 143 objetivas + 17 discursivas = 160 questões.**
-**No banco hoje: as 160.** O que a extração não leu direito (OCR de
+**No site hoje: 156** — as 160 menos as 4 anuladas (2014-CE-Q27, Q30 e
+Q34, e 2019-FG-Q01), que ficam em `banco/anuladas.json`. O que a extração
+não leu direito (OCR de
 2014/2017, fórmula e figura achatadas e enunciados cortados em 2019/2023)
 foi lido da página renderizada e está em `banco/digitadas.json` — ver a
 seção "Texto lido do PDF" do README. Gabaritos conferidos com as folhas
 oficiais.
 
 Anulada = o INEP credita a todos (como fez o professor no relatório:
-"Q1 anulada no gabarito oficial: creditada a todos, como faz o INEP").
+"Q1 anulada no gabarito oficial: creditada a todos, como faz o INEP"). No
+site ela não entra: sem letra certa, não serve para treinar.
 
 ## Arquivos
 

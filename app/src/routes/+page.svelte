@@ -12,8 +12,9 @@
 		Timer
 	} from 'phosphor-svelte';
 
-	// Meta do banco: prova completa de 2026 = 15 FG + 30 CE + 1 discursiva.
-	const META = 160;
+	// Meta do banco: as 160 questões das quatro provas, menos as 4 anuladas
+	// pelo INEP, que ficam fora do site (`banco/anuladas.json`).
+	const META = 156;
 
 	let total = $state(0);
 	let fg = $state(0);
@@ -71,7 +72,11 @@
 			edicoes = [...new Set(b.filter((q) => !ehGerada(q)).map((q) => q.edicao))].sort();
 			xp = getXP();
 			prog = resumoProgresso();
-			paraRevisar = getParaRevisar();
+			// só o que ainda está no banco: uma questão que saiu (as anuladas)
+			// continuava contada aqui, e a revisão abria com menos do que o botão
+			// prometia
+			const ids = new Set(b.map((q) => q.id));
+			paraRevisar = getParaRevisar().filter((id) => ids.has(id));
 		} finally {
 			// sempre fecha o esqueleto — sem "loading eterno" nem tela em branco
 			pronto = true;

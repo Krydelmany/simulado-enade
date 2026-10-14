@@ -219,6 +219,7 @@ def reaplicar_banco():
     arquivo da edição/parte, com a classificação de `classificacao.json`.
     """
     import glob
+    import anuladas
     import classificar
 
     raiz = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -235,7 +236,9 @@ def reaplicar_banco():
             if alvo == nome and nova['id'] not in ids:
                 classificar.aplicar([nova])
                 qs.append(nova)
-                print(f'  + {nova["id"]} (nova)')
+                # a anulada entra só para sair logo abaixo, atualizada
+                if not anuladas.anulada(nova):
+                    print(f'  + {nova["id"]} (nova)')
         for i, q in enumerate(qs):
             if q['id'] not in entradas:
                 continue
@@ -247,6 +250,12 @@ def reaplicar_banco():
         # mesma ordem do gerar.py: discursivas primeiro, depois por número
         ordem = {'discursiva': 0, 'objetiva': 1}
         qs.sort(key=lambda q: (ordem.get(q['tipo'], 9), q['numero']))
+        # anulada pelo INEP sai do site para `banco/anuladas.json`; grava lá
+        # antes, para a questão nunca ficar sem estar em lugar nenhum
+        qs, fora = anuladas.separar(qs)
+        anuladas.guardar(fora)
+        for q in fora:
+            print(f'  - {q["id"]} -> anuladas.json')
         with open(arq, 'w', encoding='utf-8', newline='\n') as fh:
             json.dump(qs, fh, ensure_ascii=False, indent=1)
             fh.write('\n')

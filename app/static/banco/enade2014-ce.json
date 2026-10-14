@@ -442,30 +442,6 @@
   "materia": "ia"
  },
  {
-  "id": "2014-CE-Q27",
-  "edicao": 2014,
-  "parte": "CE",
-  "numero": "27",
-  "tipo": "objetiva",
-  "tema": "Protótipo de tela de classificados e usabilidade",
-  "dificuldade": "Fácil",
-  "figura": null,
-  "enunciado": "O protótipo de tela apresentado a seguir foi desenvolvido para atender um requisito de cadastro de classificados de jornal, via smartphone.\n\nCom base nesse protótipo de tela, infere-se que o modelo lógico correto para um banco de dados relacional que irá armazenar os dados cadastrados por esse sistema é representado por",
-  "alternativas": {
-   "A": "Classificado (cod, nome, email, telefone, anuncio, categoria, preco)",
-   "B": "Cliente (codCli, nome, email, telefone); Anuncio (codAnu, texto, codCategoria), codCategoria referencia Categoria; Categoria (codCategoria, nome)",
-   "C": "Cliente (codCli, nome, email, telefone); Anuncio (codAnu, texto, codCategoria, aceiteTermos), codCategoria referencia Categoria; Categoria (codCategoria, nome)",
-   "D": "Cliente (codCli, nome, email, telefone); Anuncio (codAnu, texto, codCliente, aceiteTermos), codCliente referencia Cliente; Categoria (codCategoria, nome)",
-   "E": "Cliente (codCli, nome, email, telefone); Anuncio (codAnu, texto, codCategoria, codCli, aceiteTermos), codCategoria referencia Categoria, codCli referencia Cliente; Categoria (codCategoria, nome)"
-  },
-  "gabarito": "ANULADA",
-  "imagem": {
-   "src": "/banco/img/2014-CE-Q27.png",
-   "alt": "Protótipo de tela de classificados no celular."
-  },
-  "materia": "ihc"
- },
- {
   "id": "2014-CE-Q28",
   "edicao": 2014,
   "parte": "CE",
@@ -508,26 +484,6 @@
   },
   "gabarito": "A",
   "materia": "linguagens-formais"
- },
- {
-  "id": "2014-CE-Q30",
-  "edicao": 2014,
-  "parte": "CE",
-  "numero": "30",
-  "tipo": "objetiva",
-  "tema": "Endereçamento de memória de 32 bits",
-  "dificuldade": "Difícil",
-  "figura": null,
-  "enunciado": "Uma arquitetura clássica de 32 bits de espaço de endereçamento de memória permite até 4 GB de memória principal. Para um bom gerenciamento dessa memória, algumas técnicas podem ser utilizadas: paginação, segmentação e swapping.\n\nEm relação a essas técnicas de gerenciamento de memória, avalie as afirmações a seguir.\n\nI. Utilizando páginas de 4 KB de tamanho, o endereço virtual de memória utiliza os 220 bits mais significativos para o número da página virtual e os demais 212 bits para o deslocamento interno da página.\nII. O acesso à memória física, utilizando segmentação, é feito por meio de uma estrutura de hardware específica do processador.\nIII. Utilizando a paginação ou a segmentação, a memória física não sofrerá fragmentação interna ou externa.\nIV. É possível utilizar a técnica de swapping para qualquer tamanho de página, mas não a segmentação, pois esta tem espaço de endereçamento variável.\nV. O algoritmo de substituição de página, denominado LFU, utiliza o princípio de localidade temporal, enquanto o algoritmo LRU utiliza o princípio de localidade espacial.\n\nÉ correto apenas o que se afirma em",
-  "alternativas": {
-   "A": "III.",
-   "B": "I e II.",
-   "C": "I e V.",
-   "D": "IV e V.",
-   "E": "II, III e IV."
-  },
-  "gabarito": "ANULADA",
-  "materia": "sistemas-operacionais"
  },
  {
   "id": "2014-CE-Q31",
@@ -588,26 +544,6 @@
   },
   "gabarito": "C",
   "materia": "economia"
- },
- {
-  "id": "2014-CE-Q34",
-  "edicao": 2014,
-  "parte": "CE",
-  "numero": "34",
-  "tipo": "objetiva",
-  "tema": "Sistemas de investimento e modelagem",
-  "dificuldade": "Média",
-  "figura": null,
-  "enunciado": "Suponha que um banco de investimentos possua um sistema que controla, para cada cliente, os tipos de investimentos que eles mesmos realizam ao longo do tempo. Cada cliente pode ter apenas uma aplicação de cada tipo de investimento oferecido pelo banco.\n\nConsidere as tabelas Cliente, TipoInvestimento e Investimento pertencentes a um modelo relacional do sistema citado (as chaves primárias estão sublinhadas).\n```text\nCliente (codCliente, nomeCliente, enderCliente, cidadeCliente, anoIngressoCliente)\nTipoInvestimento (codInvestimento, descricaoInvestimento, taxaRemuneracao)\nInvestimento(codCliente, codInvestimento, valor, dataDeposito)\n```\nA partir do modelo relacional apresentado, avalie as afirmações a seguir.\n\nI. O comando SQL que lista todos os pares de clientes que residem na mesma cidade é:\n```sql\nselect c1.NomeCliente, c2.NomeCliente\nfrom   Cliente c1, Cliente c2\nwhere  c1.CidadeCliente = c2.CidadeCliente\nand    c1.CodCliente < c2.CodCliente;\n```\nII. O comando SQL que retorna, para cada cidade, os clientes mais antigos é:\n```sql\nselect codCliente, nomeCliente, cidadeCliente, anoIngressoCliente\nfrom   Cliente\nwhere  anoIngressoCliente in (select min(anoIngressoCliente)\nfrom   Cliente\ngroup by cidadeCliente);\n```\nIII. O comando SQL que retorna, para cada cidade (de um cliente), o ano de ingresso mais antigo, porém apenas para as cidades com mais de um cliente, é:\n```sql\nselect cidadeCliente, min(AnoIngressoCliente)\nfrom   Cliente\ngroup by cidadeCliente\nhaving count(*) > 1;\n```\nIV. O comando SQL que retorna o maior valor de cada investimento de cada cliente é:\n```sql\nselect codCliente, max(valor)\nfrom   Cliente c, Investimento i\nwhere  c.codCliente = i.codCliente\ngroup  by codCliente,codInvestimento\n```\nÉ correto apenas o que se afirma em",
-  "alternativas": {
-   "A": "I.",
-   "B": "II.",
-   "C": "I e III.",
-   "D": "II e IV.",
-   "E": "III e IV."
-  },
-  "gabarito": "ANULADA",
-  "materia": "banco-dados"
  },
  {
   "id": "2014-CE-Q35",

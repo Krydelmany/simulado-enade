@@ -96,6 +96,12 @@ def main():
     problemas = []
     vistos = set()
     total = 0
+    # anuladas ficam fora do site (ver anuladas.py); o mesmo id nos dois
+    # lugares quer dizer que a separação parou no meio
+    anuladas = set()
+    arq_anuladas = os.path.join(RAIZ, 'banco', 'anuladas.json')
+    if os.path.exists(arq_anuladas):
+        anuladas = {q['id'] for q in json.load(open(arq_anuladas, encoding='utf-8'))}
     digitadas = os.path.join(RAIZ, 'banco', 'digitadas.json')
     lidos_do_pdf = set()
     if os.path.exists(digitadas):
@@ -117,6 +123,13 @@ def main():
             if qid in vistos:
                 problemas.append((nome, qid, 'id duplicado'))
             vistos.add(qid)
+            if qid in anuladas:
+                problemas.append((nome, qid, 'também está em anuladas.json'))
+            if (q.get('gabarito') or '').strip() == 'ANULADA':
+                problemas.append((
+                    nome, qid,
+                    'anulada no banco do site — rode python banco/anuladas.py'
+                ))
 
             # gerada não tem edição: não saiu de prova nenhuma
             obrigatorios = ('parte', 'numero', 'tipo', 'tema', 'enunciado', 'materia')

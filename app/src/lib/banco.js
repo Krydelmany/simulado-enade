@@ -13,7 +13,7 @@
  * altere JSON em `static/banco`** — é o que invalida a cache sem depender da
  * rede (um deploy novo sempre traz uma versão nova).
  */
-export const VERSAO_BANCO = '1699f3629968';
+export const VERSAO_BANCO = '17f84b1dff2c';
 
 /** Arquivos do banco (um por edição+parte). Exportado para o preload. */
 export const ARQUIVOS_BANCO = [
@@ -213,7 +213,7 @@ export function doNivel(q, nivel) {
  * de montar sessão vazia/curta em silêncio.
  *
  * No banco inteiro cada nível de geradas tem 60 (3 por matéria × 20) e o
- * ENADE tem 160 — todos ≥ 10. Com o filtro de matéria do Estudo, um nível
+ * ENADE tem 156 — todos ≥ 10. Com o filtro de matéria do Estudo, um nível
  * fica com 3: é aí que o aviso de sessão curta aparece.
  *
  * @returns {{ok: boolean, total: number, minimo: number, nivel: number, rotulo: string|null}}
@@ -232,9 +232,9 @@ export function nivelDisponivel(banco, nivel, minimo = NIVEL_MINIMO) {
  * porque a discursiva aparece nos dois eixos). `fgTotal`/`ceTotal` dão o
  * número completo por parte quando precisar.
  *
- * Tudo aqui é da prova OFICIAL — é o que a meta de 160 mede. As geradas vêm
+ * Tudo aqui é da prova OFICIAL — é o que a meta da home (156) mede. As geradas vêm
  * à parte em `geradas`/`geradasPorDificuldade`, para a home não anunciar
- * "340 / 160 questões da prova".
+ * "336 / 156 questões da prova".
  */
 export function contagens(banco) {
 	const todas = Array.isArray(banco) ? banco : [];

@@ -197,6 +197,13 @@
 		return q.materia || 'formacao-geral';
 	}
 
+	// conta só o que ainda está no banco, como a própria revisão (`base`):
+	// uma questão que saiu (as anuladas) inflava o número do botão
+	function nParaRevisar() {
+		const ids = new Set(getParaRevisar());
+		return banco.filter((q) => ids.has(q.id)).length;
+	}
+
 	function base() {
 		let lista = revisao ? banco.filter((q) => getParaRevisar().includes(q.id)) : banco;
 		if (filtro !== 'todos') lista = lista.filter((q) => materia(q) === filtro);
@@ -580,7 +587,7 @@
 		</button>
 		{#if getErros().length}
 			<a href="/treino/?modo=revisao" class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
-				Revisar erros e marcadas ({getParaRevisar().length})
+				Revisar erros e marcadas ({nParaRevisar()})
 			</a>
 		{/if}
 	</div>
@@ -669,7 +676,7 @@
 					</button>
 					{#if getErros().length}
 						<a href="/treino/?modo=revisao" class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
-							Revisar erros e marcadas ({getParaRevisar().length})
+							Revisar erros e marcadas ({nParaRevisar()})
 						</a>
 					{/if}
 					<button type="button" onclick={() => montar()} class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
