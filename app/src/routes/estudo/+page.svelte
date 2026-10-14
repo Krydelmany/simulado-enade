@@ -5,6 +5,7 @@
 	import BarraAcao from '$lib/BarraAcao.svelte';
 	import Contador from '$lib/Contador.svelte';
 	import { carregarBancoDetalhado, embaralhar, doNivel, NIVEL_ENADE } from '$lib/banco.js';
+	import { remontarSessao } from '$lib/sessao.js';
 	import { GRUPOS_MATERIA, materiaExiste, nomeMateria } from '$lib/materias.js';
 	import {
 	somarXP,
@@ -110,9 +111,11 @@
 				sessaoGuardada = true;
 				return;
 			}
-			const ordem = achadas.filter(Boolean);
-			if (ordem.length) {
-				salvaE = { ...s, sessao: ordem };
+			// banco inteiro: o que falta saiu do banco — remonta reindexando o
+			// que é guardado por posição (ver `remontarSessao`)
+			const r = remontarSessao(s.ids, banco, s);
+			if (r.fila.length) {
+				salvaE = { ...s, sessao: r.fila, respostas: r.respostas, log: r.log, i: r.i, removidas: r.removidas };
 				escolhaE = true;
 			}
 		}
@@ -417,6 +420,11 @@
 		<p class="nums mt-2 text-sm text-ink-soft">
 			{NIVEIS[salvaE.nivel]?.nome ?? 'Sessão'}{materiaExiste(salvaE.materia) ? ` · ${nomeMateria(salvaE.materia)}` : ''} · questão {salvaE.i + 1} de {salvaE.sessao.length} · {salvaECertas}/{salvaEfeitas} certas
 		</p>
+		{#if salvaE.removidas}
+			<p class="nums mt-1 text-xs font-semibold text-ink-soft">
+				{salvaE.removidas} {salvaE.removidas === 1 ? 'questão saiu' : 'questões saíram'} do banco desde a pausa.
+			</p>
+		{/if}
 		<button type="button" onclick={continuar} class="btn3d duo-accent mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
 			<Play size={20} weight="fill" aria-hidden="true" /> Continuar sessão
 		</button>

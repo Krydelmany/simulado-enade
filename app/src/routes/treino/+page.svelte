@@ -7,6 +7,7 @@
 	import BarraAcao from '$lib/BarraAcao.svelte';
 	import Contador from '$lib/Contador.svelte';
 	import { carregarBancoDetalhado, embaralhar } from '$lib/banco.js';
+	import { remontarSessao } from '$lib/sessao.js';
 	import { GRUPOS_MATERIA, materiaExiste, nomeMateria } from '$lib/materias.js';
 	import {
 		somarXP,
@@ -140,9 +141,16 @@
 				sessaoGuardada = true;
 				return;
 			}
-			const ordem = achadas.filter(Boolean);
-			if (ordem.length) {
-				salva = { ...s, fila: ordem };
+			// banco inteiro: o que falta saiu do banco — remonta reindexando o
+			// que é guardado por posição (ver `remontarSessao`)
+			const r = remontarSessao(s.ids, banco, s);
+			if (r.fila.length) {
+				salva = {
+					...s,
+					...r,
+					certas: r.log.filter((x) => x.certa).length,
+					feitas: r.log.filter((x) => !x.pulada).length
+				};
 				escolha = true;
 				return;
 			}
@@ -475,6 +483,11 @@
 		<p class="nums mt-2 text-sm text-ink-soft">
 			Questão {salva.i + 1} · {salva.certas}/{salva.feitas} certas{salva.filtro && salva.filtro !== 'todos' ? ` · ${nomeMateria(salva.filtro)}` : ''}
 		</p>
+		{#if salva.removidas}
+			<p class="nums mt-1 text-xs font-semibold text-ink-soft">
+				{salva.removidas} {salva.removidas === 1 ? 'questão saiu' : 'questões saíram'} do banco desde a pausa.
+			</p>
+		{/if}
 		<button type="button" onclick={() => montar(false)} class="btn3d duo-accent mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
 			<Play size={20} weight="fill" aria-hidden="true" /> Continuar sessão
 		</button>
