@@ -3,7 +3,7 @@
 	import Questao from '$lib/Questao.svelte';
 	import BarraAcao from '$lib/BarraAcao.svelte';
 	import Contador from '$lib/Contador.svelte';
-	import { carregarBanco } from '$lib/banco.js';
+	import { carregarBancoDetalhado } from '$lib/banco.js';
 	import { nomeMateria } from '$lib/materias.js';
 	import { foco } from '$lib/foco.svelte.js';
 	import {
@@ -66,6 +66,10 @@
 	let banco = $state([]);
 	let carregou = $state(false);
 	let falhou = $state(false);
+	// banco carregou pela metade: algum JSON não chegou
+	let bancoParcial = $state(false);
+	// prova salva que não deu para remontar por causa do banco parcial
+	let provaGuardada = $state(false);
 	let prova = $state(null);
 	let questoes = $state([]);
 	// 'inicio' | 'prova' | 'resultado' | 'revisao'
@@ -130,25 +134,33 @@
 
 	onMount(() => {
 		(async () => {
+			let completo = false;
 			try {
-				banco = await carregarBanco();
+				({ questoes: banco, completo } = await carregarBancoDetalhado());
 			} catch {
 				falhou = true;
 			} finally {
 				carregou = true;
 			}
+			bancoParcial = !completo;
 			ultimo = lerUltimo();
 			const p = lerProva();
 			if (p) {
 				const mapa = new Map(banco.map((q) => [q.id, q]));
 				const lista = p.ids.map((id) => mapa.get(id));
-				// banco mudou e alguma questão sumiu: a prova salva não fecha mais
 				if (lista.every(Boolean)) {
 					prova = p;
 					questoes = lista;
 					i = Math.min(p.i ?? 0, lista.length - 1);
-				} else {
+				} else if (completo) {
+					// banco inteiro e a questão não existe mais: a prova não fecha
 					limparProva();
+				} else {
+					// Banco pela metade (offline, 404, deploy no meio): o id pode
+					// estar no arquivo que não chegou. Antes a prova era apagada
+					// aqui — inclusive a já entregue. Agora fica no aparelho, e a
+					// tela pede para recarregar.
+					provaGuardada = true;
 				}
 			}
 		})();
@@ -403,6 +415,17 @@
 	<div class="rounded-3xl bg-card p-6 text-center shadow-sm" role="alert">
 		<p class="font-display text-lg font-bold">Não deu para carregar as questões</p>
 		<p class="mt-1 text-sm text-ink-soft">Verifique sua conexão e tente de novo.</p>
+		<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
+			Tentar de novo
+		</button>
+	</div>
+{:else if provaGuardada}
+	<!-- sem o início: "Começar simulado" aqui gravaria por cima da prova guardada -->
+	<div class="rounded-3xl bg-card p-6 text-center shadow-sm" role="alert">
+		<p class="font-display text-lg font-bold">Parte das questões não carregou</p>
+		<p class="mt-1 text-sm text-ink-soft">
+			Sua prova continua guardada neste aparelho. Verifique a conexão e tente de novo para abri-la.
+		</p>
 		<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
 			Tentar de novo
 		</button>
@@ -694,6 +717,16 @@
 		<h1 class="font-display text-2xl font-extrabold tracking-tight">Simulado ENADE 2026</h1>
 		<p class="mt-1 text-sm text-ink-soft">A prova inteira, cronometrada, com correção só no final.</p>
 	</div>
+
+	{#if bancoParcial}
+		<p class="mb-4 flex items-start gap-2 rounded-2xl bg-warn-bg p-3 text-sm font-semibold text-warn-fg" role="status">
+			<Info size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
+			<span>
+				Parte das questões não carregou: uma prova nova sairia sorteada só do que chegou.
+				<button type="button" onclick={() => location.reload()} class="font-bold underline">Recarregar</button>
+			</span>
+		</p>
+	{/if}
 
 	<div class="space-y-4">
 		<section
