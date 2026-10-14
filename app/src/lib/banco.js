@@ -31,6 +31,21 @@ export const ARQUIVOS_BANCO = [
 const CHAVE_CACHE = 'enade-banco';
 const TTL_CACHE_MS = 6 * 60 * 60 * 1000; // 6 h: cobre o dia de estudo, não atrapalha deploy
 
+/**
+ * URL de um arquivo do banco, com a versão na query.
+ *
+ * O `vercel.json` serve `/banco/*` com `stale-while-revalidate`: logo depois
+ * de um deploy, o navegador entrega o JSON ANTIGO na hora e só busca o novo
+ * em segundo plano. Sem a versão na URL, o app gravava esse JSON velho na
+ * cache de sessão já com a versão NOVA — e o aluno via a questão antiga por
+ * até 6 h (aconteceu com o deploy das 160 questões: 2023-FG-Q09 continuou
+ * sem as afirmações). Com `?v=`, cada deploy pede um endereço que nenhuma
+ * cache tem.
+ */
+export function urlBanco(arquivo) {
+	return `/banco/${arquivo}?v=${VERSAO_BANCO}`;
+}
+
 /** Tamanho mínimo de uma sessão por nível (as telas pedem 10 questões). */
 export const NIVEL_MINIMO = 10;
 
@@ -101,7 +116,7 @@ export async function carregarBanco() {
 	const resultados = await Promise.all(
 		ARQUIVOS_BANCO.map(async (arquivo) => {
 			try {
-				const r = await fetch(`/banco/${arquivo}`);
+				const r = await fetch(urlBanco(arquivo));
 				if (!r.ok) return { questoes: [], ok: false };
 				const lote = await r.json();
 				return { questoes: Array.isArray(lote) ? lote : [], ok: true };
@@ -130,13 +145,14 @@ export async function carregarBanco() {
  * Como chamar (não mexe em `app.html`, que está fora deste escopo):
  *  - opção A (melhor): colar no `<head>` de `app.html`, estático, antes de
  *    `%sveltekit.head%`:
- *      {ARQUIVOS_BANCO.map(a => `<link rel="preload" as="fetch" crossorigin href="/banco/${a}">`)}
+ *      {ARQUIVOS_BANCO.map(a => `<link rel="preload" as="fetch" crossorigin href="${urlBanco(a)}">`)}
+ *    (com a MESMA url do fetch, versão incluída — senão o preload baixa à toa)
  *  - opção B: chamar `precarregar()` no início do `onMount` do layout/home.
  *
  * @returns {string[]} as URLs enfileiradas (útil para teste/telemetria).
  */
 export function precarregar() {
-	const urls = ARQUIVOS_BANCO.map((a) => `/banco/${a}`);
+	const urls = ARQUIVOS_BANCO.map(urlBanco);
 	if (typeof document === 'undefined') return urls;
 	for (const href of urls) {
 		try {
