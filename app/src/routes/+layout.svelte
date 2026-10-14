@@ -5,6 +5,7 @@
 	import { Infinity as InfinityIcon, Moon, Stairs, Sun, Timer } from 'phosphor-svelte';
 	import { alternarTema, iniciarTema, temaAtual } from '$lib/tema.js';
 	import VigiaDevTools from '$lib/VigiaDevTools.svelte';
+	import { foco } from '$lib/foco.svelte.js';
 
 	const tabs = [
 		{ href: '/treino/', label: 'Treino', icone: InfinityIcon },
@@ -15,7 +16,9 @@
 	// no fluxo de questão a tela é dona da parte de baixo (CTA fixo) —
 	// a tab bar só aparece fora do quiz, e só no mobile
 	let emQuiz = $derived(
-		$page.url.pathname.startsWith('/treino/') || $page.url.pathname.startsWith('/estudo/')
+		$page.url.pathname.startsWith('/treino/') ||
+			$page.url.pathname.startsWith('/estudo/') ||
+			foco.quiz
 	);
 
 	let { children } = $props();

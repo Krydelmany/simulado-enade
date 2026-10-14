@@ -52,8 +52,8 @@
 			href: '/simulado/',
 			icone: Timer,
 			titulo: 'Simulado',
-			desc: 'O formato da prova de 2026, passo a passo.',
-			cta: 'Ver formato'
+			desc: 'A prova de 2026 inteira: 45 objetivas + 1 discursiva em 4 h.',
+			cta: 'Fazer simulado'
 		}
 	];
 
@@ -112,7 +112,7 @@
 					href="/simulado/"
 					class="inline-flex min-h-[52px] items-center justify-center rounded-[14px] border-2 border-white/20 px-6 font-display text-base font-bold transition-colors hover:bg-white/10"
 				>
-					Ver o formato
+					Fazer o simulado
 				</a>
 			</div>
 		</div>

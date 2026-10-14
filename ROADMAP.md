@@ -1,4 +1,4 @@
-# Roadmap — Simulado ENADE (atualizado 10/10/2026)
+# Roadmap — Simulado ENADE (atualizado 14/10/2026)
 
 ## Feito ✓
 
@@ -19,10 +19,10 @@
 
 ## Depois do lock
 
-- [ ] Lotes 2–4 no banco (2019 CE, 2023, 2014; 2017 precisa OCR parcial)
+- [x] Lotes 2–4 no banco: as 160 questões oficiais, texto conferido com o PDF (`banco/digitadas.json`)
 - [x] Matérias da Portaria nº 161 (20 áreas do CE) + filtro por matéria no Treino e no Estudo
 - [x] Níveis Fácil/Médio/Difícil com 180 questões geradas para revisão; oficiais na categoria ENADE
-- [ ] Simulado cronometrado (abre com banco completo)
+- [x] Simulado cronometrado: 15 FG + 30 CE + 1 discursiva em 4 h, sorteio por matéria, cartão-resposta, pausa, correção na entrega
 - [ ] Repo GitHub + deploy Vercel + link p/ turma
 
 ## Fase 2 (só se a turma pedir)

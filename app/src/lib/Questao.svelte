@@ -23,14 +23,25 @@
 	 *
 	 * Contrato ÚNICO de resposta para os dois modos (treino e estudo):
 	 *   { id, certa, parcial?, anulada? }   (+ escolha/mostrouPadrao/auto, para restaurar a UI)
+	 *
+	 * `prova` é o cartão-resposta do simulado: marcar não corrige — a letra
+	 * fica marcada, pode ser trocada ou desmarcada (`onMarcar(id, letra|null)`),
+	 * e a discursiva vira um campo de texto (`onRascunho`). A correção só
+	 * aparece depois da entrega, com esta mesma questão fora do modo prova e
+	 * `respostaAluno` mostrando o que o aluno escreveu.
 	 */
 	let {
 		q,
-		onResponder,
+		onResponder = null,
 		onPular = null,
 		onRevisar = null,
 		revisarInicial = false,
 		inicial = null,
+		prova = false,
+		onMarcar = null,
+		rascunhoInicial = '',
+		onRascunho = null,
+		respostaAluno = '',
 		zoomAberto = $bindable(false)
 	} = $props();
 
@@ -42,10 +53,12 @@
 			respondida: !!inicial?.respondida,
 			mostrouPadrao: !!inicial?.mostrouPadrao,
 			auto: inicial?.auto ?? null, // discursiva: 'certa' | 'parcial' | 'errada'
-			revisar: !!revisarInicial
+			revisar: !!revisarInicial,
+			rascunho: rascunhoInicial || ''
 		};
 	}
 	const ini = estadoInicial();
+	let rascunho = $state(ini.rascunho);
 
 	let escolha = $state(ini.escolha);
 	let respondida = $state(ini.respondida);
@@ -71,11 +84,19 @@
 					? auto
 					: acertou
 						? 'certa'
-						: 'errada'
+						: q.tipo === 'objetiva' && !escolha
+							? 'branco' // correção do simulado: questão sem marcação
+							: 'errada'
 	);
 
 	function responder(letra) {
 		if (respondida) return;
+		if (prova) {
+			// cartão-resposta: marca, troca ou desmarca — nada de veredito
+			escolha = escolha === letra ? null : letra;
+			onMarcar?.(q.id, escolha);
+			return;
+		}
 		escolha = letra;
 		respondida = true;
 		avaliadaAgora = true;
@@ -191,6 +212,7 @@
 	function classeAlt(letra) {
 		const base =
 			'flex w-full items-start gap-3 rounded-2xl border-2 p-3.5 text-left text-[15px] leading-relaxed transition-[border-color,background-color,color,transform] duration-150 active:scale-[0.99] disabled:cursor-default ';
+		if (prova) return base + (letra === escolha ? 'border-ink bg-tile' : 'border-line bg-card hover:border-ink');
 		if (!respondida) return base + 'border-line bg-card hover:border-ink';
 		if (anulada) return base + 'border-line bg-tile';
 		if (letra === q.gabarito) return base + 'border-ok-solid bg-ok-solid text-white pop';
@@ -202,6 +224,7 @@
 		// bolha de cartão-resposta: preenche como caneta ao marcar
 		const base =
 			'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-[2.5px] text-sm font-extrabold transition-colors duration-150 ';
+		if (prova) return base + (letra === escolha ? 'border-ink bg-ink text-paper' : 'border-ink/30 text-ink');
 		if (!respondida) return base + 'border-ink/30 text-ink';
 		if (anulada) return letra === escolha ? base + 'border-white bg-white/25 text-white' : base + 'border-line text-ink-soft';
 		if (letra === q.gabarito) return base + 'border-white bg-white/25 text-white';
@@ -335,6 +358,7 @@
 							type="button"
 							onclick={() => responder(letra)}
 							disabled={respondida}
+							aria-pressed={prova ? letra === escolha : undefined}
 							aria-label={rotuloAlt(letra)}
 							class={classeAlt(letra)}
 						>
@@ -356,6 +380,25 @@
 		</div>
 	{:else}
 		<div class="mt-4">
+			{#if prova}
+				<!-- na prova o padrão não aparece: o aluno escreve, e a comparação vem na correção -->
+				<label class="block">
+					<span class="text-sm font-bold">Sua resposta</span>
+					<span class="mt-0.5 block text-xs text-ink-soft">Fica só neste aparelho. Na correção, você compara com o padrão do INEP.</span>
+					<textarea
+						bind:value={rascunho}
+						oninput={() => onRascunho?.(rascunho)}
+						rows="12"
+						class="mt-2 w-full rounded-2xl border-2 border-line bg-card p-3.5 text-[15px] leading-relaxed text-ink focus:border-ink focus:outline-none"
+					></textarea>
+				</label>
+			{:else}
+			{#if respostaAluno}
+				<div class="mb-3 rounded-2xl border border-line bg-tile p-4">
+					<p class="text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">Sua resposta</p>
+					<p class="enunciado mt-2 max-w-[65ch] text-sm leading-relaxed">{respostaAluno}</p>
+				</div>
+			{/if}
 			{#if q.padrao_placeholder}
 				<!--
 					O gabarito desta discursiva é um desenho que o INEP publica
@@ -415,6 +458,7 @@
 					</div>
 				{/if}
 			{/if}
+			{/if}
 		</div>
 	{/if}
 
@@ -451,6 +495,10 @@
 			{:else if categoria === 'parcial'}
 				<MinusCircle size={19} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 				<span>Quase. Você avaliou como parcial — vale conferir o padrão.</span>
+			{:else if q.tipo === 'objetiva' && !escolha}
+				<!-- só acontece na correção do simulado: a questão ficou sem marcação -->
+				<MinusCircle size={19} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
+				<span>Em branco. Gabarito: {q.gabarito}.</span>
 			{:else if q.tipo === 'objetiva'}
 				<XCircle size={19} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 				<span>Não foi dessa vez. Gabarito: {q.gabarito} — você marcou {escolha}.</span>
