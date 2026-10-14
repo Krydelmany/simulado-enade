@@ -1,8 +1,13 @@
 <script>
 	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
 	import Questao from '$lib/Questao.svelte';
 	import BarraAcao from '$lib/BarraAcao.svelte';
 	import Contador from '$lib/Contador.svelte';
+	import DicaGestos from '$lib/DicaGestos.svelte';
+	import { DUR } from '$lib/motion.js';
+	import { arrastarParaFechar, deslizarQuestoes } from '$lib/gestos.js';
+	import { ligarCamadas } from '$lib/camadas.svelte.js';
 	import { carregarBancoDetalhado } from '$lib/banco.js';
 	import { nomeMateria } from '$lib/materias.js';
 	import { foco } from '$lib/foco.svelte.js';
@@ -83,6 +88,43 @@
 	let confirmaEntrega = $state(false);
 	let confirmaNova = $state(false);
 	let zoomAberto = $state(false);
+	// sentido da última troca de questão: a nova entra deslizando por ele
+	let direcao = $state(0);
+
+	// A tela inicial é a base da rota; prova, resultado e revisão são camadas
+	// por cima. Antes, o voltar do sistema no meio da prova saía do simulado
+	// e caía na home. Sem confirmação: voltar da prova só pausa (relógio
+	// parado, prova salva), e o histórico nunca REABRE a prova.
+	ligarCamadas(
+		() => {
+			const l = [];
+			if (tela === 'prova') {
+				l.push('prova');
+				if (cartaoAberto) l.push('cartao');
+				if (confirmaEntrega) l.push('entrega');
+			} else if (tela === 'resultado') l.push('resultado');
+			else if (tela === 'revisao') l.push('resultado', 'revisao');
+			else if (confirmaNova) l.push('nova');
+			if (zoomAberto) l.push('zoom');
+			return l;
+		},
+		(n) => {
+			if (n === 'prova') pausar();
+			else if (n === 'cartao') cartaoAberto = false;
+			else if (n === 'entrega') confirmaEntrega = false;
+			else if (n === 'nova') confirmaNova = false;
+			else if (n === 'resultado') {
+				tela = 'inicio';
+				topo();
+			} else if (n === 'revisao') tela = 'resultado';
+			else if (n === 'zoom') zoomAberto = false;
+		}
+	);
+
+	// estável: trocar a referência refaria o attachment da BarraAcao
+	function abrirCartao() {
+		cartaoAberto = true;
+	}
 	let refEntrega = $state(null);
 
 	let completo = $derived(bancoCompleto(banco));
@@ -202,6 +244,7 @@
 		prova = p;
 		questoes = p.ids.map((id) => mapa.get(id));
 		i = 0;
+		direcao = 0;
 		retomadoEm = Date.now();
 		agora = retomadoEm;
 		confirmaNova = false;
@@ -226,6 +269,7 @@
 
 	function irPara(k) {
 		if (k < 0 || k >= questoes.length) return;
+		direcao = Math.sign(k - i);
 		i = k;
 		cartaoAberto = false;
 		if (tela === 'prova') salvar();
@@ -310,6 +354,7 @@
 	}
 
 	function revisar(k) {
+		direcao = 0;
 		i = k;
 		tela = 'revisao';
 		topo();
@@ -478,20 +523,40 @@
 	</div>
 
 	<div class="mt-4">
-		{#key questoes[i].id}
-			<Questao
-				q={questoes[i]}
-				prova
-				onMarcar={marcar}
-				onRascunho={escrever}
-				rascunhoInicial={prova.rascunho}
-				onRevisar={alternarRevisar}
-				revisarInicial={getRevisar().includes(questoes[i].id)}
-				inicial={{ escolha: prova.marcas?.[i] ?? null }}
-				bind:zoomAberto
-			/>
-		{/key}
-		<BarraAcao rotulo={i + 1 < questoes.length ? 'Próxima' : 'Revisar e entregar'} onClick={avancar}>
+		<DicaGestos
+			id="simulado"
+			texto="Deslize a questão para os lados para passar ou voltar. Da borda da tela para o meio, você volta à tela anterior. Puxe a barra de baixo para cima para abrir o cartão-resposta."
+		/>
+		<!-- na última questão, deslizar abre o cartão-resposta, como o CTA -->
+		<div
+			{@attach deslizarQuestoes(() => ({
+				anterior: i > 0,
+				proxima: true,
+				onAnterior: () => irPara(i - 1),
+				onProxima: avancar
+			}))}
+		>
+			{#key questoes[i].id}
+				<div in:fly={{ x: 32 * direcao, duration: direcao ? DUR : 0 }}>
+					<Questao
+						q={questoes[i]}
+						prova
+						onMarcar={marcar}
+						onRascunho={escrever}
+						rascunhoInicial={prova.rascunho}
+						onRevisar={alternarRevisar}
+						revisarInicial={getRevisar().includes(questoes[i].id)}
+						inicial={{ escolha: prova.marcas?.[i] ?? null }}
+						bind:zoomAberto
+					/>
+				</div>
+			{/key}
+		</div>
+		<BarraAcao
+			rotulo={i + 1 < questoes.length ? 'Próxima' : 'Revisar e entregar'}
+			onClick={avancar}
+			onPuxar={abrirCartao}
+		>
 			<nav class="flex items-center gap-2" aria-label="Navegação da prova">
 				<button
 					type="button"
@@ -539,17 +604,29 @@
 			{NOME_BLOCO[blocoDe(i)]} · {i + 1} de {questoes.length}
 		</p>
 	</div>
-	{#key questoes[i].id}
-		<Questao
-			q={questoes[i]}
-			onResponder={avaliarDiscursiva}
-			onRevisar={alternarRevisar}
-			revisarInicial={getRevisar().includes(questoes[i].id)}
-			inicial={inicialRevisao(i)}
-			respostaAluno={questoes[i].tipo === 'discursiva' ? prova.rascunho || '(em branco)' : ''}
-			bind:zoomAberto
-		/>
-	{/key}
+	<!-- na última questão o gesto só cede: não troca de tela -->
+	<div
+		{@attach deslizarQuestoes(() => ({
+			anterior: i > 0,
+			proxima: i + 1 < questoes.length,
+			onAnterior: () => irPara(i - 1),
+			onProxima: () => irPara(i + 1)
+		}))}
+	>
+		{#key questoes[i].id}
+			<div in:fly={{ x: 32 * direcao, duration: direcao ? DUR : 0 }}>
+				<Questao
+					q={questoes[i]}
+					onResponder={avaliarDiscursiva}
+					onRevisar={alternarRevisar}
+					revisarInicial={getRevisar().includes(questoes[i].id)}
+					inicial={inicialRevisao(i)}
+					respostaAluno={questoes[i].tipo === 'discursiva' ? prova.rascunho || '(em branco)' : ''}
+					bind:zoomAberto
+				/>
+			</div>
+		{/key}
+	</div>
 	<BarraAcao
 		rotulo={i + 1 < questoes.length ? 'Próxima' : 'Voltar ao resultado'}
 		onClick={() => {
@@ -855,9 +932,12 @@
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="cartao-titulo"
-				class="relative max-h-[88vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-card p-5 shadow sm:rounded-3xl"
+				class="relative max-h-[88vh] w-full max-w-lg overflow-y-auto overscroll-none rounded-t-3xl bg-card p-5 shadow sm:rounded-3xl"
 				style="padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));"
+				in:fly={{ y: 40, duration: DUR }}
+				{@attach arrastarParaFechar(() => (cartaoAberto = false))}
 			>
+				<span aria-hidden="true" class="mx-auto mb-3 block h-1 w-9 rounded-full bg-line sm:hidden"></span>
 				<div class="flex items-center gap-2">
 					<h2 id="cartao-titulo" class="font-display text-xl font-extrabold tracking-tight">Cartão-resposta</h2>
 					<span class="flex-1"></span>

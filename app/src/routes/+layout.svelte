@@ -5,6 +5,7 @@
 	import { Infinity as InfinityIcon, Moon, Stairs, Sun, Timer } from 'phosphor-svelte';
 	import { alternarTema, iniciarTema, temaAtual } from '$lib/tema.js';
 	import VigiaDevTools from '$lib/VigiaDevTools.svelte';
+	import BordaVoltar from '$lib/BordaVoltar.svelte';
 	import { foco } from '$lib/foco.svelte.js';
 
 	const tabs = [
@@ -22,6 +23,13 @@
 	);
 
 	let { children } = $props();
+
+	// no quiz, puxar a página para baixo no topo recarregava (pull-to-refresh
+	// do Chrome Android) e tirava o aluno da questão — ver `.sem-recarregar`
+	$effect(() => {
+		document.documentElement.classList.toggle('sem-recarregar', emQuiz);
+		return () => document.documentElement.classList.remove('sem-recarregar');
+	});
 
 	let escuro = $state(false);
 	onMount(() => {
@@ -135,3 +143,5 @@
 <!-- Aviso de DevTools aberto. Fica fora do fluxo e depois do rodapé: é a
      última coisa da página, e só aparece quando o sinal dispara. -->
 <VigiaDevTools />
+<!-- Voltar puxando da borda, para aparelho sem esse gesto no sistema. -->
+<BordaVoltar ativo={emQuiz} />

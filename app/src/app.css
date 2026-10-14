@@ -161,6 +161,13 @@ body {
 	overflow-x: clip;
 }
 
+/* Tela de questão: puxar no topo não recarrega (pull-to-refresh do Chrome).
+   Só o eixo y: overscroll-behavior-x desligaria o voltar por gesto do Chrome. */
+html.sem-recarregar,
+html.sem-recarregar body {
+	overscroll-behavior-y: contain;
+}
+
 .nums {
 	font-variant-numeric: tabular-nums;
 }

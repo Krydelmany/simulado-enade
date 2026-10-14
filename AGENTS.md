@@ -45,9 +45,10 @@ app/                       o site: SvelteKit 2 + Svelte 5 + Tailwind 4 + Vite 6
                            (prerender), +error.svelte (404), / , treino/, estudo/,
                            simulado/
   src/lib/                 banco.js, stats.js, simulado.js, materias.js(.json),
-                           resumo.js, tema.js, motion.js, foco.svelte.js e os
+                           resumo.js, tema.js, motion.js, foco.svelte.js,
+                           sessao.js, gestos.js, camadas.svelte.js e os
                            componentes (Questao, TextoRico, SessaoTopo, BarraAcao,
-                           Contador, VigiaDevTools)
+                           Contador, VigiaDevTools, BordaVoltar, DicaGestos)
   static/banco/            O BANCO que o site carrega: enadeAAAA-{fg,ce}.json,
                            geradas.json e img/   ← SAÍDA de scripts
   vercel.json              build e cache headers (tem de ficar em app/)
@@ -114,6 +115,7 @@ Todas as chaves têm o prefixo `enade-`:
 | localStorage | `enade-sessao-estudo` | estudo pausado (`v: 2`), gravado direto pela rota, fora do `stats.js` |
 | localStorage | `enade-simulado` | prova em andamento ou entregue (`v: 1`) |
 | localStorage | `enade-simulado-ultimo` | resumo da última prova entregue |
+| localStorage | `enade-dica-gestos` | ids das dicas de gesto já vistas (`'questoes'`, `'simulado'`) |
 | localStorage | `enade-streak` | legado, só lido por `getStreak` (deprecated) |
 | sessionStorage | `enade-banco` | cache do banco |
 
@@ -129,8 +131,9 @@ cada chave lida com isso hoje:
 - **`enade-historico`:** grava `v: 1`, mas `normalizarEstado` ignora esse
   campo e regrava sempre `v: 1`. A migração, se precisar, entra em
   `normalizarEstado`.
-- **`enade-simulado-ultimo`, `enade-xp`, `enade-erros`, `enade-revisar`:**
-  não têm `v`. A leitura só descarta o que não tem a forma esperada.
+- **`enade-simulado-ultimo`, `enade-xp`, `enade-erros`, `enade-revisar`,
+  `enade-dica-gestos`:** não têm `v`. A leitura só descarta o que não tem a
+  forma esperada.
 
 `stats.js` nunca lança: storage bloqueado, cheio ou com JSON inválido volta
 ao valor padrão, e o histórico é cortado para caber (os tetos estão em
@@ -170,6 +173,54 @@ some na próxima gravação.
   corrigida com os blocos errados. Atualize também, na rota, o
   `FORMATO_TELA` e o "relógio de 4 horas" da lista "Como funciona", e o card
   do simulado na home. Os três repetem os números em texto.
+
+### Gestos e o voltar do sistema
+
+O "voltar da borda para o meio" já existe no celular: é o voltar do
+sistema (as duas bordas no Android com gestos, a esquerda no iOS, o botão no
+Android com 3 botões). Por isso o site não inventa outro gesto: faz o voltar
+do sistema fechar a camada certa.
+
+- **Camadas (`camadas.svelte.js`):** cada tela montada dentro da página
+  (prova, resultado e revisão do simulado; quiz e fim do estudo), cada modal
+  e o zoom da figura ganham uma entrada rasa no histórico (`pushState` do
+  `$app/navigation`), com `page.state = { camadas, idade }`. A rota chama
+  `ligarCamadas(abertas, fechar)` uma vez e o efeito mantém o histórico
+  alinhado com o que está aberto.
+  - **Invariante:** uma entrada com N camadas fica exatamente N entradas
+    acima da base da mesma URL; `history.go(-k)` com k ≤ N nunca sai da rota.
+  - **O histórico só fecha, nunca abre.** Avançar, ou cair numa entrada
+    velha, é desfeito na hora: uma entrada "prova" antiga não pode religar o
+    relógio. A `idade` (sempre crescente) separa voltar de avançar.
+  - O voltar não pede confirmação, porque tudo já está salvo: o treino grava a
+    cada resposta, o estudo volta ao seletor com "Continuar?" e a prova volta
+    ao início, pausada.
+  - Depois de recarregar com camadas abertas, pode sobrar no máximo um toque
+    de voltar sem efeito (o Kit zera o `page.state` na hidratação).
+- **`BordaVoltar`:** gesto de borda próprio, só como reserva para aparelho
+  sem o do sistema. Ligado só no quiz. No iOS ele NÃO usa a borda esquerda,
+  que é do Safari (seriam dois voltares de uma vez); no Android com gestos o
+  sistema manda `touchcancel` e ele nunca dispara. Na base da rota leva à
+  home com `goto('/')`, nunca `history.back()` (quem chegou por link direto
+  sairia do site).
+- **Deslizar (`gestos.js`):** a questão segue o dedo e troca com
+  max(64 px, 20% da largura) ou com um peteleco (≥ 0,4 px/ms e ≥ 32 px). A
+  direção bloqueada só cede 32 px (efeito elástico). O eixo só é decidido
+  depois de 10 px, com o principal ≥ 1,5× o outro; parado 450 ms antes disso
+  é seleção de texto e o gesto é abandonado. Os 24 px de cada borda ficam
+  para o voltar do sistema. No simulado, puxar a `BarraAcao` 40 px para cima
+  abre o cartão-resposta, e arrastar o cartão 80 px para baixo o fecha.
+  - Só toque (mouse e caneta ficam de fora), com listeners passivos. O
+    `touchend` tem `preventDefault` e os cliques dos 400 ms seguintes são
+    engolidos em captura: sem isso, soltar o dedo sobre uma alternativa a
+    marcava.
+  - Elemento com `data-sem-gesto` (e campo de texto, seleção ativa, pinça
+    ampliada, modal aberto) não começa gesto.
+  - Com `prefers-reduced-motion`, nada segue o dedo e nada anima; o gesto
+    continua trocando a questão.
+- **`html.sem-recarregar`:** no quiz, `overscroll-behavior-y: contain`
+  impede o pull-to-refresh do Chrome. Só o eixo y: o x desligaria o voltar
+  por gesto do Chrome.
 
 ### Questão ANULADA
 
@@ -449,6 +500,22 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
     e sobrevive à troca de rota). Sem isso, a tab bar cobre a `BarraAcao` no
     celular e, em qualquer largura, o `<main>` fica sem o `pb-32` que impede a
     barra de esconder a última alternativa.
+15. **Toda camada nova** (modal, overlay, tela montada dentro da página)
+    entra no `abertas()` do `ligarCamadas` da rota, com o `fechar`
+    correspondente. Sem isso, o voltar do sistema sai da rota com ela aberta.
+    Nunca chame `history.pushState` direto; para sair da rota com camada
+    aberta, use `sairDaRota(url)`, que não deixa entrada morta.
+16. **O gesto nunca responde, pula nem conclui.** Ele só faz o que um botão
+    visível ao lado já faz: questão não respondida não avança, a última do
+    estudo não encerra (`registrarSessao` é irreversível) e a última da
+    revisão do simulado não troca de tela.
+17. **A pinça (zoom) nunca é desligada:** nada de `touch-action: pan-y` (ou
+    `none`) nas áreas de leitura. A exceção é a `BarraAcao` com `onPuxar`,
+    que não é área de leitura.
+18. **Nada de `transform` nem `will-change` persistente no envoltório da
+    questão:** o zoom da figura é `position: fixed` lá dentro, e um transform
+    vira o bloco de contenção dele. O `deslizarQuestoes` limpa o transform ao
+    soltar; o `in:fly` só existe durante a animação.
 
 ## Padrões de código
 
@@ -462,6 +529,10 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
     `createEventDispatcher`.
   - Estado compartilhado é um objeto `$state` exportado de um `.svelte.js`
     (ver `foco.svelte.js`).
+  - Comportamento de DOM reaproveitável vai em attachment (`{@attach}`, a
+    partir do Svelte 5.29), com o estado passado como FUNÇÃO lida na hora
+    do evento (ver `deslizarQuestoes`). Passar o valor direto refaz o
+    attachment a cada mudança.
   - O `+layout.svelte` e o treino leem a URL com `$page` de `$app/stores`,
     que é legado desde o Kit 2.12. Em código novo, prefira `page` de
     `$app/state`, e não misture os dois no mesmo arquivo.

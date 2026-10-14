@@ -1,11 +1,15 @@
 <script>
 	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
 	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
 	import Questao from '$lib/Questao.svelte';
 	import SessaoTopo from '$lib/SessaoTopo.svelte';
 	import BarraAcao from '$lib/BarraAcao.svelte';
 	import Contador from '$lib/Contador.svelte';
+	import DicaGestos from '$lib/DicaGestos.svelte';
+	import { DUR } from '$lib/motion.js';
+	import { deslizarQuestoes } from '$lib/gestos.js';
+	import { ligarCamadas, sairDaRota } from '$lib/camadas.svelte.js';
 	import { carregarBancoDetalhado, embaralhar } from '$lib/banco.js';
 	import { remontarSessao } from '$lib/sessao.js';
 	import { GRUPOS_MATERIA, materiaExiste, nomeMateria } from '$lib/materias.js';
@@ -56,6 +60,30 @@
 	let confirmaFiltro = $state(null);
 	let confirmaSaida = $state(false);
 	let zoomAberto = $state(false);
+	// sentido da última troca de questão: a nova entra deslizando por ele
+	// (1 = veio da direita, -1 = da esquerda, 0 = sem animação)
+	let direcao = $state(0);
+
+	// O quiz é a base da rota: o voltar do sistema fecha só o que está por
+	// cima (fim da volta, modais, zoom) e, na base, sai da rota sem perda —
+	// `persistir()` roda a cada resposta e navegação.
+	ligarCamadas(
+		() =>
+			[fimVolta && 'fim', confirmaFiltro && 'filtro', confirmaSaida && 'saida', zoomAberto && 'zoom'].filter(
+				Boolean
+			),
+		(n) => {
+			if (n === 'fim') fimVolta = false;
+			else if (n === 'filtro') confirmaFiltro = null;
+			else if (n === 'saida') confirmaSaida = false;
+			else if (n === 'zoom') zoomAberto = false;
+		}
+	);
+
+	// a questão nova abria no meio da rolagem da anterior
+	function topo() {
+		window.scrollTo({ top: 0 });
+	}
 	let ultimoToque = $state(0);
 	let refTema = $state(null);
 	let refSaida = $state(null);
@@ -186,6 +214,7 @@
 			log = [];
 			xpGanho = 0;
 			inicio = Date.now();
+			direcao = 0;
 		} else if (salva) {
 			fila = salva.fila;
 			i = Math.min(salva.i ?? 0, fila.length - 1);
@@ -228,7 +257,7 @@
 	function sair() {
 		// em revisão nada é salvo; no treino normal, avisa antes de sair com progresso
 		if (revisao || feitas === 0) {
-			goto('/');
+			sairDaRota('/');
 			return;
 		}
 		confirmaSaida = true;
@@ -236,7 +265,7 @@
 
 	function sairAgora() {
 		persistir();
-		goto('/');
+		sairDaRota('/');
 	}
 
 	// registra/atualiza uma resposta para (idx, volta) — reescrever evita contar duas vezes
@@ -317,6 +346,8 @@
 
 	function avancar() {
 		xpPing = 0;
+		direcao = 1;
+		topo();
 		if (ultima) {
 			// fim da fila: avisa em vez de dar a volta em silêncio
 			fimVolta = true;
@@ -330,11 +361,15 @@
 	function voltar() {
 		if (i === 0) return;
 		xpPing = 0;
+		direcao = -1;
+		topo();
 		i--;
 		persistir();
 	}
 
 	function continuarVolta() {
+		direcao = 1;
+		topo();
 		volta++;
 		i = 0;
 		respostas = [];
@@ -646,17 +681,32 @@
 				</div>
 			</div>
 		{:else if fila[i]}
-			{#key fila[i].id + '-' + volta + '-' + i}
-				<Questao
-					q={fila[i]}
-					onResponder={aoResponder}
-					onPular={aoPular}
-					onRevisar={aoRevisar}
-					revisarInicial={getRevisar().includes(fila[i].id)}
-					inicial={respostas[i]?.pulada ? null : (respostas[i] ?? null)}
-					bind:zoomAberto
-				/>
-			{/key}
+			<DicaGestos
+				id="questoes"
+				texto="Deslize a questão para os lados para passar ou voltar. Da borda da tela para o meio, você volta à tela anterior."
+			/>
+			<div
+				{@attach deslizarQuestoes(() => ({
+					anterior: i > 0,
+					proxima: podeAvancar,
+					onAnterior: voltar,
+					onProxima: avancar
+				}))}
+			>
+				{#key fila[i].id + '-' + volta + '-' + i}
+					<div in:fly={{ x: 32 * direcao, duration: direcao ? DUR : 0 }}>
+						<Questao
+							q={fila[i]}
+							onResponder={aoResponder}
+							onPular={aoPular}
+							onRevisar={aoRevisar}
+							revisarInicial={getRevisar().includes(fila[i].id)}
+							inicial={respostas[i]?.pulada ? null : (respostas[i] ?? null)}
+							bind:zoomAberto
+						/>
+					</div>
+				{/key}
+			</div>
 			<BarraAcao
 				rotulo={ultima ? 'Concluir volta' : 'Próxima'}
 				mostrarXP={xpPing > 0}

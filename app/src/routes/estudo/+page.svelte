@@ -1,9 +1,14 @@
 <script>
 	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
 	import Questao from '$lib/Questao.svelte';
 	import SessaoTopo from '$lib/SessaoTopo.svelte';
 	import BarraAcao from '$lib/BarraAcao.svelte';
 	import Contador from '$lib/Contador.svelte';
+	import DicaGestos from '$lib/DicaGestos.svelte';
+	import { DUR } from '$lib/motion.js';
+	import { deslizarQuestoes } from '$lib/gestos.js';
+	import { ligarCamadas } from '$lib/camadas.svelte.js';
 	import { carregarBancoDetalhado, embaralhar, doNivel, NIVEL_ENADE } from '$lib/banco.js';
 	import { remontarSessao } from '$lib/sessao.js';
 	import { GRUPOS_MATERIA, materiaExiste, nomeMateria } from '$lib/materias.js';
@@ -60,6 +65,34 @@
 	let salvaE = $state(null);
 	let confirmaSaida = $state(false);
 	let zoomAberto = $state(false);
+	// o banco chegou inteiro? (decide se a sessão pausada pode ser remontada)
+	let bancoInteiro = $state(false);
+	// sentido da última troca de questão: a nova entra deslizando por ele
+	let direcao = $state(0);
+
+	// O seletor de níveis é a base da rota; o quiz é uma camada por cima.
+	// Antes, o voltar do sistema no meio do quiz saía do estudo e caía na
+	// home. Quiz → fim troca no mesmo nível, então o voltar no fim leva ao
+	// seletor (a sessão já foi registrada e não há o que retomar).
+	ligarCamadas(
+		() =>
+			nivel === null
+				? []
+				: fim
+					? ['fim']
+					: ['quiz', confirmaSaida && 'saida', zoomAberto && 'zoom'].filter(Boolean),
+		(n) => {
+			if (n === 'quiz') sairAgora();
+			else if (n === 'fim') nivel = null;
+			else if (n === 'saida') confirmaSaida = false;
+			else if (n === 'zoom') zoomAberto = false;
+		}
+	);
+
+	// a questão nova abria no meio da rolagem da anterior
+	function topo() {
+		window.scrollTo({ top: 0 });
+	}
 	let refSaida = $state(null);
 
 	// contadores derivados do log — navegar para frente/voltar nunca conta duas vezes
@@ -88,15 +121,23 @@
 	let salvaECertas = $derived(salvaE ? (salvaE.log || []).filter((r) => r.certa).length : 0);
 
 	onMount(async () => {
-		let completo = false;
 		try {
-			({ questoes: banco, completo } = await carregarBancoDetalhado());
+			({ questoes: banco, completo: bancoInteiro } = await carregarBancoDetalhado());
 			xp = getXP();
 		} catch {
 			falhou = true;
 		} finally {
 			carregou = true;
 		}
+		oferecerContinuar();
+	});
+
+	// Também roda ao sair do quiz: antes o seletor não oferecia "Continuar?",
+	// e começar outro nível ali chamava `limparSessao()` e apagava a sessão
+	// salva.
+	function oferecerContinuar() {
+		salvaE = null;
+		escolhaE = false;
 		const s = lerSessao();
 		if (s?.ids?.length) {
 			// v1 = antes da escada de geradas: a sessão era só de questões
@@ -107,7 +148,7 @@
 			// Banco pela metade: a questão que falta pode estar no JSON que não
 			// chegou. Antes a sessão voltava encurtada em silêncio, e a primeira
 			// resposta regravava a versão curta por cima da inteira.
-			if (!completo && !achadas.every(Boolean)) {
+			if (!bancoInteiro && !achadas.every(Boolean)) {
 				sessaoGuardada = true;
 				return;
 			}
@@ -119,7 +160,7 @@
 				escolhaE = true;
 			}
 		}
-	});
+	}
 
 	$effect(() => {
 		if (confirmaSaida && refSaida) refSaida.focus();
@@ -138,6 +179,7 @@
 			return;
 		}
 		vazioNivel = null;
+		direcao = 0;
 		nivel = n;
 		sessao = pool.slice(0, TOTAL);
 		i = 0;
@@ -223,6 +265,8 @@
 
 	function avancar() {
 		xpPing = 0;
+		direcao = 1;
+		topo();
 		if (ultima) {
 			fim = true;
 			limparSessao(); // sessão terminou: não há mais o que retomar
@@ -242,6 +286,8 @@
 	function voltar() {
 		if (i === 0) return;
 		xpPing = 0;
+		direcao = -1;
+		topo();
 		i--;
 		persistir();
 	}
@@ -250,6 +296,8 @@
 		// antes descartava 10 questões em silêncio; agora salva e avisa
 		if (feitas === 0) {
 			nivel = null;
+			// só pulou: a sessão pode ter sido gravada mesmo assim
+			oferecerContinuar();
 			return;
 		}
 		confirmaSaida = true;
@@ -259,10 +307,12 @@
 		persistir();
 		confirmaSaida = false;
 		nivel = null;
+		oferecerContinuar();
 	}
 
 	function continuar() {
 		if (!salvaE) return;
+		direcao = 0;
 		nivel = salvaE.nivel;
 		materiaFiltro = materiaExiste(salvaE.materia) ? salvaE.materia : 'todas';
 		sessao = salvaE.sessao;
@@ -579,17 +629,34 @@
 	{/if}
 	<div class="mt-4">
 		{#if sessao[i]}
-			{#key sessao[i].id + '-' + i}
-				<Questao
-					q={sessao[i]}
-					onResponder={aoResponder}
-					onPular={aoPular}
-					onRevisar={aoRevisar}
-					revisarInicial={getRevisar().includes(sessao[i].id)}
-					inicial={respostas[i]?.pulada ? null : (respostas[i] ?? null)}
-					bind:zoomAberto
-				/>
-			{/key}
+			<DicaGestos
+				id="questoes"
+				texto="Deslize a questão para os lados para passar ou voltar. Da borda da tela para o meio, você volta à tela anterior."
+			/>
+			<!-- na última questão o gesto NÃO encerra (registrarSessao é
+			     irreversível): só cede, e o caminho é o "Ver resultado" -->
+			<div
+				{@attach deslizarQuestoes(() => ({
+					anterior: i > 0,
+					proxima: podeAvancar && !ultima,
+					onAnterior: voltar,
+					onProxima: avancar
+				}))}
+			>
+				{#key sessao[i].id + '-' + i}
+					<div in:fly={{ x: 32 * direcao, duration: direcao ? DUR : 0 }}>
+						<Questao
+							q={sessao[i]}
+							onResponder={aoResponder}
+							onPular={aoPular}
+							onRevisar={aoRevisar}
+							revisarInicial={getRevisar().includes(sessao[i].id)}
+							inicial={respostas[i]?.pulada ? null : (respostas[i] ?? null)}
+							bind:zoomAberto
+						/>
+					</div>
+				{/key}
+			</div>
 			<BarraAcao
 				rotulo={ultima ? 'Ver resultado' : 'Próxima'}
 				mostrarXP={xpPing > 0}
