@@ -59,7 +59,13 @@
 		if (!carregou || !banco.length) return;
 		const m = revisao ? 'rev' : 'nor';
 		if (prontoModo === m) return;
+		const primeira = prontoModo === null;
 		prontoModo = m;
+		// A montagem inicial é do onMount. Antes este efeito rodava logo depois
+		// dele, remontava a fila e o `montar()` apagava a sessão salva: o
+		// "Continuar de onde parou?" nunca aparecia e o "Sair e salvar" se
+		// perdia ao voltar para /treino/.
+		if (primeira) return;
 		// Remonta nos DOIS sentidos. Antes só o modo revisão remontava: sair
 		// dela pela aba "Treino" trocava o título e a URL mas mantinha a fila
 		// de revisão — e, se ela estava vazia, deixava a tela num "nada por
@@ -68,7 +74,7 @@
 		escolha = false;
 		encerrada = false;
 		filtro = 'todos';
-		montar();
+		iniciar();
 	});
 
 	let revisao = $derived($page.url.searchParams.get('modo') === 'revisao');
@@ -111,17 +117,23 @@
 		} finally {
 			carregou = true;
 		}
+		iniciar();
+	});
+
+	// Com treino pausado, pergunta se continua; sem, monta uma fila nova.
+	// Serve ao carregar a página e ao trocar entre treino e revisão.
+	function iniciar() {
 		const s = carregarSessao();
-		if (s?.ids?.length) {
+		if (!revisao && s?.ids?.length) {
 			const ordem = s.ids.map((id) => banco.find((q) => q.id === id)).filter(Boolean);
-			if (ordem.length && !revisao) {
+			if (ordem.length) {
 				salva = { ...s, fila: ordem };
 				escolha = true;
 				return;
 			}
 		}
 		montar();
-	});
+	}
 
 	$effect(() => {
 		if (confirmaFiltro && refTema) refTema.focus();
@@ -142,7 +154,8 @@
 
 	function montar(nova = true) {
 		if (nova) {
-			limparSessao();
+			// a revisão não grava sessão — e não pode apagar o treino pausado
+			if (!revisao) limparSessao();
 			fila = embaralhar(base());
 			i = 0;
 			volta = 0;
@@ -307,7 +320,8 @@
 	}
 
 	function encerrar() {
-		limparSessao();
+		// encerrar a revisão não encerra o treino pausado
+		if (!revisao) limparSessao();
 		encerrada = true;
 		// fecha a sessão no histórico: sem isso a home nunca sabe que a
 		// pessoa estudou, mesmo tendo respondido 40 questões
