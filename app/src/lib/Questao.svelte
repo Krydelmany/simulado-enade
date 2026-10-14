@@ -180,6 +180,14 @@
 		if (fora) veredito.scrollIntoView({ block: 'center', behavior: REDUCED ? 'auto' : 'smooth' });
 	});
 
+	// leitor de tela: a alternativa sem as marcas de bloco de código
+	const MARCA_BLOCO = new RegExp('\x60{3}\\w*\\n?', 'g');
+	function rotuloAlt(letra) {
+		const texto = q.alternativas[letra];
+		if (!texto) return 'Alternativa ' + letra + ' (na imagem)';
+		return 'Alternativa ' + letra + ': ' + texto.replace(MARCA_BLOCO, '');
+	}
+
 	function classeAlt(letra) {
 		const base =
 			'flex w-full items-start gap-3 rounded-2xl border-2 p-3.5 text-left text-[15px] leading-relaxed transition-[border-color,background-color,color,transform] duration-150 active:scale-[0.99] disabled:cursor-default ';
@@ -327,13 +335,16 @@
 							type="button"
 							onclick={() => responder(letra)}
 							disabled={respondida}
-							aria-label="Alternativa {letra}{q.alternativas[letra] ? `: ${q.alternativas[letra]}` : ' (na imagem)'}"
+							aria-label={rotuloAlt(letra)}
 							class={classeAlt(letra)}
 						>
 							<span class={classeBolha(letra)}>
 								{letra}
 							</span>
-							{#if q.alternativas[letra]}
+							{#if q.alternativas[letra]?.includes('```')}
+								<!-- alternativa que é código (2023-CE-Q15, Q30): bloco mono, como no enunciado -->
+								<span class="min-w-0 flex-1"><TextoRico texto={q.alternativas[letra]} /></span>
+							{:else if q.alternativas[letra]}
 								<span class="enunciado">{q.alternativas[letra]}</span>
 							{:else}
 								<span class="text-sm font-semibold text-ink-soft">Alternativa {letra} da imagem</span>

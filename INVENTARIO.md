@@ -7,16 +7,17 @@ Fontes em `fontes/`. Provas oficiais do INEP (RIEP + GitHub `geacc/enade`)
 
 | Edição | Formato | Objetivas | Discursivas | Gabarito | Padrão resp. | Anuladas | Extração de texto |
 |---|---|---|---|---|---|---|---|
-| 2014 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (9 p.) | Q27, Q30, Q34 | OCR (mutool + tesseract) — 19/39 no banco |
-| 2017 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (11 p.) | — | OCR (mutool + tesseract) — 24/40 no banco |
-| 2019 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (10 p.) | Q1 (= mesma do AVA) | pdftotext — 38/40 no banco |
-| 2023 | FG 1–9 + CE 10–38 | 38 | 2 (D1–D2) | ok | ok | — | pdftotext — 40/40 no banco |
+| 2014 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (9 p.) | Q27, Q30, Q34 | OCR (mutool + tesseract) + leitura da página — 40/40 no banco |
+| 2017 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (11 p.) | — | OCR (mutool + tesseract) + leitura da página — 40/40 no banco |
+| 2019 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (10 p.) | Q1 (= mesma do AVA) | pdftotext + leitura da página — 40/40 no banco |
+| 2023 | FG 1–9 + CE 10–38 | 38 | 2 (D1–D2) | ok | ok | — | pdftotext + leitura da página — 40/40 no banco |
 
 **Total: 143 objetivas + 17 discursivas = 160 questões.**
-**No banco hoje: 123** (107 objetivas + 16 discursivas). O que falta está em
-`revisao/pendencias.md`, com o motivo de cada uma — em geral o OCR da prova
-perde a bolinha de uma alternativa e o gabario passaria a apontar para a
-letra errada.
+**No banco hoje: as 160.** O que a extração não leu direito (OCR de
+2014/2017, fórmula e figura achatadas e enunciados cortados em 2019/2023)
+foi lido da página renderizada e está em `banco/digitadas.json` — ver a
+seção "Texto lido do PDF" do README. Gabaritos conferidos com as folhas
+oficiais.
 
 Anulada = o INEP credita a todos (como fez o professor no relatório:
 "Q1 anulada no gabarito oficial: creditada a todos, como faz o INEP").

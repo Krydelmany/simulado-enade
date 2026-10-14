@@ -27,7 +27,7 @@ REVISAO = f'{RAIZ}/revisao'
 # O alt descreve o desenho para quem usa leitor de tela — não é decoração.
 IMAGENS = {
     '2019-CE-Q11': 'Tabela de conflitos de horário entre os cinco grupos de eventos.',
-    '2019-CE-Q12': 'Gráfico da região viável em空间 de duas variáveis, com os pontos A a F.',
+    '2019-CE-Q12': 'Gráfico da região viável no plano xy, com os vértices A a F e as arestas a a f.',
     '2019-CE-Q15': 'Tabela com os quatro pontos usados no ajuste de reta por mínimos quadrados.',
     '2019-CE-Q16': 'Diagrama esquemático do demultiplexador de quatro canais com CIs 7404 e 7411.',
     '2019-CE-Q21': 'Tabela com os cinco fornecedores e os critérios CD1 a CD6.',
@@ -39,7 +39,6 @@ IMAGENS = {
     '2019-FG-Q02': 'Poema concreto de Augusto de Campos.',
     '2019-FG-D02': 'Diagrama da hélice tríplice: setor público, instituição de ensino superior e empresa.',
     '2019-FG-Q05': 'Duas fotos: uma cava a céu aberto na floresta e um povoado com construções e torres de energia.',
-    '2019-FG-Q06': 'Gráfico do Atlas da Violência: homicídios de mulheres negras e não negras.',
     '2019-FG-Q06': 'Gráfico do Atlas da Violência: homicídios de mulheres negras e não negras.',
     '2023-CE-Q10': 'Desenho do cilindro-resistor com os pontos A e L indicados.',
     '2023-CE-Q13': 'Circuito elétrico e o grafo equivalente, com as correntes I1 a I6.',
@@ -89,6 +88,11 @@ FIGURAS = {
     # jeito que as de 2019.
     '2017-CE-Q19': 'Alternativas A a E: circuitos combinatórios candidatos, '
                    'com as entradas A a D e as saídas C1 a C4.',
+    # 2017-CE-Q14: as alternativas são gráficos de profundidade × pressão;
+    # o OCR devolvia só os números dos eixos ("000 MM Lá (m) 3 000…").
+    # Recorte gerado a 200 dpi da página 19 da prova.
+    '2017-CE-Q14': 'Alternativas A a E: gráficos da profundidade (m) em função '
+                   'da pressão hidrostática (kPa).',
     '2017-CE-Q22': 'Alternativas A a E: mapas de memória principal, com '
                    'endereço, dado e nome da variável.',
 }
@@ -110,7 +114,9 @@ def parte_nome(parte):
 
 
 def main(ano, parte):
-    qs = classificar.aplicar(montar.extrair(ano))
+    # `acrescenta`: questão que o OCR não separou (2014-CE-D04) e foi lida
+    # inteira do PDF em digitadas.json
+    qs = classificar.aplicar(digita.acrescenta(montar.extrair(ano), ano))
     qs = montar.aplicar_figuras(qs, FIGURAS)
     for q in qs:
         alt = IMAGENS.get(q['id'])
@@ -127,6 +133,11 @@ def main(ano, parte):
     #              o que está dentro dos ``` que o formato marcou;
     #   problema → decide se a questão sai.
     #
+    # `digita.aplica` entra no começo (a alternativa lida do PDF passa pela
+    # mesma limpeza) e `digita.finaliza` no fim: o enunciado/padrão digitado
+    # já vem com bloco de código e indentação, que `arruma`/`formato`/
+    # `qualidade` desmontariam — então ele volta por cima, intacto.
+    #
     # Rodar `formato` depois de `qualidade` não erra o texto: faz a detecção
     # não ver linha nenhuma, porque `qualidade` já colapsou tudo numa.
     #
@@ -136,7 +147,9 @@ def main(ano, parte):
     boas, pendentes = [], []
     digitadas = digita.completas()
     for q in (
-        qualidade.limpa(formato.formata(arruma.limpa(digita.aplica(q))))
+        digita.finaliza(
+            qualidade.limpa(formato.formata(arruma.limpa(digita.aplica(q))))
+        )
         for q in qs
     ):
         motivo = qualidade.problema(q, ignorar_fora=digitadas)
@@ -239,9 +252,10 @@ def resumo():
         # (código, fórmula, diagrama): elas não têm texto para conferir, e
         # por isso não são pendência
         qs = montar.aplicar_figuras(
-            classificar.aplicar(montar.extrair(ano)), FIGURAS
+            classificar.aplicar(digita.acrescenta(montar.extrair(ano), ano)), FIGURAS
         )
-        qs = [qualidade.limpa(formato.formata(arruma.limpa(digita.aplica(q))))
+        qs = [digita.finaliza(
+                  qualidade.limpa(formato.formata(arruma.limpa(digita.aplica(q)))))
               for q in qs]
         ok = [q for q in qs
               if not qualidade.problema(q, ignorar_fora=digita.completas())]

@@ -17,6 +17,8 @@ e é a rede de segurança contra uma regressão silenciosa.
 
 import re
 
+import paragrafo
+
 # frases que só aparecem no ENUNCIADO, nunca na alternativa
 COMANDO_ENUNCIADO = re.compile(
     r'assinale\s+(a\s+)?(a\s+)?op[çc][ãa]o'
@@ -102,19 +104,30 @@ def _normaliza_texto(t):
 
 
 def limpa(q):
-    """Tira o rodapé que sobrou grudado nas alternativas (em cópia)."""
+    """Tira o rodapé que sobrou grudado nas alternativas (em cópia) e monta
+    os parágrafos do enunciado e do padrão de resposta.
+
+    Alternativa é uma frase só: as quebras do PDF viram espaço. Enunciado e
+    padrão NÃO — antes o `_normaliza_texto` achatava os dois num bloco único
+    e o aluno recebia texto-base, fonte, comando e afirmações emendados. As
+    linhas do PDF ainda estão aqui, e o `paragrafo.reflui` usa a largura
+    delas para saber onde o parágrafo acaba (ver paragrafo.py).
+    """
     q = dict(q)
     alt = q.get('alternativas') or {}
     novo = {}
     for letra, txt in alt.items():
         t = SUFIXO_RODAPE.sub('', (txt or '').strip()).strip()
-        t = _normaliza_texto(t)
+        t = paragrafo.espacos(_normaliza_texto(t))
         if t:
             novo[letra] = t
     q['alternativas'] = novo
-    q['enunciado'] = _normaliza_texto(
+    q['enunciado'] = paragrafo.reflui(
         SUFIXO_RODAPE.sub('', (q.get('enunciado') or '').strip()).strip()
     )
+    if q.get('padrao'):
+        # padrão de resposta não tem "comando": "Considerando…" ali é frase
+        q['padrao'] = paragrafo.reflui(q['padrao'], comandos=False)
     return q
 
 
