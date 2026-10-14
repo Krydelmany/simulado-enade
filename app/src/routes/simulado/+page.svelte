@@ -262,7 +262,13 @@
 		for (const it of r.itens) {
 			if (it.bloco === 'DISC' || it.status === 'branco') continue;
 			const q = questoes[it.k];
-			registrarResposta({ id: q.id, certa: it.status === 'certa', materia: q.materia, tema: q.tema });
+			registrarResposta({
+				id: q.id,
+				certa: it.status === 'certa',
+				anulada: q.gabarito === 'ANULADA',
+				materia: q.materia,
+				tema: q.tema
+			});
 			if (it.status === 'certa') removerErro(q.id);
 			else registrarErro(q.id);
 		}

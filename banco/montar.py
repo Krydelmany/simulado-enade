@@ -41,7 +41,17 @@ def gabaritos(ano):
     # separadas — "     1        A"
     for m in re.finditer(r'(?m)^\s*(\d{1,2})\s+(ANULADA|[A-E])\s*$', txt):
         out[int(m.group(1))] = m.group(2).upper()
+    out.update(GABARITO_OFICIAL.get(ano, {}))
     return out
+
+
+# Gabarito conferido na folha oficial que a leitura do .txt não entrega.
+# 2019, Questão 1: a folha definitiva traz ANULADA, mas a extração gravou "A"
+# — a questão entrava no sorteio do simulado e era corrigida pela letra A.
+# Conferido com `pdftotext fontes/2019-e2_gabarito.pdf -` em 14/10/2026.
+GABARITO_OFICIAL = {
+    2019: {1: 'ANULADA'},
+}
 
 
 CACHE = '/tmp/opencode/extr'

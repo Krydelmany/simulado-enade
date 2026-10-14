@@ -125,6 +125,10 @@ export function corrigir(prova, questoes) {
 		const marca = prova.marcas?.[k] ?? null;
 		let status;
 		if (q.tipo === 'discursiva') status = prova.discAuto || 'pendente';
+		// anulada não entra no sorteio, mas uma prova salva antes da anulação
+		// (2019-FG-Q01 estava com gabarito "A") ainda pode trazê-la: ponto
+		// para todos, como faz o INEP
+		else if (q.gabarito === 'ANULADA') status = 'certa';
 		else if (!marca) status = 'branco';
 		else status = marca === q.gabarito ? 'certa' : 'errada';
 		return { k, id: q.id, bloco: blocoDe(k), materia: q.materia || null, marca, gabarito: q.gabarito ?? null, status };
