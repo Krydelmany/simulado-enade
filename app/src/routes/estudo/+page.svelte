@@ -4,7 +4,7 @@
 	import SessaoTopo from '$lib/SessaoTopo.svelte';
 	import BarraAcao from '$lib/BarraAcao.svelte';
 	import Contador from '$lib/Contador.svelte';
-	import { carregarBanco, embaralhar, doNivel, NIVEL_ENADE } from '$lib/banco.js';
+	import { carregarBancoDetalhado, embaralhar, doNivel, NIVEL_ENADE } from '$lib/banco.js';
 	import { GRUPOS_MATERIA, materiaExiste, nomeMateria } from '$lib/materias.js';
 	import {
 	somarXP,
@@ -52,6 +52,8 @@
 	let xpValor = $state(10);
 	let carregou = $state(false);
 	let falhou = $state(false);
+	// estudo pausado que não deu para remontar porque o banco veio pela metade
+	let sessaoGuardada = $state(false);
 	let vazioNivel = $state(null);
 	let escolhaE = $state(false);
 	let salvaE = $state(null);
@@ -85,8 +87,9 @@
 	let salvaECertas = $derived(salvaE ? (salvaE.log || []).filter((r) => r.certa).length : 0);
 
 	onMount(async () => {
+		let completo = false;
 		try {
-			banco = await carregarBanco();
+			({ questoes: banco, completo } = await carregarBancoDetalhado());
 			xp = getXP();
 		} catch {
 			falhou = true;
@@ -99,7 +102,15 @@
 			// oficiais, então hoje ela é do nível ENADE (o número antigo 1–3
 			// mostraria "Fácil" em cima de uma questão do INEP)
 			if (s.v === 1) s.nivel = NIVEL_ENADE;
-			const ordem = s.ids.map((id) => banco.find((q) => q.id === id)).filter(Boolean);
+			const achadas = s.ids.map((id) => banco.find((q) => q.id === id));
+			// Banco pela metade: a questão que falta pode estar no JSON que não
+			// chegou. Antes a sessão voltava encurtada em silêncio, e a primeira
+			// resposta regravava a versão curta por cima da inteira.
+			if (!completo && !achadas.every(Boolean)) {
+				sessaoGuardada = true;
+				return;
+			}
+			const ordem = achadas.filter(Boolean);
 			if (ordem.length) {
 				salvaE = { ...s, sessao: ordem };
 				escolhaE = true;
@@ -384,6 +395,17 @@
 	<div class="rounded-3xl bg-card p-6 text-center shadow-sm" role="alert">
 		<p class="font-display text-lg font-bold">Não deu para carregar as questões</p>
 		<p class="mt-1 text-sm text-ink-soft">Verifique sua conexão e tente de novo.</p>
+		<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
+			Tentar de novo
+		</button>
+	</div>
+{:else if sessaoGuardada}
+	<!-- sem a escolha de nível: começar uma sessão nova apagaria a guardada -->
+	<div class="rounded-3xl bg-card p-6 text-center shadow-sm" role="alert">
+		<p class="font-display text-lg font-bold">Parte das questões não carregou</p>
+		<p class="mt-1 text-sm text-ink-soft">
+			Sua sessão de estudo pausada continua guardada neste aparelho. Verifique a conexão e tente de novo para continuar.
+		</p>
 		<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
 			Tentar de novo
 		</button>
