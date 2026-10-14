@@ -1,4 +1,6 @@
 <script>
+	import { puxarParaCima } from './gestos.js';
+
 	/**
 	 * Barra fixa de ação no rodapé.
 	 *
@@ -8,6 +10,9 @@
 	 *    para a última alternativa nunca ficar escondida atrás dela;
 	 *  - `desabilitado` + `aviso` travam o CTA até o aluno responder, dizendo o que fazer.
 	 * Aceita conteúdo (snippet default `children`) para a faixa de navegação acima do CTA.
+	 * Com `onPuxar`, puxar a barra para cima (toque) chama a função — no simulado,
+	 * abre o cartão-resposta — e uma alça aparece no topo no celular. Passe uma
+	 * função ESTÁVEL: trocar a referência refaz o attachment.
 	 */
 	let {
 		rotulo,
@@ -16,6 +21,7 @@
 		xpValor = 10,
 		desabilitado = false,
 		aviso = '',
+		onPuxar = null,
 		children
 	} = $props();
 
@@ -27,8 +33,12 @@
 	data-barra-acao
 	class="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper"
 	style="padding-bottom: env(safe-area-inset-bottom);"
+	{@attach onPuxar && puxarParaCima(onPuxar)}
 >
 	<div class="mx-auto max-w-3xl px-4 pt-2 pb-3">
+		{#if onPuxar}
+			<span aria-hidden="true" class="mx-auto mb-1.5 block h-1 w-9 rounded-full bg-line sm:hidden"></span>
+		{/if}
 		{#if children}
 			<div class="mb-2">{@render children()}</div>
 		{/if}

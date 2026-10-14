@@ -65,7 +65,6 @@
 	let mostrouPadrao = $state(ini.mostrouPadrao);
 	let auto = $state(ini.auto);
 	let revisar = $state(ini.revisar);
-	let ampliada = $state(false);
 	// só rola/foca o veredito quando o aluno ACABOU de responder — nunca ao restaurar
 	let avaliadaAgora = $state(false);
 	let veredito = $state(null);
@@ -141,8 +140,8 @@
 
 	function aoTecla(e) {
 		// com a imagem ampliada, o Esc só fecha o zoom (a página ignora via `zoomAberto`)
-		if (ampliada) {
-			if (e.key === 'Escape') ampliada = false;
+		if (zoomAberto) {
+			if (e.key === 'Escape') zoomAberto = false;
 			return;
 		}
 		if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -170,16 +169,15 @@
 		}
 	}
 
-	// avisa a página se há um modal (zoom) aberto, para o Esc não encerrar a sessão junto
-	$effect(() => {
-		zoomAberto = ampliada;
-		return () => {
-			zoomAberto = false;
-		};
+	// `zoomAberto` é a FONTE do zoom (não um espelho): a página precisa
+	// fechá-lo pelo voltar do sistema (ver `camadas.svelte.js`), e lê o mesmo
+	// valor para o Esc não encerrar a sessão junto. Ao desmontar, fecha.
+	$effect(() => () => {
+		zoomAberto = false;
 	});
 
 	$effect(() => {
-		document.body.style.overflow = ampliada ? 'hidden' : '';
+		document.body.style.overflow = zoomAberto ? 'hidden' : '';
 		return () => {
 			document.body.style.overflow = '';
 		};
@@ -275,7 +273,7 @@
 		<figure class="mt-3 overflow-hidden rounded-2xl border border-line bg-white">
 			<button
 				type="button"
-				onclick={() => (ampliada = true)}
+				onclick={() => (zoomAberto = true)}
 				aria-label="Ampliar figura: {q.imagem.alt}"
 				class="block w-full cursor-zoom-in"
 			>
@@ -294,14 +292,14 @@
 				</span>
 			</figcaption>
 		</figure>
-		{#if ampliada}
+		{#if zoomAberto}
 			<div
 				class="fixed inset-0 z-50 flex flex-col bg-black/90 p-4"
 				style="padding-bottom: env(safe-area-inset-bottom);"
 			>
 				<button
 					type="button"
-					onclick={() => (ampliada = false)}
+					onclick={() => (zoomAberto = false)}
 					aria-label="Fechar figura ampliada"
 					class="absolute inset-0 cursor-zoom-out"
 				></button>
