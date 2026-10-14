@@ -50,8 +50,16 @@ function camadasAtuais() {
 export function ligarCamadas(abertas, fechar) {
 	let hrefVisto = null;
 	let idadeVista = 0;
-	// fomos NÓS que chamamos history.go(-k): o popstate que vier é nosso
+	// fomos NÓS que chamamos history.go(-k): o popstate que cair na entrada
+	// `alvo` é nosso. Sem prazo de validade: antes havia um timeout de 1 s, e
+	// num aparelho lento o popstate atrasado era lido como um voltar do aluno
+	// e fechava uma camada a mais. A invariante garante que a entrada alvo
+	// existe, então o popstate sempre vem.
 	let espera = null;
+
+	function iguais(a, b) {
+		return a.length === b.length && prefixoComum(a, b) === a.length;
+	}
 
 	function alinhar(h, l) {
 		const c = prefixoComum(h, l);
@@ -75,12 +83,8 @@ export function ligarCamadas(abertas, fechar) {
 			// No popstate raso o Kit rola para a posição salva da entrada.
 			// Quando foi a TELA que fechou a camada (ex.: o irPara do cartão,
 			// que já subiu a página), essa rolagem velha desfaria o topo.
-			espera = { rolagem: window.scrollY };
+			espera = { rolagem: window.scrollY, alvo: h.slice(0, c) };
 			history.go(-tirar);
-			const minha = espera;
-			setTimeout(() => {
-				if (espera === minha) espera = null;
-			}, 1000);
 		}
 	}
 
@@ -99,9 +103,12 @@ export function ligarCamadas(abertas, fechar) {
 				// a entrada mudou (popstate)
 				const anterior = idadeVista;
 				idadeVista = idade;
-				if (espera) {
-					const y = espera.rolagem;
-					espera = null;
+				const nossa = espera && iguais(h, espera.alvo);
+				const y = espera?.rolagem;
+				// qualquer popstate encerra a espera; se não caiu no alvo,
+				// é do aluno e segue o caminho normal
+				espera = null;
+				if (nossa) {
 					window.scrollTo(0, y);
 				} else if (idade < anterior && l.length) {
 					// voltar do aluno: fecha o que está acima da entrada
