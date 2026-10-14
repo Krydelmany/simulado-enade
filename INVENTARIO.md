@@ -7,9 +7,9 @@ Fontes em `fontes/`. Provas oficiais do INEP (RIEP + GitHub `geacc/enade`)
 
 | Edição | Formato | Objetivas | Discursivas | Gabarito | Padrão resp. | Anuladas | Extração de texto |
 |---|---|---|---|---|---|---|---|
-| 2014 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (9 p.) | Q27, Q30, Q34 | OCR (mutool + tesseract) + leitura da página — 40/40 no banco |
+| 2014 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (9 p.) | Q27, Q30, Q34 | OCR (mutool + tesseract) + leitura da página — 37/40 no site (as 3 anuladas em `banco/anuladas.json`) |
 | 2017 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (11 p.) | — | OCR (mutool + tesseract) + leitura da página — 40/40 no banco |
-| 2019 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (10 p.) | Q1 (= mesma do AVA) | pdftotext + leitura da página — 40/40 no banco |
+| 2019 | FG 1–8 + CE 9–35 | 35 | 5 (D1–D5) | ok | ok (10 p.) | Q1 (= mesma do AVA) | pdftotext + leitura da página — 39/40 no site (a anulada em `banco/anuladas.json`) |
 | 2023 | FG 1–9 + CE 10–38 | 38 | 2 (D1–D2) | ok | ok | — | pdftotext + leitura da página — 40/40 no banco |
 
 **Total: 143 objetivas + 17 discursivas = 160 questões.**

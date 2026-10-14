@@ -247,8 +247,10 @@ de hoje (2014-CE-Q27, Q30 e Q34, e 2019-FG-Q01) ficam em
   no estudo; o simulado a corrige como certa e a tira do sorteio). Hoje é só
   defesa: não remova sem tirar também a regra do `validar.py`.
 - O id de uma anulada continua no aparelho de quem já a respondeu ou
-  marcou. Ele fica órfão e é ignorado: a revisão e as contagens de
-  "Revisar" (home e treino) só contam o que está no banco.
+  marcou. Ele fica órfão e é ignorado: a revisão e o número do botão
+  "Revisar" (home, treino, estudo e simulado) só contam o que está no banco.
+  Botão novo de revisão usa `contarParaRevisar(banco)` de `stats.js`, nunca
+  `getParaRevisar().length`.
 
 ## O banco de questões
 
@@ -294,7 +296,7 @@ Commite tudo junto: a fonte que você editou, os JSON de `app/static/banco/`
 | `materia` | um `id` de `materias.json` (as 20 áreas do CE da Portaria nº 161 + as de FG) |
 | `enunciado` | `\n\n` separa parágrafos; `\n` simples só entre itens de lista (I., II., a), •) e linhas de tabela; blocos ```` ```lang ```` para código |
 | `alternativas` | `{A..E}` nas objetivas; `{}` nas discursivas e nas de alternativas visuais |
-| `gabarito` | `"A"` a `"E"`, ou `"ANULADA"` (só objetivas) |
+| `gabarito` | `"A"` a `"E"` (só objetivas). `"ANULADA"` só existe em `banco/anuladas.json`: no banco do site o `validar.py` reprova |
 | `padrao` | padrão de resposta (só discursivas) |
 | `padrao_placeholder` | `true` quando o padrão oficial não tem texto utilizável |
 | `imagem` | `{src: "/banco/img/<id>.png", alt}` (`legenda` é opcional) |

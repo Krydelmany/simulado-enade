@@ -21,7 +21,7 @@
 	getRevisar,
 	marcarRevisar,
 	desmarcarRevisar,
-	getParaRevisar,
+	contarParaRevisar,
 	registrarResposta,
 	registrarSessao
 } from '$lib/stats.js';
@@ -607,9 +607,9 @@
 		<button type="button" onclick={() => (nivel = null)} class="btn3d duo-accent flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
 			<ArrowsClockwise size={20} weight="bold" aria-hidden="true" /> Outra sessão
 		</button>
-		{#if getParaRevisar().length}
+		{#if contarParaRevisar(banco)}
 			<a href="/treino/?modo=revisao" class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
-				Revisar erros e marcadas ({getParaRevisar().length})
+				Revisar erros e marcadas ({contarParaRevisar(banco)})
 			</a>
 		{/if}
 	</div>
