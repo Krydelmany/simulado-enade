@@ -276,7 +276,7 @@
 			<button
 				type="button"
 				onclick={copiar}
-				aria-label="Copiar questão com alternativas e figura"
+				aria-label="Copiar questão"
 				title={copia === 'erro' ? 'O navegador não deixou copiar' : 'Copiar questão'}
 				class="flex h-11 min-w-11 items-center justify-center rounded-full border border-line transition-transform active:scale-95 {copia ===
 				'ok'

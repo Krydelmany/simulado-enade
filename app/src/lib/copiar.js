@@ -15,7 +15,8 @@ import { nomeMateria } from './materias.js';
  */
 
 const LETRAS = ['A', 'B', 'C', 'D', 'E'];
-// o mesmo regex do `TextoRico.svelte`
+// IDÊNTICO ao `FENCE` do `TextoRico.svelte` e ao `FENCE_RENDER` do
+// `validar.py` (ver "Blocos de código" no AGENTS.md)
 const FENCE = /```([^\n`]*)\n?([\s\S]*?)```/g;
 const LINK = /(https?:\/\/[^\s<>]+)/g;
 

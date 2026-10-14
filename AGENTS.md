@@ -47,7 +47,8 @@ app/                       o site: SvelteKit 2 + Svelte 5 + Tailwind 4 + Vite 6
                            simulado/
   src/lib/                 banco.js, stats.js, simulado.js, materias.js(.json),
                            resumo.js, tema.js, motion.js, foco.svelte.js,
-                           sessao.js, gestos.js, camadas.svelte.js e os
+                           sessao.js, gestos.js, camadas.svelte.js,
+                           copiar.js (botão de copiar a questão) e os
                            componentes (Questao, TextoRico, SessaoTopo, BarraAcao,
                            Contador, VigiaDevTools, BordaVoltar, DicaGestos)
   static/banco/            O BANCO que o site carrega: enadeAAAA-{fg,ce}.json,
@@ -363,8 +364,10 @@ Ordem dentro dos arquivos:
     texto em código.
   - O `validar.py` acusa os dois casos. Se for uma linguagem nova legítima,
     acrescente-a em `LINGUAGENS`.
-  - O regex `FENCE_RENDER` do `validar.py` tem de continuar idêntico ao de
-    `TextoRico.svelte`.
+  - O regex `FENCE_RENDER` do `validar.py` tem de continuar idêntico ao
+    `FENCE` de `TextoRico.svelte` e ao de `lib/copiar.js`. Mudou um, mude os
+    três: senão a validação ou o texto copiado cortam o código de um jeito
+    diferente do que a tela mostra.
 - **Imagem:** recorte da página renderizada a 200 dpi, conferido a olho, em
   `app/static/banco/img/<id>.png`. Vídeo é link, nunca arquivo.
 
