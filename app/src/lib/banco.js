@@ -105,13 +105,31 @@ function gravarCache(questoes) {
 
 /**
  * Carrega todos os JSONs do banco (pasta `static/banco`) EM PARALELO.
- * Só grava a cache quando os 8 arquivos vieram — cache parcial seria pior que
+ * Nunca lança: arquivo que falha (offline, 404, deploy no meio) vira `[]`.
+ * Só grava a cache quando os 9 arquivos vieram — cache parcial seria pior que
  * nenhuma, porque o TTL a manteria por 6 h.
+ *
+ * @returns {Promise<object[]>} as questões que chegaram (pode ser parcial).
  */
 export async function carregarBanco() {
-	if (typeof fetch !== 'function') return [];
+	return (await carregarBancoDetalhado()).questoes;
+}
+
+/**
+ * Como `carregarBanco`, dizendo também se o banco veio INTEIRO.
+ *
+ * Quem decide algo pela AUSÊNCIA de uma questão precisa disso: com um JSON
+ * faltando, "o id não está no banco" não quer dizer que a questão deixou de
+ * existir. O simulado apagava a prova salva do aluno (até a já entregue) ao
+ * abrir sem internet numa aba nova.
+ *
+ * @returns {Promise<{questoes: object[], completo: boolean}>}
+ */
+export async function carregarBancoDetalhado() {
+	if (typeof fetch !== 'function') return { questoes: [], completo: false };
 	const cache = lerCache();
-	if (cache) return cache;
+	// a cache só existe quando os 9 arquivos chegaram
+	if (cache) return { questoes: cache, completo: true };
 
 	const resultados = await Promise.all(
 		ARQUIVOS_BANCO.map(async (arquivo) => {
@@ -134,7 +152,7 @@ export async function carregarBanco() {
 		if (!r.ok) completo = false;
 	}
 	if (completo && questoes.length) gravarCache(questoes);
-	return questoes;
+	return { questoes, completo };
 }
 
 /**
