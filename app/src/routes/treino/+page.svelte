@@ -6,7 +6,7 @@
 	import SessaoTopo from '$lib/SessaoTopo.svelte';
 	import BarraAcao from '$lib/BarraAcao.svelte';
 	import Contador from '$lib/Contador.svelte';
-	import { carregarBanco, embaralhar } from '$lib/banco.js';
+	import { carregarBancoDetalhado, embaralhar } from '$lib/banco.js';
 	import { GRUPOS_MATERIA, materiaExiste, nomeMateria } from '$lib/materias.js';
 	import {
 		somarXP,
@@ -45,6 +45,10 @@
 	let xpValor = $state(10);
 	let carregou = $state(false);
 	let falhou = $state(false);
+	// banco veio inteiro? (com um JSON faltando, id ausente não é questão apagada)
+	let bancoInteiro = $state(true);
+	// treino pausado que não deu para remontar por causa do banco parcial
+	let sessaoGuardada = $state(false);
 	let escolha = $state(false);
 	let salva = $state(null);
 	let prontoModo = $state(null);
@@ -110,7 +114,7 @@
 
 	onMount(async () => {
 		try {
-			banco = await carregarBanco();
+			({ questoes: banco, completo: bancoInteiro } = await carregarBancoDetalhado());
 			xp = getXP();
 		} catch {
 			falhou = true;
@@ -123,9 +127,20 @@
 	// Com treino pausado, pergunta se continua; sem, monta uma fila nova.
 	// Serve ao carregar a página e ao trocar entre treino e revisão.
 	function iniciar() {
+		sessaoGuardada = false;
 		const s = carregarSessao();
 		if (!revisao && s?.ids?.length) {
-			const ordem = s.ids.map((id) => banco.find((q) => q.id === id)).filter(Boolean);
+			const achadas = s.ids.map((id) => banco.find((q) => q.id === id));
+			// Banco pela metade: a questão que falta pode estar no JSON que não
+			// chegou. Antes a sessão voltava encurtada em silêncio, e a primeira
+			// resposta regravava a versão curta por cima da inteira. Agora fica
+			// guardada e a tela pede para recarregar — sem montar() nenhum, que
+			// apagaria a sessão.
+			if (!bancoInteiro && !achadas.every(Boolean)) {
+				sessaoGuardada = true;
+				return;
+			}
+			const ordem = achadas.filter(Boolean);
 			if (ordem.length) {
 				salva = { ...s, fila: ordem };
 				escolha = true;
@@ -439,6 +454,16 @@
 	<div class="rounded-3xl bg-card p-6 text-center shadow-sm" role="alert">
 		<p class="font-display text-lg font-bold">Não deu para carregar as questões</p>
 		<p class="mt-1 text-sm text-ink-soft">Verifique sua conexão e tente de novo.</p>
+		<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
+			Tentar de novo
+		</button>
+	</div>
+{:else if sessaoGuardada}
+	<div class="rounded-3xl bg-card p-6 text-center shadow-sm" role="alert">
+		<p class="font-display text-lg font-bold">Parte das questões não carregou</p>
+		<p class="mt-1 text-sm text-ink-soft">
+			Seu treino pausado continua guardado neste aparelho. Verifique a conexão e tente de novo para continuar.
+		</p>
 		<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
 			Tentar de novo
 		</button>
