@@ -5,6 +5,7 @@
 	import Questao from '$lib/Questao.svelte';
 	import SessaoTopo from '$lib/SessaoTopo.svelte';
 	import BarraAcao from '$lib/BarraAcao.svelte';
+	import BuscaQuestoes from '$lib/BuscaQuestoes.svelte';
 	import Contador from '$lib/Contador.svelte';
 	import DicaGestos from '$lib/DicaGestos.svelte';
 	import { DUR } from '$lib/motion.js';
@@ -202,6 +203,39 @@
 		let lista = revisao ? banco.filter((q) => getParaRevisar().includes(q.id)) : banco;
 		if (filtro !== 'todos') lista = lista.filter((q) => materia(q) === filtro);
 		return lista;
+	}
+
+	/**
+	 * Poe a questao escolhida na busca na posicao ATUAL da fila, sem perder o
+	 * resto: ela sai de onde estava (se estava) e entra em `i`. O resto da fila
+	 * mantem a ordem relativa.
+	 *
+	 * `respostas` e indexado por posicao, entao inserir no meio desalinha tudo
+	 * a frente — o que e seguro aqui porque `respostas` so serve para reexibir
+	 * ao voltar; o que alimenta XP e historico e o `log`. Corta da posicao
+	 * atual em diante para nao mostrar a resposta de outra questao.
+	 */
+	function pularPara(id) {
+		if (revisao) {
+			// em revisao a fila e so o que foi marcado: pular para fora dela
+			// criaria uma questao que nao entrou no modo
+			const q = banco.find((x) => x.id === id);
+			if (q && !fila.some((x) => x.id === id)) {
+				fila = [q, ...fila];
+				i = 0;
+				respostas = [];
+			}
+			return;
+		}
+		const q = banco.find((x) => x.id === id);
+		if (!q) return;
+		const novaFila = fila.filter((x) => x.id !== id);
+		novaFila.splice(Math.min(i, novaFila.length), 0, q);
+		fila = novaFila;
+		respostas = respostas.slice(0, i);
+		escolha = false;
+		fimVolta = false;
+		persistir();
 	}
 
 	function montar(nova = true) {
@@ -625,6 +659,11 @@
 			</div>
 		</div>
 	{:else}
+		<!-- Busca: campo fixo no topo, acima do filtro de materia. Some quando a
+		     sessao acabou ou esta pausada — nesses estados nao ha fila para pular. -->
+		<div class="relative mt-4 mb-3">
+			<BuscaQuestoes {banco} aoPular={pularPara} />
+		</div>
 		<div class="mt-4 mb-3 flex items-center gap-2">
 			<label class="flex flex-1 items-center gap-2 rounded-2xl border border-line bg-card px-3">
 				<Tag size={17} weight="bold" class="shrink-0 text-ink-soft" aria-hidden="true" />
