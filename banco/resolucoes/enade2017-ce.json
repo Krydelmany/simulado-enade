@@ -1,0 +1,152 @@
+{
+ "2017-CE-D03": {
+  "texto": "São dois passos: contar os vizinhos vivos e aplicar as regras.\n\n1. Contar as 8 células em volta de (i, j): linhas i−1 a i+1 e colunas j−1 a j+1, pulando a própria célula. O enunciado dispensa tratar as bordas.\n2. Aplicar as regras. Uma célula viva com menos de 2 ou mais de 3 vizinhos morre. Uma célula morta com exatamente 3 vizinhos nasce. Em todos os outros casos, nada muda.\n\n```c\nvoid atualiza(unsigned char **M, int i, int j) {\n    int p, q, vivos = 0;\n    for (p = i - 1; p <= i + 1; p++)\n        for (q = j - 1; q <= j + 1; q++)\n            if (!(p == i && q == j))\n                vivos += M[p][q];\n\n    if (M[i][j] == 1 && (vivos < 2 || vivos > 3))\n        M[i][j] = 0;            /* solidão ou superpopulação */\n    else if (M[i][j] == 0 && vivos == 3)\n        M[i][j] = 1;            /* nascimento */\n    /* demais casos: permanece */\n}\n```\n\nErros comuns:\n- somar a própria célula junto com as vizinhas;\n- usar M[i][j] dentro do laço no lugar de M[p][q].",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-D04": {
+  "texto": "a) Duas características do microcontrolador para essa aplicação, por exemplo:\n- os periféricos necessários: conversor A/D, I2C para a memória externa, temporizador para o intervalo de 30 min;\n- consumo de energia (o coletor fica em campo);\n- capacidade de memória;\n- desempenho (tamanho da palavra, velocidade);\n- custo;\n- suporte à depuração;\n- tolerância ao ambiente (temperatura, umidade).\n\nb) O circuito é um divisor de tensão, com R embaixo e 10 kΩ em cima:\n\nVo = Vref · R / (R + 10 kΩ)\n\nO conversor A/D de 12 bits leva 0..Vref em 0..4095, então x = Vo · 4095 / Vref. Substituindo Vo:\n\nx = 4095 · R / (R + 10 000)\n\nc) São 4 variáveis × 2 amostras por hora × 24 h × 31 dias (o maior mês) × 16 bits:\n\n4 × 2 × 24 × 31 × 16 = 95 232 bits = 93 Kbits.\n\nAs memórias I2C vêm em potências de 2, então a menor que comporta 93 Kbits é a de 128 Kbits.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-D05": {
+  "texto": "Áreas livres, na ordem: 10, 4, 20, 19, 27, 9, 12, 13 e 15 KB. O programa tem 12 KB.\n\na)\n- First-fit: usa a PRIMEIRA área que cabe. Percorrendo a lista, 10 e 4 não cabem e 20 cabe, então o programa vai para a área de 20 KB (sobram 8).\n- Best-fit: usa a área que deixa a MENOR sobra, a de 12 KB (sobra 0).\n- Worst-fit: usa a MAIOR área, a de 27 KB (sobram 15).\n\nb) Neste caso, o best-fit gera a menor fragmentação: ocupa a área de 12 KB inteira e não deixa sobra.\n\nEle deixa de ser a melhor opção quando nenhuma área bate exatamente com o tamanho. Por exemplo, um programa de 11 KB iria para a área de 12 KB e deixaria um buraco de 1 KB. Repetido muitas vezes, isso espalha pela memória pequenos buracos inúteis, porque nenhum programa cabe neles (fragmentação externa). Nesses casos, o worst-fit pode ser melhor: deixa sobras grandes, que ainda servem para outros programas.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q09": {
+  "texto": "No diagrama de tensão por deformação:\n- o módulo de elasticidade é a inclinação do trecho inicial, reto: quanto mais em pé, mais alto;\n- o nível de deformação é até onde a curva vai no eixo ε.\n\nCurva por curva:\n- Curva I: módulo alto, deformação pequena (material rígido e frágil). A opção A erra a deformação.\n- Curva II: módulo alto, deformação grande. A opção B erra o módulo.\n- Curva III: módulo baixo, deformação grande (elastômero). A opção C erra a deformação.\n- Curva IV: módulo baixo, deformação grande. A opção D erra o módulo.\n- Curva V: inclinação pequena (módulo baixo) e termina logo (deformação pequena). A opção E acerta.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q10": {
+  "texto": "- I: verdadeira. É difícil pôr preço nos serviços dos ecossistemas, como polinização, regulação climática e biodiversidade.\n- II: verdadeira. O problema climático abriu espaço para as fontes renováveis.\n- III: verdadeira. A degradação ambiental compromete os recursos dos quais a economia depende.\n- IV: falsa. É o contrário: o desenvolvimento sustentável busca crescer sem aumentar o consumo de recursos naturais. Isso não impede os países em desenvolvimento de crescer.\n- V: verdadeira. Os acordos ambientais internacionais buscam conciliar economia, comunidades tradicionais e conservação.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q11": {
+  "texto": "- I: verdadeira. O just in time valoriza a melhoria contínua (kaizen) dos processos e das pessoas.\n- II: falsa. O princípio da visibilidade é tornar os problemas visíveis no local de trabalho (como o andon, os quadros e o kanban). A afirmação mistura essa ideia com a da implantação \"da fábrica para a empresa\".\n- III: verdadeira. O objetivo é produzir de forma simples e enxuta, com qualidade, no prazo e com custo mínimo.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q12": {
+  "texto": "Pela lei de Newton, a temperatura se aproxima da ambiente: a taxa é proporcional à diferença e tem sinal contrário. Logo, dT/dt = −k(T − A), com k > 0.\n\nResolva com a substituição u = T − A, que dá du/dt = −k·u e u(t) = u(0)·e^(−kt). Voltando:\n\nT(t) = (T(0) − A)·e^(−kt) + A.\n\nConfira: em t = 0 dá T(0), e para t → ∞ tende a A. As opções C, D e E esquecem o fator (T(0) − A). A opção B tem o sinal errado, e a temperatura se afastaria do ambiente.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q13": {
+  "texto": "O escudo térmico precisa barrar o calor e aguentar choques térmicos sem trincar. Por isso usa cerâmica porosa:\n- baixa condutividade térmica: o calor quase não atravessa;\n- baixo coeficiente de dilatação: não trinca com variações bruscas de temperatura.\n\nOs erros das outras opções:\n- A: metais conduzem bem o calor.\n- B e D: polímeros resistem pouco ao calor.\n- C: cerâmicas são fracas à tração (resistem bem à compressão).\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q14": {
+  "texto": "A pressão hidrostática é P = ρ·g·z = 1 025 × 9,8 × z ≈ 10 045 Pa por metro, ou cerca de 10,05 kPa/m.\n\n- É uma relação linear que passa pela origem: profundidade 0 dá pressão 0.\n- Com 1 000 m, a pressão é cerca de 10 050 kPa. Com 4 000 m, cerca de 40 200 kPa.\n\nO gráfico A é uma reta pela origem que bate com esses valores. Os outros são curvas ou começam fora da origem.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q15": {
+  "texto": "Reduzir todos os tempos em 30% é multiplicar cada um por 0,7.\n\n- I: falsa. A média também é multiplicada por 0,7: 50 s viram 35 s no total, o que dá cerca de 2,7 s por etapa (35 / 13), e não 32,5 s.\n- II: falsa. O desvio padrão também é multiplicado por 0,7.\n- III: verdadeira. A dispersão relativa (o coeficiente de variação, desvio dividido pela média) não muda, porque os dois são multiplicados pelo mesmo fator.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q16": {
+  "texto": "Repare no que as recomendações têm em comum: todas reduzem energia elétrica que vira calor, seja de propósito ou como perda.\n\n- A lâmpada incandescente transforma a maior parte da energia em calor.\n- O chuveiro na posição \"inverno\" e o ferro de passar aquecem resistências.\n- Os benjamins e os fios finos demais aquecem por efeito Joule.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q17": {
+  "texto": "A lata tem lateral 2πrh e base mais tampa 2πr², e cada parte é feita de uma liga com custo diferente.\n\n- I: verdadeira. O custo é C = 2π(K₁rh + K₂r²).\n- II: falsa. Não se minimiza a área: o objetivo é o CUSTO. Com ligas de preços diferentes, a menor área não dá o menor custo.\n- III: verdadeira. A restrição é o volume fixo: g(r, h) = πr²h − V₀ = 0.\n- IV: verdadeira. O método de Lagrange resolve ∇C = λ∇g junto com a restrição.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q18": {
+  "texto": "Os dois corpos de prova rompem na mesma tensão (290 MPa). Como σ = 3Fd/(2wh²) e d é igual nos dois, a força de ruptura é proporcional a w·h².\n\nO corpo A tem w = 3w_B e h = h_B/2, então w·h² = 3 × (1/2)² = 3/4 do de B.\n\nF_A = 0,75·F_B, ou seja, 75%.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q19": {
+  "texto": "Monte as regras, sempre respeitando a prioridade A > B > C > D e no máximo duas catracas abertas:\n\n- C1 = A. A fila A sempre passa.\n- C2 = B. Acima de B só existe A, então nunca haveria uma terceira catraca aberta.\n- C3 = C·(A' + B'). C só abre se A e B não estiverem ambas ocupadas.\n- C4 = D·(A'B' + A'C' + B'C'). D só abre se, entre A, B e C, no máximo uma estiver ocupada.\n\nO circuito C implementa exatamente isso:\n- C1 ligada direto em A;\n- C2 = A'B + AB = B;\n- C3 = A'C + B'C;\n- C4 = soma de três ANDs, cada um com D e um par de entradas negadas.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q20": {
+  "texto": "- I: verdadeira. (100*)* aceita blocos que começam com \"1\" seguido de \"0\" e mais zeros quantos quiser. 10010100 = \"100\" + \"10\" + \"100\".\n- II: falsa. Em (1(10)*0)*, cada bloco começa com 1 e termina com 0, com pares \"10\" no meio. 10010 = \"10\" e sobra \"010\", que começa com 0. Não há divisão possível.\n- III: falsa. Uma mesma linguagem regular pode ter várias expressões. Por exemplo, a* e (a*)* descrevem a mesma linguagem.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q21": {
+  "texto": "É preciso escrever 011 nos bits 5, 4 e 3 sem mexer nos outros bits:\n\n1. Zerar os bits 5 a 3: AND com ~0x0038 (0x0038 = 0000 0000 0011 1000).\n2. Ligar o padrão 011 nessa posição: OR com 0x0018 (011 deslocado 3 casas = 0001 1000).\n\nFica MODOEVENTO = (MODOEVENTO & ~0x0038) | 0x0018.\n\n- A: apaga todos os outros bits do registrador.\n- B: não zera o bit 5. Se ele estava em 1, o resultado vira 111, que é inválido.\n- C: só apaga bits.\n- D: faz na ordem errada e apaga o que acabou de ligar.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q22": {
+  "texto": "Em 32 bits, cada int ocupa 4 bytes. Os valores são:\n\n- salario1 = 6750 = 0x00001A5E;\n- salario2 = 6750 + 1000 = 7750 = 0x00001E46;\n- ptr = endereço de salario1 = 0x00000070.\n\nNa memória, que está em little-endian (o byte menos significativo fica no menor endereço):\n\n- 0x70 a 0x73: 5E 1A 00 00 (salario1);\n- 0x74 a 0x77: 46 1E 00 00 (salario2);\n- 0x78 a 0x7B: 70 00 00 00 (ptr).\n\nO mapa A mostra exatamente isso.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q23": {
+  "texto": "Escreva o sistema em espaço de estados. Com o estado (x1, x2):\n\n- x1[n+1] = −x2[n]\n- x2[n+1] = 0,5·x1[n] − x2[n] + u[n]\n\nA matriz é A = [[0, −1], [0,5, −1]], com equação característica z² + z + 0,5 = 0. Os polos são z = (−1 ± j)/2, com módulo √0,5 ≈ 0,71.\n\n- I: verdadeira. Os polos estão dentro do círculo unitário, então o sistema é assintoticamente estável. Além disso é linear, invariante e discreto.\n- II: verdadeira. Os polos têm parte real −0,5, então estão no semiplano esquerdo.\n- Relação: a II não justifica a I. Em sistemas DISCRETOS, o critério de estabilidade é estar dentro do círculo unitário. \"Semiplano esquerdo\" é o critério dos sistemas contínuos.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q24": {
+  "texto": "- B: correta. O máximo de duas heurísticas admissíveis também é admissível (não passa do custo real), e em cada estado é maior ou igual às duas, ou seja, mais informado.\n- A: falsa. Sendo as duas admissíveis, o A* encontra o caminho de custo ótimo com qualquer uma delas, e o custo é o mesmo.\n- C: falsa. Mais informada garante expandir no máximo os mesmos estados (\"menor ou igual\"), e não necessariamente menos.\n- D: falsa. A soma de duas heurísticas admissíveis pode superestimar o custo real.\n- E: falsa. Com h = 0, o A* vira a busca de custo uniforme (Dijkstra), e não uma busca gulosa.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q25": {
+  "texto": "- D: correta. O IPS fica no caminho do tráfego, como um firewall, e bloqueia anomalias e conteúdo malicioso antes que entrem na rede.\n- A: falsa. O antivírus de gateway olha o conteúdo, então trabalha na camada de aplicação, e não na de rede.\n- B: falsa. Um firewall comum não detecta canais camuflados em túneis.\n- C: falsa. É o contrário: o firewall de aplicação é que filtra com mais detalhe, com mais custo de desempenho.\n- E: falsa. O IDS detecta e avisa, mas não age para neutralizar. Quem age é o IPS.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q26": {
+  "texto": "Veja como o código manipula os índices:\n\n- insereEvento grava na posição fim e avança o fim.\n- processaEvento lê da posição inicio e avança o inicio.\n\nO primeiro a entrar é o primeiro a sair (FIFO): é uma fila, e os eventos mais antigos são processados primeiro. Não há prioridade, nem escolha pelo operador.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q27": {
+  "texto": "- I: verdadeira. Sem cobertura, o carro precisa guardar até um dia de leituras para enviar depois.\n- II: verdadeira. Os três módulos usam a internet (GPRS, o aplicativo e o servidor), e quem mostra os relatórios ao usuário é o MÓDULO_2.\n- III: falsa. O MÓDULO_1 nem sempre está conectado e é o mais limitado. O processamento deve ficar no servidor.\n- IV: verdadeira. O banco de dados fica melhor no servidor em nuvem, com espaço e conexão permanente.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q28": {
+  "texto": "- I: verdadeira. O custo total é a soma de quantidade × custo unitário em todas as rotas.\n- II: verdadeira. Cada porto não pode enviar mais do que tem: Σⱼ yᵢⱼ ≤ sᵢ.\n- III: falsa. Cada mercado deve receber PELO MENOS rⱼ, então a desigualdade é ≥, e não ≤.\n- IV: falsa. O total enviado ao mercado j é a soma Σᵢ yᵢⱼ, e não K vezes um valor.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q29": {
+  "texto": "- I: verdadeira. A virtualização economiza energia (menos servidores físicos), mas traz dificuldades de projeto e gerência.\n- II: verdadeira. Uma vulnerabilidade no hospedeiro afeta todas as máquinas virtuais, e os servidores consolidados trabalham mais carregados, o que aumenta o desgaste e o custo de manutenção.\n- Relação: a II explica a I. São justamente os problemas que a I menciona.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q30": {
+  "texto": "Pelo Marco Civil da Internet, o provedor de aplicações responde quando há divulgação de imagens íntimas sem autorização e ele, ao ser notificado pela vítima, não remove o conteúdo dentro dos seus limites técnicos (art. 21).\n\n- B: falsa. Não faz sentido \"inocentar\" o provedor por um suposto pedido da vítima.\n- C e E: falsas. Punem a vítima.\n- D: falsa. O provedor não pode retirar tudo o que existe da vítima na internet: só o que está no próprio serviço.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q31": {
+  "texto": "- I: falsa. No timeboxing, o tempo fixo é o de cada iteração ou ciclo (o sprint), e o escopo se ajusta a ele. Não se trata de fixar o prazo do projeto inteiro \"independentemente do ciclo\".\n- II: verdadeira. É a lógica de priorizar: entregar o mais importante dentro do prazo e deixar o resto para depois.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q32": {
+  "texto": "- B: correta. Antes da rasterização, o pipeline descarta faces que não aparecem (culling) e recorta o que está fora da visão da câmera (clipping). Isso economiza trabalho.\n- A: falsa. É o próprio Vertex Shader que projeta os vértices, e não a aplicação.\n- C: falsa. A textura é lida no estágio de fragmentos.\n- D: falsa. O modelo de Phong calcula a cor por fragmento, no Fragment Shader, e não por vértice.\n- E: falsa. Só esses dados de vértice não bastam para uma imagem foto-realística: faltam luzes, sombras etc.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q33": {
+  "texto": "- I: verdadeira. GRANT concede, DENY nega e REVOKE retira permissões.\n- II: falsa. No SQL Server, o DENY tem precedência. Se o grupo do usuário tem DENY SELECT, ele não consegue consultar, mesmo com GRANT individual.\n- III: falsa. Com WITH GRANT OPTION, o usuário pode repassar as permissões que recebeu.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q34": {
+  "texto": "- I: falsa. A baixa acessibilidade aos smartphones não basta para \"revelar a exclusão social na terceira idade\", que é um fenômeno bem mais amplo. O texto fala de dificuldade de usabilidade.\n- II: verdadeira. Tela de toque, ícones pequenos e avisos sonoros, ou seja, as affordances do aparelho, combinam mal com as limitações de visão, tato, audição e coordenação do idoso.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q35": {
+  "texto": "Teste as opções com o vetor D a partir do nó 1. A opção C dá A = 2, B = 1, C = 1, D = 4, E = 2 e F = 1:\n\n- nó 3: pela aresta A, custo 2. ✓\n- nó 2: o direto custa 4, e pelo 3 custa 2 + B = 3. ✓\n- nó 4: pelo 2, 3 + C = 4; pelo 3, 2 + 3 = 5. Fica 4. ✓\n- nó 5: pelo 4, 4 + 1 = 5; pelo 3, 2 + D = 6. Fica 5. ✓\n- nó 6: pelo 4, 4 + 5 = 9; pelo 5, 5 + E = 7. Fica 7. ✓\n- nó 7: pelo 6, 7 + F = 8; pelo 5, 5 + 4 = 9. Fica 8. ✓\n\nAs outras opções falham em algum nó. Por exemplo, na D (C = 3), o nó 4 ficaria com 5.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ }
+}

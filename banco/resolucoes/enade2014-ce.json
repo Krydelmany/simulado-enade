@@ -1,0 +1,137 @@
+{
+ "2014-CE-D03": {
+  "texto": "a) Inverter todas as arestas é transpor a matriz: a aresta (i, j) vira (j, i), ou seja, M'[j][i] = M[i][j].\n\n```text\npara i = 1 até n faça\n    para j = 1 até n faça\n        R[j][i] = M[i][j]\ndevolve R\n```\n\nFazendo na própria matriz, troque só os pares acima da diagonal (j > i). Se percorrer a matriz inteira, cada par é trocado duas vezes e volta ao original.\n\nb) Um ciclo orientado de tamanho 3 é i → j → k → i. Para imprimir cada ciclo uma vez só, escolha i < j < k e teste os dois sentidos possíveis do trio:\n\n```text\npara i = 1 até n faça\n    para j = i+1 até n faça\n        para k = j+1 até n faça\n            se M[i][j] = 1 e M[j][k] = 1 e M[k][i] = 1 então\n                imprima (i, j, k)\n            se M[j][i] = 1 e M[i][k] = 1 e M[k][j] = 1 então\n                imprima (j, i, k)\n```\n\n(1, 2, 3) e (2, 3, 1) são o mesmo ciclo, e a ordem i < j < k evita repeti-lo. O sentido oposto, (3, 2, 1), é outro ciclo: é o segundo teste.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-D04": {
+  "texto": "Responda os quatro itens, com pelo menos dois argumentos em a) e em d).\n\na) A plataforma do cliente fica mais \"leve\", com menos processamento, armazenamento e programas instalados. Em troca, passa a precisar obrigatoriamente de conexão de rede e de comunicação segura, como criptografia. As atualizações de software deixam de ser problema do usuário.\n\nb) A rede local e o acesso à internet precisam de qualidade de serviço: banda suficiente, baixa latência e alta disponibilidade (às vezes com link redundante). Sem a conexão, o serviço para.\n\nc) Pela redundância: os dados ficam replicados em vários servidores e em locais diferentes. Se um equipamento ou um local falha, outra cópia assume. Assim, o serviço continua no ar e nada se perde.\n\nd) Alta disponibilidade, acesso de qualquer lugar e de qualquer dispositivo, menos manutenção do lado do cliente, cópias de segurança sem infraestrutura própria e um custo inicial menor.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-D05": {
+  "texto": "a) Some os pesos dos parâmetros presentes (A = 30%, B = 30%, C = 40%). Com 60% ou mais, Z = 1. Com 30% ou menos, Z = 0. Entre 30% e 60%, tanto faz (X).\n\n```text\nA B C | soma | Z\n0 0 0 |   0% | 0\n0 0 1 |  40% | X\n0 1 0 |  30% | 0\n0 1 1 |  70% | 1\n1 0 0 |  30% | 0\n1 0 1 |  70% | 1\n1 1 0 |  60% | 1\n1 1 1 | 100% | 1\n```\n\nb) No mapa de Karnaugh, use o X de 001 como 1. Assim a coluna C = 1 vira toda 1, e sobra o termo AB para o caso 110:\n\nZ = A·B + C.\n\nO circuito tem uma porta AND (entradas A e B) e uma porta OR (a saída da AND e C), só duas portas.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q09": {
+  "texto": "A distribuição tem média μ = 25 km e variância σ² = 25 km², então o desvio padrão é σ = 5 km. O treino dura 1h15min = 1,25 h.\n\n- I: falsa. A velocidade média é 25 / 1,25 = 20 km/h.\n- II: verdadeira. A média da distância é μ = 25 km.\n- III: falsa. 25 km² é a variância. Não é uma área percorrida.\n- IV: verdadeira. Um desvio padrão em torno da média: 25 ± 5, de 20 a 30 km.\n- V: verdadeira. Dividindo esse intervalo por 1,25 h: de 16 a 24 km/h.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q10": {
+  "texto": "Em corrente contínua e regime permanente:\n\n- O capacitor vira circuito aberto: não passa corrente, e L1, em série com ele, fica apagada.\n- O indutor vira curto-circuito: L3, em paralelo com ele, fica em curto e apagada.\n\nSobra L2, em série com o indutor (curto) e ligada direto aos 12 V da fonte: L2 acende.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q11": {
+  "texto": "Primeiro converta tudo para mg/L. Como 1 g/m³ = 1 mg/L:\n\n- X: 0,4 g/m³ = 0,4 mg/L → muito limpo.\n- Y: 3 850 mg/m³ = 3,85 mg/L → razoável.\n- Z: 2,5 mg/L → razoável.\n- W: 3,0 mg/L → razoável.\n- T: 0,01 kg/m³ = 10 g/m³ = 10 mg/L → péssimo (acima de 6).\n\nSó a seção T não chega a \"razoável\".\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q12": {
+  "texto": "Pela lei de Fourier, numa parede plana, q = λ · ΔT / L. Isolando a condutividade:\n\nλ = q · L / ΔT = 105 W/m² × 0,20 m / (35 − 20) K = 21 / 15 = 1,40 W/(m·K).\n\nO material da tabela com λ = 1,40 é o concreto.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q13": {
+  "texto": "O texto diz que a fibra de carbono tem resistência só \"ligeiramente\" maior que a do aço, mas pesa sete vezes menos.\n\n- I: falsa. A vantagem não vem de uma resistência à tração muito maior.\n- II: falsa. O texto não aponta a flexibilidade como a vantagem.\n- III: verdadeira. Com a boa relação entre resistência e peso, a força antes gasta para sustentar o próprio cabo passa a sustentar o elevador, e o consumo cai cerca de 15%.\n- IV: verdadeira. A vantagem principal é a alta relação entre resistência e peso.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q14": {
+  "texto": "Siga as formas do fluxograma:\n\n- 1 é o início (C) e 9 é o término (F).\n- 2 a 5 são entradas de dados: k, D, Re e o chute inicial f₀. O f₀ = 0,03 precisa entrar antes do laço.\n- 6 é o cálculo de f₁ pela equação (D).\n- 7 é o losango de decisão: |f₀ − f₁| < 0,00001 (E).\n- Se convergiu, 8 é a saída do resultado (J). Se não, 10 faz f₀ = f₁ (I) e volta para o cálculo em 6.\n\nA única opção com 6-D, 7-E, 8-J, 9-F e 10-I é a B.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q15": {
+  "texto": "Olhe a troca nas linhas 15 a 21: se nota[i] <= nota[j], troca a nota e o nome junto.\n\n- A troca acontece quando a nota da frente é MENOR, então a maior nota sobe para o início: a ordem é decrescente por nota.\n- O nome só acompanha a sua nota. Não há nenhum critério alfabético, nem para desempatar (com notas iguais, o <= até troca a ordem).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q16": {
+  "texto": "Use o consumo anual de combustível como 100%:\n\n- investimento inicial de 20%;\n- custo de transporte de 5% ao ano;\n- economia de 10% ao ano.\n\nO ganho líquido é de 5% ao ano, então o investimento se paga em 20 / 5 = 4 anos.\n\n- I: verdadeira. A partir do quinto ano, a indústria lucra.\n- II: falsa. Queimar biomassa produz MAIS material particulado do que o gás natural.\n- III: verdadeira. Resíduo de madeira é fonte renovável. O gás natural é fóssil.\n- IV: falsa. Em 5 anos, a economia líquida (25%) já supera o investimento (20%).\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q17": {
+  "texto": "Os dois gráficos mostram os mesmos números: A com 45% e B com 55%. A diferença está na escala do eixo.\n\n- I: falsa. Os resultados são iguais. Só a apresentação muda.\n- II: falsa. O gráfico II começa o eixo em 40%, o que faz B parecer muito à frente. Para atrair o eleitor que quer \"votar em quem vai ganhar\", o mais conveniente para B é o II, e não o I.\n- III: verdadeira. Escolher a escala que exagera a vantagem é uma decisão técnica, mas também ética: pode enganar o eleitor.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q18": {
+  "texto": "O alumínio aeronáutico é usado porque junta alta resistência mecânica e baixa densidade. Isso permite uma estrutura forte e leve: a cadeira pesa metade do modelo comum.\n\n- B e D: falsas. O alumínio não tem baixa plasticidade, e seu ponto de fusão é baixo.\n- C: falsa. O alumínio não tem alta dureza a quente nem baixa dutilidade.\n- E: falsa. A densidade do alumínio é baixa, não alta.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q19": {
+  "texto": "- I: falsa. A neutralidade da rede vale para quem transmite e roteia o tráfego na internet. A rede interna de uma empresa pode priorizar o que quiser.\n- II: verdadeira. Leis novas mudam os requisitos técnicos e sociais, e os profissionais precisam se adaptar.\n- III: falsa. É justamente o que a neutralidade proíbe: um provedor priorizar um tipo de serviço (mensagens) sobre outro (transferência de arquivos).\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q20": {
+  "texto": "Leia o algoritmo: y = 2·x1 − x2, em que x1 e x2 são as entradas anteriores (u[n−1] e u[n−2]). Ou seja, y[n] = 2u[n−1] − u[n−2].\n\n- I: verdadeira. A saída depende só de entradas e nunca de saídas anteriores. Não há realimentação, então o filtro é FIR (não recursivo).\n- II: verdadeira. A entrada atual u[n] não aparece em y[n]: não há termo de transmissão direta.\n- Relação: a II não explica a I. Ser FIR vem da falta de realimentação da saída, não da falta do termo direto.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q21": {
+  "texto": "- I: verdadeira. Usar mais bits do que o necessário para os tons é redundância de codificação. A semelhança entre pixels vizinhos é redundância inter-pixel.\n- II: verdadeira. Em imagens com várias bandas, as bandas são correlacionadas, então dá para guardar uma com detalhe e as outras de forma mais compacta.\n- III: falsa. O olho humano NÃO tem a mesma sensibilidade a tudo. É por isso que a informação a que ele é pouco sensível pode ser descartada sem perda perceptível de qualidade (como faz o JPEG).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q22": {
+  "texto": "- I: falsa. Ser euleriano diz respeito a percorrer todas as ARESTAS sem repetir (o problema do carteiro). O caixeiro precisa visitar os VÉRTICES, e isso não garante um ciclo hamiltoniano.\n- II: verdadeira. Se toda cidade se liga a todas as outras, existem ciclos hamiltonianos, e a solução do caixeiro é o de menor custo.\n- III: falsa. O carteiro passa por todas as arestas e o caixeiro só pelas necessárias para visitar todos os vértices. As trilhas só coincidiriam em casos especiais (como um grafo que é só um ciclo).\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q23": {
+  "texto": "Leia as colunas do estágio AND, de cima para baixo (um ponto indica que o sinal entra no produto):\n\n- coluna 1: J'K'L'\n- coluna 2: J'KL'\n- coluna 3: J'KL\n- coluna 4: JKL'\n\nNo estágio OR: M soma as quatro colunas, N soma as colunas 3 e 4, e O soma as colunas 1 e 3.\n\n- JKL = 000: só a coluna 1 vale 1. Então M = 1, N = 0 e O = 1, ou seja, 101.\n- JKL = 101: nenhuma coluna vale 1 (as que têm J pedem K = 1). Então MNO = 000.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q24": {
+  "texto": "Cada segmento leva 40 bytes:\n\n- o 1º vai do byte 20 ao 59;\n- o 2º, do 60 ao 99, e foi perdido;\n- o 3º, do 100 ao 139;\n- o 4º começa no 140.\n\nO ACK do TCP é cumulativo e informa o próximo byte esperado EM ORDEM. B recebeu até o 59, e o 60 não chegou. Mesmo recebendo o 3º segmento, ele continua pedindo o 60.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q25": {
+  "texto": "Com compensador proporcional K, a malha fechada tem equação característica s² + 3s + K = 0.\n\n- O discriminante é 9 − 4K. As raízes são complexas (há oscilação) só quando K > 2,25. Para K ≤ 2,25, elas são reais e não há oscilação.\n- I: falsa. Nem sempre há oscilação: depende do ganho.\n- II: verdadeira. Acima de 2,25 as raízes são complexas, que é o ponto em que o lugar das raízes sai do eixo real.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q26": {
+  "texto": "Regra do perceptron: w ← w + η·(esperado − calculado)·x, com η = 1 e w inicial [0, 0].\n\n- I5 (1,1): esperado 1, calculado 0 → w = [0,0] + [1,1] = [1,1].\n- I6 (0,1): esperado 0, calculado 1 → w = [1,1] − [0,1] = [1,0].\n- I7 (1,0): acertou → [1,0].\n- I8 (0,0): acertou → [1,0].\n- I5 (1,1): acertou → [1,0].\n- I6 (0,1): acertou → [1,0].\n\nSequência: [1,1], [1,0], [1,0], [1,0], [1,0], [1,0].\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q28": {
+  "texto": "- A: falsa. O ganho é 1 + 10k/10k = 2, não unitário. O sinal vai a ±1,6 V.\n- B: correta. A faixa de ±1 m/s² com resolução de 0,001 m/s² precisa de 2 000 níveis. Esse sinal ocupa só ±1,6 V dos ±2,0 V do conversor, ou seja, 80% da escala. São necessários 2 000 / 0,8 = 2 500 níveis no total. 11 bits dão só 2 048; 12 bits dão 4 096.\n- C: falsa. A montagem é não inversora (ganho 1 + Rf/Rg).\n- D: falsa. Com 500 amostras por segundo, o sinal deve ficar ABAIXO de 250 Hz (Nyquist). O filtro precisa limitar a banda a até 250 Hz, e não garantir \"pelo menos\" essa faixa.\n- E: falsa. O Sample & Hold abre e fecha a chave a cada amostra, e não uma vez por coleta.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q29": {
+  "texto": "Teste \"abbb\" em cada expressão:\n\n- R1 = a*ba*ba*ba*: exige exatamente três b, com a's em qualquer lugar. \"a\" + \"b\" + \"b\" + \"b\" → aceita.\n- R2 = a*(a|b)a(a|b)*: exige um 'a' que venha depois de pelo menos um caractere. Em abbb o único 'a' é o primeiro → rejeita.\n- R3 = a*ab*a(a|b): exige pelo menos dois a's → rejeita.\n- R4 = (a|b)*: aceita qualquer cadeia.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q31": {
+  "texto": "Para ganhar o meio, exatamente uma estação transmite e as N − 1 outras ficam caladas.\n\n- Uma estação específica transmitir e as outras não: P·(1 − P)^(N−1).\n- Essa estação pode ser qualquer uma das N, e os casos não se sobrepõem. Multiplique por N.\n\nN·P·(1 − P)^(N−1).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q32": {
+  "texto": "Árvore B de grau mínimo t = 5: cada nó cheio tem 2t − 1 = 9 chaves e 2t = 10 filhos.\n\nCom todos os nós cheios, o nível 0 tem 1 nó, o nível 1 tem 10 nós, o nível 2 tem 100 nós, e assim por diante. Uma árvore com profundidade h tem (10^(h+1) − 1) / 9 nós, com 9 chaves em cada:\n\ntotal de chaves = 10^(h+1) − 1.\n\nIgualando a 999 999 = 10^6 − 1: h + 1 = 6, então a profundidade é 5 (contando a raiz como profundidade 0).\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q33": {
+  "texto": "- I: verdadeira. Mesmo com novos polos de inovação, as grandes metrópoles continuam concentrando os fatores de inovação (universidades, capital, serviços avançados).\n- II: falsa. A localização da mão de obra menos qualificada também pesa. As empresas espalham as etapas de montagem para onde ela é mais barata.\n- III: verdadeira. A marca do novo espaço industrial é separar as etapas do processo produtivo em lugares diferentes.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q35": {
+  "texto": "Em Java, os parâmetros são passados por valor. Quando o parâmetro é um objeto, a cópia é da REFERÊNCIA.\n\n- trocaB troca só as cópias locais a e b. As variáveis do main continuam \"2\" e \"5\".\n- trocaC recebe uma cópia da referência para o MESMO array e multiplica cada elemento por 2, alterando o array original: 2 4 6 8 10.\n\nSaída: 2 5 2 4 6 8 10.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ }
+}

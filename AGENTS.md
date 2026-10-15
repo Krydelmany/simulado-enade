@@ -48,16 +48,18 @@ app/                       o site: SvelteKit 2 + Svelte 5 + Tailwind 4 + Vite 6
   src/lib/                 banco.js, stats.js, simulado.js, materias.js(.json),
                            resumo.js, tema.js, motion.js, foco.svelte.js,
                            sessao.js, gestos.js, camadas.svelte.js,
-                           copiar.js (botão de copiar a questão) e os
+                           copiar.js (botão de copiar a questão),
+                           resolucoes.js ("como resolver") e os
                            componentes (Questao, TextoRico, SessaoTopo, BarraAcao,
                            Contador, VigiaDevTools, BordaVoltar, DicaGestos)
   static/banco/            O BANCO que o site carrega: enadeAAAA-{fg,ce}.json,
-                           geradas.json e img/   ← SAÍDA de scripts
+                           geradas.json, resolucoes.json e img/   ← SAÍDA de scripts
   vercel.json              build e cache headers (tem de ficar em app/)
 banco/                     scripts Python que produzem e conferem o banco, mais as
                            FONTES editáveis: classificacao.json, digitadas.json,
-                           geradas/NN-<materia>.json; e anuladas.json (as
-                           questões anuladas, fora do site ← SAÍDA de script)
+                           geradas/NN-<materia>.json, resolucoes/*.json; e
+                           anuladas.json (as questões anuladas, fora do site
+                           ← SAÍDA de script)
 fontes/                    PDFs oficiais do INEP (prova, gabarito, padrão de resposta)
                            + simulado-prof-2026.pdf (relatório da turma, não é banco)
 revisao/                   markdown de revisão: lotes da extração (histórico) e
@@ -226,6 +228,33 @@ do sistema fechar a camada certa.
   impede o pull-to-refresh do Chrome. Só o eixo y: o x desligaria o voltar
   por gesto do Chrome.
 
+### Resoluções ("como resolver")
+
+Depois de responder no treino e no estudo, a questão mostra o bloco "Como
+resolver", aberto, com a autoria no topo esquerdo ("IA · Não auditado").
+Na correção do simulado ele vem fechado (`resolucaoAberta={false}`), e na
+prova nunca aparece. Na discursiva, aparece depois de ver o padrão.
+
+- **Fonte:** `banco/resolucoes/<arquivo do banco>.json` (por exemplo,
+  `enade2019-ce.json`), no formato `{ "<id>": { texto, autor, auditado } }`.
+  Sem `autor`, vale "IA"; sem `auditado`, vale `false`. Quem conferir uma
+  resolução troca `auditado` para `true`, e o selo fica verde.
+- **Saída:** `python banco/resolucoes.py` gera
+  `app/static/banco/resolucoes.json`. O arquivo fica FORA de
+  `ARQUIVOS_BANCO` de propósito: tem quase o tamanho do banco, e a home não
+  precisa dele. O site só o baixa (`lib/resolucoes.js`) quando a primeira
+  resolução vai aparecer. O `versao.py` o inclui no hash, então rode
+  `versao.py --escrever` depois de mudar uma resolução.
+- **Conferência:** o script e o `validar.py` recusam id fora do banco,
+  objetiva cuja ÚLTIMA linha não é "Resposta: X." com X = gabarito oficial,
+  bloco de código torto e arquivo do site desatualizado em relação à fonte.
+  Gerada renumerada (inserir no meio, mudar dificuldade) quase sempre cai na
+  checagem da letra: corrija a fonte junto.
+- O texto passa pelo `TextoRico` (parágrafos com `\n\n`, código em
+  ```` ```lang ````), sem markdown: `**negrito**` aparece literal.
+- Quando o gabarito oficial diverge da análise técnica (2019-CE-Q30 e Q32),
+  a resolução chega à letra oficial e diz isso no texto.
+
 ### Questão ANULADA
 
 Questão anulada pelo INEP (`"gabarito": "ANULADA"`) **não vai para o site**:
@@ -268,6 +297,7 @@ fonte e rode o script correspondente:
 | questões geradas (Fácil/Médio/Difícil) | `banco/geradas/NN-<materia>.json` | `python banco/geradas.py` (reescreve `geradas.json` e `revisao/geradas/*.md`) |
 | taxonomia de matérias | `app/src/lib/materias.json` | lida pelo app e pelos scripts (veja as regras abaixo) |
 | reextrair uma prova inteira do PDF | `fontes/*.pdf` | `banco/gerar.py` (só Linux, veja "Extração") |
+| resolução ("como resolver"), autor e auditoria | `banco/resolucoes/<arquivo do banco>.json` | `python banco/resolucoes.py` e depois `versao.py --escrever` |
 | tirar as anuladas do site | (automático: gabarito `ANULADA`) | `python banco/anuladas.py` (o `gerar.py` e o `digita.py --banco` já chamam); vão para `banco/anuladas.json` |
 
 Depois de **qualquer** mudança no banco, rode nesta ordem:
@@ -490,7 +520,9 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
    outra fonte (veja a tabela).
 5. **Arquivo novo no banco entra à mão em `ARQUIVOS_BANCO`** e se chama
    `enadeAAAA-{fg,ce}.json`. Fora da lista, o site não busca o arquivo. Com
-   outro nome, só o `versao.py` o enxerga, e ninguém o confere.
+   outro nome, só o `versao.py` o enxerga, e ninguém o confere. A exceção é
+   `resolucoes.json`, que fica fora da lista de propósito e tem conferência
+   própria (ver "Resoluções").
 6. **Os caminhos do `.vercelignore` começam com `/`.** Um `banco` sem a barra
    casa também com `app/static/banco`, e o site vai ao ar sem nenhuma questão.
 7. **O `vercel.json` fica em `app/`**, ao lado do `package.json`.

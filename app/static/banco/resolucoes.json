@@ -1,0 +1,1682 @@
+{
+ "2014-CE-D03": {
+  "texto": "a) Inverter todas as arestas é transpor a matriz: a aresta (i, j) vira (j, i), ou seja, M'[j][i] = M[i][j].\n\n```text\npara i = 1 até n faça\n    para j = 1 até n faça\n        R[j][i] = M[i][j]\ndevolve R\n```\n\nFazendo na própria matriz, troque só os pares acima da diagonal (j > i). Se percorrer a matriz inteira, cada par é trocado duas vezes e volta ao original.\n\nb) Um ciclo orientado de tamanho 3 é i → j → k → i. Para imprimir cada ciclo uma vez só, escolha i < j < k e teste os dois sentidos possíveis do trio:\n\n```text\npara i = 1 até n faça\n    para j = i+1 até n faça\n        para k = j+1 até n faça\n            se M[i][j] = 1 e M[j][k] = 1 e M[k][i] = 1 então\n                imprima (i, j, k)\n            se M[j][i] = 1 e M[i][k] = 1 e M[k][j] = 1 então\n                imprima (j, i, k)\n```\n\n(1, 2, 3) e (2, 3, 1) são o mesmo ciclo, e a ordem i < j < k evita repeti-lo. O sentido oposto, (3, 2, 1), é outro ciclo: é o segundo teste.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-D04": {
+  "texto": "Responda os quatro itens, com pelo menos dois argumentos em a) e em d).\n\na) A plataforma do cliente fica mais \"leve\", com menos processamento, armazenamento e programas instalados. Em troca, passa a precisar obrigatoriamente de conexão de rede e de comunicação segura, como criptografia. As atualizações de software deixam de ser problema do usuário.\n\nb) A rede local e o acesso à internet precisam de qualidade de serviço: banda suficiente, baixa latência e alta disponibilidade (às vezes com link redundante). Sem a conexão, o serviço para.\n\nc) Pela redundância: os dados ficam replicados em vários servidores e em locais diferentes. Se um equipamento ou um local falha, outra cópia assume. Assim, o serviço continua no ar e nada se perde.\n\nd) Alta disponibilidade, acesso de qualquer lugar e de qualquer dispositivo, menos manutenção do lado do cliente, cópias de segurança sem infraestrutura própria e um custo inicial menor.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-D05": {
+  "texto": "a) Some os pesos dos parâmetros presentes (A = 30%, B = 30%, C = 40%). Com 60% ou mais, Z = 1. Com 30% ou menos, Z = 0. Entre 30% e 60%, tanto faz (X).\n\n```text\nA B C | soma | Z\n0 0 0 |   0% | 0\n0 0 1 |  40% | X\n0 1 0 |  30% | 0\n0 1 1 |  70% | 1\n1 0 0 |  30% | 0\n1 0 1 |  70% | 1\n1 1 0 |  60% | 1\n1 1 1 | 100% | 1\n```\n\nb) No mapa de Karnaugh, use o X de 001 como 1. Assim a coluna C = 1 vira toda 1, e sobra o termo AB para o caso 110:\n\nZ = A·B + C.\n\nO circuito tem uma porta AND (entradas A e B) e uma porta OR (a saída da AND e C), só duas portas.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q09": {
+  "texto": "A distribuição tem média μ = 25 km e variância σ² = 25 km², então o desvio padrão é σ = 5 km. O treino dura 1h15min = 1,25 h.\n\n- I: falsa. A velocidade média é 25 / 1,25 = 20 km/h.\n- II: verdadeira. A média da distância é μ = 25 km.\n- III: falsa. 25 km² é a variância. Não é uma área percorrida.\n- IV: verdadeira. Um desvio padrão em torno da média: 25 ± 5, de 20 a 30 km.\n- V: verdadeira. Dividindo esse intervalo por 1,25 h: de 16 a 24 km/h.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q10": {
+  "texto": "Em corrente contínua e regime permanente:\n\n- O capacitor vira circuito aberto: não passa corrente, e L1, em série com ele, fica apagada.\n- O indutor vira curto-circuito: L3, em paralelo com ele, fica em curto e apagada.\n\nSobra L2, em série com o indutor (curto) e ligada direto aos 12 V da fonte: L2 acende.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q11": {
+  "texto": "Primeiro converta tudo para mg/L. Como 1 g/m³ = 1 mg/L:\n\n- X: 0,4 g/m³ = 0,4 mg/L → muito limpo.\n- Y: 3 850 mg/m³ = 3,85 mg/L → razoável.\n- Z: 2,5 mg/L → razoável.\n- W: 3,0 mg/L → razoável.\n- T: 0,01 kg/m³ = 10 g/m³ = 10 mg/L → péssimo (acima de 6).\n\nSó a seção T não chega a \"razoável\".\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q12": {
+  "texto": "Pela lei de Fourier, numa parede plana, q = λ · ΔT / L. Isolando a condutividade:\n\nλ = q · L / ΔT = 105 W/m² × 0,20 m / (35 − 20) K = 21 / 15 = 1,40 W/(m·K).\n\nO material da tabela com λ = 1,40 é o concreto.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q13": {
+  "texto": "O texto diz que a fibra de carbono tem resistência só \"ligeiramente\" maior que a do aço, mas pesa sete vezes menos.\n\n- I: falsa. A vantagem não vem de uma resistência à tração muito maior.\n- II: falsa. O texto não aponta a flexibilidade como a vantagem.\n- III: verdadeira. Com a boa relação entre resistência e peso, a força antes gasta para sustentar o próprio cabo passa a sustentar o elevador, e o consumo cai cerca de 15%.\n- IV: verdadeira. A vantagem principal é a alta relação entre resistência e peso.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q14": {
+  "texto": "Siga as formas do fluxograma:\n\n- 1 é o início (C) e 9 é o término (F).\n- 2 a 5 são entradas de dados: k, D, Re e o chute inicial f₀. O f₀ = 0,03 precisa entrar antes do laço.\n- 6 é o cálculo de f₁ pela equação (D).\n- 7 é o losango de decisão: |f₀ − f₁| < 0,00001 (E).\n- Se convergiu, 8 é a saída do resultado (J). Se não, 10 faz f₀ = f₁ (I) e volta para o cálculo em 6.\n\nA única opção com 6-D, 7-E, 8-J, 9-F e 10-I é a B.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q15": {
+  "texto": "Olhe a troca nas linhas 15 a 21: se nota[i] <= nota[j], troca a nota e o nome junto.\n\n- A troca acontece quando a nota da frente é MENOR, então a maior nota sobe para o início: a ordem é decrescente por nota.\n- O nome só acompanha a sua nota. Não há nenhum critério alfabético, nem para desempatar (com notas iguais, o <= até troca a ordem).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q16": {
+  "texto": "Use o consumo anual de combustível como 100%:\n\n- investimento inicial de 20%;\n- custo de transporte de 5% ao ano;\n- economia de 10% ao ano.\n\nO ganho líquido é de 5% ao ano, então o investimento se paga em 20 / 5 = 4 anos.\n\n- I: verdadeira. A partir do quinto ano, a indústria lucra.\n- II: falsa. Queimar biomassa produz MAIS material particulado do que o gás natural.\n- III: verdadeira. Resíduo de madeira é fonte renovável. O gás natural é fóssil.\n- IV: falsa. Em 5 anos, a economia líquida (25%) já supera o investimento (20%).\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q17": {
+  "texto": "Os dois gráficos mostram os mesmos números: A com 45% e B com 55%. A diferença está na escala do eixo.\n\n- I: falsa. Os resultados são iguais. Só a apresentação muda.\n- II: falsa. O gráfico II começa o eixo em 40%, o que faz B parecer muito à frente. Para atrair o eleitor que quer \"votar em quem vai ganhar\", o mais conveniente para B é o II, e não o I.\n- III: verdadeira. Escolher a escala que exagera a vantagem é uma decisão técnica, mas também ética: pode enganar o eleitor.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q18": {
+  "texto": "O alumínio aeronáutico é usado porque junta alta resistência mecânica e baixa densidade. Isso permite uma estrutura forte e leve: a cadeira pesa metade do modelo comum.\n\n- B e D: falsas. O alumínio não tem baixa plasticidade, e seu ponto de fusão é baixo.\n- C: falsa. O alumínio não tem alta dureza a quente nem baixa dutilidade.\n- E: falsa. A densidade do alumínio é baixa, não alta.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q19": {
+  "texto": "- I: falsa. A neutralidade da rede vale para quem transmite e roteia o tráfego na internet. A rede interna de uma empresa pode priorizar o que quiser.\n- II: verdadeira. Leis novas mudam os requisitos técnicos e sociais, e os profissionais precisam se adaptar.\n- III: falsa. É justamente o que a neutralidade proíbe: um provedor priorizar um tipo de serviço (mensagens) sobre outro (transferência de arquivos).\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q20": {
+  "texto": "Leia o algoritmo: y = 2·x1 − x2, em que x1 e x2 são as entradas anteriores (u[n−1] e u[n−2]). Ou seja, y[n] = 2u[n−1] − u[n−2].\n\n- I: verdadeira. A saída depende só de entradas e nunca de saídas anteriores. Não há realimentação, então o filtro é FIR (não recursivo).\n- II: verdadeira. A entrada atual u[n] não aparece em y[n]: não há termo de transmissão direta.\n- Relação: a II não explica a I. Ser FIR vem da falta de realimentação da saída, não da falta do termo direto.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q21": {
+  "texto": "- I: verdadeira. Usar mais bits do que o necessário para os tons é redundância de codificação. A semelhança entre pixels vizinhos é redundância inter-pixel.\n- II: verdadeira. Em imagens com várias bandas, as bandas são correlacionadas, então dá para guardar uma com detalhe e as outras de forma mais compacta.\n- III: falsa. O olho humano NÃO tem a mesma sensibilidade a tudo. É por isso que a informação a que ele é pouco sensível pode ser descartada sem perda perceptível de qualidade (como faz o JPEG).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q22": {
+  "texto": "- I: falsa. Ser euleriano diz respeito a percorrer todas as ARESTAS sem repetir (o problema do carteiro). O caixeiro precisa visitar os VÉRTICES, e isso não garante um ciclo hamiltoniano.\n- II: verdadeira. Se toda cidade se liga a todas as outras, existem ciclos hamiltonianos, e a solução do caixeiro é o de menor custo.\n- III: falsa. O carteiro passa por todas as arestas e o caixeiro só pelas necessárias para visitar todos os vértices. As trilhas só coincidiriam em casos especiais (como um grafo que é só um ciclo).\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q23": {
+  "texto": "Leia as colunas do estágio AND, de cima para baixo (um ponto indica que o sinal entra no produto):\n\n- coluna 1: J'K'L'\n- coluna 2: J'KL'\n- coluna 3: J'KL\n- coluna 4: JKL'\n\nNo estágio OR: M soma as quatro colunas, N soma as colunas 3 e 4, e O soma as colunas 1 e 3.\n\n- JKL = 000: só a coluna 1 vale 1. Então M = 1, N = 0 e O = 1, ou seja, 101.\n- JKL = 101: nenhuma coluna vale 1 (as que têm J pedem K = 1). Então MNO = 000.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q24": {
+  "texto": "Cada segmento leva 40 bytes:\n\n- o 1º vai do byte 20 ao 59;\n- o 2º, do 60 ao 99, e foi perdido;\n- o 3º, do 100 ao 139;\n- o 4º começa no 140.\n\nO ACK do TCP é cumulativo e informa o próximo byte esperado EM ORDEM. B recebeu até o 59, e o 60 não chegou. Mesmo recebendo o 3º segmento, ele continua pedindo o 60.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q25": {
+  "texto": "Com compensador proporcional K, a malha fechada tem equação característica s² + 3s + K = 0.\n\n- O discriminante é 9 − 4K. As raízes são complexas (há oscilação) só quando K > 2,25. Para K ≤ 2,25, elas são reais e não há oscilação.\n- I: falsa. Nem sempre há oscilação: depende do ganho.\n- II: verdadeira. Acima de 2,25 as raízes são complexas, que é o ponto em que o lugar das raízes sai do eixo real.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q26": {
+  "texto": "Regra do perceptron: w ← w + η·(esperado − calculado)·x, com η = 1 e w inicial [0, 0].\n\n- I5 (1,1): esperado 1, calculado 0 → w = [0,0] + [1,1] = [1,1].\n- I6 (0,1): esperado 0, calculado 1 → w = [1,1] − [0,1] = [1,0].\n- I7 (1,0): acertou → [1,0].\n- I8 (0,0): acertou → [1,0].\n- I5 (1,1): acertou → [1,0].\n- I6 (0,1): acertou → [1,0].\n\nSequência: [1,1], [1,0], [1,0], [1,0], [1,0], [1,0].\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q28": {
+  "texto": "- A: falsa. O ganho é 1 + 10k/10k = 2, não unitário. O sinal vai a ±1,6 V.\n- B: correta. A faixa de ±1 m/s² com resolução de 0,001 m/s² precisa de 2 000 níveis. Esse sinal ocupa só ±1,6 V dos ±2,0 V do conversor, ou seja, 80% da escala. São necessários 2 000 / 0,8 = 2 500 níveis no total. 11 bits dão só 2 048; 12 bits dão 4 096.\n- C: falsa. A montagem é não inversora (ganho 1 + Rf/Rg).\n- D: falsa. Com 500 amostras por segundo, o sinal deve ficar ABAIXO de 250 Hz (Nyquist). O filtro precisa limitar a banda a até 250 Hz, e não garantir \"pelo menos\" essa faixa.\n- E: falsa. O Sample & Hold abre e fecha a chave a cada amostra, e não uma vez por coleta.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q29": {
+  "texto": "Teste \"abbb\" em cada expressão:\n\n- R1 = a*ba*ba*ba*: exige exatamente três b, com a's em qualquer lugar. \"a\" + \"b\" + \"b\" + \"b\" → aceita.\n- R2 = a*(a|b)a(a|b)*: exige um 'a' que venha depois de pelo menos um caractere. Em abbb o único 'a' é o primeiro → rejeita.\n- R3 = a*ab*a(a|b): exige pelo menos dois a's → rejeita.\n- R4 = (a|b)*: aceita qualquer cadeia.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q31": {
+  "texto": "Para ganhar o meio, exatamente uma estação transmite e as N − 1 outras ficam caladas.\n\n- Uma estação específica transmitir e as outras não: P·(1 − P)^(N−1).\n- Essa estação pode ser qualquer uma das N, e os casos não se sobrepõem. Multiplique por N.\n\nN·P·(1 − P)^(N−1).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q32": {
+  "texto": "Árvore B de grau mínimo t = 5: cada nó cheio tem 2t − 1 = 9 chaves e 2t = 10 filhos.\n\nCom todos os nós cheios, o nível 0 tem 1 nó, o nível 1 tem 10 nós, o nível 2 tem 100 nós, e assim por diante. Uma árvore com profundidade h tem (10^(h+1) − 1) / 9 nós, com 9 chaves em cada:\n\ntotal de chaves = 10^(h+1) − 1.\n\nIgualando a 999 999 = 10^6 − 1: h + 1 = 6, então a profundidade é 5 (contando a raiz como profundidade 0).\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q33": {
+  "texto": "- I: verdadeira. Mesmo com novos polos de inovação, as grandes metrópoles continuam concentrando os fatores de inovação (universidades, capital, serviços avançados).\n- II: falsa. A localização da mão de obra menos qualificada também pesa. As empresas espalham as etapas de montagem para onde ela é mais barata.\n- III: verdadeira. A marca do novo espaço industrial é separar as etapas do processo produtivo em lugares diferentes.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-CE-Q35": {
+  "texto": "Em Java, os parâmetros são passados por valor. Quando o parâmetro é um objeto, a cópia é da REFERÊNCIA.\n\n- trocaB troca só as cópias locais a e b. As variáveis do main continuam \"2\" e \"5\".\n- trocaC recebe uma cópia da referência para o MESMO array e multiplica cada elemento por 2, alterando o array original: 2 4 6 8 10.\n\nSaída: 2 5 2 4 6 8 10.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-FG-D01": {
+  "texto": "Escreva um texto dissertativo (com introdução, desenvolvimento e conclusão) que responda os dois itens.\n\na) Cite pelo menos duas consequências do uso crescente de transporte motorizado e ligue cada uma ao desenvolvimento sustentável:\n\n- mais emissão de poluentes e de gases de efeito estufa (CO₂, CO), com aquecimento local e global;\n- mais consumo de combustível fóssil;\n- doenças respiratórias e cardíacas;\n- poluição sonora e visual;\n- congestionamentos, mais vias e estacionamentos, e menos áreas verdes;\n- impermeabilização do solo, que causa enchentes;\n- custo maior de manutenção da cidade.\n\nb) Proponha duas ações para incentivar a bicicleta, dizendo como cada uma funciona:\n\n- ciclovias e ciclofaixas, que dão segurança;\n- integração da bicicleta com metrô e ônibus (bicicletários nas estações, levar a bicicleta no transporte coletivo);\n- bicicletas compartilhadas, para aluguel ou empréstimo;\n- campanhas educativas;\n- crédito ou redução de impostos na compra de bicicletas.\n\nUse os dados do quadro para mostrar o problema. Por exemplo, a participação baixa da bicicleta nos deslocamentos de uma cidade grande.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-FG-D02": {
+  "texto": "Escreva um texto dissertativo. O item a vale mais (7 pontos), então dedique a ele a maior parte do texto.\n\na) Analise duas causas, explicando como cada uma leva a esse tipo de violência, e não só citando:\n\n- desigualdade social e exclusão: jovens em situação de rua disputando um \"ponto\" para sobreviver;\n- banalização da violência e desvalorização da vida;\n- baixa escolaridade e falta de qualificação e de emprego;\n- ausência de políticas sociais para a população de rua;\n- sensação de impunidade e segurança pública precária;\n- uso de drogas.\n\nb) Cite dois fatores de prevenção:\n\n- políticas sociais e de moradia para a população de rua;\n- mais educação e qualificação profissional, com mais emprego;\n- distribuição de renda;\n- segurança pública mais efetiva e uma justiça que funcione;\n- valorização da vida e dos direitos humanos.\n\nLigue o texto ao caso da notícia: três jovens de rua contra um adolescente que também trabalhava na rua. Isso mostra a disputa pela sobrevivência entre pessoas igualmente vulneráveis.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-FG-Q01": {
+  "texto": "- I: verdadeira. Com a tecnologia, ficou mais fácil produzir e divulgar arte, e os antigos \"funis\" (gravadoras, editoras, centros de exposição) perderam peso.\n- II: verdadeira. Hoje o artista pode produzir sozinho e publicar direto para muita gente.\n- Relação: a II explica a I. É porque o artista consegue produzir e distribuir sozinho que a produção se democratiza e os centros tradicionais perdem importância.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-FG-Q02": {
+  "texto": "- I: verdadeira. O terceiro setor (ONGs, fundações, associações) é privado na forma, mas age com finalidade pública. Fica entre o Estado e o mercado.\n- II: falsa. O terceiro setor não é o responsável por garantir à sociedade acesso à educação e ao desenvolvimento técnico. Ele complementa: a responsabilidade principal continua sendo do Estado.\n- III: verdadeira. A responsabilidade social mudou a estratégia e a cultura das empresas.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-FG-Q03": {
+  "texto": "Leia o gráfico: a razão sai de 0,74 em 1961, chega a 1,00 em 1970 e sobe sempre, até 1,52 em 2008.\n\n- E: correta. A demanda humana passou a superar a capacidade de regeneração do planeta, e o desequilíbrio só aumenta.\n- D: falsa. Até 1970, a razão era menor ou igual a 1, então o planeta conseguia se regenerar. A incapacidade não vale para o período todo.\n- A: falsa. O gráfico não fala de áreas de plantio.\n- B e C: falsas. Dizem o contrário do que o gráfico mostra.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-FG-Q04": {
+  "texto": "- B: correta. O texto mostra empresas pesquisando candidatos em redes sociais e adotando cartilhas de conduta. Elas estão atentas ao comportamento online.\n- A: falsa. 60% das empresas americanas admitem bisbilhotar os perfis, ou seja, a maioria não evita.\n- C: falsa. O texto não fala em dificuldade técnica.\n- D: falsa. O texto não diz que as cartilhas proíbem o uso.\n- E: falsa. Foram 44% dos executivos, menos da metade, e não a maioria.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-FG-Q05": {
+  "texto": "- I: verdadeira. O aparelho deve salvar recém-nascidos e terá preço menor nos países pobres.\n- II: falsa. O dispositivo não é uma variante dos tubos de sucção. Ele veio de uma técnica para tirar rolhas de garrafas e deve substituir os métodos antigos.\n- III: verdadeira. Por ser simples, ele pode ser usado onde o parto é feito por parteiras, sem equipamento sofisticado.\n- IV: verdadeira. Cobrar menos nos países pobres mostra preocupação com a responsabilidade social.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-FG-Q06": {
+  "texto": "Leia o gráfico somando, em cada perfil, as horas de afazeres domésticos e as de trabalho remunerado:\n\n- mãe com filhos: 25,9 + 36,8 = 62,7 h; pai com filhos: 15,5 + 41,4 = 56,9 h;\n- mulher chefe de casal: 66,8 h; homem chefe de casal: 54,5 h;\n- mulher cônjuge: 65,7 h.\n\nAgora as afirmações:\n\n- I: verdadeira. Em todos os formatos de família, a jornada total da mulher é maior.\n- II: verdadeira. Os dados mostram desigualdade de tempo e de remuneração, o que pede políticas de igualdade de gênero.\n- III: falsa. O texto fala, sim, dos cuidados com a casa: as mulheres \"dividem seu tempo entre o trabalho e os cuidados com a casa\".\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-FG-Q07": {
+  "texto": "Compare as colunas do quadro:\n\n- I: verdadeira. Rio e São Paulo têm distribuições quase iguais: cerca de 33% a 35% gastam de meia a uma hora, e cerca de 23% gastam de uma a duas horas. Curitiba e a média do Brasil concentram muito mais gente em até meia hora.\n- II: verdadeira. Os empregos ficam no centro e a população de baixa renda mora na periferia, o que aumenta o tempo e o custo do deslocamento.\n- III: verdadeira. Políticas como o Bilhete Único (que barateia a integração) e o VLT (mais rápido) reduzem o tempo e o custo.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2014-FG-Q08": {
+  "texto": "O texto diz que a industrialização transformou tanto o campo quanto a cidade, com técnicas novas aplicadas aos recursos naturais.\n\n- D: correta. É exatamente essa ideia.\n- A: falsa. O texto liga a industrialização aos recursos naturais.\n- B: falsa. O texto cita prejuízo nas atividades agrícolas.\n- C e E: falsas. São extremos (perda total da cultura, ou cultura intacta) que o texto não sustenta. Ele fala em mudança de valores e tradições.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-D03": {
+  "texto": "São dois passos: contar os vizinhos vivos e aplicar as regras.\n\n1. Contar as 8 células em volta de (i, j): linhas i−1 a i+1 e colunas j−1 a j+1, pulando a própria célula. O enunciado dispensa tratar as bordas.\n2. Aplicar as regras. Uma célula viva com menos de 2 ou mais de 3 vizinhos morre. Uma célula morta com exatamente 3 vizinhos nasce. Em todos os outros casos, nada muda.\n\n```c\nvoid atualiza(unsigned char **M, int i, int j) {\n    int p, q, vivos = 0;\n    for (p = i - 1; p <= i + 1; p++)\n        for (q = j - 1; q <= j + 1; q++)\n            if (!(p == i && q == j))\n                vivos += M[p][q];\n\n    if (M[i][j] == 1 && (vivos < 2 || vivos > 3))\n        M[i][j] = 0;            /* solidão ou superpopulação */\n    else if (M[i][j] == 0 && vivos == 3)\n        M[i][j] = 1;            /* nascimento */\n    /* demais casos: permanece */\n}\n```\n\nErros comuns:\n- somar a própria célula junto com as vizinhas;\n- usar M[i][j] dentro do laço no lugar de M[p][q].",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-D04": {
+  "texto": "a) Duas características do microcontrolador para essa aplicação, por exemplo:\n- os periféricos necessários: conversor A/D, I2C para a memória externa, temporizador para o intervalo de 30 min;\n- consumo de energia (o coletor fica em campo);\n- capacidade de memória;\n- desempenho (tamanho da palavra, velocidade);\n- custo;\n- suporte à depuração;\n- tolerância ao ambiente (temperatura, umidade).\n\nb) O circuito é um divisor de tensão, com R embaixo e 10 kΩ em cima:\n\nVo = Vref · R / (R + 10 kΩ)\n\nO conversor A/D de 12 bits leva 0..Vref em 0..4095, então x = Vo · 4095 / Vref. Substituindo Vo:\n\nx = 4095 · R / (R + 10 000)\n\nc) São 4 variáveis × 2 amostras por hora × 24 h × 31 dias (o maior mês) × 16 bits:\n\n4 × 2 × 24 × 31 × 16 = 95 232 bits = 93 Kbits.\n\nAs memórias I2C vêm em potências de 2, então a menor que comporta 93 Kbits é a de 128 Kbits.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-D05": {
+  "texto": "Áreas livres, na ordem: 10, 4, 20, 19, 27, 9, 12, 13 e 15 KB. O programa tem 12 KB.\n\na)\n- First-fit: usa a PRIMEIRA área que cabe. Percorrendo a lista, 10 e 4 não cabem e 20 cabe, então o programa vai para a área de 20 KB (sobram 8).\n- Best-fit: usa a área que deixa a MENOR sobra, a de 12 KB (sobra 0).\n- Worst-fit: usa a MAIOR área, a de 27 KB (sobram 15).\n\nb) Neste caso, o best-fit gera a menor fragmentação: ocupa a área de 12 KB inteira e não deixa sobra.\n\nEle deixa de ser a melhor opção quando nenhuma área bate exatamente com o tamanho. Por exemplo, um programa de 11 KB iria para a área de 12 KB e deixaria um buraco de 1 KB. Repetido muitas vezes, isso espalha pela memória pequenos buracos inúteis, porque nenhum programa cabe neles (fragmentação externa). Nesses casos, o worst-fit pode ser melhor: deixa sobras grandes, que ainda servem para outros programas.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q09": {
+  "texto": "No diagrama de tensão por deformação:\n- o módulo de elasticidade é a inclinação do trecho inicial, reto: quanto mais em pé, mais alto;\n- o nível de deformação é até onde a curva vai no eixo ε.\n\nCurva por curva:\n- Curva I: módulo alto, deformação pequena (material rígido e frágil). A opção A erra a deformação.\n- Curva II: módulo alto, deformação grande. A opção B erra o módulo.\n- Curva III: módulo baixo, deformação grande (elastômero). A opção C erra a deformação.\n- Curva IV: módulo baixo, deformação grande. A opção D erra o módulo.\n- Curva V: inclinação pequena (módulo baixo) e termina logo (deformação pequena). A opção E acerta.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q10": {
+  "texto": "- I: verdadeira. É difícil pôr preço nos serviços dos ecossistemas, como polinização, regulação climática e biodiversidade.\n- II: verdadeira. O problema climático abriu espaço para as fontes renováveis.\n- III: verdadeira. A degradação ambiental compromete os recursos dos quais a economia depende.\n- IV: falsa. É o contrário: o desenvolvimento sustentável busca crescer sem aumentar o consumo de recursos naturais. Isso não impede os países em desenvolvimento de crescer.\n- V: verdadeira. Os acordos ambientais internacionais buscam conciliar economia, comunidades tradicionais e conservação.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q11": {
+  "texto": "- I: verdadeira. O just in time valoriza a melhoria contínua (kaizen) dos processos e das pessoas.\n- II: falsa. O princípio da visibilidade é tornar os problemas visíveis no local de trabalho (como o andon, os quadros e o kanban). A afirmação mistura essa ideia com a da implantação \"da fábrica para a empresa\".\n- III: verdadeira. O objetivo é produzir de forma simples e enxuta, com qualidade, no prazo e com custo mínimo.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q12": {
+  "texto": "Pela lei de Newton, a temperatura se aproxima da ambiente: a taxa é proporcional à diferença e tem sinal contrário. Logo, dT/dt = −k(T − A), com k > 0.\n\nResolva com a substituição u = T − A, que dá du/dt = −k·u e u(t) = u(0)·e^(−kt). Voltando:\n\nT(t) = (T(0) − A)·e^(−kt) + A.\n\nConfira: em t = 0 dá T(0), e para t → ∞ tende a A. As opções C, D e E esquecem o fator (T(0) − A). A opção B tem o sinal errado, e a temperatura se afastaria do ambiente.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q13": {
+  "texto": "O escudo térmico precisa barrar o calor e aguentar choques térmicos sem trincar. Por isso usa cerâmica porosa:\n- baixa condutividade térmica: o calor quase não atravessa;\n- baixo coeficiente de dilatação: não trinca com variações bruscas de temperatura.\n\nOs erros das outras opções:\n- A: metais conduzem bem o calor.\n- B e D: polímeros resistem pouco ao calor.\n- C: cerâmicas são fracas à tração (resistem bem à compressão).\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q14": {
+  "texto": "A pressão hidrostática é P = ρ·g·z = 1 025 × 9,8 × z ≈ 10 045 Pa por metro, ou cerca de 10,05 kPa/m.\n\n- É uma relação linear que passa pela origem: profundidade 0 dá pressão 0.\n- Com 1 000 m, a pressão é cerca de 10 050 kPa. Com 4 000 m, cerca de 40 200 kPa.\n\nO gráfico A é uma reta pela origem que bate com esses valores. Os outros são curvas ou começam fora da origem.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q15": {
+  "texto": "Reduzir todos os tempos em 30% é multiplicar cada um por 0,7.\n\n- I: falsa. A média também é multiplicada por 0,7: 50 s viram 35 s no total, o que dá cerca de 2,7 s por etapa (35 / 13), e não 32,5 s.\n- II: falsa. O desvio padrão também é multiplicado por 0,7.\n- III: verdadeira. A dispersão relativa (o coeficiente de variação, desvio dividido pela média) não muda, porque os dois são multiplicados pelo mesmo fator.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q16": {
+  "texto": "Repare no que as recomendações têm em comum: todas reduzem energia elétrica que vira calor, seja de propósito ou como perda.\n\n- A lâmpada incandescente transforma a maior parte da energia em calor.\n- O chuveiro na posição \"inverno\" e o ferro de passar aquecem resistências.\n- Os benjamins e os fios finos demais aquecem por efeito Joule.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q17": {
+  "texto": "A lata tem lateral 2πrh e base mais tampa 2πr², e cada parte é feita de uma liga com custo diferente.\n\n- I: verdadeira. O custo é C = 2π(K₁rh + K₂r²).\n- II: falsa. Não se minimiza a área: o objetivo é o CUSTO. Com ligas de preços diferentes, a menor área não dá o menor custo.\n- III: verdadeira. A restrição é o volume fixo: g(r, h) = πr²h − V₀ = 0.\n- IV: verdadeira. O método de Lagrange resolve ∇C = λ∇g junto com a restrição.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q18": {
+  "texto": "Os dois corpos de prova rompem na mesma tensão (290 MPa). Como σ = 3Fd/(2wh²) e d é igual nos dois, a força de ruptura é proporcional a w·h².\n\nO corpo A tem w = 3w_B e h = h_B/2, então w·h² = 3 × (1/2)² = 3/4 do de B.\n\nF_A = 0,75·F_B, ou seja, 75%.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q19": {
+  "texto": "Monte as regras, sempre respeitando a prioridade A > B > C > D e no máximo duas catracas abertas:\n\n- C1 = A. A fila A sempre passa.\n- C2 = B. Acima de B só existe A, então nunca haveria uma terceira catraca aberta.\n- C3 = C·(A' + B'). C só abre se A e B não estiverem ambas ocupadas.\n- C4 = D·(A'B' + A'C' + B'C'). D só abre se, entre A, B e C, no máximo uma estiver ocupada.\n\nO circuito C implementa exatamente isso:\n- C1 ligada direto em A;\n- C2 = A'B + AB = B;\n- C3 = A'C + B'C;\n- C4 = soma de três ANDs, cada um com D e um par de entradas negadas.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q20": {
+  "texto": "- I: verdadeira. (100*)* aceita blocos que começam com \"1\" seguido de \"0\" e mais zeros quantos quiser. 10010100 = \"100\" + \"10\" + \"100\".\n- II: falsa. Em (1(10)*0)*, cada bloco começa com 1 e termina com 0, com pares \"10\" no meio. 10010 = \"10\" e sobra \"010\", que começa com 0. Não há divisão possível.\n- III: falsa. Uma mesma linguagem regular pode ter várias expressões. Por exemplo, a* e (a*)* descrevem a mesma linguagem.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q21": {
+  "texto": "É preciso escrever 011 nos bits 5, 4 e 3 sem mexer nos outros bits:\n\n1. Zerar os bits 5 a 3: AND com ~0x0038 (0x0038 = 0000 0000 0011 1000).\n2. Ligar o padrão 011 nessa posição: OR com 0x0018 (011 deslocado 3 casas = 0001 1000).\n\nFica MODOEVENTO = (MODOEVENTO & ~0x0038) | 0x0018.\n\n- A: apaga todos os outros bits do registrador.\n- B: não zera o bit 5. Se ele estava em 1, o resultado vira 111, que é inválido.\n- C: só apaga bits.\n- D: faz na ordem errada e apaga o que acabou de ligar.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q22": {
+  "texto": "Em 32 bits, cada int ocupa 4 bytes. Os valores são:\n\n- salario1 = 6750 = 0x00001A5E;\n- salario2 = 6750 + 1000 = 7750 = 0x00001E46;\n- ptr = endereço de salario1 = 0x00000070.\n\nNa memória, que está em little-endian (o byte menos significativo fica no menor endereço):\n\n- 0x70 a 0x73: 5E 1A 00 00 (salario1);\n- 0x74 a 0x77: 46 1E 00 00 (salario2);\n- 0x78 a 0x7B: 70 00 00 00 (ptr).\n\nO mapa A mostra exatamente isso.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q23": {
+  "texto": "Escreva o sistema em espaço de estados. Com o estado (x1, x2):\n\n- x1[n+1] = −x2[n]\n- x2[n+1] = 0,5·x1[n] − x2[n] + u[n]\n\nA matriz é A = [[0, −1], [0,5, −1]], com equação característica z² + z + 0,5 = 0. Os polos são z = (−1 ± j)/2, com módulo √0,5 ≈ 0,71.\n\n- I: verdadeira. Os polos estão dentro do círculo unitário, então o sistema é assintoticamente estável. Além disso é linear, invariante e discreto.\n- II: verdadeira. Os polos têm parte real −0,5, então estão no semiplano esquerdo.\n- Relação: a II não justifica a I. Em sistemas DISCRETOS, o critério de estabilidade é estar dentro do círculo unitário. \"Semiplano esquerdo\" é o critério dos sistemas contínuos.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q24": {
+  "texto": "- B: correta. O máximo de duas heurísticas admissíveis também é admissível (não passa do custo real), e em cada estado é maior ou igual às duas, ou seja, mais informado.\n- A: falsa. Sendo as duas admissíveis, o A* encontra o caminho de custo ótimo com qualquer uma delas, e o custo é o mesmo.\n- C: falsa. Mais informada garante expandir no máximo os mesmos estados (\"menor ou igual\"), e não necessariamente menos.\n- D: falsa. A soma de duas heurísticas admissíveis pode superestimar o custo real.\n- E: falsa. Com h = 0, o A* vira a busca de custo uniforme (Dijkstra), e não uma busca gulosa.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q25": {
+  "texto": "- D: correta. O IPS fica no caminho do tráfego, como um firewall, e bloqueia anomalias e conteúdo malicioso antes que entrem na rede.\n- A: falsa. O antivírus de gateway olha o conteúdo, então trabalha na camada de aplicação, e não na de rede.\n- B: falsa. Um firewall comum não detecta canais camuflados em túneis.\n- C: falsa. É o contrário: o firewall de aplicação é que filtra com mais detalhe, com mais custo de desempenho.\n- E: falsa. O IDS detecta e avisa, mas não age para neutralizar. Quem age é o IPS.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q26": {
+  "texto": "Veja como o código manipula os índices:\n\n- insereEvento grava na posição fim e avança o fim.\n- processaEvento lê da posição inicio e avança o inicio.\n\nO primeiro a entrar é o primeiro a sair (FIFO): é uma fila, e os eventos mais antigos são processados primeiro. Não há prioridade, nem escolha pelo operador.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q27": {
+  "texto": "- I: verdadeira. Sem cobertura, o carro precisa guardar até um dia de leituras para enviar depois.\n- II: verdadeira. Os três módulos usam a internet (GPRS, o aplicativo e o servidor), e quem mostra os relatórios ao usuário é o MÓDULO_2.\n- III: falsa. O MÓDULO_1 nem sempre está conectado e é o mais limitado. O processamento deve ficar no servidor.\n- IV: verdadeira. O banco de dados fica melhor no servidor em nuvem, com espaço e conexão permanente.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q28": {
+  "texto": "- I: verdadeira. O custo total é a soma de quantidade × custo unitário em todas as rotas.\n- II: verdadeira. Cada porto não pode enviar mais do que tem: Σⱼ yᵢⱼ ≤ sᵢ.\n- III: falsa. Cada mercado deve receber PELO MENOS rⱼ, então a desigualdade é ≥, e não ≤.\n- IV: falsa. O total enviado ao mercado j é a soma Σᵢ yᵢⱼ, e não K vezes um valor.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q29": {
+  "texto": "- I: verdadeira. A virtualização economiza energia (menos servidores físicos), mas traz dificuldades de projeto e gerência.\n- II: verdadeira. Uma vulnerabilidade no hospedeiro afeta todas as máquinas virtuais, e os servidores consolidados trabalham mais carregados, o que aumenta o desgaste e o custo de manutenção.\n- Relação: a II explica a I. São justamente os problemas que a I menciona.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q30": {
+  "texto": "Pelo Marco Civil da Internet, o provedor de aplicações responde quando há divulgação de imagens íntimas sem autorização e ele, ao ser notificado pela vítima, não remove o conteúdo dentro dos seus limites técnicos (art. 21).\n\n- B: falsa. Não faz sentido \"inocentar\" o provedor por um suposto pedido da vítima.\n- C e E: falsas. Punem a vítima.\n- D: falsa. O provedor não pode retirar tudo o que existe da vítima na internet: só o que está no próprio serviço.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q31": {
+  "texto": "- I: falsa. No timeboxing, o tempo fixo é o de cada iteração ou ciclo (o sprint), e o escopo se ajusta a ele. Não se trata de fixar o prazo do projeto inteiro \"independentemente do ciclo\".\n- II: verdadeira. É a lógica de priorizar: entregar o mais importante dentro do prazo e deixar o resto para depois.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q32": {
+  "texto": "- B: correta. Antes da rasterização, o pipeline descarta faces que não aparecem (culling) e recorta o que está fora da visão da câmera (clipping). Isso economiza trabalho.\n- A: falsa. É o próprio Vertex Shader que projeta os vértices, e não a aplicação.\n- C: falsa. A textura é lida no estágio de fragmentos.\n- D: falsa. O modelo de Phong calcula a cor por fragmento, no Fragment Shader, e não por vértice.\n- E: falsa. Só esses dados de vértice não bastam para uma imagem foto-realística: faltam luzes, sombras etc.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q33": {
+  "texto": "- I: verdadeira. GRANT concede, DENY nega e REVOKE retira permissões.\n- II: falsa. No SQL Server, o DENY tem precedência. Se o grupo do usuário tem DENY SELECT, ele não consegue consultar, mesmo com GRANT individual.\n- III: falsa. Com WITH GRANT OPTION, o usuário pode repassar as permissões que recebeu.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q34": {
+  "texto": "- I: falsa. A baixa acessibilidade aos smartphones não basta para \"revelar a exclusão social na terceira idade\", que é um fenômeno bem mais amplo. O texto fala de dificuldade de usabilidade.\n- II: verdadeira. Tela de toque, ícones pequenos e avisos sonoros, ou seja, as affordances do aparelho, combinam mal com as limitações de visão, tato, audição e coordenação do idoso.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-CE-Q35": {
+  "texto": "Teste as opções com o vetor D a partir do nó 1. A opção C dá A = 2, B = 1, C = 1, D = 4, E = 2 e F = 1:\n\n- nó 3: pela aresta A, custo 2. ✓\n- nó 2: o direto custa 4, e pelo 3 custa 2 + B = 3. ✓\n- nó 4: pelo 2, 3 + C = 4; pelo 3, 2 + 3 = 5. Fica 4. ✓\n- nó 5: pelo 4, 4 + 1 = 5; pelo 3, 2 + D = 6. Fica 5. ✓\n- nó 6: pelo 4, 4 + 5 = 9; pelo 5, 5 + E = 7. Fica 7. ✓\n- nó 7: pelo 6, 7 + F = 8; pelo 5, 5 + 4 = 9. Fica 8. ✓\n\nAs outras opções falham em algum nó. Por exemplo, na D (C = 3), o nó 4 ficaria com 5.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-FG-D01": {
+  "texto": "Escreva um texto dissertativo sobre \"epidemia de sífilis congênita e relações de gênero\", cobrindo os dois pontos pedidos.\n\n1. Vulnerabilidade da mulher e papel do homem. Explique que a vulnerabilidade da mulher às DSTs é social e cultural, não só biológica:\n- relações de poder desiguais dificultam negociar a camisinha com o parceiro;\n- a responsabilidade pela saúde sexual e reprodutiva costuma recair só sobre a mulher;\n- o homem vai pouco à atenção primária, não se vê vulnerável e muitas vezes nem sabe que está infectado, porque a sífilis pode ser silenciosa. Assim ele transmite e reinfecta a parceira. Só cerca de 12% dos parceiros são tratados (texto 2).\n\nNa gestação, isso vira sífilis congênita.\n\n2. Duas ações voltadas aos homens, por exemplo:\n- incluir o parceiro no pré-natal, com teste e tratamento (\"pré-natal do parceiro\");\n- campanhas e horários de atendimento na atenção primária pensados para homens, com testagem rápida regular;\n- educação sexual nas escolas, que trate a camisinha e a prevenção como responsabilidade também masculina;\n- distribuição de preservativos em locais frequentados por homens.\n\nUse os dados dos textos (aumento de 32% entre 2014 e 2015, falta de penicilina, queda no uso da camisinha) para dar base ao argumento.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-FG-D02": {
+  "texto": "Escreva um texto dissertativo em duas partes.\n\n1. A importância do nome. O nome nos documentos é a porta de entrada para a cidadania. Quando ele não corresponde à identidade de gênero, a pessoa trans passa constrangimento e enfrenta barreiras na escola, no atendimento de saúde, no trabalho (o currículo do depoimento), no voto e até no lazer (a balada). As falas mostram que a pessoa precisa de terceiros que \"atestem\" quem ela é. O nome é reconhecimento social, e negá-lo é uma forma de violência e invisibilidade (o poema da travesti morta \"sem nome\").\n\n2. Uma medida de política pública, bem explicada. Exemplos:\n- mudança de nome e de gênero nos documentos por autodeclaração, direto no cartório, sem laudo médico nem processo judicial;\n- obrigar órgãos públicos e empresas a usar o nome social;\n- campanhas educativas nas escolas contra o preconceito;\n- atendimento especializado no SUS.\n\nDiga como a medida amplia o acesso a direitos.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-FG-Q01": {
+  "texto": "O total de contribuições é € 144,9 bilhões. Teste cada alternativa:\n\n- A: falsa. Os quatro maiores (Alemanha, França, Itália e Reino Unido) somam 70,9 bilhões, cerca de 48,9%. O valor 41,13% é a soma dos TRÊS maiores.\n- B: falsa. Os \"outros países\" deram € 42,1 bilhões, que é 29% do total, e não 42,1%.\n- C: correta. O Reino Unido pagou 11,3 e recebeu 6,9. A diferença é 4,4, e 4,4 / 11,3 ≈ 38,94%.\n- D: falsa. Os três maiores somam 59,6 bilhões, ou 41,13%, menos de 50%.\n- E: falsa. A participação do Reino Unido é 11,3 / 144,9 ≈ 7,8%, e não 17,8%.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-FG-Q02": {
+  "texto": "- I: verdadeira. Os desafios da agricultura familiar são produzir o bastante (segurança alimentar e capacidade produtiva) e preservar o ambiente.\n- II: verdadeira. As políticas precisam respeitar as particularidades das propriedades familiares: tamanho, tecnologia, mercado e ecologia.\n- III: falsa. Na agricultura familiar, o trabalho é feito sobretudo pela própria família, e não por mão de obra assalariada.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-FG-Q03": {
+  "texto": "Tarifas: verde R$ 0,50/kWh e amarela R$ 0,52/kWh. Use 30 dias.\n\n- I: falsa. O chuveiro de 3 500 W gasta 1,75 kWh por dia: 52,5 kWh × 0,52 ≈ R$ 27,30 por mês, e não R$ 1,05.\n- II: falsa. O carregador (0,24 kWh) e o modem (0,12 kWh) somam 0,36 kWh por dia, ou 10,8 kWh por mês. Na verde: 10,8 × 0,50 = R$ 5,40, que está certo. Na amarela: 10,8 × 0,52 ≈ R$ 5,62, e não R$ 5,78 (esse valor seria da bandeira vermelha).\n- III: verdadeira. A incandescente gasta 0,30 kWh por dia e a LED 0,04. A diferença de 0,26 kWh × 30 = 7,8 kWh custa 7,8 × 0,50 = R$ 3,90.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-FG-Q04": {
+  "texto": "A tirinha mostra a atenção que se dispersa diante da TV. O texto 2 descreve a TV como um fluxo contínuo de imagens em que tudo se mistura (telejornal, anúncio, novela, futebol).\n\n- B: correta. Os dois textos apontam para fragmentação, excesso de informação e superficialidade.\n- A, D e E: falsas. Falam de contemplação, atenção concentrada e reflexão crítica, o contrário do que os textos descrevem.\n- C: falsa. A especialização do conhecimento não aparece nos textos.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-FG-Q05": {
+  "texto": "- C: correta. O infográfico diz que no Brasil o hidrogel é usado em florestas de eucalipto e na cafeicultura, e em regiões áridas ou irrigadas. Ou seja, em culturas agrícolas e florestais e em diferentes solos.\n- A: falsa. É o contrário: o hidrogel diminui a morte das mudas na estiagem.\n- B: falsa. Nada restringe o uso a solos áridos.\n- D: falsa. O texto diz que os hidrogéis naturais ainda não são viáveis comercialmente.\n- E: falsa. O gel só retém e libera aos poucos a água da chuva ou da irrigação. Sem água, não funciona.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-FG-Q06": {
+  "texto": "O texto diz que quem sofre xenofobia são, em geral, imigrantes negros vindos de países pobres.\n\n- E: correta. A rejeição combina discriminação social e racismo.\n- A: falsa. O texto relata marchas anti-imigração e ataques, e não solidariedade.\n- B: falsa. Os haitianos costumam ocupar postos de menor prestígio, então não disputam as melhores vagas.\n- C: falsa. É o mito da democracia racial. O texto mostra justamente o tratamento desigual conforme a origem e a cor.\n- D: falsa. O texto não fala de perseguição a brasileiros que emigram.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-FG-Q07": {
+  "texto": "- A: correta. As paneleiras tiram do ambiente local a argila (do vale e do manguezal) e a casca do mangue vermelho para a tintura. A produção depende da natureza da região.\n- B: falsa. A tradição mudou: houve profissionalização e ritmo empresarial.\n- C: falsa. O retorno não foi positivo para todos: as paneleiras \"de fundo de quintal\" reclamam que ficaram ofuscadas.\n- D: falsa. O registro como patrimônio imaterial mostra que a dimensão cultural continua valorizada. Não ficou reduzida ao comércio.\n- E: falsa. O Estado não está alheio: há tombamento, registro no Iphan e indicação geográfica.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2017-FG-Q08": {
+  "texto": "- I: verdadeira. Capacitar pessoas para pesquisa e inovação em áreas estratégicas faz parte dos ODS (educação, indústria e inovação).\n- II: falsa. Os ODS valorizam a diversidade cultural. Uma \"padronização cultural\" não é o caminho para difundir conhecimento.\n- III: verdadeira. Empreendedorismo e emprego digno estão no ODS 8 (trabalho decente e crescimento econômico).\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-D03": {
+  "texto": "Em toda árvore AVL, a altura das duas subárvores de cada nó difere em no máximo 1. Ao inserir, se algum nó ficar com diferença 2, faça a rotação: simples quando o desequilíbrio é \"em linha\" (direita-direita ou esquerda-esquerda), dupla quando é \"em zigue-zague\".\n\na) Com 7 elementos e raiz 21, ponha os três menores à esquerda e os três maiores à direita, cada lado com o elemento do meio como raiz:\n\n```text\n        21\n      /    \\\n     9      36\n    / \\    /  \\\n   2  15  27   50\n```\n\nb) Inserindo 9, 27 e 50: a árvore fica 9 → 27 → 50, toda à direita, e o 9 fica desbalanceado (caso direita-direita). Uma rotação simples à esquerda resolve:\n\n```text\n     27\n    /  \\\n   9    50\n```\n\nc) Continue a partir de b):\n- 15 entra à direita do 9, e 2 à esquerda do 9: tudo continua balanceado.\n- 21 entra à direita do 15. O 27 fica com altura 3 à esquerda e 1 à direita, e o desequilíbrio é esquerda-direita: rotação dupla, primeiro à esquerda no 9 e depois à direita no 27. O 15 sobe para a raiz.\n- 36 entra à esquerda do 50 e nenhum nó passa de diferença 1.\n\n```text\n        15\n      /    \\\n     9      27\n    /      /  \\\n   2      21   50\n              /\n             36\n```",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-D04": {
+  "texto": "O produtório multiplica os termos xᵢ = i + 1/i para i de m até n. O cuidado principal é a divisão: 1/i com i inteiro dá 0 em C, então use 1.0/i e guarde o resultado em float ou double, começando em 1 (o elemento neutro da multiplicação).\n\na) Iterativa: um laço de m até n acumulando o produto.\n\n```c\ndouble produtorio(int m, int n) {\n    double r = 1.0;\n    for (int i = m; i <= n; i++)\n        r *= i + 1.0 / i;\n    return r;\n}\n```\n\nb) Recursiva: o caso base é um único termo (m == n). O passo multiplica o termo de m pelo produtório de m+1 até n.\n\n```c\ndouble produtorio(int m, int n) {\n    if (m == n)\n        return m + 1.0 / m;\n    return (m + 1.0 / m) * produtorio(m + 1, n);\n}\n```\n\nTambém vale recursão que reduz n em vez de aumentar m: (n + 1.0/n) * produtorio(m, n-1).",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-D05": {
+  "texto": "Leia os gráficos primeiro: a tensão tem pico de 15 V, a corrente tem pico de 5 A, e cabem 3 ciclos em 0,06 s.\n\na) Resistiva. Tensão e corrente passam por zero e atingem o pico nos mesmos instantes, ou seja, não há defasagem. Carga indutiva atrasaria a corrente, e carga capacitiva a adiantaria.\n\nb) Sem defasagem, a impedância é puramente resistiva: Z = Vm / Im = 15 / 5 = 3 Ω.\n\nc) O período é T = 0,06 / 3 = 0,02 s, então f = 1 / T = 50 Hz. A corrente é i(t) = 5·sen(2π·50·t) = 5·sen(100πt) A.\n\nd) Para uma senoide, o valor eficaz é Vrms = Vm / √2 = 15 / √2 ≈ 10,61 V.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q09": {
+  "texto": "O sort recursivo do MergeSort precisa de três coisas:\n\n- Caso base: parar quando o trecho tem 0 ou 1 elemento, ou seja, if (hi <= lo) return. Com if (hi > lo) return (opções B e D), ele para justamente quando ainda há trabalho a fazer.\n- Divisão sem sobreposição: ordenar a[lo..mid] e a[mid+1..hi]. Com sort(a, mid, hi) (opções A, B e C), um trecho de 2 elementos gera mid = lo e a chamada sort(a, lo, hi) se repete para sempre.\n- Junção: merge(a, lo, mid, hi), que é exatamente o que o merge do enunciado espera.\n\nSó a opção E reúne as três.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q10": {
+  "texto": "Associe cada trecho do caso às etapas de um sistema de reconhecimento de padrões:\n\n- I: verdadeira. Os exames de retina dos 284 335 pacientes são o conjunto de dados de treinamento.\n- II: verdadeira. Os cruzamentos de vasos sanguíneos são as características escolhidas para o reconhecimento.\n- III: verdadeira. Identificar os sinais de doença cardiovascular é a classificação, ou seja, a saída do sistema.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q11": {
+  "texto": "Modele como coloração de grafos: cada grupo é um vértice, cada conflito (1 na tabela) é uma aresta, e cada auditório é uma cor. Vértices ligados não podem ter a mesma cor.\n\nArestas: G1 está ligado a todos; além disso, G2–G3, G2–G4 e G3–G5.\n\n- G1, G2 e G3 são ligados entre si (um triângulo), então são necessárias pelo menos 3 cores.\n- 3 bastam: G1 = auditório 1, G2 = 2, G3 = 3, G4 = 3 (só conflita com G1 e G2) e G5 = 2 (só conflita com G1 e G3).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q12": {
+  "texto": "Em programação linear, o ótimo de uma região viável limitada está em um vértice. Leia os vértices no gráfico e calcule Z = 30x + 10y em cada um:\n\n- A (0, 4): 40\n- B (2, 7): 60 + 70 = 130\n- C (5, 6): 150 + 60 = 210\n- D (8, 4): 240 + 40 = 280\n- E (9, 0): 270\n- F (0, 0): 0\n\nO máximo é 280, no vértice D.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q13": {
+  "texto": "O gráfico mostra a resposta de malha fechada T(s), de primeira ordem:\n\n- Valor final 0,8: o ganho estático é T(0) = 0,8.\n- Estabiliza em 1 s com o critério de 4 constantes de tempo: 4τ = 1, então τ = 0,25 s e o polo está em s = −4.\n\nLogo T(s) = K / (s + 4) com K / 4 = 0,8, ou seja, K = 3,2. A II é verdadeira.\n\nCom realimentação unitária, T = G / (1 + G), e isolando: G = T / (1 − T) = 3,2 / (s + 4 − 3,2) = 3,2 / (s + 0,8). A I também é verdadeira, e é obtida justamente a partir da T(s) da II. Portanto, a II justifica a I.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q14": {
+  "texto": "Use a normalização do enunciado: a frequência de amostragem (20 000 Hz) corresponde a π. Então a frequência de corte de 6 000 Hz vira Ω = (6 000 / 20 000)·π = 0,3π.\n\nO filtro é passa-baixas ideal: ganho 1 para |Ω| < 0,3π e ganho 0 no resto. Como todo filtro digital, a resposta se repete a cada 2π, com cópias em ±2π.\n\n- B mostra exatamente isso.\n- A tem o mesmo desenho, mas o \"zero\" fica acima do eixo: o filtro não rejeitaria totalmente as frequências altas.\n- C é um passa-altas.\n- D e E têm faixas de passagem a mais.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q15": {
+  "texto": "Monte as equações normais com os pontos (1, 1), (2, 3), (3, 2) e (4, 5):\n\n- Σx = 10, Σy = 11, Σx² = 30, Σxy = 1 + 6 + 6 + 20 = 33, n = 4.\n- AᵀA·X = AᵀB vira: 30m + 10c = 33 e 10m + 4c = 11.\n\nDa segunda equação, c = (11 − 10m) / 4. Substituindo na primeira: 30m + 27,5 − 25m = 33, então 5m = 5,5 e m = 1,1. Daí c = (11 − 11) / 4 = 0.\n\nA reta é y = 1,1x.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q16": {
+  "texto": "Cada AND de 3 entradas acende um LED quando o código S1S0 bate e a ENTRADA está em 1. O LED2 deve acender com S1S0 = 2 (S1 = 1, S0 = 0): é a porta IC1C, com pino 9 em S1, pino 10 em S0 negado e pino 11 na ENTRADA.\n\nO defeito: com ENTRADA = 0 e S1S0 = 2, o LED2 acende mesmo assim, e todo o resto funciona. Então a porta IC1C não está \"vendo\" a ENTRADA, e o que chega no lugar dela vale 1 justamente quando S1S0 = 2.\n\n- Se o pino 11 estiver ligado em S1 (opção E), a porta calcula S1 · S0' · S1 = S1 · S0', que acende o LED2 em S1S0 = 2 com qualquer ENTRADA. Bate com a tabela.\n- Ligado em S0 (opção D), a porta daria S1 · S0' · S0 = 0, e o LED2 nunca acenderia.\n- As opções B e C mudariam também os casos com ENTRADA = 1, que estão corretos.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q17": {
+  "texto": "Resolva por etapas:\n\n1. Ponte. Lado esquerdo: NTC (8 kΩ a 30 °C) em cima e 2 kΩ embaixo, então V = 10 · 2 / (8 + 2) = 2 V. Lado direito: dois resistores de 10 kΩ, então V = 5 V.\n2. Os dois amplificadores não inversores têm ganho 1 + 100/100 = 2. O de cima recebe o lado direito (5 V) e entrega 10 V. O de baixo recebe o lado esquerdo (2 V) e entrega 4 V.\n3. O amplificador diferencial com todos os resistores iguais (1 kΩ) entrega V+ − V−. A saída de cima (10 V) vai na entrada inversora, e a de baixo (4 V) na não inversora.\n\nVout = 4 − 10 = −6 V.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q18": {
+  "texto": "Para o 3DES decifrar o que o DES cifrou, a composição das três etapas tem de se reduzir a um único DES quando as três chaves são iguais.\n\n- Na forma D(C(D(m, k), k), k), a decifração D(·, k) e a cifração C(·, k) do meio se anulam e sobra D(m, k): exatamente o DES. É o modo EDE/DED usado no 3DES.\n- Com chaves diferentes (opção A), o resultado não é o do DES.\n- Três decifrações seguidas (B, C) ou outra ordem (E) não se reduzem a uma operação simples.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q19": {
+  "texto": "Hardware trojan é difícil de detectar porque fica inativo até o gatilho disparar.\n\n- I: falsa. Testes de falha de manufatura (atraso, por exemplo) não foram feitos para achar trojans. Um trojan pequeno quase não altera o atraso.\n- II: verdadeira. A engenharia reversa destrutiva destrói o chip analisado e não garante nada sobre os outros chips do lote.\n- III: falsa. Preencher as células vazias dificulta a inserção, mas não a impede: o atacante pode substituir células existentes.\n- IV: verdadeira. A camuflagem ofusca o layout físico com contatos e conexões falsas, dificultando a engenharia reversa.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q20": {
+  "texto": "Rigidez é quando uma mudança obriga a mexer em vários lugares. Procure a alternativa em que mudar um tipo de modem se espalha para outros pontos do código.\n\n- O LogOn decide pelo tipo e usa o mesmo OpenCourrierChannel para Courrier e Ernie. Se a política do Courrier mudar, é preciso alterar OpenCourrierChannel, alterar o LogOn e criar um OpenErnieChannel, porque o Ernie não pode herdar a mudança. É a cascata que define rigidez: opção E.\n- A e D descrevem mudanças locais e esperadas (remover uma estrutura, alterar o código do próprio tipo).\n- B é falsa: o número de parâmetros do LogOn não depende do tipo de modem.\n- C fala de duplicação de código, que é outro problema.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q21": {
+  "texto": "Teste cada comando com a tabela:\n\n- I: falsa. A condição CD6 = 'Regional' OR CD1 > 160 OR CD5 > 1 apaga os fornecedores 1 (CD1 = 300), 3 (Regional), 4 (CD1 = 220) e 5 (CD1 = 240). O fornecedor 3 também sai, e o enunciado queria apagar só 1, 4 e 5.\n- II: falsa. INSERT insere linhas. Criar uma coluna exige ALTER TABLE ... ADD, e o valor calculado depois entraria com UPDATE.\n- III: verdadeira. CD1 > 100 vale para todos. CD3/CD2 > 0,99 só vale para o fornecedor 3 (24/24 = 1; os outros dão 0,80, 0,96, 0,90 e 0,88). CD5 < 0,5 também vale para ele (0,01). O SELECT devolve só o fornecedor 3.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q22": {
+  "texto": "Numa rede bayesiana, cada seta vai da causa para o efeito. Pelas variáveis do enunciado:\n\n- A temperatura real T influencia a leitura LM.\n- O medidor defeituoso MD também altera a leitura LM.\n- A temperatura alta pode fazer o medidor falhar: T → MD. Esse é o detalhe da última frase do enunciado.\n- O alarme A depende da leitura LM e do alarme estar defeituoso AD.\n\nSó a opção B tem T → MD, T → LM, MD → LM, LM → A e AD → A.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q23": {
+  "texto": "Siga as transições: de P, com 1 vai para I1 (o estado final) e com 0 vai para I0. De I1 ou de I0, qualquer símbolo volta para P.\n\n- Cada par de símbolos sai de P e volta para P, então em P a palavra lida tem tamanho par.\n- Só se termina em I1 lendo um 1 a partir de P: tamanho par + 1 = ímpar, e o último símbolo é 1.\n\nExemplos aceitos: 1, 001, 101. A linguagem é a das palavras de tamanho ímpar terminadas em 1.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q24": {
+  "texto": "Aplique Kruskal: percorra os enlaces do mais barato ao mais caro, aceitando cada um se não formar ciclo, até ligar os 6 roteadores (5 enlaces).\n\n- C–E (1): aceita.\n- C–F (1): aceita.\n- E–F (1): rejeita, porque fecha ciclo com C–E e C–F.\n- A–B (2): aceita.\n- A–C (2): aceita, ligando {A, B} a {C, E, F}.\n- B–C (2): rejeita, porque fecha ciclo.\n- D–F (2): aceita. Os 6 nós estão ligados.\n\nCusto: 1 + 1 + 2 + 2 + 2 = 8.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q25": {
+  "texto": "Recursão em cauda é quando a chamada recursiva é a última coisa que a função faz. Ela pode ser trocada por um laço que só atualiza os parâmetros.\n\n- I: falsa. Só trocar a chamada por high = mid − 1 (sem laço) faz a função terminar sem retornar nada (None), e a busca para na primeira divisão.\n- II: verdadeira. Com while True envolvendo as linhas 4 a 12 e as atribuições no lugar das chamadas, a função vira iterativa e dá o mesmo resultado.\n- III: falsa. Guardar os limites em variáveis antes de chamar não muda nada: a chamada continua sendo a última operação, então ainda é recursão em cauda.\n- IV: verdadeira. É só uma reorganização: calcula os novos limites e faz uma única chamada recursiva, com o mesmo resultado.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q26": {
+  "texto": "A saída do PID é a soma dos três termos, cada um com seu ganho:\n\n- proporcional ao erro atual: kp · Erro;\n- integral, o erro acumulado (já está em ITerm): ki · ITerm;\n- derivativo, a variação do erro (já está em dErro): kd · dErro.\n\noutput = kp * Erro + ki * ITerm + kd * dErro.\n\n- A deixa a parte derivativa de fora.\n- C e E elevam a derivada ao quadrado, o que não faz parte do PID.\n- B divide os ganhos por kp, sem motivo.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q27": {
+  "texto": "No Strategy, uma família de algoritmos fica atrás de uma interface comum, e o contexto usa qualquer um deles sem saber qual é.\n\n- I: verdadeira. Strategy é só a abstração, e pode ser classe abstrata ou interface.\n- II: verdadeira. Ordenar com critérios de comparação diferentes é o exemplo clássico (Comparator em Java).\n- III: verdadeira. Com baixo acoplamento, adicionar ou remover estratégias não mexe nas outras classes.\n- IV: falsa. O Singleton só garante uma única instância. Centralizar a escolha de qual estratégia criar é papel de um padrão de criação como Factory Method.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q28": {
+  "texto": "Escreva a expressão do circuito. Com X = AB e Z = CD:\n\n- a primeira OR dá X + Z;\n- a segunda OR recebe X e Z negado, e dá X + Z';\n- a AND final dá Y = (X + Z)(X + Z').\n\nSimplifique: (X + Z)(X + Z') = X + ZZ' = X + 0 = X. Logo, Y = AB.\n\nO circuito inteiro equivale a uma única porta AND, então o menor tempo é o atraso de uma AND: 3 u.t.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q29": {
+  "texto": "- I: verdadeira. Em IoT, muitos dispositivos acessam o mesmo recurso ao mesmo tempo, então é preciso garantir consistência sob concorrência.\n- II: verdadeira. Os ecossistemas de IoT misturam hardware, sistemas operacionais, linguagens e padrões de rede diferentes.\n- Relação: o gabarito oficial considera que a II justifica a I. Com tantos componentes diferentes atuando ao mesmo tempo, garantir consistência no acesso concorrente se torna uma exigência.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q30": {
+  "texto": "Atenção: o gabarito oficial desta questão diverge da análise técnica mais comum.\n\n- II: verdadeira, e aqui não há dúvida. O contêiner usa uma única instância do servlet para todas as requisições, então synchronized (this) faz todas as threads disputarem a mesma trava e o incremento fica correto.\n- I: pela análise técnica, é verdadeira. contador = contador + 1 em várias threads ao mesmo tempo é uma condição de corrida clássica.\n- III: pela análise técnica, é falsa. Cada requisição tem o seu próprio objeto request, então travá-lo não impede que duas threads incrementem o contador ao mesmo tempo.\n\nPela análise técnica, a resposta seria I e II. O gabarito definitivo do INEP, porém, é D (II e III). Para a prova, vale a letra D. Para o dia a dia, guarde que a trava precisa ser um objeto compartilhado por todas as threads.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q31": {
+  "texto": "Leia as transições: A = pronto → execução, B = execução → pronto, C = execução → espera, D = espera → pronto.\n\n- I: falsa. Um processo novo entra na fila de prontos, não em espera.\n- II: verdadeira. A fila de prontos pode ter vários processos esperando o processador.\n- III: verdadeira. A transição B é a preempção: o processo perde o processador sem ter terminado e volta para a fila. Isso só existe em sistemas multitarefa.\n- IV: verdadeira. Num sistema monotarefa não existe fila de prontos nem preempção, então o diagrama não serve para representá-lo.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q32": {
+  "texto": "Atenção: o gabarito oficial desta questão diverge da análise técnica mais comum.\n\n- O algoritmo calcula a média dos quadrados dos desvios dividida por |P| e tira a raiz: é o desvio padrão POPULACIONAL, que é o que o enunciado pede. O amostral dividiria por |P| − 1.\n- I: pela análise técnica, é verdadeira. Em cada período os valores quase não variam (σ ≈ 0,2 °C), bem abaixo de 2.\n- II: pela análise técnica, é falsa, pelo motivo acima.\n- III: verdadeira. Juntando os três períodos (valores perto de 33, de 27 e de 2), o desvio padrão passa de 13 °C, então o algoritmo indica inapropriado.\n\nPela análise técnica, a resposta seria I e III. O gabarito definitivo do INEP, porém, é D (II e III). Para a prova, vale a letra D.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q33": {
+  "texto": "Atenção: no texto do site, a fórmula do comprimento crítico perdeu parte dela. No enunciado original, ela é Lc = Vp · th / 2.\n\n1. Período da frequência máxima: T = 1 / 1,25 GHz = 0,8 ns.\n2. Meio período: th = T / 2 = 0,4 ns.\n3. Comprimento crítico: Lc = Vp · th / 2 = 15 cm/ns × 0,4 ns / 2 = 3 cm.\n4. Comprimento máximo da trilha: L = Lc / 1,5 = 3 / 1,5 = 2 cm.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q34": {
+  "texto": "São só dois processos de 20 ms. Quanto maior a troca de contexto em relação ao quantum, mais tempo se perde sem executar nada. Compare a sobrecarga (troca / quantum) e o tempo total:\n\n- 5 ms e 1 ms: 8 fatias, cerca de 7 trocas, 40 + 7 = 47 ms. Sobrecarga de 20%.\n- 4 ms e 2 ms: 10 fatias, 9 trocas de 2 ms, 58 ms. Sobrecarga de 50%.\n- 5 ms e 3 ms: 7 trocas de 3 ms, 61 ms. Sobrecarga de 60%.\n- 2 ms e 1 ms: 20 fatias, 19 trocas, 59 ms. Sobrecarga de 50%.\n- 2 ms e 2 ms: 19 trocas de 2 ms, 78 ms. Sobrecarga de 100%.\n\nA combinação 5 ms e 1 ms tem a menor sobrecarga e termina antes.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q35": {
+  "texto": "Na norma de qualidade de software (ISO/IEC 9126), a usabilidade se divide em subcaracterísticas:\n\n- inteligibilidade: o esforço do usuário para reconhecer o conceito lógico do software e se ele se aplica ao que precisa (opção C);\n- apreensibilidade: o esforço para aprender a usar (opção E);\n- operacionalidade: o esforço para operar e controlar (opção B);\n- conformidade: aderir a normas (opção D).\n\nA satisfação subjetiva (opção A) aparece em outras definições de usabilidade, mas não é a inteligibilidade.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-D01": {
+  "texto": "A pergunta pede ações de RESTAURAÇÃO ou RECUPERAÇÃO depois do desastre, e não de prevenção. Proposta de prevenção (alerta, mapa de risco, obra de contenção antes da chuva) não pontua.\n\nEscolha duas propostas de campos diferentes e explique cada uma em uma ou duas frases, dizendo quem age e qual o efeito:\n\n- Social e psicossocial: realocar a população afetada para áreas seguras, montar abrigos temporários, mobilizar a saúde para atendimento de emergência, vacinação e acompanhamento psicossocial.\n- Econômico e sociocultural: aluguel social, fundo emergencial para reconstruir moradias, crédito para agricultores atingidos, restauração do patrimônio histórico e cultural.\n- Ambiental: reflorestar áreas degradadas e nascentes com vegetação nativa, recuperar mananciais, monitorar a qualidade da água e do solo, descontaminar o solo.\n- Infraestrutura: restabelecer água, energia e comunicações, desobstruir bueiros e vias.\n\nUm texto curto com as duas propostas bem justificadas vale mais do que uma lista longa sem explicação.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-D02": {
+  "texto": "A figura é a hélice tríplice: universidade, empresa e governo trabalhando juntos. Responda os dois itens separadamente, com dois ganhos em cada um.\n\na) Campo científico: mais recursos para pesquisa voltada a problemas reais; transferência mútua de conhecimento e tecnologia entre universidade e empresa; mais fontes de financiamento (bolsas, laboratórios, equipamentos).\n\nb) Campo econômico: novos produtos, processos e materiais ajustados à demanda local; mais patentes (o texto aponta as patentes como o pior indicador do país); startups, incubadoras e empresas juniores; tecnologias mais baratas ou sustentáveis; mais vagas para estudantes e egressos.\n\nCuidado para não repetir no item b um ganho científico: ali o ganho precisa ser econômico, ligado a produção, renda, emprego ou competitividade.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-Q02": {
+  "texto": "O poema concreto é feito só com as letras de \"poema\" e \"bomba\", espalhadas como numa explosão. O sentido nasce da disposição visual.\n\n- I: verdadeira. A imagem é essencial: o leitor vê a explosão antes de ler.\n- II: verdadeira. A diagramação (espaço, tamanho, posição das letras) constrói o sentido.\n- III: verdadeira. As letras dispersas sugerem um big-bang que atinge as duas palavras.\n- IV: falsa. Contradiz as anteriores: no concretismo, o espaço é central, não secundário.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-Q03": {
+  "texto": "Segurança alimentar e nutricional não é só produzir comida: inclui acesso, qualidade e sustentabilidade.\n\n- I: verdadeira. É a definição ampla: oferta adequada de alimentos saudáveis, respeitando a cultura e a sustentabilidade.\n- II: verdadeira. O conceito abrange produção, disponibilidade e acesso a uma alimentação adequada.\n- III: falsa. O próprio texto mostra que o volume de alimentos aumentou e mesmo assim a fome cresceu. O problema é de acesso e distribuição, não de falta de tecnologia de produção.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-Q04": {
+  "texto": "Avalie cada asserção sozinha e depois a relação entre elas.\n\n- I: verdadeira. O Nordeste (210 L per capita) está bem abaixo da média nacional (320 L), o que indica desigualdade de acesso, com reflexo na saúde pública.\n- II: verdadeira. Uma política de abastecimento mais eficiente contribui para o desenvolvimento e para reduzir desigualdades regionais.\n- Relação: a II não explica a I. A II fala do benefício de uma política mais eficiente; não é ela que causa os índices abaixo da média. As duas são verdadeiras, mas independentes.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-Q05": {
+  "texto": "O ponto central é o marco da tradicionalidade: a relação com a terra é contínua, mas não parada no tempo.\n\n- I: falsa. A tradicionalidade não pressupõe modos de vida estáticos. As fotos mostram aldeias com construções e torres de energia, e mesmo assim são terras indígenas.\n- II: verdadeira. O reconhecimento garante o direito de usar a terra em diferentes atividades produtivas.\n- III: verdadeira. A terra fornece elementos materiais e simbólicos para transmitir a cultura entre gerações.\n- IV: falsa. O reconhecimento valoriza a diversidade cultural, não uma homogeneidade ou \"amálgama\".\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-Q06": {
+  "texto": "- I: verdadeira. O crescimento maior dos homicídios de mulheres negras mostra que é preciso estudar as múltiplas variáveis do fenômeno (raça, renda, território etc.).\n- II: falsa. O gráfico não permite concluir que havia, no início da série, um \"contexto favorável à superação\" da vulnerabilidade. Uma diferença menor entre as taxas não significa contexto favorável, e a mulher negra já tinha a taxa mais alta.\n\nCom a II falsa, não há relação de causa a avaliar.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-Q07": {
+  "texto": "O texto define acessibilidade como garantir que a pessoa use os espaços com autonomia, como usuária legítima e independente.\n\n- I: verdadeira. Adaptar as vias facilita a circulação de quem tem dificuldade de locomoção.\n- II: verdadeira. Rampas, faixas livres, guias e piso antiderrapante são o desenho universal das calçadas.\n- III: falsa. Depender da ajuda de terceiros vai contra a ideia de autonomia. A acessibilidade busca dispensar essa ajuda.\n- IV: verdadeira. Sinal sonoro no semáforo e braille na sinalização são medidas adequadas para pessoas com deficiência visual.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-Q08": {
+  "texto": "Burnout é estresse crônico do trabalho, então tanto a causa quanto a solução passam pelo contexto do trabalho.\n\n- I: falsa. Treinar líderes para a obstinação e a resistência ao erro aumenta a pressão; não reduz a vulnerabilidade.\n- II: verdadeira. Olhar os sintomas fora do contexto sociocultural dificulta ligar o adoecimento ao trabalho (o nexo causal).\n- III: verdadeira. Trabalho com sentido de realização e reconhecimento protege a saúde psíquica.\n- IV: falsa. O remédio pode ajudar, mas não é a condição determinante: a origem está na organização do trabalho.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-D02": {
+  "texto": "a) Algoritmo A. Cada cliente de X é comparado com todos os que já estão em Y. O pior caso é quando não há nenhum repetido, porque aí Y cresce a cada passo: 0 + 1 + 2 + … + (N − 1) = N(N − 1)/2 comparações, ou seja, O(N²).\n\nb) Algoritmo B. Com X ordenado, cada cliente só é comparado com o anterior: N − 1 comparações, O(N). A ordenação do passo 2 não entra nessa conta.\n\nc) Depois de particionar, o pivô já está na posição final x. Basta ordenar o que está à esquerda e o que está à direita dele: a = ini, b = x − 1, c = x + 1, d = fim. Usar b = x ou c = x também funciona, mas repete o pivô sem necessidade.\n\nd) Uma forma de particionar: leve o pivô para o início, varra o vetor mandando para o fim quem for maior que o pivô, e por fim coloque o pivô no lugar dele.\n\n```c\nint particiona(int *vetor, int ini, int fim, int pivot) {\n    troca(vetor, ini, pivot);   /* pivô vai para o início */\n    pivot = ini;\n    ini = ini + 1;\n    while (ini <= fim) {\n        if (vetor[ini] <= vetor[pivot])\n            ini = ini + 1;           /* fica à esquerda */\n        else {\n            troca(vetor, ini, fim);  /* maior vai para o fim */\n            fim = fim - 1;\n        }\n    }\n    troca(vetor, pivot, fim);       /* pivô na posição final */\n    return fim;\n}\n```\n\nAo final, os elementos com índice menor que o retorno são menores ou iguais ao pivô, e os de índice maior são maiores, como o enunciado exige.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q10": {
+  "texto": "Calcule a resistência de cada material com R = ρ·L / A:\n\n- Carbono: 40 × 1 / 2,5 = 16 Ω.\n- Grafite: 13 × 1,5 / 1,5 = 13 Ω.\n- Níquel-cromo: 1,1 × 5 / 0,5 = 11 Ω.\n\nPara ter I < 300 mA com 12 V, é preciso R > 12 / 0,3 = 40 Ω. Paralelo diminui a resistência, então só associações em série servem:\n\n- 3 de carbono em série: 48 Ω, e I = 12 / 48 = 0,25 A. Atende.\n- 2 de grafite em série: 26 Ω, e I ≈ 0,46 A. Não atende.\n- 3 de níquel-cromo em série: 33 Ω, e I ≈ 0,36 A. Não atende.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q11": {
+  "texto": "- I: falsa. O OSPF escolhe a rota de menor soma de atrasos (custos), e não a de menos conexões.\n- II: verdadeira. Cada roteador guarda a sua cópia da base com o grafo inteiro do sistema autônomo.\n- III: falsa. Cada roteador executa o Dijkstra sozinho sobre a sua cópia do grafo. Nenhum roteador calcula para os outros.\n- IV: verdadeira. Para todos montarem a mesma base, a informação de conexões e atrasos precisa circular por todos os roteadores.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q12": {
+  "texto": "Junte os computadores que aparecem ligados na tabela, contando que todo computador também se relaciona consigo mesmo:\n\n- {1, 5, 7, 10}: todos os pares estão na tabela (1–5, 1–7, 1–10, 5–7, 5–10, 7–10).\n- {2, 8, 9}: os pares 2–8, 2–9 e 8–9 estão lá.\n- {3, 4}.\n- {6}, sozinho.\n\nOs grupos não se misturam e cada um está \"completo\". A relação é reflexiva (por definição), simétrica (cada linha vale nos dois sentidos) e transitiva (não existe a–b e b–c sem a–c). Logo, é uma relação de equivalência, e os grupos acima são as classes.\n\n- D e E erram as classes: o 3 não se relaciona com 1, 5, 7 e 10, nem com 2, 8 e 9.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q13": {
+  "texto": "Pela figura, os arcos são: 1 de A para C, 2 de A para B, 3 de B para D, 4 de B para C, 5 de C para D, 6 de D para A.\n\nEm cada corte, some com sinal + as correntes que saem de um dos lados e com sinal − as que entram nele:\n\n- Corte Y = {1, 2, 3, 5}: separa {A, D} de {B, C}. Do lado {A, D}, saem 1 e 2 e entram 3 e 5: I₁ + I₂ − I₃ − I₅ = 0.\n- Corte Z = {1, 4, 3, 6}: separa {A, B} de {C, D}. Do lado {A, B}, saem 1, 4 e 3 e entra 6: I₁ + I₃ + I₄ − I₆ = 0.\n\nAs duas equações estão na opção D.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q14": {
+  "texto": "A função enade processa a lista de trás para a frente: chama enade na cauda primeiro e depois insere a cabeça com auxiliar.\n\nA auxiliar faz o seguinte:\n- número par: põe na frente da lista;\n- número ímpar: passa por todos os elementos e entra no fim.\n\nMontando a partir do fim de [1..8]:\n\n- 8 → [8]\n- 7 (ímpar, vai para o fim) → [8, 7]\n- 6 (par, vai para a frente) → [6, 8, 7]\n- 5 → [6, 8, 7, 5]\n- 4 → [4, 6, 8, 7, 5]\n- 3 → [4, 6, 8, 7, 5, 3]\n- 2 → [2, 4, 6, 8, 7, 5, 3]\n- 1 → [2, 4, 6, 8, 7, 5, 3, 1]\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q15": {
+  "texto": "Há vazamento quando a memória alocada deixa de ser acessível sem ter sido liberada.\n\n- C: se size > 50, a função retorna −1 antes do free(s). Os 50 bytes alocados ficam perdidos. É o vazamento.\n- A: aloca e libera. Correto.\n- B: só declara um ponteiro, sem alocar nada.\n- D: a memória alocada em f é liberada no main. Correto.\n- E: tem outro erro, a liberação dupla (o mesmo bloco n é liberado duas vezes), mas nada fica sem liberar.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q16": {
+  "texto": "Simule com a = 10 (1010) e b = 1. Antes do laço: x = 10, y = 1, z = 11.\n\n- Volta 1 (a = 10, b = 1): x = 10 | 1 = 11; y = 1 ^ 10 = 11; z = 11 & 11 = 11. Depois a = 5 e b = 2.\n- Volta 2 (a = 5, b = 2): x = 11 | 2 = 11; y = 11 ^ 5 = 14; z = 11 & 7 = 3. Depois a = 2 e b = 4.\n- Volta 3 (a = 2, b = 4): x = 11 | 4 = 15; y = 14 ^ 2 = 12; z = 3 & 6 = 2. Depois a = 1 e b = 8.\n- Volta 4 (a = 1, b = 8): x = 15 | 8 = 15; y = 12 ^ 1 = 13; z = 2 & 9 = 0. Depois a = 0, e o laço termina.\n\nSaída: 15 13 0.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q17": {
+  "texto": "É a subestrutura ótima da LCS:\n\n- I: verdadeira. Se os últimos caracteres são iguais, eles fecham a LCS, e o resto dela é uma LCS dos prefixos sem eles.\n- II: verdadeira. Se a LCS não termina em aₙ, esse caractere não serve, e Z é uma LCS de Aₙ₋₁ com B.\n- III: falsa. Quando aᵢ ≠ bⱼ, vale o MÁXIMO das duas opções, não o mínimo: lcs(i, j) = max{lcs(i, j−1), lcs(i−1, j)}.\n- IV: verdadeira. Quando aᵢ = bⱼ, a LCS cresce 1 em relação aos prefixos menores.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q18": {
+  "texto": "Pela análise amortizada: a maioria das inserções custa O(1), e só de vez em quando (nos tamanhos 1, 2, 4, 8…) o vetor dobra e copia tudo.\n\nEm n inserções, o total de cópias é 1 + 2 + 4 + … + n < 2n. Somando as n escritas, o custo total é Θ(n), e a média por inserção é Θ(n) / n = Θ(1).\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q19": {
+  "texto": "Separe as fases do compilador:\n\n- Léxica: só reconhece os tokens (a, =, /, (, b, -, ;). Todos são válidos, então não há erro aqui.\n- Sintática: a sentença segue a forma \"var = E;\", com E sendo uma divisão. A produção E(E) da gramática tem a intenção de permitir parênteses. A gramática gera a sentença.\n- Semântica: b − b vale sempre zero, então a expressão divide por zero. Pelo gabarito, esse erro é apontado pelo analisador semântico, ao avaliar o significado da expressão.\n\nObservação: na prática, divisão por zero com variáveis costuma ser detectada só em execução. A questão considera que o analisador semântico percebe que b − b é sempre 0.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q20": {
+  "texto": "- I: verdadeira. A elasticidade permite pagar pelo que se usa, aumentando e diminuindo os recursos conforme a demanda.\n- II: falsa. A nuvem não garante mais velocidade nem acesso rápido em qualquer lugar: isso depende da rede, da região do provedor e da aplicação.\n- III: verdadeira. Sem comprar servidores e infraestrutura antes, o investimento inicial cai, e a operação pode começar antes de se provar viável.\n- IV: falsa. A segurança na nuvem é responsabilidade compartilhada. O contratante continua cuidando de acessos, dados e configurações.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q21": {
+  "texto": "- I: verdadeira. Ícones nos semáforos atendem quem não distingue cores (daltonismo), então o serviço passa a servir a todos: é o Fundamento 1, do projeto equitativo.\n- II: falsa. O Fundamento 1 fala em atender todos os usuários, independentemente das habilidades sensoriais, o que inclui pessoas cegas.\n- III: falsa. Colocar telas públicas não basta para a informação ser perceptível. O Fundamento 2 exige recursos como texto alternativo e bom contraste.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q22": {
+  "texto": "A consulta precisa de quatro coisas: retornar nome e saldo; juntar cliente, pessoa e funcionário pelo id; filtrar saldo_devedor > salario; ordenar por saldo em ordem crescente.\n\n- A: SELECT * devolve todas as colunas, e não só nome e saldo.\n- B: usa f sem incluir funcionario no FROM, e ordena em ordem decrescente.\n- C: compara ao contrário (saldo < salário).\n- D: ordena primeiro pelo salário, e não pelo saldo.\n- E: as junções externas, somadas ao WHERE c.saldo_devedor > f.salario, só mantêm as linhas que têm cliente e funcionário. Na prática, é uma junção interna, com as colunas e a ordem certas.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q23": {
+  "texto": "Identifique cada filtro:\n\n- Figura 1: o capacitor em série e o resistor para a terra, com seguidor de tensão, formam um passa-altas. A frequência de corte é fc = 1/(2π·10 kΩ·180 pF) ≈ 88 kHz.\n- Figura 2: um inversor com R e C em paralelo na realimentação forma um passa-baixas. A frequência de corte é fc = 1/(2π·1,8 kΩ·100 pF) ≈ 884 kHz.\n\nAgora, as afirmações:\n\n- I: verdadeira. A impedância de entrada da Figura 2 é sempre 18 kΩ (a entrada inversora é terra virtual). A da Figura 1 é o capacitor em série com 10 kΩ. Em frequências altas o capacitor quase vira curto, e ela tende a 10 kΩ, abaixo de 18 kΩ.\n- II: falsa. A Figura 1 é passa-altas.\n- III: falsa. As frequências de corte são diferentes (≈ 88 kHz e ≈ 884 kHz).\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q24": {
+  "texto": "Leia a ligação de cada pino no circuito:\n\n- P3, alarme: saída. Nível 1 aciona o alarme.\n- P2, chave 2: entrada. A chave liga o pino ao VDD, então fechada dá 1.\n- P1, LED: saída. O LED está ligado ao VDD, então acende com o pino em 0.\n- P0, chave 1: entrada. Tem pull-up e a chave liga o pino ao terra, então fechada dá 0.\n\nAgora as afirmações:\n\n- I: falsa. As saídas são P3 e P1, então PORT_DIR = 1010 = 10, e não 9.\n- II: verdadeira. Com as duas chaves fechadas, P2 = 1 e P0 = 0: X1X0.\n- III: verdadeira. Para acionar o alarme, P3 = 1. Para acender o LED, P1 = 0. Fica 1X0X.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q25": {
+  "texto": "- I: falsa. A figura é um contador de 4 bits (0 a 15), mas os dois códigos contam com só 2 bits: count[1:0] no Verilog e integer range 0 to 3 no VHDL, ou seja, de 0 a 3.\n- II: verdadeira. Ao passar do valor máximo, o contador volta a zero e recomeça. Isso vale para o contador da figura e para os códigos.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q26": {
+  "texto": "- A: falsa. A memória é compartilhada e não precisa ser dividida igualmente entre os processadores.\n- B: falsa. Com vários processadores, o acesso concorrente aumenta, e os semáforos continuam necessários.\n- C: falsa. A exclusão mútua é possível, com instruções atômicas, travas e semáforos, e várias aplicações rodam ao mesmo tempo.\n- D: falsa. As threads dependem de serviços do sistema operacional para serem criadas e escalonadas nos núcleos.\n- E: correta. Processos podem trocar dados por memória compartilhada, mas é o sistema operacional que cria a área e controla o acesso a ela.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q27": {
+  "texto": "Cada máquina virtual roda o próprio sistema operacional, e ainda há o hipervisor por cima do hardware.\n\n- C: correta. Isso ocupa mais memória física do que o mesmo sistema rodando direto no hardware. Por isso, memória extra ajuda o desempenho.\n- A: falsa. Cada cópia em máquina virtual também precisa de licença.\n- B: falsa. A virtualização não aumenta, por si só, o consumo de rede do sistema distribuído.\n- D: falsa. A virtualização existe justamente para esconder as diferenças entre os computadores físicos.\n- E: falsa. Não existe exigência de disco físico com o dobro do tamanho do virtual.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q28": {
+  "texto": "- I: verdadeira. Na troca de processo, a MMU passa a usar a tabela de páginas do novo processo, e o TLB é invalidado ou recarregado, porque guarda traduções do processo anterior.\n- II: verdadeira. Para isso, a tabela do novo processo vira a atual, carregando a tabela ou um ponteiro para ela em registradores de hardware.\n- Relação: a II explica por que e como a MMU e o TLB são reconfigurados. É uma justificativa correta da I.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q29": {
+  "texto": "Calcule yr = 0,4·x + 2,7 e compare com y. Se yr − y > 0, é vidro; se não, é plástico.\n\n- i = 1: 0,4·3 + 2,7 = 3,9 e 3,9 − 7 < 0 → plástico.\n- i = 2: 5,1 − 6 < 0 → plástico.\n- i = 3: 4,3 − 4 = 0,3 > 0 → vidro.\n- i = 4: 4,7 − 3 > 0 → vidro.\n- i = 5: 3,1 − 2 > 0 → vidro.\n\nSequência: plástico, plástico, vidro, vidro, vidro.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q30": {
+  "texto": "Há conflito de dados quando dois processadores acessam a mesma posição ao mesmo tempo e pelo menos um deles escreve. Duas escritas na mesma posição são o caso mais claro: o valor final depende de quem escreve por último.\n\n- E: os dois escrevem em A[0][0] (10 e 20) ao mesmo tempo. É o conflito.\n- A: só leem o endereço.\n- B: escrevem em posições diferentes.\n- C e D: um escreve na posição e o outro só pega o endereço dela, sem ler o valor.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q31": {
+  "texto": "- I: verdadeira. É o teorema da amostragem (Nyquist): o sinal precisa ter banda limitada e ser amostrado a mais do que o dobro da largura de banda.\n- II: falsa. O espectro do sinal AMOSTRADO não é limitado: ele é o espectro original repetido periodicamente em múltiplos da frequência de amostragem. A reconstrução funciona porque essas cópias não se sobrepõem, e um filtro passa-baixas recupera a original.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q32": {
+  "texto": "A busca gulosa olha só para a frente: a cada passo, vai para o vizinho com a menor distância estimada até São Paulo, sem voltar atrás.\n\n- Manaus: os vizinhos são Macapá (2 665) e Porto Velho (2 464). Vai para Porto Velho.\n- Porto Velho: os vizinhos são Palmas (1 489) e Cuiabá (1 326). Vai para Cuiabá.\n- Cuiabá: o vizinho é Goiânia (809).\n- Goiânia: o vizinho é São Paulo (0).\n\nRota: Manaus → Porto Velho → Cuiabá → Goiânia → São Paulo.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q33": {
+  "texto": "- I: falsa. A parte integral só precisa de um acumulador, uma variável somando os erros. Não é preciso guardar o histórico numa fila.\n- II: verdadeira. A ação proporcional é o ganho vezes o erro atual (temperatura desejada menos temperatura atual).\n- III: verdadeira, pelo gabarito. A derivada só usa o erro atual e o anterior, então basta guardar as duas últimas amostras, e o gabarito considera a pilha adequada para isso. Na prática, uma única variável com o erro anterior já resolve.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q34": {
+  "texto": "- I: falsa. A FIFO não diferencia fluxos: rajadas longas enchem a fila e fazem descartar pacotes de todos. Ela é justamente ruim nesse cenário.\n- II: verdadeira. No WFQ, cada fila recebe um peso, que define quanto de banda (quantos bits) ela ganha a cada rodada.\n- III: falsa. A fila por prioridade sempre atende primeiro a de maior prioridade, e por isso PODE deixar as de menor prioridade sem atendimento (starvation). Não usa Round-Robin.\n- IV: verdadeira. O RED acompanha o tamanho médio da fila e, acima de um limiar, descarta pacotes aleatoriamente, antes de a fila encher.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q35": {
+  "texto": "- I: verdadeira. Sockets sobre TCP dão um canal confiável, com entrega garantida e em ordem.\n- II: verdadeira. O UDP não estabelece conexão, não confirma entrega e não retransmite, então tem menos overhead e envia mais rápido.\n- III: verdadeira. Em voz e vídeo ao vivo, chegar a tempo importa mais do que chegar tudo, então perder um pouco é aceitável. O UDP é a escolha natural.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q36": {
+  "texto": "Mais threads e mais núcleos ajudam até certo ponto. Depois disso, o ganho para por causa:\n\n- da parte sequencial do programa (lei de Amdahl);\n- da sincronização e da disputa por memória;\n- da troca de contexto.\n\nEsse limite depende da aplicação.\n\n- A: falsa. O ganho não é linear.\n- B: falsa. O número de núcleos não é insignificante.\n- D: falsa. Sem threads para ocupar os núcleos, eles ficam ociosos.\n- E: falsa. Os dois fatores importam, e não só o algoritmo.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q37": {
+  "texto": "- I: falsa. A criptografia não detecta vulnerabilidade: ela protege a confidencialidade, deixando os dados ilegíveis para quem não tem a chave.\n- II: falsa. Verificar a identidade é a autenticação. A auditoria registra e analisa eventos para verificar o que aconteceu.\n- III: verdadeira. Controle de acesso é definir e gerenciar quem pode acessar o quê e fazer quais operações.\n- IV: verdadeira. Os sistemas de detecção e de prevenção de intrusão (IDS e IPS) identificam atividade maliciosa e agem para bloqueá-la.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q38": {
+  "texto": "Cada microsserviço pode ser escalado sozinho: só o serviço sobrecarregado ganha mais instâncias. Esse é o benefício central.\n\n- B: falsa. Com dados espalhados entre os serviços, a consistência fica MAIS difícil.\n- C e D: falsas. Mais chamadas pela rede e mais instâncias costumam custar desempenho e recursos.\n- E: falsa. A comunicação entre componentes fica mais complexa, não menos.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-D01": {
+  "texto": "a) Ligue três coisas numa explicação de causa e efeito:\n\n- Quem é atingido: a população pobre e extremamente pobre (o texto fala em 29,4% de pobreza e 8,4% de extrema pobreza).\n- Onde mora: sem renda para morar em áreas com infraestrutura, ela vai para a periferia, morros, encostas, margens de rios e mangues, áreas segregadas e mais violentas.\n- Que risco corre: inundações, deslizamentos, contaminação, mais doenças por falta de saneamento, violência e discriminação.\n\nA ideia central é que a desigualdade empurra essa população para os lugares de maior risco, e o risco aprofunda a pobreza.\n\nb) Apresente duas propostas concretas, e em cada uma diga o que o governo faz e como a comunidade participa. Exemplos:\n\n- Contenção de encostas e saneamento básico (água, esgoto, coleta de lixo, drenagem), com a comunidade apontando as prioridades e fiscalizando as obras.\n- Moradia digna e regularização fundiária, com cadastro e mutirões organizados pelas associações de moradores.\n- Plano participativo de redução de risco, com núcleos comunitários de defesa civil treinados para alerta e evacuação.\n- Acesso a equipamentos sociais, áreas verdes e atendimento psicossocial.\n\nProposta só do governo, ou só da comunidade, perde pontos: o item pede as duas coisas juntas.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q01": {
+  "texto": "- I: falsa. A fome não é inevitável nem \"natural\". Ela resulta de desigualdade, conflitos e falhas de distribuição, como o próprio texto diz ao pedir soluções.\n- II: verdadeira. Disponibilidade desigual, guerras (as fotos da Ucrânia), cadeias agrícolas globais e eventos climáticos (as secas em Madagascar) afetam a segurança alimentar.\n\nCom a I falsa e a II verdadeira, não há relação de causa a avaliar.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q02": {
+  "texto": "- I: verdadeira. A segregação urbana deixa periferias e favelas sem rede, e isso trava a universalização.\n- II: falsa. No Brasil, o abastecimento de água está bem mais avançado do que a coleta e o tratamento de esgoto. Os dois não estão no mesmo patamar.\n- III: verdadeira. Universalizar exige política pública, investimento e tecnologias sociais voltadas a quem está vulnerável.\n- IV: verdadeira. As doenças de veiculação hídrica dependem do saneamento e também da moradia precária (água armazenada de forma inadequada, esgoto a céu aberto).\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q03": {
+  "texto": "Confira cada alternativa com o gráfico e o texto:\n\n- A: falsa. A vacina da poliomielite caiu ano a ano, não ficou constante.\n- B: correta. Vacinação infantil é uma ação típica da atenção primária, então a cobertura baixa indica baixo desempenho dessas políticas.\n- C: falsa. A tetraviral teve cobertura muito baixa, não \"média\".\n- D: falsa. A vacina da febre amarela ficou longe da meta de 95%, então não dá para dizer que a meta foi alcançada.\n- E: falsa. O gráfico mostra queda geral em 2020 e 2021, e não aumento da cobertura depois da pandemia.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q04": {
+  "texto": "- A: correta. A IA generativa cria texto, imagem e música, ou seja, realiza interações que antes eram só humanas (texto 1).\n- B: falsa. Nada nos textos diz que ela restringe o aprendizado ao que é legal e útil.\n- C: falsa. O texto 2 diz o contrário: ela pode agravar a desigualdade, não promover a igualdade.\n- D: falsa. Os textos não dizem que o impacto é pequeno nos países desenvolvidos. A ideia é de disrupção geral.\n- E: falsa. Os textos não afirmam que ela estimula o desenvolvimento intelectual humano, e o texto 2 destaca riscos.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q05": {
+  "texto": "As palavras do estudo (insegura, ansiosa, em pânico, apertada, atenta aos assédios) mostram como a mobilidade é vivida pelas mulheres.\n\n- I: verdadeira. A predominância de termos negativos indica medo generalizado nos deslocamentos e uma percepção do próprio corpo exposto no espaço urbano.\n- II: verdadeira. Ônibus e trem aparecem ligados a lotação e assédio, e o metrô aparece como \"um pouco mais segura\".\n- III: verdadeira. O medo ligado ao gênero cria uma geografia própria: as mulheres mudam trajetos, horários e meios de transporte. É a discussão do direito à cidade.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q06": {
+  "texto": "- I: verdadeira. O texto 1 mostra o racismo do século XIX, o texto 2 a violência contra jovens negros na periferia hoje, e o texto 3 recria a identidade negra periférica. Todos fazem pensar na condição histórica da maioria da população, que é negra.\n- II: falsa. É o mito da \"democracia racial\". A formação do Brasil foi marcada pela escravidão e pela violência, e não por um convívio cordial.\n- III: verdadeira. Produções que tratam da condição negra rompem o silenciamento imposto pela colonização e pela segregação.\n- IV: falsa. A releitura de Portinari é uma ressignificação que empodera: coloca o jovem periférico no lugar da obra clássica. Não é uma limitação.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q07": {
+  "texto": "- I: falsa. Etarismo é preconceito: justamente a ideia, sem fundamento, de que o idoso \"rende menos\" e \"custa caro\". A afirmação trata o preconceito como se fosse um fato.\n- II: verdadeira. Se a lei prolonga o tempo de trabalho, precisa vir com políticas de saúde e qualidade de vida para o idoso conseguir trabalhar.\n- III: falsa. Ações intergeracionais se baseiam na troca de experiências entre gerações, e não em \"equipar\" o idoso para render como o jovem.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q08": {
+  "texto": "- I: verdadeira. No tráfico, a maioria das mulheres ocupa posições subalternas (mulas, aviões), o que repete a divisão sexual do trabalho do mercado formal.\n- II: verdadeira. O sistema penal agrava a vulnerabilidade das mulheres presas, pela invisibilidade e pela violência institucional.\n- Relação: a II não explica a I. A I fala da posição das mulheres no tráfico, antes da prisão. A II fala do que acontece depois, dentro do sistema penal.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q09": {
+  "texto": "Na \"sociedade do desempenho\", cada um se cobra produtividade o tempo todo, e a tecnologia leva o trabalho para todos os horários.\n\n- I: verdadeira. Notificações em tempo real e áudio acelerado mantêm a pessoa sempre disponível e apressada, o que precariza o trabalho.\n- II: verdadeira. Desligar notificações e separar horários de trabalho e de lazer são medidas pessoais de proteção.\n- III: verdadeira. No plano público, letramento digital, alfabetização midiática e regras para o uso de plataformas no trabalho (como o direito à desconexão) previnem os danos.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-D1": {
+  "texto": "- I: verdadeira. A inclinação 2,5 diz que cada centena a mais de usuários aumenta a latência média em 2,5 ms.\n- II: verdadeira. O coeficiente de determinação é r² = 0,9² = 0,81: o modelo explica 81% da variação.\n- III: falsa. 50 centenas está muito fora da faixa medida (1 a 8). Extrapolar não é garantido: o comportamento pode deixar de ser linear, por exemplo com saturação.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-D2": {
+  "texto": "Use o teorema de Bayes, com 10 000 conexões para facilitar:\n\n- 100 são ataques, e o sistema alerta 99 delas.\n- 9 900 são legítimas, e o sistema dá alarme falso em 5%: 495 alertas.\n\nDo total de 594 alertas, só 99 são ataques: P(ataque | alerta) ≈ 16,7%.\n\n- I: verdadeira. A maioria dos alertas, cerca de 83%, vem de conexões legítimas.\n- II: falsa. P(ataque | alerta) ≈ 16,7% é bem diferente da sensibilidade, que é P(alerta | ataque) = 99%. Confundir as duas é o erro clássico.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-D3": {
+  "texto": "Num processo de Poisson com λ = 4 por segundo:\n\n- I: verdadeira. Em 2 s, a média é λ·t = 8.\n- II: verdadeira. P(0 chegadas em 1 s) = e^(−λt) = e^(−4).\n- III: verdadeira. Os intervalos entre chegadas são exponenciais com média 1/λ = 0,25 s.\n- IV: falsa. Na Poisson, a variância é igual à média: λ·t = 4, e não 2.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-F1": {
+  "texto": "A mediana é o valor do meio dos dados em ordem. Com 12, 15, 15, 18 e 40 (cinco valores), o do meio é o terceiro: 15 ms.\n\nO 40 puxa a MÉDIA para 20 ms, mas não mexe na mediana. É por isso que a mediana resiste a valores extremos.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-F2": {
+  "texto": "Derive termo a termo com a regra da potência: a derivada de 3x² é 6x, e a de 2x é 2. Então f'(x) = 6x + 2.\n\nEm x = 1: f'(1) = 6 + 2 = 8.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-F3": {
+  "texto": "Os resultados possíveis são 1 a 6, todos com a mesma chance. Os pares maiores que 2 são 4 e 6: 2 resultados favoráveis.\n\nP = 2/6 = 1/3.\n\nCuidado: o 2 é par, mas não é maior que 2.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-M1": {
+  "texto": "É uma binomial com n = 3 e p = 0,1. A probabilidade de exatamente k sucessos é C(n, k)·p^k·(1 − p)^(n − k).\n\nP(1 defeituosa) = C(3, 1)·0,1·0,9² = 3 × 0,1 × 0,81 = 0,243.\n\nO fator 3 conta as três posições possíveis para a placa defeituosa.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-M2": {
+  "texto": "O total acumulado é a integral da taxa no intervalo:\n\nN = ∫₀² 6t dt = [3t²]₀² = 3 × 4 = 12 requisições.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-M3": {
+  "texto": "De 450 a 550 h é a média ± 1 desvio padrão (500 ± 50). Pela regra empírica da normal, cerca de 68% dos valores ficam nessa faixa. Com ±2 desvios seriam 95%, e com ±3, 99,7%.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-D1": {
+  "texto": "- I: verdadeira. Os dissipadores costumam ser de alumínio (leve e barato) ou de cobre (conduz ainda melhor).\n- II: verdadeira. Nos metais, os elétrons livres transportam energia térmica, o que dá alta condutividade.\n- Relação: a II explica a I. É a boa condução de calor que tira o calor do chip e espalha pelas aletas.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-D2": {
+  "texto": "- I: falsa. Os cerâmicos têm BAIXA tenacidade à fratura, porque são frágeis. São uma má escolha para peças sujeitas a impacto.\n- II: verdadeira. Os termoplásticos amolecem com o calor e podem ser remoldados, o que facilita a reciclagem.\n- III: falsa. É o contrário: ABAIXO da transição vítrea o polímero fica rígido e frágil. Acima dela, fica borrachoso e flexível.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-D3": {
+  "texto": "A temperatura da junção é Tj = Tamb + P·Rθ.\n\n- I: verdadeira. Tj = 30 + 65 × 0,8 = 30 + 52 = 82 °C.\n- II: verdadeira. Tj = 30 + 65 × 0,5 = 30 + 32,5 = 62,5 °C.\n- III: falsa. Dobrando a potência, quem dobra é o AUMENTO de temperatura (de 52 para 104 °C). A junção fica em 30 + 104 = 134 °C, e não no dobro de 82 (164 °C). A temperatura ambiente não dobra.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-F1": {
+  "texto": "Pela segunda lei de Newton, F = m·a = 2 kg × 3 m/s² = 6 N.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-F2": {
+  "texto": "Duro, resistente ao calor, isolante elétrico e frágil (quebra sem se deformar antes): esse conjunto é típico dos cerâmicos. A alumina (Al₂O₃) é um cerâmico clássico.\n\nOs metais conduzem eletricidade e se deformam antes de romper. Os polímeros não resistem a altas temperaturas.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-F3": {
+  "texto": "Ec = m·v²/2 = 1 000 × 20² / 2 = 1 000 × 400 / 2 = 200 000 J = 200 kJ.\n\nO erro comum é esquecer de elevar a velocidade ao quadrado ou de dividir por 2.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-M1": {
+  "texto": "Pela lei de Fourier, q = k·A·ΔT / L.\n\nq = 200 × 0,01 × 2 / 0,005 = 4 / 0,005 = 800 W.\n\nAtenção à unidade da espessura: 5 mm = 0,005 m.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-M2": {
+  "texto": "Pela lei de Hooke, ε = σ / E = 100 MPa / 200 GPa = 100 × 10⁶ / 200 × 10⁹ = 5 × 10⁻⁴.\n\nEm porcentagem: 5 × 10⁻⁴ × 100 = 0,05%.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-M3": {
+  "texto": "O fósforo tem 5 elétrons de valência. Quatro fazem ligação com o silício e o quinto fica livre: o fósforo é um doador. O silício vira tipo n, com elétrons como portadores majoritários.\n\nDopar com um elemento de 3 elétrons, como o boro, daria tipo p, com lacunas.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-D1": {
+  "texto": "- I: verdadeira. O K₄ tem 4 vértices todos ligados entre si, então cada um precisa de um horário diferente: no mínimo 4.\n- II: verdadeira. Pelo teorema das quatro cores, todo grafo planar pode ser colorido com 4 cores. Logo 4 horários bastam, e são exatamente 4.\n- III: falsa. Grau máximo + 1 é só um LIMITE SUPERIOR, e o número cromático costuma ser menor. Por exemplo, uma estrela com 10 folhas tem grau máximo 10 e precisa de só 2 cores.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-D2": {
+  "texto": "- I: verdadeira. Toda árvore com n vértices tem n − 1 arestas.\n- II: verdadeira. Toda árvore com 2 ou mais vértices tem uma folha (vértice de grau 1). Removendo a folha e a sua aresta, sobra uma árvore com um vértice e uma aresta a menos.\n- Relação: a II é exatamente o passo da prova por indução da I. Remova folhas até sobrar um vértice só, com 0 arestas. Cada remoção tirou um vértice e uma aresta, então a diferença n − arestas = 1 se mantém.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-D3": {
+  "texto": "- I: verdadeira. Pela definição, a = a vale, então a R a.\n- II: falsa. Se a é ancestral de b, b não é ancestral de a: o grafo é acíclico. A relação é ANTISSIMÉTRICA, e não simétrica.\n- III: verdadeira. Ancestral do ancestral também é ancestral.\n- IV: verdadeira. Reflexiva, antissimétrica e transitiva é exatamente a definição de ordem parcial.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-F1": {
+  "texto": "O máximo de arestas acontece quando cada par de vértices está ligado (grafo completo K₅). O número de pares é C(5, 2) = 5 × 4 / 2 = 10.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-F2": {
+  "texto": "\"Todo x tem a propriedade\" é negado por \"existe pelo menos um x que NÃO tem a propriedade\".\n\nA negação é \"existe pelo menos um servidor do cluster que não está ativo\".\n\nA opção A, \"nenhum está ativo\", é muito mais forte do que a negação: basta um servidor inativo para a frase original ser falsa.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-F3": {
+  "texto": "A − B tem os elementos de A que não estão em B. Tirando 3 e 4 de {1, 2, 3, 4}, sobram {1, 2}.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-M1": {
+  "texto": "A ordem importa e não há repetição: é um arranjo A(10, 4) = 10 × 9 × 8 × 7 = 5 040.\n\n10 000 seria com repetição. 210 seria se a ordem não importasse (combinação).\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-M2": {
+  "texto": "Pelo lema do aperto de mãos, a soma dos graus é o dobro do número de arestas, porque cada aresta conta para dois vértices.\n\n3 + 3 + 2 + 2 + 1 + 1 = 12, então são 12 / 2 = 6 arestas.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-M3": {
+  "texto": "Pelo teorema de Euler, para um grafo conexo:\n- 0 vértices de grau ímpar: há circuito euleriano, que volta ao início.\n- Exatamente 2 vértices de grau ímpar: há trilha euleriana, que começa em um deles e termina no outro.\n- Mais de 2: não há nenhuma das duas.\n\nAqui são 2 vértices de grau ímpar: existe a trilha, e ela começa em um ímpar e termina no outro.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-D1": {
+  "texto": "- I: verdadeira. É o modelo clássico. xᵢⱼ ∈ {0, 1} indica se o técnico i atende o chamado j. Cada técnico tem soma 1 e cada chamado tem soma 1, e minimiza-se Σ tᵢⱼ·xᵢⱼ.\n- II: falsa. A estratégia gulosa pode prender o técnico errado num chamado barato e forçar uma combinação cara depois. Ela não garante o ótimo.\n- III: verdadeira. O método húngaro resolve a designação em tempo polinomial (O(n³)).\n- IV: falsa. São 4! = 24 designações possíveis, e não 16.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-D2": {
+  "texto": "- I: falsa. A região viável pode ser ilimitada na direção que melhora a função objetivo. Nesse caso não existe ótimo finito: o problema é ilimitado.\n- II: falsa. Quando existe, o ótimo de uma função linear está num vértice, ou ao longo de uma aresta, na fronteira da região, e não no interior.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-D3": {
+  "texto": "Liste os caminhos do início ao fim:\n\n- A–C–D: 3 + 4 + 3 = 10 dias\n- A–B–D: 3 + 2 + 3 = 8 dias\n- A–B–E: 3 + 2 + 2 = 7 dias\n\nO mais longo é o caminho crítico. Agora as afirmações:\n\n- I: verdadeira. O projeto dura no mínimo 10 dias.\n- II: verdadeira. O caminho crítico é A–C–D.\n- III: verdadeira. B termina no dia 5, mas D só pode começar no dia 7, quando C termina. B tem folga de 2 dias.\n- IV: falsa. E termina no dia 7 e o projeto vai até o dia 10. Com folga, E não é crítica.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-F1": {
+  "texto": "A região viável é o conjunto de todos os pontos que respeitam TODAS as restrições ao mesmo tempo. É dentro dela que se procura o ótimo.\n\nO ponto que maximiza ou minimiza (A) é a solução ótima, e não a região. A reta da função objetivo (D) é usada para varrer a região.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-F2": {
+  "texto": "O ótimo de um problema linear está em um vértice. Calcule Z = 3x + 2y em cada vértice:\n\n- (0, 0): 0\n- (4, 0): 12\n- (3, 3): 9 + 6 = 15\n- (0, 5): 10\n\nO máximo é 15, em (3, 3). A opção E usa o ponto (6, 0), que nem é vértice da região.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-F3": {
+  "texto": "O caminho mínimo de uma origem para todos os destinos, com pesos não negativos, é o problema que o algoritmo de Dijkstra resolve.\n\n- Kruskal e Prim montam a árvore geradora mínima, que liga todos os nós com o menor custo total. Isso é diferente da rota mais curta até cada cliente.\n- Ford-Fulkerson calcula fluxo máximo.\n- A busca em profundidade não considera pesos.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-M1": {
+  "texto": "Monte o modelo por partes:\n\n- objetivo: maximizar o lucro 40x + 30y;\n- montagem: 2x + y ≤ 100 (X usa 2 horas e Y usa 1);\n- teste: x + y ≤ 80;\n- não negatividade: x, y ≥ 0.\n\nA opção B minimiza o lucro. A opção C inverte as desigualdades, ou seja, exige consumir pelo menos as horas disponíveis. A opção D troca os coeficientes da montagem.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-M2": {
+  "texto": "Ache os vértices da região e calcule Z = 40x + 30y em cada um:\n\n- (0, 0): 0\n- (50, 0), onde 2x + y = 100 corta o eixo x: 2 000\n- (0, 80), onde x + y = 80 corta o eixo y: 2 400\n- Cruzamento das duas retas: subtraindo x + y = 80 de 2x + y = 100, sai x = 20 e então y = 60. Z = 800 + 1 800 = 2 600.\n\nO máximo é 2 600.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-M3": {
+  "texto": "Numa restrição ≤, a folga é o quanto falta para chegar ao limite, então ela SOMA ao lado esquerdo e nunca é negativa:\n\n2x + y + s = 100, com s ≥ 0.\n\nNuma restrição ≥, se usaria uma variável de excesso, subtraindo (forma da opção A).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-D1": {
+  "texto": "- I: falsa. O saldo final fica em 700, porque T2 grava por cima e o débito de T1 se perde. O correto seria 600.\n- II: verdadeira. É a atualização perdida (lost update): duas transações leem o mesmo valor e a segunda escrita apaga a primeira.\n- III: verdadeira. Com o 2PL estrito, T1 seguraria a trava sobre a conta até o commit, e T2 teria de esperar. T2 então leria 400 e gravaria 600.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-D2": {
+  "texto": "- I: falsa. Índices aceleram as buscas, mas deixam inserções e atualizações mais lentas, porque cada índice também precisa ser atualizado. Com milhares de inserções por minuto, indexar todas as colunas atrapalha.\n- II: falsa. A árvore B+ é atualizada a cada inserção, remoção ou alteração da coluna indexada, inclusive com divisão de nós.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-D3": {
+  "texto": "- I: verdadeira. Um relacionamento N:N vira uma tabela própria, cursa(matrícula, código, nota), com chave composta.\n- II: verdadeira. A nota pertence ao par aluno-disciplina, então fica na tabela do relacionamento.\n- III: verdadeira. Matrícula e código são chaves estrangeiras para Aluno e Disciplina.\n- IV: falsa. Uma coluna código em Aluno só permitiria UMA disciplina por aluno, o que serve para 1:N e não para N:N.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-F1": {
+  "texto": "A chave primária identifica cada linha de forma única. Não pode ter valores nulos nem repetidos.\n\n- Referenciar outra tabela (A) é papel da chave estrangeira.\n- Índices (D) e colunas calculadas (E) são outros conceitos.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-F2": {
+  "texto": "Para apagar linhas específicas e manter a tabela, use DELETE com WHERE:\n\nDELETE FROM cliente WHERE ...;\n\n- DROP TABLE apaga a tabela inteira.\n- ALTER TABLE muda a estrutura.\n- UPDATE altera valores.\n- SELECT só consulta.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-F3": {
+  "texto": "Atomicidade é o \"tudo ou nada\": ou todas as operações da transação acontecem, ou nenhuma. Na transferência, se o crédito falha, o débito é desfeito (rollback).\n\n- Consistência é manter as regras de integridade.\n- Isolamento é uma transação não ver os efeitos parciais da outra.\n- Durabilidade é o que foi confirmado não se perder.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-M1": {
+  "texto": "Para filtrar pelo resultado de uma função de agregação (COUNT), o filtro vai no HAVING, depois do GROUP BY. O WHERE filtra linhas ANTES do agrupamento e não aceita funções de agregação.\n\nSELECT curso, COUNT(*) FROM aluno GROUP BY curso HAVING COUNT(*) > 30;\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-M2": {
+  "texto": "A 2ª forma normal exige que nenhum atributo dependa só de PARTE da chave composta. Aqui, nome_produto depende só de cod_produto, então há uma dependência parcial e a tabela não está na 2FN.\n\nA correção é criar uma tabela produto(cod_produto, nome_produto).\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-M3": {
+  "texto": "O LEFT JOIN mantém todos os clientes, mesmo sem pedido. Por isso Bruno aparece, com p.valor nulo.\n\n- Ana: 100 + 50 = 150.\n- Bruno: SUM de nenhum valor dá NULL, e não 0.\n- Carla: 80.\n\nSão 3 linhas, e a soma de Bruno é NULL. Para mostrar 0, seria preciso usar COALESCE(SUM(p.valor), 0).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-D1": {
+  "texto": "- I: verdadeira. O fator de carga é α = n/m = 3 000 / 1 000 = 3, ou seja, 3 chaves por lista em média.\n- II: verdadeira. Se todas as chaves caem na mesma posição, a busca percorre uma lista com n elementos: O(n).\n- III: falsa. No encadeamento, as listas crescem à vontade, então α pode passar de 1. É no endereçamento aberto que α ≤ 1.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-D2": {
+  "texto": "- I: falsa. O tempo é O(n log n) no pior caso, mas o Merge Sort comum precisa de memória auxiliar O(n) para intercalar, e não de O(1). Num dispositivo com pouca RAM, isso pesa.\n- II: verdadeira. A intercalação percorre as duas metades uma vez só: tempo linear.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-D3": {
+  "texto": "- I: verdadeira. Sem memoização, fib(n) chama fib(n−1) e fib(n−2), que recalculam os mesmos valores muitas vezes. O tempo cresce de forma exponencial (cerca de 1,6ⁿ).\n- II: verdadeira. Com o dicionário, cada fib(k) é calculado uma vez só e depois apenas consultado. São n cálculos de custo constante: O(n).\n- III: verdadeira. A sequência é 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, então fib(10) = 55.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-F1": {
+  "texto": "O último que entra é o primeiro que sai (LIFO): é a pilha. Cada edição é empilhada, e \"desfazer\" desempilha a mais recente.\n\nA fila seria o primeiro que entra, primeiro que sai (FIFO).\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-F2": {
+  "texto": "A busca binária descarta metade do vetor a cada comparação. De n para n/2, n/4…, até 1: são cerca de log₂ n passos, ou seja, O(log n).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-F3": {
+  "texto": "range(1, 5) gera 1, 2, 3 e 4 (o 5 fica de fora). Desses, os pares são 2 e 4.\n\nsoma = 2 + 4 = 6.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-M1": {
+  "texto": "A fila é FIFO: o primeiro que entra é o primeiro que sai. Acompanhe a fila, com a frente à esquerda:\n\n- enfileira(3): [3]\n- enfileira(7): [3, 7]\n- desenfileira(): sai o 3, sobra [7]\n- enfileira(5): [7, 5]\n- enfileira(1): [7, 5, 1]\n- desenfileira(): sai o 7, sobra [5, 1]\n\nO elemento da frente é o 5.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-M2": {
+  "texto": "Montando a árvore: 50 é a raiz; 30 vai para a esquerda e 70 para a direita; 20 e 40 ficam embaixo do 30, e 60 e 80 embaixo do 70.\n\nA pré-ordem visita a raiz, depois a subárvore esquerda inteira, depois a direita:\n\n50, (30, 20, 40), (70, 60, 80).\n\nA opção B é o percurso em ordem simétrica (os valores ordenados). A opção C é o pós-ordem.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-M3": {
+  "texto": "Desenrole as chamadas: f(7) = 7·f(5) = 7·5·f(3) = 7·5·3·f(1) = 7·5·3·1 = 105.\n\nÉ o produto dos ímpares até 7 (o duplo fatorial 7!!). 5 040 seria 7! comum, mas aqui n cai de 2 em 2.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-D1": {
+  "texto": "- I: verdadeira. Identificador = letra(letra|dígito)* e número = dígito⁺ são expressões regulares, então autômatos finitos reconhecem esses padrões.\n- II: falsa. Parênteses aninhados com profundidade arbitrária exigem contar sem limite, o que é linguagem livre de contexto. Um autômato finito não consegue. Isso é tarefa do analisador sintático, que usa pilha.\n- III: verdadeira. Pela construção de subconjuntos, todo AFN vira um AFD equivalente, com até 2ⁿ estados.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-D2": {
+  "texto": "- I: verdadeira. Os palíndromos sobre {a, b} são gerados por S → aSa | bSb | a | b | ε, uma gramática livre de contexto.\n- II: falsa. Os autômatos de pilha DETERMINÍSTICOS reconhecem só uma parte das linguagens livres de contexto. Os palíndromos são justamente o exemplo clássico: para saber onde está o meio da palavra é preciso não determinismo.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-D3": {
+  "texto": "- I: verdadeira. Decidir se um programa qualquer para com uma entrada qualquer é o problema da parada, que Turing provou ser indecidível.\n- II: falsa. A indecidibilidade não é falta de memória ou de tempo: não existe NENHUM algoritmo que resolva todos os casos.\n- III: verdadeira. Ferramentas de análise estática detectam laços infinitos em casos específicos, mas não em todos.\n- IV: falsa. A tese de Church-Turing diz que tudo o que é efetivamente computável pode ser computado por uma máquina de Turing, e não que ela é \"mais poderosa\" que os computadores reais.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-F1": {
+  "texto": "A expressão a(b|c)* exige começar com 'a' e depois só aceita b ou c.\n\n- \"acbb\": começa com a, seguido de c, b e b. Aceita.\n- \"ba\" e \"cab\": não começam com a.\n- \"aab\" e \"abca\": têm um segundo 'a', que a parte (b|c)* não aceita.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-F2": {
+  "texto": "Na hierarquia de Chomsky:\n\n- regulares: autômato finito;\n- livres de contexto: autômato de pilha;\n- sensíveis ao contexto: autômato linearmente limitado;\n- recursivamente enumeráveis: máquina de Turing.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-F3": {
+  "texto": "\"Determinístico\" quer dizer que não há escolha: para cada par (estado, símbolo), existe exatamente uma transição. Também não há transições vazias (ε).\n\nVárias transições possíveis ou transições ε (opções A e B) são características do AFN. A pilha (opção E) é do autômato de pilha.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-M1": {
+  "texto": "O 0 não muda o estado, e cada 1 alterna entre P e Q. Começando em P, termina em P se a cadeia tiver um número PAR de 1s. Como P é o estado de aceitação, o autômato aceita as cadeias com quantidade par de 1s.\n\n- \"1\": um 1. Rejeita.\n- \"0111\": três 1s. Rejeita.\n- \"10\": um 1. Rejeita.\n- \"1001\": dois 1s. Aceita.\n- \"111\": três 1s. Rejeita.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-M2": {
+  "texto": "{aⁿbⁿ} exige contar quantos a's vieram para depois conferir os b's, sem limite. Um autômato finito tem memória finita e não consegue fazer isso. O lema do bombeamento prova que essa linguagem não é regular: bombear um trecho só de a's quebra a igualdade.\n\nAs outras são regulares: a*, (a|b)*ab, a*b* e \"número par de a's\" (um autômato com 2 estados).\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-M3": {
+  "texto": "Cada uso de S → aSb coloca um 'a' à esquerda e um 'b' à direita, e S → ε encerra. A gramática gera aⁿbⁿ.\n\nS ⇒ aSb ⇒ aaSbb ⇒ aabb.\n\nAs outras cadeias não têm a forma aⁿbⁿ.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-D1": {
+  "texto": "- I: verdadeira. Com integração contínua, o defeito aparece logo depois do commit que o causou, quando é barato e fácil de achar.\n- II: falsa. Testes mostram a presença de defeitos, nunca a ausência. Passar em todos não garante software sem erro.\n- III: falsa. Compilar não verifica comportamento. A integração contínua depende justamente dos testes automatizados, incluindo os de unidade.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-D2": {
+  "texto": "- I: verdadeira. Sprints têm duração fixa e terminam com um incremento potencialmente utilizável.\n- II: verdadeira. É um dos quatro valores do Manifesto Ágil.\n- Relação: a II não explica a I. Sprints com incremento vêm de outros princípios, como entregar software funcionando com frequência. A valorização de indivíduos e interações é outra ideia.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-D3": {
+  "texto": "- I: verdadeira. 59 retorna 0 e 60 retorna 1: são os dois valores vizinhos da fronteira entre reprovado e aprovado.\n- II: verdadeira. −5 cai no return −1, 70 no return 1 e 30 no return 0. Os três returns são executados.\n- III: falsa. 100 está DENTRO do intervalo válido, porque a condição de inválido é nota > 100. Deve retornar 1, de aprovado.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-F1": {
+  "texto": "Fases em sequência, cada uma começando só quando a anterior termina, é o modelo em cascata (waterfall).\n\n- O modelo em espiral é iterativo e guiado por riscos.\n- Scrum, XP e Kanban são abordagens ágeis, com ciclos curtos.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-F2": {
+  "texto": "Testar uma função sozinha, isolada do resto do sistema, é teste de unidade.\n\n- O teste de sistema avalia o software inteiro.\n- O teste de aceitação confere se o software atende o cliente.\n- O teste de carga mede o desempenho sob volume.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-F3": {
+  "texto": "- Requisito funcional diz O QUE o sistema faz: cadastrar, emitir, recuperar, gerar.\n- Requisito não funcional diz COMO ele deve se comportar: desempenho, segurança, disponibilidade.\n\n\"Responder 95% das consultas em menos de 2 s\" é um requisito de desempenho: não funcional.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-M1": {
+  "texto": "No Scrum, o Product Owner cuida do valor do produto, gerencia o Product Backlog e define a prioridade.\n\n- O Scrum Master facilita o processo e remove impedimentos.\n- Os desenvolvedores constroem o incremento.\n- \"Gerente de projeto\" não é um papel do Scrum.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-M2": {
+  "texto": "Um módulo que mexe direto nas variáveis internas de outro, e quebra a cada mudança interna dele, está fortemente acoplado.\n\nA solução é encapsular: o faturamento expõe uma interface pública estável, e o módulo de relatórios usa só essa interface. Juntar os dois módulos (E) pioraria a coesão.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-M3": {
+  "texto": "Garantir uma única instância, acessível de qualquer parte do sistema, é o propósito do Singleton.\n\n- Observer notifica dependentes.\n- Strategy troca algoritmos.\n- Adapter compatibiliza interfaces.\n- Factory Method delega a criação de objetos.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-D1": {
+  "texto": "- I: verdadeira. Alvos maiores reduzem os erros de toque, o que é importante com coordenação motora mais fina reduzida.\n- II: verdadeira. Uma confirmação que some em 2 s pode passar despercebida. Mantê-la até o usuário dispensar garante que o status seja visto.\n- III: verdadeira. Rótulos de texto permitem reconhecer a função em vez de ter de lembrar o que cada ícone significa (heurística \"reconhecer em vez de lembrar\").\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-D2": {
+  "texto": "- I: verdadeira. Com cerca de cinco usuários por rodada já se encontra a maior parte dos problemas. Esse é o argumento clássico de Nielsen.\n- II: verdadeira. Os problemas mais comuns aparecem repetidos, e cada novo participante traz cada vez menos novidades.\n- Relação: a II explica a I. É por haver retornos decrescentes que poucos usuários bastam, e vale mais fazer várias rodadas pequenas.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-D3": {
+  "texto": "- I: verdadeira. Quem tem daltonismo pode confundir verde, amarelo e vermelho. A solução é combinar a cor com ícone, forma ou texto.\n- II: falsa. Mais saturação não resolve: o daltônico continua sem distinguir as tonalidades.\n- III: verdadeira. As WCAG (critério 1.4.1) proíbem usar a cor como ÚNICO meio de transmitir informação.\n- IV: falsa. Ser especialista não muda a visão de cores, e a escolha das cores também afeta fadiga e erros de qualquer pessoa.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-F1": {
+  "texto": "A barra de progresso informa o que está acontecendo e quanto falta: é a heurística \"visibilidade do status do sistema\", que manda manter o usuário informado com feedback em tempo razoável.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-F2": {
+  "texto": "O atributo alt é lido em voz alta pelos leitores de tela. Ele beneficia diretamente pessoas cegas ou com baixa visão que usam essas ferramentas.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-F3": {
+  "texto": "Especialistas que examinam a interface com base em princípios reconhecidos, sem a participação de usuários, fazem uma avaliação heurística.\n\nO teste de usabilidade, o questionário, o teste A/B e a entrevista contextual envolvem usuários reais.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-M1": {
+  "texto": "A lei de Fitts diz que o tempo para atingir um alvo cresce com a distância e diminui com o tamanho do alvo. Portanto: botão maior e mais perto da mão.\n\n- A opção A descreve a lei de Hick, que trata do número de escolhas.\n- A opção C contradiz a lei de Fitts.\n- A opção D também: mais longe fica mais lento, e não mais preciso.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-M2": {
+  "texto": "No WCAG nível AA, texto normal exige contraste mínimo de 4,5:1. Texto grande pede 3:1, e o nível AAA pede 7:1. A razão 21:1 é o máximo possível, preto sobre branco.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-M3": {
+  "texto": "Uma boa mensagem de erro segue três regras:\n- usa linguagem simples, e não códigos como \"Erro 0x3F\";\n- aparece no lugar do problema e diz como corrigir;\n- não destrói o que o usuário já preencheu.\n\nA opção D faz as três coisas. As outras escondem o erro, o atrasam ou o deixam incompreensível.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-D1": {
+  "texto": "No amplificador inversor, o ganho é −Rf / Rin = −47k / 4,7k = −10.\n\n- I: verdadeira. O ganho é −10.\n- II: verdadeira. Vout = −10 × 0,2 = −2 V.\n- III: falsa. Pela conta daria −15 V, mas a saída não passa da alimentação de ±12 V. O amplificador satura perto de −12 V.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-D2": {
+  "texto": "- I: falsa. No indutor, a corrente fica ATRASADA 90° em relação à tensão. É no capacitor que ela fica adiantada (o mnemônico \"ELI the ICE man\": em L, a tensão vem antes da corrente).\n- II: verdadeira. X_L = 2πfL cresce com a frequência.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-D3": {
+  "texto": "R2 e R3, de 2 kΩ cada, em paralelo, dão 1 kΩ. Somando R1 em série, o total é 2 kΩ.\n\n- I: verdadeira. I = 9 V / 2 kΩ = 4,5 mA.\n- II: verdadeira. Sobre o paralelo: 4,5 mA × 1 kΩ = 4,5 V. R1 fica com os outros 4,5 V.\n- III: verdadeira. Os dois resistores são iguais, então a corrente se divide ao meio: 2,25 mA em cada.\n- IV: verdadeira. P = V · I = 9 × 4,5 mA = 40,5 mW.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-F1": {
+  "texto": "Pela lei de Ohm, I = V / R = 5 / 220 ≈ 0,0227 A = 22,7 mA.\n\nCuidado com a conversão de unidade: 0,0227 A é 22,7 mA, e não 2,27 mA nem 227 mA.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-F2": {
+  "texto": "Em série, as resistências se somam: 100 + 220 + 330 = 650 Ω.\n\nO valor de 57 Ω seria o equivalente em paralelo.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-F3": {
+  "texto": "P = V · I = 12 V × 0,5 A = 6 W.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-M1": {
+  "texto": "No divisor de tensão, a saída fica sobre R2:\n\nV = Vin · R2 / (R1 + R2) = 12 × 2 / (10 + 2) = 12 × 2 / 12 = 2 V.\n\nO erro comum é usar R1 no numerador, o que daria 10 V.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-M2": {
+  "texto": "A constante de tempo é τ = R · C = 10 × 10³ Ω × 100 × 10⁻⁶ F = 1 s.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-M3": {
+  "texto": "O resistor fica com a tensão que sobra depois do LED: 5 − 2 = 3 V.\n\nR = 3 V / 15 mA = 3 / 0,015 = 200 Ω.\n\nO valor de 333 Ω (opção A) vem de esquecer de descontar a queda no LED.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-D1": {
+  "texto": "- I: verdadeira. Com interrupção externa, o microcontrolador dorme e só acorda quando o botão é acionado.\n- II: falsa. No polling, o processador fica acordado o tempo todo testando o pino. É a solução de MAIOR consumo.\n- III: verdadeira. A rotina de interrupção deve ser curta, por exemplo só incrementar um contador ou ligar uma flag, e o processamento pesado fica no laço principal.\n- IV: verdadeira. Contatos mecânicos repicam ao fechar, gerando vários pulsos. Isso se trata com filtro RC ou por software (debounce).\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-D2": {
+  "texto": "- I: verdadeira. Ligue as 3 variáveis nas linhas de seleção e ponha em cada uma das 8 entradas de dados o valor (0 ou 1) da tabela-verdade daquela combinação. Isso implementa qualquer função de 3 variáveis.\n- II: falsa. Um MUX 8:1 tem 3 linhas de SELEÇÃO (2³ = 8) e 8 entradas de DADOS. A afirmação confunde as duas coisas.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-D3": {
+  "texto": "A saída S = 1 quando pelo menos dois dos três sensores valem 1. É a função maioria.\n\n- I: verdadeira. S = AB + AC + BC é a forma mínima.\n- II: verdadeira. As linhas com S = 1 são 011, 101, 110 e 111: quatro.\n- III: falsa. A ⊕ B ⊕ C é a função de paridade. Vale 1 com um número ímpar de 1s: dá 1 com um sensor só (100) e com os três (111), o que não é maioria.\n- IV: verdadeira. A porta NAND é universal: qualquer função pode ser feita só com NANDs.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-F1": {
+  "texto": "Cada bit vale uma potência de 2, da direita para a esquerda:\n\n1011₂ = 1·8 + 0·4 + 1·2 + 1·1 = 11.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-F2": {
+  "texto": "O motor só liga quando as duas condições valem ao mesmo tempo: é a porta AND, cuja saída é 1 só com todas as entradas em 1.\n\nA OR ligaria com qualquer uma das condições, o que é perigoso aqui.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-F3": {
+  "texto": "Em hexadecimal, cada dígito vale uma potência de 16, e F = 15:\n\n0x2F = 2·16 + 15 = 32 + 15 = 47.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-M1": {
+  "texto": "Ponha A em evidência: F = A·(B + B̄) = A·1 = A.\n\nO valor de B não importa: basta A = 1 para F valer 1.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-M2": {
+  "texto": "Com n flip-flops, um contador binário completo passa por 2ⁿ estados. Com 4, são 2⁴ = 16 estados (de 0 a 15).\n\nO número 15 é o maior valor, e não a quantidade de estados.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-M3": {
+  "texto": "Para ligar um bit sem mexer nos outros, faça um OR com uma máscara que tem 1 só nessa posição:\n\nPORTB |= (1 << 3);\n\n- B: sobrescreve todos os pinos.\n- C: apaga todos os outros bits.\n- E: DESLIGA o bit 3.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-D1": {
+  "texto": "A lei de Amdahl dá o speedup S = 1 / ((1 − p) + p/n), com p = 0,8 (fração paralela).\n\n- I: verdadeira. Com n = 4: S = 1 / (0,2 + 0,8/4) = 1 / 0,4 = 2,5.\n- II: verdadeira. Com n muito grande, p/n tende a 0 e S tende a 1 / 0,2 = 5. A parte sequencial limita o ganho.\n- III: falsa. O speedup seria 4 só se o programa fosse 100% paralelizável. Os 20% sequenciais não se dividem.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-D2": {
+  "texto": "- I: verdadeira. Processadores RISC usam instruções simples e de tamanho fixo, que são fáceis de decodificar e de colocar em pipeline.\n- II: verdadeira. A cache funciona por causa da localidade: o que foi usado volta a ser usado (temporal), e o que está perto também (espacial).\n- Relação: a II não explica a I. São dois fatos verdadeiros sobre assuntos diferentes, o conjunto de instruções e a hierarquia de memória.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-D3": {
+  "texto": "- I: verdadeira. I2 lê R1, que I1 escreve. É a dependência de leitura depois de escrita (RAW).\n- II: verdadeira. No load, o dado só sai do estágio de memória. Mesmo com forwarding, ele chega um ciclo tarde para a execução de I2, então é preciso uma bolha (o hazard load-use).\n- III: verdadeira. I3 não depende de I1 nem de I2. Colocada entre as duas, ela ocupa o ciclo que seria bolha, sem mudar o resultado.\n- IV: falsa. I3 usa R6 e R7, e não R3.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-F1": {
+  "texto": "A memória pequena e rápida, entre o processador e a RAM, que guarda o que é mais usado, é a cache.\n\n- A memória secundária é o disco.\n- A memória virtual é uma técnica de gerência de memória, e não uma memória física.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-F2": {
+  "texto": "Com 16 bits de endereço, existem 2¹⁶ = 65 536 endereços. Como cada um corresponde a um byte, são 64 KB.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-F3": {
+  "texto": "Na arquitetura de von Neumann, dados e instruções ficam na mesma memória e usam o mesmo barramento. Esse é o famoso \"gargalo de von Neumann\".\n\nMemórias e barramentos separados (opção A) caracterizam a arquitetura Harvard.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-M1": {
+  "texto": "O tempo de execução é T = número de instruções × CPI / frequência:\n\nT = 2 × 10⁹ × 1,5 / (3 × 10⁹) = 3 × 10⁹ / 3 × 10⁹ = 1 s.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-M2": {
+  "texto": "A primeira instrução leva 5 ciclos para atravessar o pipeline. Depois disso, termina uma instrução por ciclo.\n\nTotal = 5 + (100 − 1) = 104 ciclos. Sem pipeline, seriam 500.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-M3": {
+  "texto": "O tempo médio de acesso é o tempo de acerto mais a taxa de falha vezes a penalidade:\n\n1 + 0,05 × 100 = 1 + 5 = 6 ns.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-D1": {
+  "texto": "- I: verdadeira. Se o produtor pegar o mutex primeiro e o buffer estiver cheio, ele dorme em down(vazio) segurando o mutex. O consumidor nunca entra para esvaziar o buffer: deadlock. Por isso o semáforo de contagem vem antes.\n- II: verdadeira. O mutex protege a região crítica, ou seja, os índices e o conteúdo do buffer.\n- III: verdadeira. É o mesmo problema do lado do consumidor: ele seguraria o mutex esperando \"cheio\" e o produtor não conseguiria inserir.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-D2": {
+  "texto": "- I: verdadeira. A memória virtual permite rodar processos que, juntos, passam da memória física.\n- II: verdadeira. Com paginação sob demanda, só as páginas usadas ficam na RAM, e o resto fica no disco (área de swap).\n- Relação: a II explica a I. É por só carregar o que está em uso que o total pode passar da RAM. A lentidão vem das faltas de página que buscam páginas no disco.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-D3": {
+  "texto": "Simule com 3 quadros e a sequência 1, 2, 3, 1, 4, 1, 5:\n\n- FIFO: 1, 2 e 3 são faltas; 1 é acerto; 4 é falta e sai o 1 (o mais antigo); 1 é falta e sai o 2; 5 é falta e sai o 3. Total: 6 faltas.\n- LRU: 1, 2 e 3 são faltas; 1 é acerto; 4 é falta e sai o 2 (o menos usado recentemente); 1 é acerto; 5 é falta. Total: 5 faltas.\n- Ótimo: 1, 2 e 3 são faltas; 1 é acerto; 4 é falta e sai o 2 ou o 3, que não voltam a ser usados; 1 é acerto; 5 é falta. Total: 5 faltas.\n\nAgora as afirmações:\n\n- I: verdadeira.\n- II: verdadeira.\n- III: falsa. O ótimo dá 5, que não é menor que 5.\n- IV: falsa. No FIFO, mais quadros podem aumentar as faltas. É a anomalia de Belady.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-F1": {
+  "texto": "Um processo esperando E/S não pode usar a CPU mesmo que ela esteja livre: ele está bloqueado (em espera). Quando a leitura termina, ele passa para pronto.\n\n\"Pronto\" seria se só faltasse a vez na CPU.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-F2": {
+  "texto": "A troca de contexto guarda o estado do processo que sai (registradores, contador de programa, ponteiro de pilha) e carrega o estado do próximo processo. Assim, o processo interrompido continua depois de onde parou.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-F3": {
+  "texto": "As threads de um processo compartilham o espaço de endereçamento (código, dados globais, heap) e os recursos, como arquivos abertos.\n\nCada thread tem os seus próprios registradores, contador de programa e pilha.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-M1": {
+  "texto": "O SJF executa do menor para o maior job: P3 (1), depois P2 (3), depois P1 (6).\n\n- P3 espera 0.\n- P2 espera 1, enquanto P3 executa.\n- P1 espera 1 + 3 = 4.\n\nMédia = (0 + 1 + 4) / 3 = 5/3 ≈ 1,67 ms.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-M2": {
+  "texto": "O deslocamento endereça os bytes dentro da página. Como 4 KB = 4 096 = 2¹² bytes, ele precisa de 12 bits.\n\nSobram 32 − 12 = 20 bits para o número da página.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-M3": {
+  "texto": "As quatro condições de Coffman para o deadlock são exclusão mútua, posse e espera, não preempção e espera circular.\n\nO escalonamento por prioridade não é uma delas. Ele pode causar starvation, que é outro problema.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-D1": {
+  "texto": "- I: verdadeira. Calcular média e desvio com os dados de teste deixa informação do teste vazar para o treino. As estatísticas devem vir só do treino.\n- II: verdadeira. A data de cobrança judicial só existe DEPOIS da inadimplência. Em produção, ela não estaria disponível na hora de prever. É vazamento de alvo, e explica os 99% de acerto ilusórios.\n- III: falsa. A validação cruzada não resolve vazamento se o pré-processamento for feito antes da divisão, ou se houver atributos \"do futuro\".\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-D2": {
+  "texto": "- I: falsa. r = 0 indica ausência de relação LINEAR. A parábola do gráfico mostra uma relação forte, só que não linear.\n- II: falsa. O coeficiente de Pearson mede apenas associação linear.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-D3": {
+  "texto": "- I: verdadeira. A renda varia em dezenas de milhares e o número de moradores varia de 1 a 8. Sem padronizar, a distância é praticamente só a diferença de renda.\n- II: verdadeira. O k-means depende dos centróides iniciais. Por isso se roda várias vezes ou se usa k-means++.\n- III: verdadeira. O método do cotovelo procura o k a partir do qual a soma dos quadrados dentro dos grupos para de cair muito.\n- IV: falsa. O k-means converge para um mínimo LOCAL. Não há garantia do ótimo global.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-F1": {
+  "texto": "A mediana depende só da posição do valor central, então poucos valores muito altos não a deslocam. A média é puxada por eles.\n\nAmplitude e variância medem dispersão, e não tendência central.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-F2": {
+  "texto": "Formar grupos sem rótulos prévios é o clustering, um método não supervisionado (como o k-means). Regressão e classificação precisam de exemplos já rotulados.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-F3": {
+  "texto": "groupby('estado') separa as linhas por estado, e ['vendas'].sum() soma as vendas dentro de cada grupo. O resultado tem um total de vendas por estado.\n\nPara a média, seria .mean(). Para contar linhas, .count() ou .size().\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-M1": {
+  "texto": "- Precisão = VP / (VP + FP) = 40 / 50 = 0,80. Dos que o modelo marcou como fraude, 80% eram fraude.\n- Revocação = VP / (VP + FN) = 40 / 60 ≈ 0,67. Das fraudes reais, o modelo pegou 67%.\n\nA opção B inverte as duas.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-M2": {
+  "texto": "Erro baixo no treino e alto na validação mostram um modelo que decorou o treino e não generaliza: é o sobreajuste (overfitting).\n\nOs remédios são regularização, mais dados de treino ou um modelo mais simples.\n\nMisturar a validação no treino (D) só esconde o problema.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-M3": {
+  "texto": "A normalização min-max é x' = (x − mín) / (máx − mín).\n\nx' = (30 − 10) / (60 − 10) = 20 / 50 = 0,4.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-D1": {
+  "texto": "- I: verdadeira. Basta calcular o hash de palavras comuns (dicionário) ou consultar tabelas pré-computadas (rainbow tables) e comparar.\n- II: verdadeira. Sem salt, senhas iguais geram hashes iguais. Quebrando um hash, todos os usuários com aquela senha ficam expostos.\n- III: falsa. Não é preciso \"inverter\" o hash: basta adivinhar a senha e comparar. A nota da empresa é enganosa.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-D2": {
+  "texto": "- I: falsa. O HTTPS só cifra a conexão. Um site de phishing pode ter cadeado e mesmo assim roubar o que o usuário digitar.\n- II: falsa. O certificado comprova o controle do domínio e protege a comunicação. Não atesta que o conteúdo é legítimo ou seguro.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-D3": {
+  "texto": "- I: verdadeira. O servidor exposto fica na DMZ, e o banco de dados fica na rede interna, acessível só pelo servidor web e nas portas necessárias.\n- II: verdadeira. O firewall deve negar tudo por padrão e liberar só o necessário (menor privilégio).\n- III: verdadeira. O IDS complementa o firewall, monitorando ataques que passam pelas regras.\n- IV: falsa. Firewall e DMZ não dispensam as atualizações. Uma falha no próprio servidor web continua explorável pela porta liberada.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-F1": {
+  "texto": "Os dados foram alterados sem autorização, mas continuaram acessíveis e sigilosos. O princípio violado é a integridade: os dados não podem ser modificados indevidamente.\n\n- A confidencialidade seria violada por um vazamento.\n- A disponibilidade, pela queda do serviço.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-F2": {
+  "texto": "Muitos dispositivos infectados (uma botnet) inundando o serviço até derrubá-lo: é a negação de serviço distribuída (DDoS). O alvo é a disponibilidade.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-F3": {
+  "texto": "Senhas devem ser guardadas com funções de hash feitas para isso, lentas e com salt (bcrypt, scrypt, Argon2). O salt faz senhas iguais terem hashes diferentes, e a lentidão dificulta a força bruta.\n\n- Texto puro, Base64 e cifra com chave fixa podem ser revertidos.\n- O MD5 sem salt é rápido demais e vulnerável a tabelas pré-computadas.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-M1": {
+  "texto": "Para que SÓ Bob consiga ler, Alice cifra com a chave pública de Bob. Somente a chave privada de Bob decifra.\n\nCifrar com a chave privada da própria Alice serve para assinar (provar a autoria), e não para manter sigilo, porque qualquer um decifra com a chave pública dela.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-M2": {
+  "texto": "Na consulta parametrizada, o comando SQL é fixo e os valores vão separados como dados. Assim, nada que o usuário digite vira código SQL.\n\n- Ocultar erros e usar TLS não resolvem a injeção.\n- Trocar o tipo de aspas não resolve, e aumentar o tamanho dos campos piora.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-M3": {
+  "texto": "A assinatura digital, feita com a chave privada e conferida com a chave pública, garante três coisas:\n- autenticidade: veio mesmo do órgão;\n- integridade: o documento não foi alterado;\n- não repúdio: o órgão não pode negar que assinou.\n\nEla não dá confidencialidade: o documento continua legível.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-D1": {
+  "texto": "- I: verdadeira. O FIR não realimenta a saída, então todos os polos estão na origem. Ele é sempre estável.\n- II: verdadeira. Com coeficientes simétricos, o FIR tem fase linear e não distorce a forma de onda. Isso é importante no ECG.\n- III: verdadeira. Graças à realimentação, um IIR atinge a mesma seletividade com bem menos coeficientes.\n- IV: falsa. IIR quer dizer resposta ao impulso INFINITA.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-D2": {
+  "texto": "- I: falsa. O que define a frequência máxima sem aliasing é a TAXA de amostragem (25 kHz dá Nyquist de 12,5 kHz, que é pouco para 20 kHz), e não o número de bits. Para esse sinal, seria preciso amostrar acima de 40 kHz.\n- II: verdadeira. Cada bit a mais divide o passo de quantização por 2, o que melhora a relação sinal-ruído de quantização em cerca de 6 dB.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-D3": {
+  "texto": "- I: verdadeira. A resolução em frequência é fs / N = 1 000 / 500 = 2 Hz.\n- II: verdadeira. A frequência máxima sem aliasing é fs / 2 = 500 Hz.\n- III: verdadeira. A FFT calcula a mesma DFT em O(N log N), em vez de O(N²).\n- IV: verdadeira. O índice é k = f / resolução = 100 / 2 = 50.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-F1": {
+  "texto": "Pelo teorema de Nyquist, a taxa de amostragem precisa ser pelo menos o dobro da maior frequência: 2 × 4 kHz = 8 kHz.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-F2": {
+  "texto": "T = 1 / f = 1 / 50 = 0,02 s = 20 ms.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-F3": {
+  "texto": "Deixar passar as baixas frequências, que são o sinal lento da temperatura, e atenuar as altas, que são o chiado: é um filtro passa-baixas.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-M1": {
+  "texto": "O passo de quantização é a faixa dividida pelo número de níveis: 5 V / 2⁸ = 5 / 256 ≈ 0,0195 V ≈ 19,5 mV.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-M2": {
+  "texto": "Amostrando a 10 kHz, o limite de Nyquist é 5 kHz. O sinal de 7 kHz passa desse limite e é \"dobrado\" para |7 − 10| = 3 kHz.\n\nÉ o aliasing: a componente aparece numa frequência falsa.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-M3": {
+  "texto": "Calcule y[n] = (x[n] + x[n−1]) / 2, lembrando que x[−1] = 0:\n\n- n = 0: (2 + 0) / 2 = 1\n- n = 1: (4 + 2) / 2 = 3\n- n = 2: (6 + 4) / 2 = 5\n- n = 3: (8 + 6) / 2 = 7\n\ny = [1, 3, 5, 7].\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-D1": {
+  "texto": "- I: verdadeira. Atributos correlacionados com o gênero (o nome, certas atividades ou escolas, lacunas no currículo) funcionam como \"proxies\", e o modelo reaprende o viés histórico.\n- II: falsa. Tirar a coluna não garante justiça, justamente pelo motivo da I.\n- III: verdadeira. Comparar as taxas de aprovação entre grupos (paridade demográfica) é uma forma de auditar se há discriminação.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-D2": {
+  "texto": "- I: verdadeira. Com camadas ocultas e ativação não linear, a rede consegue fronteiras de decisão não lineares, como a do XOR.\n- II: falsa. Várias camadas LINEARES compostas equivalem a uma única transformação linear. Empilhá-las não aumenta a expressividade, e é por isso que o estudante falhou.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-D3": {
+  "texto": "- I: verdadeira. Pelo teorema de Bayes: P(spam | grátis) = 0,4 × 0,5 / (0,4 × 0,5 + 0,6 × 0,05) = 0,20 / 0,23 ≈ 0,87.\n- II: verdadeira. Essa suposição de independência condicional é o \"ingênuo\" (naive) do nome.\n- III: verdadeira. Sem suavização, uma probabilidade zero anula o produto inteiro. A suavização de Laplace evita isso.\n- IV: falsa. O Naive Bayes é probabilístico. Os modelos baseados em distância são outros, como o k-NN.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-F1": {
+  "texto": "A busca em largura explora por \"camadas\": primeiro todos os nós a 1 passo, depois todos a 2 passos, e assim por diante (usa uma fila). Por isso, quando todos os passos têm o mesmo custo, ela acha o caminho com menos passos.\n\nSeguir o ramo mais fundo (B) é a busca em profundidade. Usar só a heurística (C) é a busca gulosa.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-F2": {
+  "texto": "No XOR, os pontos (0,1) e (1,0) valem 1, e (0,0) e (1,1) valem 0. Nenhuma reta separa esses dois grupos, então um perceptron de uma camada não aprende o XOR.\n\nAND, OR, NAND e NOR são linearmente separáveis.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-F3": {
+  "texto": "O agente aprende por tentativa e erro, recebendo recompensas e penalidades e buscando maximizar o total acumulado. Isso é aprendizado por reforço.\n\nNão há exemplos rotulados (supervisionado) nem só uma busca de grupos nos dados (não supervisionado).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-M1": {
+  "texto": "Uma heurística admissível NUNCA superestima o custo real até o objetivo. A distância em linha reta é o exemplo clássico, porque nenhuma estrada é mais curta que a reta. Com ela, o A* garante o caminho ótimo.\n\nh = 0 (B) também é admissível, mas a admissibilidade não EXIGE que a heurística seja zero.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-M2": {
+  "texto": "Calcule de baixo para cima:\n\n- O MIN da esquerda escolhe o menor entre 3 e 5: 3.\n- O MIN da direita escolhe o menor entre 2 e 9: 2.\n- A raiz (MAX) escolhe o maior entre 3 e 2: 3.\n\nO 9 é uma armadilha: o jogador MIN nunca deixaria o jogo chegar nele.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-M3": {
+  "texto": "Calcule a soma ponderada mais o viés:\n\n0,5 × 1 + (−1) × 0,5 + 0,2 = 0,5 − 0,5 + 0,2 = 0,2.\n\nComo 0,2 ≥ 0, a função degrau dá saída 1.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-D1": {
+  "texto": "- I: verdadeira. Mais ganho proporcional acelera a resposta e reduz o tempo de subida, mas tende a aumentar o sobressinal.\n- II: verdadeira. A ação derivativa \"freia\" a resposta e amortece, mas amplifica o ruído de alta frequência. Na prática, usa-se um filtro.\n- III: verdadeira. Com o aquecedor no limite, o erro continua acumulando no integral (windup), e depois a resposta passa do ponto. Técnicas anti-windup limitam ou congelam o integrador.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-D2": {
+  "texto": "- I: verdadeira. O CLP trabalha em ciclo de varredura: lê as entradas, executa o programa e atualiza as saídas.\n- II: verdadeira. Os sensores indutivos detectam metais sem contato, por variação de campo magnético.\n- Relação: a II não explica a I. Uma é sobre como o CLP processa e a outra sobre como o sensor funciona. São fatos independentes.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-D3": {
+  "texto": "- I: verdadeira. integral += erro·dt soma retângulos de altura erro e largura dt.\n- II: verdadeira. (erro − erro_ant) / dt é a diferença regressiva, que usa o erro atual e o anterior.\n- III: verdadeira. dt entra nas duas contas. Se ele variar sem ser medido, o efeito real de Ki e de Kd muda.\n- IV: falsa. O controle é DISCRETO: roda a cada período de amostragem. A escolha de dt é essencial.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-F1": {
+  "texto": "O sistema mede a saída (a temperatura), compara com a referência e corrige conforme a diferença. Isso é realimentação: controle em malha fechada.\n\nEm malha aberta, como num temporizador, o sistema não mede o resultado.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-F2": {
+  "texto": "A ação integral soma o erro ao longo do tempo. Enquanto houver erro, ela continua aumentando a ação de controle, até zerar o erro em regime permanente.\n\nSó com ação proporcional, costuma sobrar um erro residual. A ação derivativa reage à variação do erro.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-F3": {
+  "texto": "A linguagem Ladder (LD) é gráfica e imita os diagramas de relés, com contatos e bobinas. É a mais usada em CLPs.\n\nTexto Estruturado e Lista de Instruções também estão na IEC 61131-3, mas são textuais.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-M1": {
+  "texto": "Num sistema de primeira ordem K / (τs + 1):\n\n- o ganho estático é K = 5. Com degrau unitário, a saída final é 5 (pelo teorema do valor final, G(0) = 5);\n- a constante de tempo é τ = 2 s, o coeficiente de s.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-M2": {
+  "texto": "Um sistema contínuo é estável só se TODOS os polos tiverem parte real negativa. O polo em s = +0,5 tem parte real positiva e gera um termo e^(0,5t), que cresce sem limite.\n\nBasta um polo assim para o sistema ser instável, não importa quantos outros sejam estáveis.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-M3": {
+  "texto": "Com realimentação unitária e degrau na entrada, o erro em regime é eₛₛ = 1 / (1 + Kp), em que Kp = G(0) = 10 / 1 = 10.\n\neₛₛ = 1 / 11 ≈ 0,091.\n\nO sistema é do tipo 0 (sem integrador), então sobra um erro. Ele só seria zero com um integrador.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-D1": {
+  "texto": "- I: verdadeira. Na partida lenta, a janela dobra a cada RTT (crescimento exponencial) até o limiar (ssthresh).\n- II: verdadeira. Depois do limiar, na prevenção de congestionamento, a janela cresce cerca de um segmento por RTT (crescimento linear).\n- III: verdadeira. Três ACKs duplicados indicam que um segmento se perdeu e disparam a retransmissão rápida (fast retransmit).\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-D2": {
+  "texto": "- I: verdadeira. A voz sobre IP costuma transportar a mídia em UDP, normalmente com RTP.\n- II: verdadeira. Um pacote de áudio retransmitido chegaria tarde demais para ser tocado. O UDP não retransmite nem segura o envio.\n- Relação: a II explica a I. É exatamente por isso que se prefere o UDP para voz.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-D3": {
+  "texto": "- I: verdadeira. VLANs diferentes são redes diferentes. Para conversar, elas precisam de roteamento (um roteador ou um switch de camada 3).\n- II: verdadeira. O broadcast fica restrito à VLAN de origem, o que reduz o domínio de broadcast.\n- III: verdadeira. Para o setor financeiro existir nos dois andares, o cabo entre os switches precisa levar várias VLANs. Isso é um tronco com marcação IEEE 802.1Q.\n- IV: falsa. O hub repete o sinal para todas as portas, e todas formam um único domínio de colisão. Quem separa um domínio de colisão por porta é o switch.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-F1": {
+  "texto": "O TCP é orientado à conexão e garante entrega confiável e em ordem, com confirmações e retransmissões. É o adequado para transferir arquivos.\n\n- O UDP não garante entrega nem ordem.\n- IP, ICMP e ARP não são protocolos de transporte.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-F2": {
+  "texto": "Endereçamento lógico (IP) e roteamento entre redes são funções da camada de rede, a camada 3 do modelo OSI.\n\nA camada de enlace cuida do quadro e do endereço físico (MAC), dentro da mesma rede local.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-F3": {
+  "texto": "O DNS traduz nomes, como www.exemplo.com.br, em endereços IP.\n\n- O DHCP distribui endereços IP aos computadores da rede.\n- HTTP, FTP e SMTP são protocolos de aplicação para web, arquivos e e-mail.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-M1": {
+  "texto": "Com máscara /26, sobram 32 − 26 = 6 bits para os hosts. São 2⁶ = 64 endereços, e menos os de rede e de broadcast ficam 62 utilizáveis.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-M2": {
+  "texto": "Converta para bits: 10 MB × 8 = 80 Mbit.\n\nt = 80 Mbit / 100 Mbit/s = 0,8 s.\n\nO erro clássico é esquecer de multiplicar por 8, o que daria 0,1 s.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-M3": {
+  "texto": "Com /27, cada sub-rede tem 2⁵ = 32 endereços. As sub-redes começam em 0, 32, 64, 96, … no último octeto.\n\nO 77 fica entre 64 e 95, então o endereço de rede é 192.168.10.64.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-D1": {
+  "texto": "- I: verdadeira. Uma leitura em outra réplica, antes de a escrita chegar até ela, devolve o valor antigo. É o carrinho \"sem o produto\".\n- II: verdadeira. Essa é a promessa da consistência eventual: sem novas escritas, as réplicas convergem.\n- III: falsa. Isso descreve a consistência forte (linearizabilidade), e não a eventual.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-D2": {
+  "texto": "- I: falsa. Em sistemas assíncronos, não dá para ter certeza se o nó falhou ou só está lento. É exatamente o erro do monitoramento, que removeu nós saudáveis.\n- II: verdadeira. Esse é o modelo assíncrono: não há limite conhecido para atrasos de mensagens nem de processamento. Por isso o timeout só gera suspeita, e não certeza.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-D3": {
+  "texto": "- I: verdadeira. O map lê um bloco e emite (palavra, 1) para cada ocorrência.\n- II: verdadeira. O shuffle agrupa os pares pela chave e manda cada palavra para um único reducer, que soma.\n- III: verdadeira. O combiner faz somas parciais no próprio nó e diminui o tráfego na rede.\n- IV: verdadeira. Se um nó falha, o framework reexecuta as tarefas dele em outro nó.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-F1": {
+  "texto": "Pelo teorema CAP, durante uma partição de rede (P) não dá para ter ao mesmo tempo consistência forte (C) e disponibilidade (A). Ou uma réplica recusa requisições para não divergir, ou aceita e fica temporariamente inconsistente.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-F2": {
+  "texto": "Quando o resultado depende da ordem em que as threads são intercaladas no acesso a um dado compartilhado, é uma condição de corrida. O incremento (ler, somar e gravar) não é atômico.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-F3": {
+  "texto": "Chamar uma função em outra máquina como se fosse local, com o middleware cuidando da serialização (marshalling) e da rede, é a chamada de procedimento remoto (RPC). Exemplos: gRPC e Java RMI.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-M1": {
+  "texto": "- Speedup = tempo sequencial / tempo paralelo = 120 / 40 = 3.\n- Eficiência = speedup / número de processadores = 3 / 4 = 75%.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-M2": {
+  "texto": "Na recepção, o relógio vira max(local, mensagem) + 1 = max(5, 8) + 1 = 9.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-M3": {
+  "texto": "O lock garante que só uma thread por vez executa contador += 1. Assim, nenhum incremento se perde: 2 × 100 000 = 200 000.\n\nSem o lock, o resultado seria imprevisível (opção A). Também não há deadlock, porque o with libera o lock a cada volta.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ }
+}

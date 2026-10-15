@@ -1,0 +1,52 @@
+{
+ "2023-FG-D01": {
+  "texto": "a) Ligue três coisas numa explicação de causa e efeito:\n\n- Quem é atingido: a população pobre e extremamente pobre (o texto fala em 29,4% de pobreza e 8,4% de extrema pobreza).\n- Onde mora: sem renda para morar em áreas com infraestrutura, ela vai para a periferia, morros, encostas, margens de rios e mangues, áreas segregadas e mais violentas.\n- Que risco corre: inundações, deslizamentos, contaminação, mais doenças por falta de saneamento, violência e discriminação.\n\nA ideia central é que a desigualdade empurra essa população para os lugares de maior risco, e o risco aprofunda a pobreza.\n\nb) Apresente duas propostas concretas, e em cada uma diga o que o governo faz e como a comunidade participa. Exemplos:\n\n- Contenção de encostas e saneamento básico (água, esgoto, coleta de lixo, drenagem), com a comunidade apontando as prioridades e fiscalizando as obras.\n- Moradia digna e regularização fundiária, com cadastro e mutirões organizados pelas associações de moradores.\n- Plano participativo de redução de risco, com núcleos comunitários de defesa civil treinados para alerta e evacuação.\n- Acesso a equipamentos sociais, áreas verdes e atendimento psicossocial.\n\nProposta só do governo, ou só da comunidade, perde pontos: o item pede as duas coisas juntas.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q01": {
+  "texto": "- I: falsa. A fome não é inevitável nem \"natural\". Ela resulta de desigualdade, conflitos e falhas de distribuição, como o próprio texto diz ao pedir soluções.\n- II: verdadeira. Disponibilidade desigual, guerras (as fotos da Ucrânia), cadeias agrícolas globais e eventos climáticos (as secas em Madagascar) afetam a segurança alimentar.\n\nCom a I falsa e a II verdadeira, não há relação de causa a avaliar.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q02": {
+  "texto": "- I: verdadeira. A segregação urbana deixa periferias e favelas sem rede, e isso trava a universalização.\n- II: falsa. No Brasil, o abastecimento de água está bem mais avançado do que a coleta e o tratamento de esgoto. Os dois não estão no mesmo patamar.\n- III: verdadeira. Universalizar exige política pública, investimento e tecnologias sociais voltadas a quem está vulnerável.\n- IV: verdadeira. As doenças de veiculação hídrica dependem do saneamento e também da moradia precária (água armazenada de forma inadequada, esgoto a céu aberto).\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q03": {
+  "texto": "Confira cada alternativa com o gráfico e o texto:\n\n- A: falsa. A vacina da poliomielite caiu ano a ano, não ficou constante.\n- B: correta. Vacinação infantil é uma ação típica da atenção primária, então a cobertura baixa indica baixo desempenho dessas políticas.\n- C: falsa. A tetraviral teve cobertura muito baixa, não \"média\".\n- D: falsa. A vacina da febre amarela ficou longe da meta de 95%, então não dá para dizer que a meta foi alcançada.\n- E: falsa. O gráfico mostra queda geral em 2020 e 2021, e não aumento da cobertura depois da pandemia.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q04": {
+  "texto": "- A: correta. A IA generativa cria texto, imagem e música, ou seja, realiza interações que antes eram só humanas (texto 1).\n- B: falsa. Nada nos textos diz que ela restringe o aprendizado ao que é legal e útil.\n- C: falsa. O texto 2 diz o contrário: ela pode agravar a desigualdade, não promover a igualdade.\n- D: falsa. Os textos não dizem que o impacto é pequeno nos países desenvolvidos. A ideia é de disrupção geral.\n- E: falsa. Os textos não afirmam que ela estimula o desenvolvimento intelectual humano, e o texto 2 destaca riscos.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q05": {
+  "texto": "As palavras do estudo (insegura, ansiosa, em pânico, apertada, atenta aos assédios) mostram como a mobilidade é vivida pelas mulheres.\n\n- I: verdadeira. A predominância de termos negativos indica medo generalizado nos deslocamentos e uma percepção do próprio corpo exposto no espaço urbano.\n- II: verdadeira. Ônibus e trem aparecem ligados a lotação e assédio, e o metrô aparece como \"um pouco mais segura\".\n- III: verdadeira. O medo ligado ao gênero cria uma geografia própria: as mulheres mudam trajetos, horários e meios de transporte. É a discussão do direito à cidade.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q06": {
+  "texto": "- I: verdadeira. O texto 1 mostra o racismo do século XIX, o texto 2 a violência contra jovens negros na periferia hoje, e o texto 3 recria a identidade negra periférica. Todos fazem pensar na condição histórica da maioria da população, que é negra.\n- II: falsa. É o mito da \"democracia racial\". A formação do Brasil foi marcada pela escravidão e pela violência, e não por um convívio cordial.\n- III: verdadeira. Produções que tratam da condição negra rompem o silenciamento imposto pela colonização e pela segregação.\n- IV: falsa. A releitura de Portinari é uma ressignificação que empodera: coloca o jovem periférico no lugar da obra clássica. Não é uma limitação.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q07": {
+  "texto": "- I: falsa. Etarismo é preconceito: justamente a ideia, sem fundamento, de que o idoso \"rende menos\" e \"custa caro\". A afirmação trata o preconceito como se fosse um fato.\n- II: verdadeira. Se a lei prolonga o tempo de trabalho, precisa vir com políticas de saúde e qualidade de vida para o idoso conseguir trabalhar.\n- III: falsa. Ações intergeracionais se baseiam na troca de experiências entre gerações, e não em \"equipar\" o idoso para render como o jovem.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q08": {
+  "texto": "- I: verdadeira. No tráfico, a maioria das mulheres ocupa posições subalternas (mulas, aviões), o que repete a divisão sexual do trabalho do mercado formal.\n- II: verdadeira. O sistema penal agrava a vulnerabilidade das mulheres presas, pela invisibilidade e pela violência institucional.\n- Relação: a II não explica a I. A I fala da posição das mulheres no tráfico, antes da prisão. A II fala do que acontece depois, dentro do sistema penal.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-FG-Q09": {
+  "texto": "Na \"sociedade do desempenho\", cada um se cobra produtividade o tempo todo, e a tecnologia leva o trabalho para todos os horários.\n\n- I: verdadeira. Notificações em tempo real e áudio acelerado mantêm a pessoa sempre disponível e apressada, o que precariza o trabalho.\n- II: verdadeira. Desligar notificações e separar horários de trabalho e de lazer são medidas pessoais de proteção.\n- III: verdadeira. No plano público, letramento digital, alfabetização midiática e regras para o uso de plataformas no trabalho (como o direito à desconexão) previnem os danos.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ }
+}
