@@ -272,30 +272,35 @@
 		<!-- os dois botões andam juntos: soltos, quando as etiquetas enchiam a
 		     linha o de revisar caía sozinho para a esquerda da linha de baixo -->
 		<div class="ml-auto flex items-center gap-2">
-			<!-- copia enunciado, figura e alternativas (sem gabarito) para colar fora do site -->
-			<button
-				type="button"
-				onclick={copiar}
-				aria-label="Copiar questão"
-				title={copia === 'erro' ? 'O navegador não deixou copiar' : 'Copiar questão'}
-				class="flex h-11 min-w-11 items-center justify-center rounded-full border border-line transition-transform active:scale-95 {copia ===
-				'ok'
-					? 'bg-ok-bg text-ok-fg'
-					: copia === 'erro'
-						? 'bg-bad-bg text-bad-fg'
-						: 'bg-card text-ink-soft'}"
-			>
-				{#if copia === 'ok'}
-					<Check size={20} weight="bold" aria-hidden="true" />
-				{:else if copia === 'erro'}
-					<Warning size={20} weight="bold" aria-hidden="true" />
-				{:else}
-					<Copy size={20} weight="bold" aria-hidden="true" />
-				{/if}
-			</button>
-			<span class="sr-only" role="status">
-				{copia === 'ok' ? 'Questão copiada' : copia === 'erro' ? 'Não deu para copiar a questão' : ''}
-			</span>
+			<!-- copia enunciado, figura e alternativas (sem gabarito) para colar fora
+			     do site. Fica fora da PROVA do simulado: lá ele facilitaria colar a
+			     questão em outro lugar no meio do teste; na correção, depois da
+			     entrega (a mesma questão sem `prova`), ele volta -->
+			{#if !prova}
+				<button
+					type="button"
+					onclick={copiar}
+					aria-label="Copiar questão"
+					title={copia === 'erro' ? 'O navegador não deixou copiar' : 'Copiar questão'}
+					class="flex h-11 min-w-11 items-center justify-center rounded-full border border-line transition-transform active:scale-95 {copia ===
+					'ok'
+						? 'bg-ok-bg text-ok-fg'
+						: copia === 'erro'
+							? 'bg-bad-bg text-bad-fg'
+							: 'bg-card text-ink-soft'}"
+				>
+					{#if copia === 'ok'}
+						<Check size={20} weight="bold" aria-hidden="true" />
+					{:else if copia === 'erro'}
+						<Warning size={20} weight="bold" aria-hidden="true" />
+					{:else}
+						<Copy size={20} weight="bold" aria-hidden="true" />
+					{/if}
+				</button>
+				<span class="sr-only" role="status">
+					{copia === 'ok' ? 'Questão copiada' : copia === 'erro' ? 'Não deu para copiar a questão' : ''}
+				</span>
+			{/if}
 			<button
 				type="button"
 				onclick={alternarRevisar}
