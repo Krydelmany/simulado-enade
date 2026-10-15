@@ -231,6 +231,17 @@ def main():
                     problemas.append((nome, qid, f'imagem não existe: {img["src"]}'))
 
     print(f'{total} questões em {len(arquivos)} arquivos')
+
+    # resoluções (arquivo à parte do site): batem com o banco e com a fonte?
+    import resolucoes
+    saida, probs = resolucoes.montar()
+    problemas += probs
+    if not probs and saida != resolucoes.atual():
+        problemas.append((
+            'resolucoes.json', '-',
+            'desatualizado em relação a banco/resolucoes/ — rode python banco/resolucoes.py'
+        ))
+    print(f'resoluções: {len(saida)} de {total} questões')
     if cobertura:
         for m in sorted(materias_ce):
             for d in sorted(DIFICULDADES):

@@ -6,6 +6,7 @@
 	import {
 		Atom,
 		BookmarkSimple,
+		CaretDown,
 		Check,
 		CheckCircle,
 		Copy,
@@ -13,13 +14,16 @@
 		Info,
 		MagnifyingGlassPlus,
 		MinusCircle,
+		Robot,
 		SealCheck,
 		SkipForward,
+		UserCircle,
 		Warning,
 		XCircle
 	} from 'phosphor-svelte';
 	import TextoRico from './TextoRico.svelte';
 	import { copiarQuestao } from './copiar.js';
+	import { carregarResolucoes, rotuloAutoria } from './resolucoes.js';
 
 	/**
 	 * `inicial` restaura o estado de uma questão já respondida quando o aluno volta
@@ -46,6 +50,9 @@
 		rascunhoInicial = '',
 		onRascunho = null,
 		respostaAluno = '',
+		// a resolução abre sozinha depois da resposta no treino e no estudo;
+		// na correção do simulado ela vem fechada, a um toque
+		resolucaoAberta = true,
 		zoomAberto = $bindable(false)
 	} = $props();
 
@@ -72,6 +79,24 @@
 	// só rola/foca o veredito quando o aluno ACABOU de responder — nunca ao restaurar
 	let avaliadaAgora = $state(false);
 	let veredito = $state(null);
+
+	// "Como resolver": só depois da resposta (ou, na discursiva, depois de ver
+	// o padrão) e nunca na prova do simulado
+	const podeResolver = $derived(!prova && (respondida || mostrouPadrao));
+	let resolucao = $state(null); // null = ainda não carregou, ou a questão não tem
+	// lido uma vez, como `inicial`: a questão é remontada a cada troca ({#key})
+	// svelte-ignore state_referenced_locally
+	let resolucaoVisivel = $state(resolucaoAberta);
+	$effect(() => {
+		if (!podeResolver || resolucao) return;
+		let vivo = true;
+		carregarResolucoes().then((mapa) => {
+			if (vivo) resolucao = mapa[q.id] ?? null;
+		});
+		return () => {
+			vivo = false;
+		};
+	});
 
 	const LETRAS = ['A', 'B', 'C', 'D', 'E'];
 	const anulada = $derived(q.gabarito === 'ANULADA');
@@ -553,5 +578,48 @@
 				<span>Você avaliou como errada. Vale reler o padrão acima.</span>
 			{/if}
 		</p>
+	{/if}
+
+	{#if podeResolver && resolucao}
+		<section in:fly={{ y: 8, duration: DUR }} class="mt-3 rounded-2xl border border-line bg-panel" aria-label="Como resolver">
+			<button
+				type="button"
+				onclick={() => (resolucaoVisivel = !resolucaoVisivel)}
+				aria-expanded={resolucaoVisivel}
+				class="flex min-h-11 w-full flex-wrap items-center gap-2 p-3 text-left"
+			>
+				<!-- autoria no topo esquerdo: quem escreveu e se alguém conferiu -->
+				<span
+					class="flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold {resolucao.auditado
+						? 'bg-ok-bg text-ok-fg'
+						: 'bg-warn-bg text-warn-fg'}"
+				>
+					{#if (resolucao.autor || 'IA') === 'IA'}
+						<Robot size={12} weight="bold" aria-hidden="true" />
+					{:else}
+						<UserCircle size={12} weight="bold" aria-hidden="true" />
+					{/if}
+					{rotuloAutoria(resolucao)}
+				</span>
+				<span class="text-sm font-bold">Como resolver</span>
+				<CaretDown
+					size={16}
+					weight="bold"
+					class="ml-auto shrink-0 text-ink-soft transition-transform {resolucaoVisivel ? 'rotate-180' : ''}"
+					aria-hidden="true"
+				/>
+			</button>
+			{#if resolucaoVisivel}
+				<div class="px-4 pb-4">
+					<p class="enunciado max-w-[65ch] text-sm leading-relaxed"><TextoRico texto={resolucao.texto} /></p>
+					{#if !resolucao.auditado}
+						<p class="mt-3 text-xs text-ink-soft">
+							Escrita por {resolucao.autor || 'IA'} e ainda não conferida por uma pessoa: pode ter erro.
+							{q.tipo === 'objetiva' ? 'O gabarito acima é o oficial.' : 'O padrão de resposta acima é o oficial.'}
+						</p>
+					{/if}
+				</div>
+			{/if}
+		</section>
 	{/if}
 </article>

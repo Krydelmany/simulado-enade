@@ -1,0 +1,47 @@
+{
+ "2019-FG-D01": {
+  "texto": "A pergunta pede ações de RESTAURAÇÃO ou RECUPERAÇÃO depois do desastre, e não de prevenção. Proposta de prevenção (alerta, mapa de risco, obra de contenção antes da chuva) não pontua.\n\nEscolha duas propostas de campos diferentes e explique cada uma em uma ou duas frases, dizendo quem age e qual o efeito:\n\n- Social e psicossocial: realocar a população afetada para áreas seguras, montar abrigos temporários, mobilizar a saúde para atendimento de emergência, vacinação e acompanhamento psicossocial.\n- Econômico e sociocultural: aluguel social, fundo emergencial para reconstruir moradias, crédito para agricultores atingidos, restauração do patrimônio histórico e cultural.\n- Ambiental: reflorestar áreas degradadas e nascentes com vegetação nativa, recuperar mananciais, monitorar a qualidade da água e do solo, descontaminar o solo.\n- Infraestrutura: restabelecer água, energia e comunicações, desobstruir bueiros e vias.\n\nUm texto curto com as duas propostas bem justificadas vale mais do que uma lista longa sem explicação.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-D02": {
+  "texto": "A figura é a hélice tríplice: universidade, empresa e governo trabalhando juntos. Responda os dois itens separadamente, com dois ganhos em cada um.\n\na) Campo científico: mais recursos para pesquisa voltada a problemas reais; transferência mútua de conhecimento e tecnologia entre universidade e empresa; mais fontes de financiamento (bolsas, laboratórios, equipamentos).\n\nb) Campo econômico: novos produtos, processos e materiais ajustados à demanda local; mais patentes (o texto aponta as patentes como o pior indicador do país); startups, incubadoras e empresas juniores; tecnologias mais baratas ou sustentáveis; mais vagas para estudantes e egressos.\n\nCuidado para não repetir no item b um ganho científico: ali o ganho precisa ser econômico, ligado a produção, renda, emprego ou competitividade.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-Q02": {
+  "texto": "O poema concreto é feito só com as letras de \"poema\" e \"bomba\", espalhadas como numa explosão. O sentido nasce da disposição visual.\n\n- I: verdadeira. A imagem é essencial: o leitor vê a explosão antes de ler.\n- II: verdadeira. A diagramação (espaço, tamanho, posição das letras) constrói o sentido.\n- III: verdadeira. As letras dispersas sugerem um big-bang que atinge as duas palavras.\n- IV: falsa. Contradiz as anteriores: no concretismo, o espaço é central, não secundário.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-Q03": {
+  "texto": "Segurança alimentar e nutricional não é só produzir comida: inclui acesso, qualidade e sustentabilidade.\n\n- I: verdadeira. É a definição ampla: oferta adequada de alimentos saudáveis, respeitando a cultura e a sustentabilidade.\n- II: verdadeira. O conceito abrange produção, disponibilidade e acesso a uma alimentação adequada.\n- III: falsa. O próprio texto mostra que o volume de alimentos aumentou e mesmo assim a fome cresceu. O problema é de acesso e distribuição, não de falta de tecnologia de produção.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-Q04": {
+  "texto": "Avalie cada asserção sozinha e depois a relação entre elas.\n\n- I: verdadeira. O Nordeste (210 L per capita) está bem abaixo da média nacional (320 L), o que indica desigualdade de acesso, com reflexo na saúde pública.\n- II: verdadeira. Uma política de abastecimento mais eficiente contribui para o desenvolvimento e para reduzir desigualdades regionais.\n- Relação: a II não explica a I. A II fala do benefício de uma política mais eficiente; não é ela que causa os índices abaixo da média. As duas são verdadeiras, mas independentes.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-Q05": {
+  "texto": "O ponto central é o marco da tradicionalidade: a relação com a terra é contínua, mas não parada no tempo.\n\n- I: falsa. A tradicionalidade não pressupõe modos de vida estáticos. As fotos mostram aldeias com construções e torres de energia, e mesmo assim são terras indígenas.\n- II: verdadeira. O reconhecimento garante o direito de usar a terra em diferentes atividades produtivas.\n- III: verdadeira. A terra fornece elementos materiais e simbólicos para transmitir a cultura entre gerações.\n- IV: falsa. O reconhecimento valoriza a diversidade cultural, não uma homogeneidade ou \"amálgama\".\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-Q06": {
+  "texto": "- I: verdadeira. O crescimento maior dos homicídios de mulheres negras mostra que é preciso estudar as múltiplas variáveis do fenômeno (raça, renda, território etc.).\n- II: falsa. O gráfico não permite concluir que havia, no início da série, um \"contexto favorável à superação\" da vulnerabilidade. Uma diferença menor entre as taxas não significa contexto favorável, e a mulher negra já tinha a taxa mais alta.\n\nCom a II falsa, não há relação de causa a avaliar.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-Q07": {
+  "texto": "O texto define acessibilidade como garantir que a pessoa use os espaços com autonomia, como usuária legítima e independente.\n\n- I: verdadeira. Adaptar as vias facilita a circulação de quem tem dificuldade de locomoção.\n- II: verdadeira. Rampas, faixas livres, guias e piso antiderrapante são o desenho universal das calçadas.\n- III: falsa. Depender da ajuda de terceiros vai contra a ideia de autonomia. A acessibilidade busca dispensar essa ajuda.\n- IV: verdadeira. Sinal sonoro no semáforo e braille na sinalização são medidas adequadas para pessoas com deficiência visual.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-FG-Q08": {
+  "texto": "Burnout é estresse crônico do trabalho, então tanto a causa quanto a solução passam pelo contexto do trabalho.\n\n- I: falsa. Treinar líderes para a obstinação e a resistência ao erro aumenta a pressão; não reduz a vulnerabilidade.\n- II: verdadeira. Olhar os sintomas fora do contexto sociocultural dificulta ligar o adoecimento ao trabalho (o nexo causal).\n- III: verdadeira. Trabalho com sentido de realização e reconhecimento protege a saúde psíquica.\n- IV: falsa. O remédio pode ajudar, mas não é a condição determinante: a origem está na organização do trabalho.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ }
+}

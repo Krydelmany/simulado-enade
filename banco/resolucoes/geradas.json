@@ -1,0 +1,902 @@
+{
+ "GER-I-D1": {
+  "texto": "- I: verdadeira. A inclinação 2,5 diz que cada centena a mais de usuários aumenta a latência média em 2,5 ms.\n- II: verdadeira. O coeficiente de determinação é r² = 0,9² = 0,81: o modelo explica 81% da variação.\n- III: falsa. 50 centenas está muito fora da faixa medida (1 a 8). Extrapolar não é garantido: o comportamento pode deixar de ser linear, por exemplo com saturação.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-D2": {
+  "texto": "Use o teorema de Bayes, com 10 000 conexões para facilitar:\n\n- 100 são ataques, e o sistema alerta 99 delas.\n- 9 900 são legítimas, e o sistema dá alarme falso em 5%: 495 alertas.\n\nDo total de 594 alertas, só 99 são ataques: P(ataque | alerta) ≈ 16,7%.\n\n- I: verdadeira. A maioria dos alertas, cerca de 83%, vem de conexões legítimas.\n- II: falsa. P(ataque | alerta) ≈ 16,7% é bem diferente da sensibilidade, que é P(alerta | ataque) = 99%. Confundir as duas é o erro clássico.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-D3": {
+  "texto": "Num processo de Poisson com λ = 4 por segundo:\n\n- I: verdadeira. Em 2 s, a média é λ·t = 8.\n- II: verdadeira. P(0 chegadas em 1 s) = e^(−λt) = e^(−4).\n- III: verdadeira. Os intervalos entre chegadas são exponenciais com média 1/λ = 0,25 s.\n- IV: falsa. Na Poisson, a variância é igual à média: λ·t = 4, e não 2.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-F1": {
+  "texto": "A mediana é o valor do meio dos dados em ordem. Com 12, 15, 15, 18 e 40 (cinco valores), o do meio é o terceiro: 15 ms.\n\nO 40 puxa a MÉDIA para 20 ms, mas não mexe na mediana. É por isso que a mediana resiste a valores extremos.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-F2": {
+  "texto": "Derive termo a termo com a regra da potência: a derivada de 3x² é 6x, e a de 2x é 2. Então f'(x) = 6x + 2.\n\nEm x = 1: f'(1) = 6 + 2 = 8.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-F3": {
+  "texto": "Os resultados possíveis são 1 a 6, todos com a mesma chance. Os pares maiores que 2 são 4 e 6: 2 resultados favoráveis.\n\nP = 2/6 = 1/3.\n\nCuidado: o 2 é par, mas não é maior que 2.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-M1": {
+  "texto": "É uma binomial com n = 3 e p = 0,1. A probabilidade de exatamente k sucessos é C(n, k)·p^k·(1 − p)^(n − k).\n\nP(1 defeituosa) = C(3, 1)·0,1·0,9² = 3 × 0,1 × 0,81 = 0,243.\n\nO fator 3 conta as três posições possíveis para a placa defeituosa.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-M2": {
+  "texto": "O total acumulado é a integral da taxa no intervalo:\n\nN = ∫₀² 6t dt = [3t²]₀² = 3 × 4 = 12 requisições.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-I-M3": {
+  "texto": "De 450 a 550 h é a média ± 1 desvio padrão (500 ± 50). Pela regra empírica da normal, cerca de 68% dos valores ficam nessa faixa. Com ±2 desvios seriam 95%, e com ±3, 99,7%.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-D1": {
+  "texto": "- I: verdadeira. Os dissipadores costumam ser de alumínio (leve e barato) ou de cobre (conduz ainda melhor).\n- II: verdadeira. Nos metais, os elétrons livres transportam energia térmica, o que dá alta condutividade.\n- Relação: a II explica a I. É a boa condução de calor que tira o calor do chip e espalha pelas aletas.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-D2": {
+  "texto": "- I: falsa. Os cerâmicos têm BAIXA tenacidade à fratura, porque são frágeis. São uma má escolha para peças sujeitas a impacto.\n- II: verdadeira. Os termoplásticos amolecem com o calor e podem ser remoldados, o que facilita a reciclagem.\n- III: falsa. É o contrário: ABAIXO da transição vítrea o polímero fica rígido e frágil. Acima dela, fica borrachoso e flexível.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-D3": {
+  "texto": "A temperatura da junção é Tj = Tamb + P·Rθ.\n\n- I: verdadeira. Tj = 30 + 65 × 0,8 = 30 + 52 = 82 °C.\n- II: verdadeira. Tj = 30 + 65 × 0,5 = 30 + 32,5 = 62,5 °C.\n- III: falsa. Dobrando a potência, quem dobra é o AUMENTO de temperatura (de 52 para 104 °C). A junção fica em 30 + 104 = 134 °C, e não no dobro de 82 (164 °C). A temperatura ambiente não dobra.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-F1": {
+  "texto": "Pela segunda lei de Newton, F = m·a = 2 kg × 3 m/s² = 6 N.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-F2": {
+  "texto": "Duro, resistente ao calor, isolante elétrico e frágil (quebra sem se deformar antes): esse conjunto é típico dos cerâmicos. A alumina (Al₂O₃) é um cerâmico clássico.\n\nOs metais conduzem eletricidade e se deformam antes de romper. Os polímeros não resistem a altas temperaturas.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-F3": {
+  "texto": "Ec = m·v²/2 = 1 000 × 20² / 2 = 1 000 × 400 / 2 = 200 000 J = 200 kJ.\n\nO erro comum é esquecer de elevar a velocidade ao quadrado ou de dividir por 2.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-M1": {
+  "texto": "Pela lei de Fourier, q = k·A·ΔT / L.\n\nq = 200 × 0,01 × 2 / 0,005 = 4 / 0,005 = 800 W.\n\nAtenção à unidade da espessura: 5 mm = 0,005 m.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-M2": {
+  "texto": "Pela lei de Hooke, ε = σ / E = 100 MPa / 200 GPa = 100 × 10⁶ / 200 × 10⁹ = 5 × 10⁻⁴.\n\nEm porcentagem: 5 × 10⁻⁴ × 100 = 0,05%.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-II-M3": {
+  "texto": "O fósforo tem 5 elétrons de valência. Quatro fazem ligação com o silício e o quinto fica livre: o fósforo é um doador. O silício vira tipo n, com elétrons como portadores majoritários.\n\nDopar com um elemento de 3 elétrons, como o boro, daria tipo p, com lacunas.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-D1": {
+  "texto": "- I: verdadeira. O K₄ tem 4 vértices todos ligados entre si, então cada um precisa de um horário diferente: no mínimo 4.\n- II: verdadeira. Pelo teorema das quatro cores, todo grafo planar pode ser colorido com 4 cores. Logo 4 horários bastam, e são exatamente 4.\n- III: falsa. Grau máximo + 1 é só um LIMITE SUPERIOR, e o número cromático costuma ser menor. Por exemplo, uma estrela com 10 folhas tem grau máximo 10 e precisa de só 2 cores.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-D2": {
+  "texto": "- I: verdadeira. Toda árvore com n vértices tem n − 1 arestas.\n- II: verdadeira. Toda árvore com 2 ou mais vértices tem uma folha (vértice de grau 1). Removendo a folha e a sua aresta, sobra uma árvore com um vértice e uma aresta a menos.\n- Relação: a II é exatamente o passo da prova por indução da I. Remova folhas até sobrar um vértice só, com 0 arestas. Cada remoção tirou um vértice e uma aresta, então a diferença n − arestas = 1 se mantém.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-D3": {
+  "texto": "- I: verdadeira. Pela definição, a = a vale, então a R a.\n- II: falsa. Se a é ancestral de b, b não é ancestral de a: o grafo é acíclico. A relação é ANTISSIMÉTRICA, e não simétrica.\n- III: verdadeira. Ancestral do ancestral também é ancestral.\n- IV: verdadeira. Reflexiva, antissimétrica e transitiva é exatamente a definição de ordem parcial.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-F1": {
+  "texto": "O máximo de arestas acontece quando cada par de vértices está ligado (grafo completo K₅). O número de pares é C(5, 2) = 5 × 4 / 2 = 10.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-F2": {
+  "texto": "\"Todo x tem a propriedade\" é negado por \"existe pelo menos um x que NÃO tem a propriedade\".\n\nA negação é \"existe pelo menos um servidor do cluster que não está ativo\".\n\nA opção A, \"nenhum está ativo\", é muito mais forte do que a negação: basta um servidor inativo para a frase original ser falsa.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-F3": {
+  "texto": "A − B tem os elementos de A que não estão em B. Tirando 3 e 4 de {1, 2, 3, 4}, sobram {1, 2}.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-M1": {
+  "texto": "A ordem importa e não há repetição: é um arranjo A(10, 4) = 10 × 9 × 8 × 7 = 5 040.\n\n10 000 seria com repetição. 210 seria se a ordem não importasse (combinação).\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-M2": {
+  "texto": "Pelo lema do aperto de mãos, a soma dos graus é o dobro do número de arestas, porque cada aresta conta para dois vértices.\n\n3 + 3 + 2 + 2 + 1 + 1 = 12, então são 12 / 2 = 6 arestas.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-III-M3": {
+  "texto": "Pelo teorema de Euler, para um grafo conexo:\n- 0 vértices de grau ímpar: há circuito euleriano, que volta ao início.\n- Exatamente 2 vértices de grau ímpar: há trilha euleriana, que começa em um deles e termina no outro.\n- Mais de 2: não há nenhuma das duas.\n\nAqui são 2 vértices de grau ímpar: existe a trilha, e ela começa em um ímpar e termina no outro.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-D1": {
+  "texto": "- I: verdadeira. É o modelo clássico. xᵢⱼ ∈ {0, 1} indica se o técnico i atende o chamado j. Cada técnico tem soma 1 e cada chamado tem soma 1, e minimiza-se Σ tᵢⱼ·xᵢⱼ.\n- II: falsa. A estratégia gulosa pode prender o técnico errado num chamado barato e forçar uma combinação cara depois. Ela não garante o ótimo.\n- III: verdadeira. O método húngaro resolve a designação em tempo polinomial (O(n³)).\n- IV: falsa. São 4! = 24 designações possíveis, e não 16.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-D2": {
+  "texto": "- I: falsa. A região viável pode ser ilimitada na direção que melhora a função objetivo. Nesse caso não existe ótimo finito: o problema é ilimitado.\n- II: falsa. Quando existe, o ótimo de uma função linear está num vértice, ou ao longo de uma aresta, na fronteira da região, e não no interior.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-D3": {
+  "texto": "Liste os caminhos do início ao fim:\n\n- A–C–D: 3 + 4 + 3 = 10 dias\n- A–B–D: 3 + 2 + 3 = 8 dias\n- A–B–E: 3 + 2 + 2 = 7 dias\n\nO mais longo é o caminho crítico. Agora as afirmações:\n\n- I: verdadeira. O projeto dura no mínimo 10 dias.\n- II: verdadeira. O caminho crítico é A–C–D.\n- III: verdadeira. B termina no dia 5, mas D só pode começar no dia 7, quando C termina. B tem folga de 2 dias.\n- IV: falsa. E termina no dia 7 e o projeto vai até o dia 10. Com folga, E não é crítica.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-F1": {
+  "texto": "A região viável é o conjunto de todos os pontos que respeitam TODAS as restrições ao mesmo tempo. É dentro dela que se procura o ótimo.\n\nO ponto que maximiza ou minimiza (A) é a solução ótima, e não a região. A reta da função objetivo (D) é usada para varrer a região.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-F2": {
+  "texto": "O ótimo de um problema linear está em um vértice. Calcule Z = 3x + 2y em cada vértice:\n\n- (0, 0): 0\n- (4, 0): 12\n- (3, 3): 9 + 6 = 15\n- (0, 5): 10\n\nO máximo é 15, em (3, 3). A opção E usa o ponto (6, 0), que nem é vértice da região.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-F3": {
+  "texto": "O caminho mínimo de uma origem para todos os destinos, com pesos não negativos, é o problema que o algoritmo de Dijkstra resolve.\n\n- Kruskal e Prim montam a árvore geradora mínima, que liga todos os nós com o menor custo total. Isso é diferente da rota mais curta até cada cliente.\n- Ford-Fulkerson calcula fluxo máximo.\n- A busca em profundidade não considera pesos.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-M1": {
+  "texto": "Monte o modelo por partes:\n\n- objetivo: maximizar o lucro 40x + 30y;\n- montagem: 2x + y ≤ 100 (X usa 2 horas e Y usa 1);\n- teste: x + y ≤ 80;\n- não negatividade: x, y ≥ 0.\n\nA opção B minimiza o lucro. A opção C inverte as desigualdades, ou seja, exige consumir pelo menos as horas disponíveis. A opção D troca os coeficientes da montagem.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-M2": {
+  "texto": "Ache os vértices da região e calcule Z = 40x + 30y em cada um:\n\n- (0, 0): 0\n- (50, 0), onde 2x + y = 100 corta o eixo x: 2 000\n- (0, 80), onde x + y = 80 corta o eixo y: 2 400\n- Cruzamento das duas retas: subtraindo x + y = 80 de 2x + y = 100, sai x = 20 e então y = 60. Z = 800 + 1 800 = 2 600.\n\nO máximo é 2 600.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IV-M3": {
+  "texto": "Numa restrição ≤, a folga é o quanto falta para chegar ao limite, então ela SOMA ao lado esquerdo e nunca é negativa:\n\n2x + y + s = 100, com s ≥ 0.\n\nNuma restrição ≥, se usaria uma variável de excesso, subtraindo (forma da opção A).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-D1": {
+  "texto": "- I: falsa. O saldo final fica em 700, porque T2 grava por cima e o débito de T1 se perde. O correto seria 600.\n- II: verdadeira. É a atualização perdida (lost update): duas transações leem o mesmo valor e a segunda escrita apaga a primeira.\n- III: verdadeira. Com o 2PL estrito, T1 seguraria a trava sobre a conta até o commit, e T2 teria de esperar. T2 então leria 400 e gravaria 600.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-D2": {
+  "texto": "- I: falsa. Índices aceleram as buscas, mas deixam inserções e atualizações mais lentas, porque cada índice também precisa ser atualizado. Com milhares de inserções por minuto, indexar todas as colunas atrapalha.\n- II: falsa. A árvore B+ é atualizada a cada inserção, remoção ou alteração da coluna indexada, inclusive com divisão de nós.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-D3": {
+  "texto": "- I: verdadeira. Um relacionamento N:N vira uma tabela própria, cursa(matrícula, código, nota), com chave composta.\n- II: verdadeira. A nota pertence ao par aluno-disciplina, então fica na tabela do relacionamento.\n- III: verdadeira. Matrícula e código são chaves estrangeiras para Aluno e Disciplina.\n- IV: falsa. Uma coluna código em Aluno só permitiria UMA disciplina por aluno, o que serve para 1:N e não para N:N.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-F1": {
+  "texto": "A chave primária identifica cada linha de forma única. Não pode ter valores nulos nem repetidos.\n\n- Referenciar outra tabela (A) é papel da chave estrangeira.\n- Índices (D) e colunas calculadas (E) são outros conceitos.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-F2": {
+  "texto": "Para apagar linhas específicas e manter a tabela, use DELETE com WHERE:\n\nDELETE FROM cliente WHERE ...;\n\n- DROP TABLE apaga a tabela inteira.\n- ALTER TABLE muda a estrutura.\n- UPDATE altera valores.\n- SELECT só consulta.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-F3": {
+  "texto": "Atomicidade é o \"tudo ou nada\": ou todas as operações da transação acontecem, ou nenhuma. Na transferência, se o crédito falha, o débito é desfeito (rollback).\n\n- Consistência é manter as regras de integridade.\n- Isolamento é uma transação não ver os efeitos parciais da outra.\n- Durabilidade é o que foi confirmado não se perder.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-M1": {
+  "texto": "Para filtrar pelo resultado de uma função de agregação (COUNT), o filtro vai no HAVING, depois do GROUP BY. O WHERE filtra linhas ANTES do agrupamento e não aceita funções de agregação.\n\nSELECT curso, COUNT(*) FROM aluno GROUP BY curso HAVING COUNT(*) > 30;\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-M2": {
+  "texto": "A 2ª forma normal exige que nenhum atributo dependa só de PARTE da chave composta. Aqui, nome_produto depende só de cod_produto, então há uma dependência parcial e a tabela não está na 2FN.\n\nA correção é criar uma tabela produto(cod_produto, nome_produto).\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-IX-M3": {
+  "texto": "O LEFT JOIN mantém todos os clientes, mesmo sem pedido. Por isso Bruno aparece, com p.valor nulo.\n\n- Ana: 100 + 50 = 150.\n- Bruno: SUM de nenhum valor dá NULL, e não 0.\n- Carla: 80.\n\nSão 3 linhas, e a soma de Bruno é NULL. Para mostrar 0, seria preciso usar COALESCE(SUM(p.valor), 0).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-D1": {
+  "texto": "- I: verdadeira. O fator de carga é α = n/m = 3 000 / 1 000 = 3, ou seja, 3 chaves por lista em média.\n- II: verdadeira. Se todas as chaves caem na mesma posição, a busca percorre uma lista com n elementos: O(n).\n- III: falsa. No encadeamento, as listas crescem à vontade, então α pode passar de 1. É no endereçamento aberto que α ≤ 1.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-D2": {
+  "texto": "- I: falsa. O tempo é O(n log n) no pior caso, mas o Merge Sort comum precisa de memória auxiliar O(n) para intercalar, e não de O(1). Num dispositivo com pouca RAM, isso pesa.\n- II: verdadeira. A intercalação percorre as duas metades uma vez só: tempo linear.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-D3": {
+  "texto": "- I: verdadeira. Sem memoização, fib(n) chama fib(n−1) e fib(n−2), que recalculam os mesmos valores muitas vezes. O tempo cresce de forma exponencial (cerca de 1,6ⁿ).\n- II: verdadeira. Com o dicionário, cada fib(k) é calculado uma vez só e depois apenas consultado. São n cálculos de custo constante: O(n).\n- III: verdadeira. A sequência é 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, então fib(10) = 55.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-F1": {
+  "texto": "O último que entra é o primeiro que sai (LIFO): é a pilha. Cada edição é empilhada, e \"desfazer\" desempilha a mais recente.\n\nA fila seria o primeiro que entra, primeiro que sai (FIFO).\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-F2": {
+  "texto": "A busca binária descarta metade do vetor a cada comparação. De n para n/2, n/4…, até 1: são cerca de log₂ n passos, ou seja, O(log n).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-F3": {
+  "texto": "range(1, 5) gera 1, 2, 3 e 4 (o 5 fica de fora). Desses, os pares são 2 e 4.\n\nsoma = 2 + 4 = 6.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-M1": {
+  "texto": "A fila é FIFO: o primeiro que entra é o primeiro que sai. Acompanhe a fila, com a frente à esquerda:\n\n- enfileira(3): [3]\n- enfileira(7): [3, 7]\n- desenfileira(): sai o 3, sobra [7]\n- enfileira(5): [7, 5]\n- enfileira(1): [7, 5, 1]\n- desenfileira(): sai o 7, sobra [5, 1]\n\nO elemento da frente é o 5.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-M2": {
+  "texto": "Montando a árvore: 50 é a raiz; 30 vai para a esquerda e 70 para a direita; 20 e 40 ficam embaixo do 30, e 60 e 80 embaixo do 70.\n\nA pré-ordem visita a raiz, depois a subárvore esquerda inteira, depois a direita:\n\n50, (30, 20, 40), (70, 60, 80).\n\nA opção B é o percurso em ordem simétrica (os valores ordenados). A opção C é o pós-ordem.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-V-M3": {
+  "texto": "Desenrole as chamadas: f(7) = 7·f(5) = 7·5·f(3) = 7·5·3·f(1) = 7·5·3·1 = 105.\n\nÉ o produto dos ímpares até 7 (o duplo fatorial 7!!). 5 040 seria 7! comum, mas aqui n cai de 2 em 2.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-D1": {
+  "texto": "- I: verdadeira. Identificador = letra(letra|dígito)* e número = dígito⁺ são expressões regulares, então autômatos finitos reconhecem esses padrões.\n- II: falsa. Parênteses aninhados com profundidade arbitrária exigem contar sem limite, o que é linguagem livre de contexto. Um autômato finito não consegue. Isso é tarefa do analisador sintático, que usa pilha.\n- III: verdadeira. Pela construção de subconjuntos, todo AFN vira um AFD equivalente, com até 2ⁿ estados.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-D2": {
+  "texto": "- I: verdadeira. Os palíndromos sobre {a, b} são gerados por S → aSa | bSb | a | b | ε, uma gramática livre de contexto.\n- II: falsa. Os autômatos de pilha DETERMINÍSTICOS reconhecem só uma parte das linguagens livres de contexto. Os palíndromos são justamente o exemplo clássico: para saber onde está o meio da palavra é preciso não determinismo.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-D3": {
+  "texto": "- I: verdadeira. Decidir se um programa qualquer para com uma entrada qualquer é o problema da parada, que Turing provou ser indecidível.\n- II: falsa. A indecidibilidade não é falta de memória ou de tempo: não existe NENHUM algoritmo que resolva todos os casos.\n- III: verdadeira. Ferramentas de análise estática detectam laços infinitos em casos específicos, mas não em todos.\n- IV: falsa. A tese de Church-Turing diz que tudo o que é efetivamente computável pode ser computado por uma máquina de Turing, e não que ela é \"mais poderosa\" que os computadores reais.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-F1": {
+  "texto": "A expressão a(b|c)* exige começar com 'a' e depois só aceita b ou c.\n\n- \"acbb\": começa com a, seguido de c, b e b. Aceita.\n- \"ba\" e \"cab\": não começam com a.\n- \"aab\" e \"abca\": têm um segundo 'a', que a parte (b|c)* não aceita.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-F2": {
+  "texto": "Na hierarquia de Chomsky:\n\n- regulares: autômato finito;\n- livres de contexto: autômato de pilha;\n- sensíveis ao contexto: autômato linearmente limitado;\n- recursivamente enumeráveis: máquina de Turing.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-F3": {
+  "texto": "\"Determinístico\" quer dizer que não há escolha: para cada par (estado, símbolo), existe exatamente uma transição. Também não há transições vazias (ε).\n\nVárias transições possíveis ou transições ε (opções A e B) são características do AFN. A pilha (opção E) é do autômato de pilha.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-M1": {
+  "texto": "O 0 não muda o estado, e cada 1 alterna entre P e Q. Começando em P, termina em P se a cadeia tiver um número PAR de 1s. Como P é o estado de aceitação, o autômato aceita as cadeias com quantidade par de 1s.\n\n- \"1\": um 1. Rejeita.\n- \"0111\": três 1s. Rejeita.\n- \"10\": um 1. Rejeita.\n- \"1001\": dois 1s. Aceita.\n- \"111\": três 1s. Rejeita.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-M2": {
+  "texto": "{aⁿbⁿ} exige contar quantos a's vieram para depois conferir os b's, sem limite. Um autômato finito tem memória finita e não consegue fazer isso. O lema do bombeamento prova que essa linguagem não é regular: bombear um trecho só de a's quebra a igualdade.\n\nAs outras são regulares: a*, (a|b)*ab, a*b* e \"número par de a's\" (um autômato com 2 estados).\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VI-M3": {
+  "texto": "Cada uso de S → aSb coloca um 'a' à esquerda e um 'b' à direita, e S → ε encerra. A gramática gera aⁿbⁿ.\n\nS ⇒ aSb ⇒ aaSbb ⇒ aabb.\n\nAs outras cadeias não têm a forma aⁿbⁿ.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-D1": {
+  "texto": "- I: verdadeira. Com integração contínua, o defeito aparece logo depois do commit que o causou, quando é barato e fácil de achar.\n- II: falsa. Testes mostram a presença de defeitos, nunca a ausência. Passar em todos não garante software sem erro.\n- III: falsa. Compilar não verifica comportamento. A integração contínua depende justamente dos testes automatizados, incluindo os de unidade.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-D2": {
+  "texto": "- I: verdadeira. Sprints têm duração fixa e terminam com um incremento potencialmente utilizável.\n- II: verdadeira. É um dos quatro valores do Manifesto Ágil.\n- Relação: a II não explica a I. Sprints com incremento vêm de outros princípios, como entregar software funcionando com frequência. A valorização de indivíduos e interações é outra ideia.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-D3": {
+  "texto": "- I: verdadeira. 59 retorna 0 e 60 retorna 1: são os dois valores vizinhos da fronteira entre reprovado e aprovado.\n- II: verdadeira. −5 cai no return −1, 70 no return 1 e 30 no return 0. Os três returns são executados.\n- III: falsa. 100 está DENTRO do intervalo válido, porque a condição de inválido é nota > 100. Deve retornar 1, de aprovado.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-F1": {
+  "texto": "Fases em sequência, cada uma começando só quando a anterior termina, é o modelo em cascata (waterfall).\n\n- O modelo em espiral é iterativo e guiado por riscos.\n- Scrum, XP e Kanban são abordagens ágeis, com ciclos curtos.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-F2": {
+  "texto": "Testar uma função sozinha, isolada do resto do sistema, é teste de unidade.\n\n- O teste de sistema avalia o software inteiro.\n- O teste de aceitação confere se o software atende o cliente.\n- O teste de carga mede o desempenho sob volume.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-F3": {
+  "texto": "- Requisito funcional diz O QUE o sistema faz: cadastrar, emitir, recuperar, gerar.\n- Requisito não funcional diz COMO ele deve se comportar: desempenho, segurança, disponibilidade.\n\n\"Responder 95% das consultas em menos de 2 s\" é um requisito de desempenho: não funcional.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-M1": {
+  "texto": "No Scrum, o Product Owner cuida do valor do produto, gerencia o Product Backlog e define a prioridade.\n\n- O Scrum Master facilita o processo e remove impedimentos.\n- Os desenvolvedores constroem o incremento.\n- \"Gerente de projeto\" não é um papel do Scrum.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-M2": {
+  "texto": "Um módulo que mexe direto nas variáveis internas de outro, e quebra a cada mudança interna dele, está fortemente acoplado.\n\nA solução é encapsular: o faturamento expõe uma interface pública estável, e o módulo de relatórios usa só essa interface. Juntar os dois módulos (E) pioraria a coesão.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VII-M3": {
+  "texto": "Garantir uma única instância, acessível de qualquer parte do sistema, é o propósito do Singleton.\n\n- Observer notifica dependentes.\n- Strategy troca algoritmos.\n- Adapter compatibiliza interfaces.\n- Factory Method delega a criação de objetos.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-D1": {
+  "texto": "- I: verdadeira. Alvos maiores reduzem os erros de toque, o que é importante com coordenação motora mais fina reduzida.\n- II: verdadeira. Uma confirmação que some em 2 s pode passar despercebida. Mantê-la até o usuário dispensar garante que o status seja visto.\n- III: verdadeira. Rótulos de texto permitem reconhecer a função em vez de ter de lembrar o que cada ícone significa (heurística \"reconhecer em vez de lembrar\").\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-D2": {
+  "texto": "- I: verdadeira. Com cerca de cinco usuários por rodada já se encontra a maior parte dos problemas. Esse é o argumento clássico de Nielsen.\n- II: verdadeira. Os problemas mais comuns aparecem repetidos, e cada novo participante traz cada vez menos novidades.\n- Relação: a II explica a I. É por haver retornos decrescentes que poucos usuários bastam, e vale mais fazer várias rodadas pequenas.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-D3": {
+  "texto": "- I: verdadeira. Quem tem daltonismo pode confundir verde, amarelo e vermelho. A solução é combinar a cor com ícone, forma ou texto.\n- II: falsa. Mais saturação não resolve: o daltônico continua sem distinguir as tonalidades.\n- III: verdadeira. As WCAG (critério 1.4.1) proíbem usar a cor como ÚNICO meio de transmitir informação.\n- IV: falsa. Ser especialista não muda a visão de cores, e a escolha das cores também afeta fadiga e erros de qualquer pessoa.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-F1": {
+  "texto": "A barra de progresso informa o que está acontecendo e quanto falta: é a heurística \"visibilidade do status do sistema\", que manda manter o usuário informado com feedback em tempo razoável.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-F2": {
+  "texto": "O atributo alt é lido em voz alta pelos leitores de tela. Ele beneficia diretamente pessoas cegas ou com baixa visão que usam essas ferramentas.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-F3": {
+  "texto": "Especialistas que examinam a interface com base em princípios reconhecidos, sem a participação de usuários, fazem uma avaliação heurística.\n\nO teste de usabilidade, o questionário, o teste A/B e a entrevista contextual envolvem usuários reais.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-M1": {
+  "texto": "A lei de Fitts diz que o tempo para atingir um alvo cresce com a distância e diminui com o tamanho do alvo. Portanto: botão maior e mais perto da mão.\n\n- A opção A descreve a lei de Hick, que trata do número de escolhas.\n- A opção C contradiz a lei de Fitts.\n- A opção D também: mais longe fica mais lento, e não mais preciso.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-M2": {
+  "texto": "No WCAG nível AA, texto normal exige contraste mínimo de 4,5:1. Texto grande pede 3:1, e o nível AAA pede 7:1. A razão 21:1 é o máximo possível, preto sobre branco.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-VIII-M3": {
+  "texto": "Uma boa mensagem de erro segue três regras:\n- usa linguagem simples, e não códigos como \"Erro 0x3F\";\n- aparece no lugar do problema e diz como corrigir;\n- não destrói o que o usuário já preencheu.\n\nA opção D faz as três coisas. As outras escondem o erro, o atrasam ou o deixam incompreensível.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-D1": {
+  "texto": "No amplificador inversor, o ganho é −Rf / Rin = −47k / 4,7k = −10.\n\n- I: verdadeira. O ganho é −10.\n- II: verdadeira. Vout = −10 × 0,2 = −2 V.\n- III: falsa. Pela conta daria −15 V, mas a saída não passa da alimentação de ±12 V. O amplificador satura perto de −12 V.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-D2": {
+  "texto": "- I: falsa. No indutor, a corrente fica ATRASADA 90° em relação à tensão. É no capacitor que ela fica adiantada (o mnemônico \"ELI the ICE man\": em L, a tensão vem antes da corrente).\n- II: verdadeira. X_L = 2πfL cresce com a frequência.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-D3": {
+  "texto": "R2 e R3, de 2 kΩ cada, em paralelo, dão 1 kΩ. Somando R1 em série, o total é 2 kΩ.\n\n- I: verdadeira. I = 9 V / 2 kΩ = 4,5 mA.\n- II: verdadeira. Sobre o paralelo: 4,5 mA × 1 kΩ = 4,5 V. R1 fica com os outros 4,5 V.\n- III: verdadeira. Os dois resistores são iguais, então a corrente se divide ao meio: 2,25 mA em cada.\n- IV: verdadeira. P = V · I = 9 × 4,5 mA = 40,5 mW.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-F1": {
+  "texto": "Pela lei de Ohm, I = V / R = 5 / 220 ≈ 0,0227 A = 22,7 mA.\n\nCuidado com a conversão de unidade: 0,0227 A é 22,7 mA, e não 2,27 mA nem 227 mA.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-F2": {
+  "texto": "Em série, as resistências se somam: 100 + 220 + 330 = 650 Ω.\n\nO valor de 57 Ω seria o equivalente em paralelo.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-F3": {
+  "texto": "P = V · I = 12 V × 0,5 A = 6 W.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-M1": {
+  "texto": "No divisor de tensão, a saída fica sobre R2:\n\nV = Vin · R2 / (R1 + R2) = 12 × 2 / (10 + 2) = 12 × 2 / 12 = 2 V.\n\nO erro comum é usar R1 no numerador, o que daria 10 V.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-M2": {
+  "texto": "A constante de tempo é τ = R · C = 10 × 10³ Ω × 100 × 10⁻⁶ F = 1 s.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-X-M3": {
+  "texto": "O resistor fica com a tensão que sobra depois do LED: 5 − 2 = 3 V.\n\nR = 3 V / 15 mA = 3 / 0,015 = 200 Ω.\n\nO valor de 333 Ω (opção A) vem de esquecer de descontar a queda no LED.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-D1": {
+  "texto": "- I: verdadeira. Com interrupção externa, o microcontrolador dorme e só acorda quando o botão é acionado.\n- II: falsa. No polling, o processador fica acordado o tempo todo testando o pino. É a solução de MAIOR consumo.\n- III: verdadeira. A rotina de interrupção deve ser curta, por exemplo só incrementar um contador ou ligar uma flag, e o processamento pesado fica no laço principal.\n- IV: verdadeira. Contatos mecânicos repicam ao fechar, gerando vários pulsos. Isso se trata com filtro RC ou por software (debounce).\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-D2": {
+  "texto": "- I: verdadeira. Ligue as 3 variáveis nas linhas de seleção e ponha em cada uma das 8 entradas de dados o valor (0 ou 1) da tabela-verdade daquela combinação. Isso implementa qualquer função de 3 variáveis.\n- II: falsa. Um MUX 8:1 tem 3 linhas de SELEÇÃO (2³ = 8) e 8 entradas de DADOS. A afirmação confunde as duas coisas.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-D3": {
+  "texto": "A saída S = 1 quando pelo menos dois dos três sensores valem 1. É a função maioria.\n\n- I: verdadeira. S = AB + AC + BC é a forma mínima.\n- II: verdadeira. As linhas com S = 1 são 011, 101, 110 e 111: quatro.\n- III: falsa. A ⊕ B ⊕ C é a função de paridade. Vale 1 com um número ímpar de 1s: dá 1 com um sensor só (100) e com os três (111), o que não é maioria.\n- IV: verdadeira. A porta NAND é universal: qualquer função pode ser feita só com NANDs.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-F1": {
+  "texto": "Cada bit vale uma potência de 2, da direita para a esquerda:\n\n1011₂ = 1·8 + 0·4 + 1·2 + 1·1 = 11.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-F2": {
+  "texto": "O motor só liga quando as duas condições valem ao mesmo tempo: é a porta AND, cuja saída é 1 só com todas as entradas em 1.\n\nA OR ligaria com qualquer uma das condições, o que é perigoso aqui.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-F3": {
+  "texto": "Em hexadecimal, cada dígito vale uma potência de 16, e F = 15:\n\n0x2F = 2·16 + 15 = 32 + 15 = 47.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-M1": {
+  "texto": "Ponha A em evidência: F = A·(B + B̄) = A·1 = A.\n\nO valor de B não importa: basta A = 1 para F valer 1.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-M2": {
+  "texto": "Com n flip-flops, um contador binário completo passa por 2ⁿ estados. Com 4, são 2⁴ = 16 estados (de 0 a 15).\n\nO número 15 é o maior valor, e não a quantidade de estados.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XI-M3": {
+  "texto": "Para ligar um bit sem mexer nos outros, faça um OR com uma máscara que tem 1 só nessa posição:\n\nPORTB |= (1 << 3);\n\n- B: sobrescreve todos os pinos.\n- C: apaga todos os outros bits.\n- E: DESLIGA o bit 3.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-D1": {
+  "texto": "A lei de Amdahl dá o speedup S = 1 / ((1 − p) + p/n), com p = 0,8 (fração paralela).\n\n- I: verdadeira. Com n = 4: S = 1 / (0,2 + 0,8/4) = 1 / 0,4 = 2,5.\n- II: verdadeira. Com n muito grande, p/n tende a 0 e S tende a 1 / 0,2 = 5. A parte sequencial limita o ganho.\n- III: falsa. O speedup seria 4 só se o programa fosse 100% paralelizável. Os 20% sequenciais não se dividem.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-D2": {
+  "texto": "- I: verdadeira. Processadores RISC usam instruções simples e de tamanho fixo, que são fáceis de decodificar e de colocar em pipeline.\n- II: verdadeira. A cache funciona por causa da localidade: o que foi usado volta a ser usado (temporal), e o que está perto também (espacial).\n- Relação: a II não explica a I. São dois fatos verdadeiros sobre assuntos diferentes, o conjunto de instruções e a hierarquia de memória.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-D3": {
+  "texto": "- I: verdadeira. I2 lê R1, que I1 escreve. É a dependência de leitura depois de escrita (RAW).\n- II: verdadeira. No load, o dado só sai do estágio de memória. Mesmo com forwarding, ele chega um ciclo tarde para a execução de I2, então é preciso uma bolha (o hazard load-use).\n- III: verdadeira. I3 não depende de I1 nem de I2. Colocada entre as duas, ela ocupa o ciclo que seria bolha, sem mudar o resultado.\n- IV: falsa. I3 usa R6 e R7, e não R3.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-F1": {
+  "texto": "A memória pequena e rápida, entre o processador e a RAM, que guarda o que é mais usado, é a cache.\n\n- A memória secundária é o disco.\n- A memória virtual é uma técnica de gerência de memória, e não uma memória física.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-F2": {
+  "texto": "Com 16 bits de endereço, existem 2¹⁶ = 65 536 endereços. Como cada um corresponde a um byte, são 64 KB.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-F3": {
+  "texto": "Na arquitetura de von Neumann, dados e instruções ficam na mesma memória e usam o mesmo barramento. Esse é o famoso \"gargalo de von Neumann\".\n\nMemórias e barramentos separados (opção A) caracterizam a arquitetura Harvard.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-M1": {
+  "texto": "O tempo de execução é T = número de instruções × CPI / frequência:\n\nT = 2 × 10⁹ × 1,5 / (3 × 10⁹) = 3 × 10⁹ / 3 × 10⁹ = 1 s.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-M2": {
+  "texto": "A primeira instrução leva 5 ciclos para atravessar o pipeline. Depois disso, termina uma instrução por ciclo.\n\nTotal = 5 + (100 − 1) = 104 ciclos. Sem pipeline, seriam 500.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XII-M3": {
+  "texto": "O tempo médio de acesso é o tempo de acerto mais a taxa de falha vezes a penalidade:\n\n1 + 0,05 × 100 = 1 + 5 = 6 ns.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-D1": {
+  "texto": "- I: verdadeira. Se o produtor pegar o mutex primeiro e o buffer estiver cheio, ele dorme em down(vazio) segurando o mutex. O consumidor nunca entra para esvaziar o buffer: deadlock. Por isso o semáforo de contagem vem antes.\n- II: verdadeira. O mutex protege a região crítica, ou seja, os índices e o conteúdo do buffer.\n- III: verdadeira. É o mesmo problema do lado do consumidor: ele seguraria o mutex esperando \"cheio\" e o produtor não conseguiria inserir.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-D2": {
+  "texto": "- I: verdadeira. A memória virtual permite rodar processos que, juntos, passam da memória física.\n- II: verdadeira. Com paginação sob demanda, só as páginas usadas ficam na RAM, e o resto fica no disco (área de swap).\n- Relação: a II explica a I. É por só carregar o que está em uso que o total pode passar da RAM. A lentidão vem das faltas de página que buscam páginas no disco.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-D3": {
+  "texto": "Simule com 3 quadros e a sequência 1, 2, 3, 1, 4, 1, 5:\n\n- FIFO: 1, 2 e 3 são faltas; 1 é acerto; 4 é falta e sai o 1 (o mais antigo); 1 é falta e sai o 2; 5 é falta e sai o 3. Total: 6 faltas.\n- LRU: 1, 2 e 3 são faltas; 1 é acerto; 4 é falta e sai o 2 (o menos usado recentemente); 1 é acerto; 5 é falta. Total: 5 faltas.\n- Ótimo: 1, 2 e 3 são faltas; 1 é acerto; 4 é falta e sai o 2 ou o 3, que não voltam a ser usados; 1 é acerto; 5 é falta. Total: 5 faltas.\n\nAgora as afirmações:\n\n- I: verdadeira.\n- II: verdadeira.\n- III: falsa. O ótimo dá 5, que não é menor que 5.\n- IV: falsa. No FIFO, mais quadros podem aumentar as faltas. É a anomalia de Belady.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-F1": {
+  "texto": "Um processo esperando E/S não pode usar a CPU mesmo que ela esteja livre: ele está bloqueado (em espera). Quando a leitura termina, ele passa para pronto.\n\n\"Pronto\" seria se só faltasse a vez na CPU.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-F2": {
+  "texto": "A troca de contexto guarda o estado do processo que sai (registradores, contador de programa, ponteiro de pilha) e carrega o estado do próximo processo. Assim, o processo interrompido continua depois de onde parou.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-F3": {
+  "texto": "As threads de um processo compartilham o espaço de endereçamento (código, dados globais, heap) e os recursos, como arquivos abertos.\n\nCada thread tem os seus próprios registradores, contador de programa e pilha.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-M1": {
+  "texto": "O SJF executa do menor para o maior job: P3 (1), depois P2 (3), depois P1 (6).\n\n- P3 espera 0.\n- P2 espera 1, enquanto P3 executa.\n- P1 espera 1 + 3 = 4.\n\nMédia = (0 + 1 + 4) / 3 = 5/3 ≈ 1,67 ms.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-M2": {
+  "texto": "O deslocamento endereça os bytes dentro da página. Como 4 KB = 4 096 = 2¹² bytes, ele precisa de 12 bits.\n\nSobram 32 − 12 = 20 bits para o número da página.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIII-M3": {
+  "texto": "As quatro condições de Coffman para o deadlock são exclusão mútua, posse e espera, não preempção e espera circular.\n\nO escalonamento por prioridade não é uma delas. Ele pode causar starvation, que é outro problema.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-D1": {
+  "texto": "- I: verdadeira. Calcular média e desvio com os dados de teste deixa informação do teste vazar para o treino. As estatísticas devem vir só do treino.\n- II: verdadeira. A data de cobrança judicial só existe DEPOIS da inadimplência. Em produção, ela não estaria disponível na hora de prever. É vazamento de alvo, e explica os 99% de acerto ilusórios.\n- III: falsa. A validação cruzada não resolve vazamento se o pré-processamento for feito antes da divisão, ou se houver atributos \"do futuro\".\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-D2": {
+  "texto": "- I: falsa. r = 0 indica ausência de relação LINEAR. A parábola do gráfico mostra uma relação forte, só que não linear.\n- II: falsa. O coeficiente de Pearson mede apenas associação linear.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-D3": {
+  "texto": "- I: verdadeira. A renda varia em dezenas de milhares e o número de moradores varia de 1 a 8. Sem padronizar, a distância é praticamente só a diferença de renda.\n- II: verdadeira. O k-means depende dos centróides iniciais. Por isso se roda várias vezes ou se usa k-means++.\n- III: verdadeira. O método do cotovelo procura o k a partir do qual a soma dos quadrados dentro dos grupos para de cair muito.\n- IV: falsa. O k-means converge para um mínimo LOCAL. Não há garantia do ótimo global.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-F1": {
+  "texto": "A mediana depende só da posição do valor central, então poucos valores muito altos não a deslocam. A média é puxada por eles.\n\nAmplitude e variância medem dispersão, e não tendência central.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-F2": {
+  "texto": "Formar grupos sem rótulos prévios é o clustering, um método não supervisionado (como o k-means). Regressão e classificação precisam de exemplos já rotulados.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-F3": {
+  "texto": "groupby('estado') separa as linhas por estado, e ['vendas'].sum() soma as vendas dentro de cada grupo. O resultado tem um total de vendas por estado.\n\nPara a média, seria .mean(). Para contar linhas, .count() ou .size().\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-M1": {
+  "texto": "- Precisão = VP / (VP + FP) = 40 / 50 = 0,80. Dos que o modelo marcou como fraude, 80% eram fraude.\n- Revocação = VP / (VP + FN) = 40 / 60 ≈ 0,67. Das fraudes reais, o modelo pegou 67%.\n\nA opção B inverte as duas.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-M2": {
+  "texto": "Erro baixo no treino e alto na validação mostram um modelo que decorou o treino e não generaliza: é o sobreajuste (overfitting).\n\nOs remédios são regularização, mais dados de treino ou um modelo mais simples.\n\nMisturar a validação no treino (D) só esconde o problema.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIV-M3": {
+  "texto": "A normalização min-max é x' = (x − mín) / (máx − mín).\n\nx' = (30 − 10) / (60 − 10) = 20 / 50 = 0,4.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-D1": {
+  "texto": "- I: verdadeira. Basta calcular o hash de palavras comuns (dicionário) ou consultar tabelas pré-computadas (rainbow tables) e comparar.\n- II: verdadeira. Sem salt, senhas iguais geram hashes iguais. Quebrando um hash, todos os usuários com aquela senha ficam expostos.\n- III: falsa. Não é preciso \"inverter\" o hash: basta adivinhar a senha e comparar. A nota da empresa é enganosa.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-D2": {
+  "texto": "- I: falsa. O HTTPS só cifra a conexão. Um site de phishing pode ter cadeado e mesmo assim roubar o que o usuário digitar.\n- II: falsa. O certificado comprova o controle do domínio e protege a comunicação. Não atesta que o conteúdo é legítimo ou seguro.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-D3": {
+  "texto": "- I: verdadeira. O servidor exposto fica na DMZ, e o banco de dados fica na rede interna, acessível só pelo servidor web e nas portas necessárias.\n- II: verdadeira. O firewall deve negar tudo por padrão e liberar só o necessário (menor privilégio).\n- III: verdadeira. O IDS complementa o firewall, monitorando ataques que passam pelas regras.\n- IV: falsa. Firewall e DMZ não dispensam as atualizações. Uma falha no próprio servidor web continua explorável pela porta liberada.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-F1": {
+  "texto": "Os dados foram alterados sem autorização, mas continuaram acessíveis e sigilosos. O princípio violado é a integridade: os dados não podem ser modificados indevidamente.\n\n- A confidencialidade seria violada por um vazamento.\n- A disponibilidade, pela queda do serviço.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-F2": {
+  "texto": "Muitos dispositivos infectados (uma botnet) inundando o serviço até derrubá-lo: é a negação de serviço distribuída (DDoS). O alvo é a disponibilidade.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-F3": {
+  "texto": "Senhas devem ser guardadas com funções de hash feitas para isso, lentas e com salt (bcrypt, scrypt, Argon2). O salt faz senhas iguais terem hashes diferentes, e a lentidão dificulta a força bruta.\n\n- Texto puro, Base64 e cifra com chave fixa podem ser revertidos.\n- O MD5 sem salt é rápido demais e vulnerável a tabelas pré-computadas.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-M1": {
+  "texto": "Para que SÓ Bob consiga ler, Alice cifra com a chave pública de Bob. Somente a chave privada de Bob decifra.\n\nCifrar com a chave privada da própria Alice serve para assinar (provar a autoria), e não para manter sigilo, porque qualquer um decifra com a chave pública dela.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-M2": {
+  "texto": "Na consulta parametrizada, o comando SQL é fixo e os valores vão separados como dados. Assim, nada que o usuário digite vira código SQL.\n\n- Ocultar erros e usar TLS não resolvem a injeção.\n- Trocar o tipo de aspas não resolve, e aumentar o tamanho dos campos piora.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XIX-M3": {
+  "texto": "A assinatura digital, feita com a chave privada e conferida com a chave pública, garante três coisas:\n- autenticidade: veio mesmo do órgão;\n- integridade: o documento não foi alterado;\n- não repúdio: o órgão não pode negar que assinou.\n\nEla não dá confidencialidade: o documento continua legível.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-D1": {
+  "texto": "- I: verdadeira. O FIR não realimenta a saída, então todos os polos estão na origem. Ele é sempre estável.\n- II: verdadeira. Com coeficientes simétricos, o FIR tem fase linear e não distorce a forma de onda. Isso é importante no ECG.\n- III: verdadeira. Graças à realimentação, um IIR atinge a mesma seletividade com bem menos coeficientes.\n- IV: falsa. IIR quer dizer resposta ao impulso INFINITA.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-D2": {
+  "texto": "- I: falsa. O que define a frequência máxima sem aliasing é a TAXA de amostragem (25 kHz dá Nyquist de 12,5 kHz, que é pouco para 20 kHz), e não o número de bits. Para esse sinal, seria preciso amostrar acima de 40 kHz.\n- II: verdadeira. Cada bit a mais divide o passo de quantização por 2, o que melhora a relação sinal-ruído de quantização em cerca de 6 dB.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-D3": {
+  "texto": "- I: verdadeira. A resolução em frequência é fs / N = 1 000 / 500 = 2 Hz.\n- II: verdadeira. A frequência máxima sem aliasing é fs / 2 = 500 Hz.\n- III: verdadeira. A FFT calcula a mesma DFT em O(N log N), em vez de O(N²).\n- IV: verdadeira. O índice é k = f / resolução = 100 / 2 = 50.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-F1": {
+  "texto": "Pelo teorema de Nyquist, a taxa de amostragem precisa ser pelo menos o dobro da maior frequência: 2 × 4 kHz = 8 kHz.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-F2": {
+  "texto": "T = 1 / f = 1 / 50 = 0,02 s = 20 ms.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-F3": {
+  "texto": "Deixar passar as baixas frequências, que são o sinal lento da temperatura, e atenuar as altas, que são o chiado: é um filtro passa-baixas.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-M1": {
+  "texto": "O passo de quantização é a faixa dividida pelo número de níveis: 5 V / 2⁸ = 5 / 256 ≈ 0,0195 V ≈ 19,5 mV.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-M2": {
+  "texto": "Amostrando a 10 kHz, o limite de Nyquist é 5 kHz. O sinal de 7 kHz passa desse limite e é \"dobrado\" para |7 − 10| = 3 kHz.\n\nÉ o aliasing: a componente aparece numa frequência falsa.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XV-M3": {
+  "texto": "Calcule y[n] = (x[n] + x[n−1]) / 2, lembrando que x[−1] = 0:\n\n- n = 0: (2 + 0) / 2 = 1\n- n = 1: (4 + 2) / 2 = 3\n- n = 2: (6 + 4) / 2 = 5\n- n = 3: (8 + 6) / 2 = 7\n\ny = [1, 3, 5, 7].\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-D1": {
+  "texto": "- I: verdadeira. Atributos correlacionados com o gênero (o nome, certas atividades ou escolas, lacunas no currículo) funcionam como \"proxies\", e o modelo reaprende o viés histórico.\n- II: falsa. Tirar a coluna não garante justiça, justamente pelo motivo da I.\n- III: verdadeira. Comparar as taxas de aprovação entre grupos (paridade demográfica) é uma forma de auditar se há discriminação.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-D2": {
+  "texto": "- I: verdadeira. Com camadas ocultas e ativação não linear, a rede consegue fronteiras de decisão não lineares, como a do XOR.\n- II: falsa. Várias camadas LINEARES compostas equivalem a uma única transformação linear. Empilhá-las não aumenta a expressividade, e é por isso que o estudante falhou.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-D3": {
+  "texto": "- I: verdadeira. Pelo teorema de Bayes: P(spam | grátis) = 0,4 × 0,5 / (0,4 × 0,5 + 0,6 × 0,05) = 0,20 / 0,23 ≈ 0,87.\n- II: verdadeira. Essa suposição de independência condicional é o \"ingênuo\" (naive) do nome.\n- III: verdadeira. Sem suavização, uma probabilidade zero anula o produto inteiro. A suavização de Laplace evita isso.\n- IV: falsa. O Naive Bayes é probabilístico. Os modelos baseados em distância são outros, como o k-NN.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-F1": {
+  "texto": "A busca em largura explora por \"camadas\": primeiro todos os nós a 1 passo, depois todos a 2 passos, e assim por diante (usa uma fila). Por isso, quando todos os passos têm o mesmo custo, ela acha o caminho com menos passos.\n\nSeguir o ramo mais fundo (B) é a busca em profundidade. Usar só a heurística (C) é a busca gulosa.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-F2": {
+  "texto": "No XOR, os pontos (0,1) e (1,0) valem 1, e (0,0) e (1,1) valem 0. Nenhuma reta separa esses dois grupos, então um perceptron de uma camada não aprende o XOR.\n\nAND, OR, NAND e NOR são linearmente separáveis.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-F3": {
+  "texto": "O agente aprende por tentativa e erro, recebendo recompensas e penalidades e buscando maximizar o total acumulado. Isso é aprendizado por reforço.\n\nNão há exemplos rotulados (supervisionado) nem só uma busca de grupos nos dados (não supervisionado).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-M1": {
+  "texto": "Uma heurística admissível NUNCA superestima o custo real até o objetivo. A distância em linha reta é o exemplo clássico, porque nenhuma estrada é mais curta que a reta. Com ela, o A* garante o caminho ótimo.\n\nh = 0 (B) também é admissível, mas a admissibilidade não EXIGE que a heurística seja zero.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-M2": {
+  "texto": "Calcule de baixo para cima:\n\n- O MIN da esquerda escolhe o menor entre 3 e 5: 3.\n- O MIN da direita escolhe o menor entre 2 e 9: 2.\n- A raiz (MAX) escolhe o maior entre 3 e 2: 3.\n\nO 9 é uma armadilha: o jogador MIN nunca deixaria o jogo chegar nele.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVI-M3": {
+  "texto": "Calcule a soma ponderada mais o viés:\n\n0,5 × 1 + (−1) × 0,5 + 0,2 = 0,5 − 0,5 + 0,2 = 0,2.\n\nComo 0,2 ≥ 0, a função degrau dá saída 1.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-D1": {
+  "texto": "- I: verdadeira. Mais ganho proporcional acelera a resposta e reduz o tempo de subida, mas tende a aumentar o sobressinal.\n- II: verdadeira. A ação derivativa \"freia\" a resposta e amortece, mas amplifica o ruído de alta frequência. Na prática, usa-se um filtro.\n- III: verdadeira. Com o aquecedor no limite, o erro continua acumulando no integral (windup), e depois a resposta passa do ponto. Técnicas anti-windup limitam ou congelam o integrador.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-D2": {
+  "texto": "- I: verdadeira. O CLP trabalha em ciclo de varredura: lê as entradas, executa o programa e atualiza as saídas.\n- II: verdadeira. Os sensores indutivos detectam metais sem contato, por variação de campo magnético.\n- Relação: a II não explica a I. Uma é sobre como o CLP processa e a outra sobre como o sensor funciona. São fatos independentes.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-D3": {
+  "texto": "- I: verdadeira. integral += erro·dt soma retângulos de altura erro e largura dt.\n- II: verdadeira. (erro − erro_ant) / dt é a diferença regressiva, que usa o erro atual e o anterior.\n- III: verdadeira. dt entra nas duas contas. Se ele variar sem ser medido, o efeito real de Ki e de Kd muda.\n- IV: falsa. O controle é DISCRETO: roda a cada período de amostragem. A escolha de dt é essencial.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-F1": {
+  "texto": "O sistema mede a saída (a temperatura), compara com a referência e corrige conforme a diferença. Isso é realimentação: controle em malha fechada.\n\nEm malha aberta, como num temporizador, o sistema não mede o resultado.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-F2": {
+  "texto": "A ação integral soma o erro ao longo do tempo. Enquanto houver erro, ela continua aumentando a ação de controle, até zerar o erro em regime permanente.\n\nSó com ação proporcional, costuma sobrar um erro residual. A ação derivativa reage à variação do erro.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-F3": {
+  "texto": "A linguagem Ladder (LD) é gráfica e imita os diagramas de relés, com contatos e bobinas. É a mais usada em CLPs.\n\nTexto Estruturado e Lista de Instruções também estão na IEC 61131-3, mas são textuais.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-M1": {
+  "texto": "Num sistema de primeira ordem K / (τs + 1):\n\n- o ganho estático é K = 5. Com degrau unitário, a saída final é 5 (pelo teorema do valor final, G(0) = 5);\n- a constante de tempo é τ = 2 s, o coeficiente de s.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-M2": {
+  "texto": "Um sistema contínuo é estável só se TODOS os polos tiverem parte real negativa. O polo em s = +0,5 tem parte real positiva e gera um termo e^(0,5t), que cresce sem limite.\n\nBasta um polo assim para o sistema ser instável, não importa quantos outros sejam estáveis.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVII-M3": {
+  "texto": "Com realimentação unitária e degrau na entrada, o erro em regime é eₛₛ = 1 / (1 + Kp), em que Kp = G(0) = 10 / 1 = 10.\n\neₛₛ = 1 / 11 ≈ 0,091.\n\nO sistema é do tipo 0 (sem integrador), então sobra um erro. Ele só seria zero com um integrador.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-D1": {
+  "texto": "- I: verdadeira. Na partida lenta, a janela dobra a cada RTT (crescimento exponencial) até o limiar (ssthresh).\n- II: verdadeira. Depois do limiar, na prevenção de congestionamento, a janela cresce cerca de um segmento por RTT (crescimento linear).\n- III: verdadeira. Três ACKs duplicados indicam que um segmento se perdeu e disparam a retransmissão rápida (fast retransmit).\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-D2": {
+  "texto": "- I: verdadeira. A voz sobre IP costuma transportar a mídia em UDP, normalmente com RTP.\n- II: verdadeira. Um pacote de áudio retransmitido chegaria tarde demais para ser tocado. O UDP não retransmite nem segura o envio.\n- Relação: a II explica a I. É exatamente por isso que se prefere o UDP para voz.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-D3": {
+  "texto": "- I: verdadeira. VLANs diferentes são redes diferentes. Para conversar, elas precisam de roteamento (um roteador ou um switch de camada 3).\n- II: verdadeira. O broadcast fica restrito à VLAN de origem, o que reduz o domínio de broadcast.\n- III: verdadeira. Para o setor financeiro existir nos dois andares, o cabo entre os switches precisa levar várias VLANs. Isso é um tronco com marcação IEEE 802.1Q.\n- IV: falsa. O hub repete o sinal para todas as portas, e todas formam um único domínio de colisão. Quem separa um domínio de colisão por porta é o switch.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-F1": {
+  "texto": "O TCP é orientado à conexão e garante entrega confiável e em ordem, com confirmações e retransmissões. É o adequado para transferir arquivos.\n\n- O UDP não garante entrega nem ordem.\n- IP, ICMP e ARP não são protocolos de transporte.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-F2": {
+  "texto": "Endereçamento lógico (IP) e roteamento entre redes são funções da camada de rede, a camada 3 do modelo OSI.\n\nA camada de enlace cuida do quadro e do endereço físico (MAC), dentro da mesma rede local.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-F3": {
+  "texto": "O DNS traduz nomes, como www.exemplo.com.br, em endereços IP.\n\n- O DHCP distribui endereços IP aos computadores da rede.\n- HTTP, FTP e SMTP são protocolos de aplicação para web, arquivos e e-mail.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-M1": {
+  "texto": "Com máscara /26, sobram 32 − 26 = 6 bits para os hosts. São 2⁶ = 64 endereços, e menos os de rede e de broadcast ficam 62 utilizáveis.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-M2": {
+  "texto": "Converta para bits: 10 MB × 8 = 80 Mbit.\n\nt = 80 Mbit / 100 Mbit/s = 0,8 s.\n\nO erro clássico é esquecer de multiplicar por 8, o que daria 0,1 s.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XVIII-M3": {
+  "texto": "Com /27, cada sub-rede tem 2⁵ = 32 endereços. As sub-redes começam em 0, 32, 64, 96, … no último octeto.\n\nO 77 fica entre 64 e 95, então o endereço de rede é 192.168.10.64.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-D1": {
+  "texto": "- I: verdadeira. Uma leitura em outra réplica, antes de a escrita chegar até ela, devolve o valor antigo. É o carrinho \"sem o produto\".\n- II: verdadeira. Essa é a promessa da consistência eventual: sem novas escritas, as réplicas convergem.\n- III: falsa. Isso descreve a consistência forte (linearizabilidade), e não a eventual.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-D2": {
+  "texto": "- I: falsa. Em sistemas assíncronos, não dá para ter certeza se o nó falhou ou só está lento. É exatamente o erro do monitoramento, que removeu nós saudáveis.\n- II: verdadeira. Esse é o modelo assíncrono: não há limite conhecido para atrasos de mensagens nem de processamento. Por isso o timeout só gera suspeita, e não certeza.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-D3": {
+  "texto": "- I: verdadeira. O map lê um bloco e emite (palavra, 1) para cada ocorrência.\n- II: verdadeira. O shuffle agrupa os pares pela chave e manda cada palavra para um único reducer, que soma.\n- III: verdadeira. O combiner faz somas parciais no próprio nó e diminui o tráfego na rede.\n- IV: verdadeira. Se um nó falha, o framework reexecuta as tarefas dele em outro nó.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-F1": {
+  "texto": "Pelo teorema CAP, durante uma partição de rede (P) não dá para ter ao mesmo tempo consistência forte (C) e disponibilidade (A). Ou uma réplica recusa requisições para não divergir, ou aceita e fica temporariamente inconsistente.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-F2": {
+  "texto": "Quando o resultado depende da ordem em que as threads são intercaladas no acesso a um dado compartilhado, é uma condição de corrida. O incremento (ler, somar e gravar) não é atômico.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-F3": {
+  "texto": "Chamar uma função em outra máquina como se fosse local, com o middleware cuidando da serialização (marshalling) e da rede, é a chamada de procedimento remoto (RPC). Exemplos: gRPC e Java RMI.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-M1": {
+  "texto": "- Speedup = tempo sequencial / tempo paralelo = 120 / 40 = 3.\n- Eficiência = speedup / número de processadores = 3 / 4 = 75%.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-M2": {
+  "texto": "Na recepção, o relógio vira max(local, mensagem) + 1 = max(5, 8) + 1 = 9.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "GER-XX-M3": {
+  "texto": "O lock garante que só uma thread por vez executa contador += 1. Assim, nenhum incremento se perde: 2 × 100 000 = 200 000.\n\nSem o lock, o resultado seria imprevisível (opção A). Também não há deadlock, porque o with libera o lock a cada volta.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ }
+}

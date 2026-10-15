@@ -622,6 +622,7 @@
 					revisarInicial={getRevisar().includes(questoes[i].id)}
 					inicial={inicialRevisao(i)}
 					respostaAluno={questoes[i].tipo === 'discursiva' ? prova.rascunho || '(em branco)' : ''}
+					resolucaoAberta={false}
 					bind:zoomAberto
 				/>
 			</div>

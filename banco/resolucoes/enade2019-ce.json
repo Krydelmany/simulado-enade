@@ -1,0 +1,152 @@
+{
+ "2019-CE-D03": {
+  "texto": "Em toda árvore AVL, a altura das duas subárvores de cada nó difere em no máximo 1. Ao inserir, se algum nó ficar com diferença 2, faça a rotação: simples quando o desequilíbrio é \"em linha\" (direita-direita ou esquerda-esquerda), dupla quando é \"em zigue-zague\".\n\na) Com 7 elementos e raiz 21, ponha os três menores à esquerda e os três maiores à direita, cada lado com o elemento do meio como raiz:\n\n```text\n        21\n      /    \\\n     9      36\n    / \\    /  \\\n   2  15  27   50\n```\n\nb) Inserindo 9, 27 e 50: a árvore fica 9 → 27 → 50, toda à direita, e o 9 fica desbalanceado (caso direita-direita). Uma rotação simples à esquerda resolve:\n\n```text\n     27\n    /  \\\n   9    50\n```\n\nc) Continue a partir de b):\n- 15 entra à direita do 9, e 2 à esquerda do 9: tudo continua balanceado.\n- 21 entra à direita do 15. O 27 fica com altura 3 à esquerda e 1 à direita, e o desequilíbrio é esquerda-direita: rotação dupla, primeiro à esquerda no 9 e depois à direita no 27. O 15 sobe para a raiz.\n- 36 entra à esquerda do 50 e nenhum nó passa de diferença 1.\n\n```text\n        15\n      /    \\\n     9      27\n    /      /  \\\n   2      21   50\n              /\n             36\n```",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-D04": {
+  "texto": "O produtório multiplica os termos xᵢ = i + 1/i para i de m até n. O cuidado principal é a divisão: 1/i com i inteiro dá 0 em C, então use 1.0/i e guarde o resultado em float ou double, começando em 1 (o elemento neutro da multiplicação).\n\na) Iterativa: um laço de m até n acumulando o produto.\n\n```c\ndouble produtorio(int m, int n) {\n    double r = 1.0;\n    for (int i = m; i <= n; i++)\n        r *= i + 1.0 / i;\n    return r;\n}\n```\n\nb) Recursiva: o caso base é um único termo (m == n). O passo multiplica o termo de m pelo produtório de m+1 até n.\n\n```c\ndouble produtorio(int m, int n) {\n    if (m == n)\n        return m + 1.0 / m;\n    return (m + 1.0 / m) * produtorio(m + 1, n);\n}\n```\n\nTambém vale recursão que reduz n em vez de aumentar m: (n + 1.0/n) * produtorio(m, n-1).",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-D05": {
+  "texto": "Leia os gráficos primeiro: a tensão tem pico de 15 V, a corrente tem pico de 5 A, e cabem 3 ciclos em 0,06 s.\n\na) Resistiva. Tensão e corrente passam por zero e atingem o pico nos mesmos instantes, ou seja, não há defasagem. Carga indutiva atrasaria a corrente, e carga capacitiva a adiantaria.\n\nb) Sem defasagem, a impedância é puramente resistiva: Z = Vm / Im = 15 / 5 = 3 Ω.\n\nc) O período é T = 0,06 / 3 = 0,02 s, então f = 1 / T = 50 Hz. A corrente é i(t) = 5·sen(2π·50·t) = 5·sen(100πt) A.\n\nd) Para uma senoide, o valor eficaz é Vrms = Vm / √2 = 15 / √2 ≈ 10,61 V.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q09": {
+  "texto": "O sort recursivo do MergeSort precisa de três coisas:\n\n- Caso base: parar quando o trecho tem 0 ou 1 elemento, ou seja, if (hi <= lo) return. Com if (hi > lo) return (opções B e D), ele para justamente quando ainda há trabalho a fazer.\n- Divisão sem sobreposição: ordenar a[lo..mid] e a[mid+1..hi]. Com sort(a, mid, hi) (opções A, B e C), um trecho de 2 elementos gera mid = lo e a chamada sort(a, lo, hi) se repete para sempre.\n- Junção: merge(a, lo, mid, hi), que é exatamente o que o merge do enunciado espera.\n\nSó a opção E reúne as três.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q10": {
+  "texto": "Associe cada trecho do caso às etapas de um sistema de reconhecimento de padrões:\n\n- I: verdadeira. Os exames de retina dos 284 335 pacientes são o conjunto de dados de treinamento.\n- II: verdadeira. Os cruzamentos de vasos sanguíneos são as características escolhidas para o reconhecimento.\n- III: verdadeira. Identificar os sinais de doença cardiovascular é a classificação, ou seja, a saída do sistema.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q11": {
+  "texto": "Modele como coloração de grafos: cada grupo é um vértice, cada conflito (1 na tabela) é uma aresta, e cada auditório é uma cor. Vértices ligados não podem ter a mesma cor.\n\nArestas: G1 está ligado a todos; além disso, G2–G3, G2–G4 e G3–G5.\n\n- G1, G2 e G3 são ligados entre si (um triângulo), então são necessárias pelo menos 3 cores.\n- 3 bastam: G1 = auditório 1, G2 = 2, G3 = 3, G4 = 3 (só conflita com G1 e G2) e G5 = 2 (só conflita com G1 e G3).\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q12": {
+  "texto": "Em programação linear, o ótimo de uma região viável limitada está em um vértice. Leia os vértices no gráfico e calcule Z = 30x + 10y em cada um:\n\n- A (0, 4): 40\n- B (2, 7): 60 + 70 = 130\n- C (5, 6): 150 + 60 = 210\n- D (8, 4): 240 + 40 = 280\n- E (9, 0): 270\n- F (0, 0): 0\n\nO máximo é 280, no vértice D.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q13": {
+  "texto": "O gráfico mostra a resposta de malha fechada T(s), de primeira ordem:\n\n- Valor final 0,8: o ganho estático é T(0) = 0,8.\n- Estabiliza em 1 s com o critério de 4 constantes de tempo: 4τ = 1, então τ = 0,25 s e o polo está em s = −4.\n\nLogo T(s) = K / (s + 4) com K / 4 = 0,8, ou seja, K = 3,2. A II é verdadeira.\n\nCom realimentação unitária, T = G / (1 + G), e isolando: G = T / (1 − T) = 3,2 / (s + 4 − 3,2) = 3,2 / (s + 0,8). A I também é verdadeira, e é obtida justamente a partir da T(s) da II. Portanto, a II justifica a I.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q14": {
+  "texto": "Use a normalização do enunciado: a frequência de amostragem (20 000 Hz) corresponde a π. Então a frequência de corte de 6 000 Hz vira Ω = (6 000 / 20 000)·π = 0,3π.\n\nO filtro é passa-baixas ideal: ganho 1 para |Ω| < 0,3π e ganho 0 no resto. Como todo filtro digital, a resposta se repete a cada 2π, com cópias em ±2π.\n\n- B mostra exatamente isso.\n- A tem o mesmo desenho, mas o \"zero\" fica acima do eixo: o filtro não rejeitaria totalmente as frequências altas.\n- C é um passa-altas.\n- D e E têm faixas de passagem a mais.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q15": {
+  "texto": "Monte as equações normais com os pontos (1, 1), (2, 3), (3, 2) e (4, 5):\n\n- Σx = 10, Σy = 11, Σx² = 30, Σxy = 1 + 6 + 6 + 20 = 33, n = 4.\n- AᵀA·X = AᵀB vira: 30m + 10c = 33 e 10m + 4c = 11.\n\nDa segunda equação, c = (11 − 10m) / 4. Substituindo na primeira: 30m + 27,5 − 25m = 33, então 5m = 5,5 e m = 1,1. Daí c = (11 − 11) / 4 = 0.\n\nA reta é y = 1,1x.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q16": {
+  "texto": "Cada AND de 3 entradas acende um LED quando o código S1S0 bate e a ENTRADA está em 1. O LED2 deve acender com S1S0 = 2 (S1 = 1, S0 = 0): é a porta IC1C, com pino 9 em S1, pino 10 em S0 negado e pino 11 na ENTRADA.\n\nO defeito: com ENTRADA = 0 e S1S0 = 2, o LED2 acende mesmo assim, e todo o resto funciona. Então a porta IC1C não está \"vendo\" a ENTRADA, e o que chega no lugar dela vale 1 justamente quando S1S0 = 2.\n\n- Se o pino 11 estiver ligado em S1 (opção E), a porta calcula S1 · S0' · S1 = S1 · S0', que acende o LED2 em S1S0 = 2 com qualquer ENTRADA. Bate com a tabela.\n- Ligado em S0 (opção D), a porta daria S1 · S0' · S0 = 0, e o LED2 nunca acenderia.\n- As opções B e C mudariam também os casos com ENTRADA = 1, que estão corretos.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q17": {
+  "texto": "Resolva por etapas:\n\n1. Ponte. Lado esquerdo: NTC (8 kΩ a 30 °C) em cima e 2 kΩ embaixo, então V = 10 · 2 / (8 + 2) = 2 V. Lado direito: dois resistores de 10 kΩ, então V = 5 V.\n2. Os dois amplificadores não inversores têm ganho 1 + 100/100 = 2. O de cima recebe o lado direito (5 V) e entrega 10 V. O de baixo recebe o lado esquerdo (2 V) e entrega 4 V.\n3. O amplificador diferencial com todos os resistores iguais (1 kΩ) entrega V+ − V−. A saída de cima (10 V) vai na entrada inversora, e a de baixo (4 V) na não inversora.\n\nVout = 4 − 10 = −6 V.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q18": {
+  "texto": "Para o 3DES decifrar o que o DES cifrou, a composição das três etapas tem de se reduzir a um único DES quando as três chaves são iguais.\n\n- Na forma D(C(D(m, k), k), k), a decifração D(·, k) e a cifração C(·, k) do meio se anulam e sobra D(m, k): exatamente o DES. É o modo EDE/DED usado no 3DES.\n- Com chaves diferentes (opção A), o resultado não é o do DES.\n- Três decifrações seguidas (B, C) ou outra ordem (E) não se reduzem a uma operação simples.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q19": {
+  "texto": "Hardware trojan é difícil de detectar porque fica inativo até o gatilho disparar.\n\n- I: falsa. Testes de falha de manufatura (atraso, por exemplo) não foram feitos para achar trojans. Um trojan pequeno quase não altera o atraso.\n- II: verdadeira. A engenharia reversa destrutiva destrói o chip analisado e não garante nada sobre os outros chips do lote.\n- III: falsa. Preencher as células vazias dificulta a inserção, mas não a impede: o atacante pode substituir células existentes.\n- IV: verdadeira. A camuflagem ofusca o layout físico com contatos e conexões falsas, dificultando a engenharia reversa.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q20": {
+  "texto": "Rigidez é quando uma mudança obriga a mexer em vários lugares. Procure a alternativa em que mudar um tipo de modem se espalha para outros pontos do código.\n\n- O LogOn decide pelo tipo e usa o mesmo OpenCourrierChannel para Courrier e Ernie. Se a política do Courrier mudar, é preciso alterar OpenCourrierChannel, alterar o LogOn e criar um OpenErnieChannel, porque o Ernie não pode herdar a mudança. É a cascata que define rigidez: opção E.\n- A e D descrevem mudanças locais e esperadas (remover uma estrutura, alterar o código do próprio tipo).\n- B é falsa: o número de parâmetros do LogOn não depende do tipo de modem.\n- C fala de duplicação de código, que é outro problema.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q21": {
+  "texto": "Teste cada comando com a tabela:\n\n- I: falsa. A condição CD6 = 'Regional' OR CD1 > 160 OR CD5 > 1 apaga os fornecedores 1 (CD1 = 300), 3 (Regional), 4 (CD1 = 220) e 5 (CD1 = 240). O fornecedor 3 também sai, e o enunciado queria apagar só 1, 4 e 5.\n- II: falsa. INSERT insere linhas. Criar uma coluna exige ALTER TABLE ... ADD, e o valor calculado depois entraria com UPDATE.\n- III: verdadeira. CD1 > 100 vale para todos. CD3/CD2 > 0,99 só vale para o fornecedor 3 (24/24 = 1; os outros dão 0,80, 0,96, 0,90 e 0,88). CD5 < 0,5 também vale para ele (0,01). O SELECT devolve só o fornecedor 3.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q22": {
+  "texto": "Numa rede bayesiana, cada seta vai da causa para o efeito. Pelas variáveis do enunciado:\n\n- A temperatura real T influencia a leitura LM.\n- O medidor defeituoso MD também altera a leitura LM.\n- A temperatura alta pode fazer o medidor falhar: T → MD. Esse é o detalhe da última frase do enunciado.\n- O alarme A depende da leitura LM e do alarme estar defeituoso AD.\n\nSó a opção B tem T → MD, T → LM, MD → LM, LM → A e AD → A.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q23": {
+  "texto": "Siga as transições: de P, com 1 vai para I1 (o estado final) e com 0 vai para I0. De I1 ou de I0, qualquer símbolo volta para P.\n\n- Cada par de símbolos sai de P e volta para P, então em P a palavra lida tem tamanho par.\n- Só se termina em I1 lendo um 1 a partir de P: tamanho par + 1 = ímpar, e o último símbolo é 1.\n\nExemplos aceitos: 1, 001, 101. A linguagem é a das palavras de tamanho ímpar terminadas em 1.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q24": {
+  "texto": "Aplique Kruskal: percorra os enlaces do mais barato ao mais caro, aceitando cada um se não formar ciclo, até ligar os 6 roteadores (5 enlaces).\n\n- C–E (1): aceita.\n- C–F (1): aceita.\n- E–F (1): rejeita, porque fecha ciclo com C–E e C–F.\n- A–B (2): aceita.\n- A–C (2): aceita, ligando {A, B} a {C, E, F}.\n- B–C (2): rejeita, porque fecha ciclo.\n- D–F (2): aceita. Os 6 nós estão ligados.\n\nCusto: 1 + 1 + 2 + 2 + 2 = 8.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q25": {
+  "texto": "Recursão em cauda é quando a chamada recursiva é a última coisa que a função faz. Ela pode ser trocada por um laço que só atualiza os parâmetros.\n\n- I: falsa. Só trocar a chamada por high = mid − 1 (sem laço) faz a função terminar sem retornar nada (None), e a busca para na primeira divisão.\n- II: verdadeira. Com while True envolvendo as linhas 4 a 12 e as atribuições no lugar das chamadas, a função vira iterativa e dá o mesmo resultado.\n- III: falsa. Guardar os limites em variáveis antes de chamar não muda nada: a chamada continua sendo a última operação, então ainda é recursão em cauda.\n- IV: verdadeira. É só uma reorganização: calcula os novos limites e faz uma única chamada recursiva, com o mesmo resultado.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q26": {
+  "texto": "A saída do PID é a soma dos três termos, cada um com seu ganho:\n\n- proporcional ao erro atual: kp · Erro;\n- integral, o erro acumulado (já está em ITerm): ki · ITerm;\n- derivativo, a variação do erro (já está em dErro): kd · dErro.\n\noutput = kp * Erro + ki * ITerm + kd * dErro.\n\n- A deixa a parte derivativa de fora.\n- C e E elevam a derivada ao quadrado, o que não faz parte do PID.\n- B divide os ganhos por kp, sem motivo.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q27": {
+  "texto": "No Strategy, uma família de algoritmos fica atrás de uma interface comum, e o contexto usa qualquer um deles sem saber qual é.\n\n- I: verdadeira. Strategy é só a abstração, e pode ser classe abstrata ou interface.\n- II: verdadeira. Ordenar com critérios de comparação diferentes é o exemplo clássico (Comparator em Java).\n- III: verdadeira. Com baixo acoplamento, adicionar ou remover estratégias não mexe nas outras classes.\n- IV: falsa. O Singleton só garante uma única instância. Centralizar a escolha de qual estratégia criar é papel de um padrão de criação como Factory Method.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q28": {
+  "texto": "Escreva a expressão do circuito. Com X = AB e Z = CD:\n\n- a primeira OR dá X + Z;\n- a segunda OR recebe X e Z negado, e dá X + Z';\n- a AND final dá Y = (X + Z)(X + Z').\n\nSimplifique: (X + Z)(X + Z') = X + ZZ' = X + 0 = X. Logo, Y = AB.\n\nO circuito inteiro equivale a uma única porta AND, então o menor tempo é o atraso de uma AND: 3 u.t.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q29": {
+  "texto": "- I: verdadeira. Em IoT, muitos dispositivos acessam o mesmo recurso ao mesmo tempo, então é preciso garantir consistência sob concorrência.\n- II: verdadeira. Os ecossistemas de IoT misturam hardware, sistemas operacionais, linguagens e padrões de rede diferentes.\n- Relação: o gabarito oficial considera que a II justifica a I. Com tantos componentes diferentes atuando ao mesmo tempo, garantir consistência no acesso concorrente se torna uma exigência.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q30": {
+  "texto": "Atenção: o gabarito oficial desta questão diverge da análise técnica mais comum.\n\n- II: verdadeira, e aqui não há dúvida. O contêiner usa uma única instância do servlet para todas as requisições, então synchronized (this) faz todas as threads disputarem a mesma trava e o incremento fica correto.\n- I: pela análise técnica, é verdadeira. contador = contador + 1 em várias threads ao mesmo tempo é uma condição de corrida clássica.\n- III: pela análise técnica, é falsa. Cada requisição tem o seu próprio objeto request, então travá-lo não impede que duas threads incrementem o contador ao mesmo tempo.\n\nPela análise técnica, a resposta seria I e II. O gabarito definitivo do INEP, porém, é D (II e III). Para a prova, vale a letra D. Para o dia a dia, guarde que a trava precisa ser um objeto compartilhado por todas as threads.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q31": {
+  "texto": "Leia as transições: A = pronto → execução, B = execução → pronto, C = execução → espera, D = espera → pronto.\n\n- I: falsa. Um processo novo entra na fila de prontos, não em espera.\n- II: verdadeira. A fila de prontos pode ter vários processos esperando o processador.\n- III: verdadeira. A transição B é a preempção: o processo perde o processador sem ter terminado e volta para a fila. Isso só existe em sistemas multitarefa.\n- IV: verdadeira. Num sistema monotarefa não existe fila de prontos nem preempção, então o diagrama não serve para representá-lo.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q32": {
+  "texto": "Atenção: o gabarito oficial desta questão diverge da análise técnica mais comum.\n\n- O algoritmo calcula a média dos quadrados dos desvios dividida por |P| e tira a raiz: é o desvio padrão POPULACIONAL, que é o que o enunciado pede. O amostral dividiria por |P| − 1.\n- I: pela análise técnica, é verdadeira. Em cada período os valores quase não variam (σ ≈ 0,2 °C), bem abaixo de 2.\n- II: pela análise técnica, é falsa, pelo motivo acima.\n- III: verdadeira. Juntando os três períodos (valores perto de 33, de 27 e de 2), o desvio padrão passa de 13 °C, então o algoritmo indica inapropriado.\n\nPela análise técnica, a resposta seria I e III. O gabarito definitivo do INEP, porém, é D (II e III). Para a prova, vale a letra D.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q33": {
+  "texto": "Atenção: no texto do site, a fórmula do comprimento crítico perdeu parte dela. No enunciado original, ela é Lc = Vp · th / 2.\n\n1. Período da frequência máxima: T = 1 / 1,25 GHz = 0,8 ns.\n2. Meio período: th = T / 2 = 0,4 ns.\n3. Comprimento crítico: Lc = Vp · th / 2 = 15 cm/ns × 0,4 ns / 2 = 3 cm.\n4. Comprimento máximo da trilha: L = Lc / 1,5 = 3 / 1,5 = 2 cm.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q34": {
+  "texto": "São só dois processos de 20 ms. Quanto maior a troca de contexto em relação ao quantum, mais tempo se perde sem executar nada. Compare a sobrecarga (troca / quantum) e o tempo total:\n\n- 5 ms e 1 ms: 8 fatias, cerca de 7 trocas, 40 + 7 = 47 ms. Sobrecarga de 20%.\n- 4 ms e 2 ms: 10 fatias, 9 trocas de 2 ms, 58 ms. Sobrecarga de 50%.\n- 5 ms e 3 ms: 7 trocas de 3 ms, 61 ms. Sobrecarga de 60%.\n- 2 ms e 1 ms: 20 fatias, 19 trocas, 59 ms. Sobrecarga de 50%.\n- 2 ms e 2 ms: 19 trocas de 2 ms, 78 ms. Sobrecarga de 100%.\n\nA combinação 5 ms e 1 ms tem a menor sobrecarga e termina antes.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2019-CE-Q35": {
+  "texto": "Na norma de qualidade de software (ISO/IEC 9126), a usabilidade se divide em subcaracterísticas:\n\n- inteligibilidade: o esforço do usuário para reconhecer o conceito lógico do software e se ele se aplica ao que precisa (opção C);\n- apreensibilidade: o esforço para aprender a usar (opção E);\n- operacionalidade: o esforço para operar e controlar (opção B);\n- conformidade: aderir a normas (opção D).\n\nA satisfação subjetiva (opção A) aparece em outras definições de usabilidade, mas não é a inteligibilidade.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ }
+}

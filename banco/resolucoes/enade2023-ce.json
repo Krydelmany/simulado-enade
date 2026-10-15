@@ -1,0 +1,152 @@
+{
+ "2023-CE-D02": {
+  "texto": "a) Algoritmo A. Cada cliente de X é comparado com todos os que já estão em Y. O pior caso é quando não há nenhum repetido, porque aí Y cresce a cada passo: 0 + 1 + 2 + … + (N − 1) = N(N − 1)/2 comparações, ou seja, O(N²).\n\nb) Algoritmo B. Com X ordenado, cada cliente só é comparado com o anterior: N − 1 comparações, O(N). A ordenação do passo 2 não entra nessa conta.\n\nc) Depois de particionar, o pivô já está na posição final x. Basta ordenar o que está à esquerda e o que está à direita dele: a = ini, b = x − 1, c = x + 1, d = fim. Usar b = x ou c = x também funciona, mas repete o pivô sem necessidade.\n\nd) Uma forma de particionar: leve o pivô para o início, varra o vetor mandando para o fim quem for maior que o pivô, e por fim coloque o pivô no lugar dele.\n\n```c\nint particiona(int *vetor, int ini, int fim, int pivot) {\n    troca(vetor, ini, pivot);   /* pivô vai para o início */\n    pivot = ini;\n    ini = ini + 1;\n    while (ini <= fim) {\n        if (vetor[ini] <= vetor[pivot])\n            ini = ini + 1;           /* fica à esquerda */\n        else {\n            troca(vetor, ini, fim);  /* maior vai para o fim */\n            fim = fim - 1;\n        }\n    }\n    troca(vetor, pivot, fim);       /* pivô na posição final */\n    return fim;\n}\n```\n\nAo final, os elementos com índice menor que o retorno são menores ou iguais ao pivô, e os de índice maior são maiores, como o enunciado exige.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q10": {
+  "texto": "Calcule a resistência de cada material com R = ρ·L / A:\n\n- Carbono: 40 × 1 / 2,5 = 16 Ω.\n- Grafite: 13 × 1,5 / 1,5 = 13 Ω.\n- Níquel-cromo: 1,1 × 5 / 0,5 = 11 Ω.\n\nPara ter I < 300 mA com 12 V, é preciso R > 12 / 0,3 = 40 Ω. Paralelo diminui a resistência, então só associações em série servem:\n\n- 3 de carbono em série: 48 Ω, e I = 12 / 48 = 0,25 A. Atende.\n- 2 de grafite em série: 26 Ω, e I ≈ 0,46 A. Não atende.\n- 3 de níquel-cromo em série: 33 Ω, e I ≈ 0,36 A. Não atende.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q11": {
+  "texto": "- I: falsa. O OSPF escolhe a rota de menor soma de atrasos (custos), e não a de menos conexões.\n- II: verdadeira. Cada roteador guarda a sua cópia da base com o grafo inteiro do sistema autônomo.\n- III: falsa. Cada roteador executa o Dijkstra sozinho sobre a sua cópia do grafo. Nenhum roteador calcula para os outros.\n- IV: verdadeira. Para todos montarem a mesma base, a informação de conexões e atrasos precisa circular por todos os roteadores.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q12": {
+  "texto": "Junte os computadores que aparecem ligados na tabela, contando que todo computador também se relaciona consigo mesmo:\n\n- {1, 5, 7, 10}: todos os pares estão na tabela (1–5, 1–7, 1–10, 5–7, 5–10, 7–10).\n- {2, 8, 9}: os pares 2–8, 2–9 e 8–9 estão lá.\n- {3, 4}.\n- {6}, sozinho.\n\nOs grupos não se misturam e cada um está \"completo\". A relação é reflexiva (por definição), simétrica (cada linha vale nos dois sentidos) e transitiva (não existe a–b e b–c sem a–c). Logo, é uma relação de equivalência, e os grupos acima são as classes.\n\n- D e E erram as classes: o 3 não se relaciona com 1, 5, 7 e 10, nem com 2, 8 e 9.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q13": {
+  "texto": "Pela figura, os arcos são: 1 de A para C, 2 de A para B, 3 de B para D, 4 de B para C, 5 de C para D, 6 de D para A.\n\nEm cada corte, some com sinal + as correntes que saem de um dos lados e com sinal − as que entram nele:\n\n- Corte Y = {1, 2, 3, 5}: separa {A, D} de {B, C}. Do lado {A, D}, saem 1 e 2 e entram 3 e 5: I₁ + I₂ − I₃ − I₅ = 0.\n- Corte Z = {1, 4, 3, 6}: separa {A, B} de {C, D}. Do lado {A, B}, saem 1, 4 e 3 e entra 6: I₁ + I₃ + I₄ − I₆ = 0.\n\nAs duas equações estão na opção D.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q14": {
+  "texto": "A função enade processa a lista de trás para a frente: chama enade na cauda primeiro e depois insere a cabeça com auxiliar.\n\nA auxiliar faz o seguinte:\n- número par: põe na frente da lista;\n- número ímpar: passa por todos os elementos e entra no fim.\n\nMontando a partir do fim de [1..8]:\n\n- 8 → [8]\n- 7 (ímpar, vai para o fim) → [8, 7]\n- 6 (par, vai para a frente) → [6, 8, 7]\n- 5 → [6, 8, 7, 5]\n- 4 → [4, 6, 8, 7, 5]\n- 3 → [4, 6, 8, 7, 5, 3]\n- 2 → [2, 4, 6, 8, 7, 5, 3]\n- 1 → [2, 4, 6, 8, 7, 5, 3, 1]\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q15": {
+  "texto": "Há vazamento quando a memória alocada deixa de ser acessível sem ter sido liberada.\n\n- C: se size > 50, a função retorna −1 antes do free(s). Os 50 bytes alocados ficam perdidos. É o vazamento.\n- A: aloca e libera. Correto.\n- B: só declara um ponteiro, sem alocar nada.\n- D: a memória alocada em f é liberada no main. Correto.\n- E: tem outro erro, a liberação dupla (o mesmo bloco n é liberado duas vezes), mas nada fica sem liberar.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q16": {
+  "texto": "Simule com a = 10 (1010) e b = 1. Antes do laço: x = 10, y = 1, z = 11.\n\n- Volta 1 (a = 10, b = 1): x = 10 | 1 = 11; y = 1 ^ 10 = 11; z = 11 & 11 = 11. Depois a = 5 e b = 2.\n- Volta 2 (a = 5, b = 2): x = 11 | 2 = 11; y = 11 ^ 5 = 14; z = 11 & 7 = 3. Depois a = 2 e b = 4.\n- Volta 3 (a = 2, b = 4): x = 11 | 4 = 15; y = 14 ^ 2 = 12; z = 3 & 6 = 2. Depois a = 1 e b = 8.\n- Volta 4 (a = 1, b = 8): x = 15 | 8 = 15; y = 12 ^ 1 = 13; z = 2 & 9 = 0. Depois a = 0, e o laço termina.\n\nSaída: 15 13 0.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q17": {
+  "texto": "É a subestrutura ótima da LCS:\n\n- I: verdadeira. Se os últimos caracteres são iguais, eles fecham a LCS, e o resto dela é uma LCS dos prefixos sem eles.\n- II: verdadeira. Se a LCS não termina em aₙ, esse caractere não serve, e Z é uma LCS de Aₙ₋₁ com B.\n- III: falsa. Quando aᵢ ≠ bⱼ, vale o MÁXIMO das duas opções, não o mínimo: lcs(i, j) = max{lcs(i, j−1), lcs(i−1, j)}.\n- IV: verdadeira. Quando aᵢ = bⱼ, a LCS cresce 1 em relação aos prefixos menores.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q18": {
+  "texto": "Pela análise amortizada: a maioria das inserções custa O(1), e só de vez em quando (nos tamanhos 1, 2, 4, 8…) o vetor dobra e copia tudo.\n\nEm n inserções, o total de cópias é 1 + 2 + 4 + … + n < 2n. Somando as n escritas, o custo total é Θ(n), e a média por inserção é Θ(n) / n = Θ(1).\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q19": {
+  "texto": "Separe as fases do compilador:\n\n- Léxica: só reconhece os tokens (a, =, /, (, b, -, ;). Todos são válidos, então não há erro aqui.\n- Sintática: a sentença segue a forma \"var = E;\", com E sendo uma divisão. A produção E(E) da gramática tem a intenção de permitir parênteses. A gramática gera a sentença.\n- Semântica: b − b vale sempre zero, então a expressão divide por zero. Pelo gabarito, esse erro é apontado pelo analisador semântico, ao avaliar o significado da expressão.\n\nObservação: na prática, divisão por zero com variáveis costuma ser detectada só em execução. A questão considera que o analisador semântico percebe que b − b é sempre 0.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q20": {
+  "texto": "- I: verdadeira. A elasticidade permite pagar pelo que se usa, aumentando e diminuindo os recursos conforme a demanda.\n- II: falsa. A nuvem não garante mais velocidade nem acesso rápido em qualquer lugar: isso depende da rede, da região do provedor e da aplicação.\n- III: verdadeira. Sem comprar servidores e infraestrutura antes, o investimento inicial cai, e a operação pode começar antes de se provar viável.\n- IV: falsa. A segurança na nuvem é responsabilidade compartilhada. O contratante continua cuidando de acessos, dados e configurações.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q21": {
+  "texto": "- I: verdadeira. Ícones nos semáforos atendem quem não distingue cores (daltonismo), então o serviço passa a servir a todos: é o Fundamento 1, do projeto equitativo.\n- II: falsa. O Fundamento 1 fala em atender todos os usuários, independentemente das habilidades sensoriais, o que inclui pessoas cegas.\n- III: falsa. Colocar telas públicas não basta para a informação ser perceptível. O Fundamento 2 exige recursos como texto alternativo e bom contraste.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q22": {
+  "texto": "A consulta precisa de quatro coisas: retornar nome e saldo; juntar cliente, pessoa e funcionário pelo id; filtrar saldo_devedor > salario; ordenar por saldo em ordem crescente.\n\n- A: SELECT * devolve todas as colunas, e não só nome e saldo.\n- B: usa f sem incluir funcionario no FROM, e ordena em ordem decrescente.\n- C: compara ao contrário (saldo < salário).\n- D: ordena primeiro pelo salário, e não pelo saldo.\n- E: as junções externas, somadas ao WHERE c.saldo_devedor > f.salario, só mantêm as linhas que têm cliente e funcionário. Na prática, é uma junção interna, com as colunas e a ordem certas.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q23": {
+  "texto": "Identifique cada filtro:\n\n- Figura 1: o capacitor em série e o resistor para a terra, com seguidor de tensão, formam um passa-altas. A frequência de corte é fc = 1/(2π·10 kΩ·180 pF) ≈ 88 kHz.\n- Figura 2: um inversor com R e C em paralelo na realimentação forma um passa-baixas. A frequência de corte é fc = 1/(2π·1,8 kΩ·100 pF) ≈ 884 kHz.\n\nAgora, as afirmações:\n\n- I: verdadeira. A impedância de entrada da Figura 2 é sempre 18 kΩ (a entrada inversora é terra virtual). A da Figura 1 é o capacitor em série com 10 kΩ. Em frequências altas o capacitor quase vira curto, e ela tende a 10 kΩ, abaixo de 18 kΩ.\n- II: falsa. A Figura 1 é passa-altas.\n- III: falsa. As frequências de corte são diferentes (≈ 88 kHz e ≈ 884 kHz).\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q24": {
+  "texto": "Leia a ligação de cada pino no circuito:\n\n- P3, alarme: saída. Nível 1 aciona o alarme.\n- P2, chave 2: entrada. A chave liga o pino ao VDD, então fechada dá 1.\n- P1, LED: saída. O LED está ligado ao VDD, então acende com o pino em 0.\n- P0, chave 1: entrada. Tem pull-up e a chave liga o pino ao terra, então fechada dá 0.\n\nAgora as afirmações:\n\n- I: falsa. As saídas são P3 e P1, então PORT_DIR = 1010 = 10, e não 9.\n- II: verdadeira. Com as duas chaves fechadas, P2 = 1 e P0 = 0: X1X0.\n- III: verdadeira. Para acionar o alarme, P3 = 1. Para acender o LED, P1 = 0. Fica 1X0X.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q25": {
+  "texto": "- I: falsa. A figura é um contador de 4 bits (0 a 15), mas os dois códigos contam com só 2 bits: count[1:0] no Verilog e integer range 0 to 3 no VHDL, ou seja, de 0 a 3.\n- II: verdadeira. Ao passar do valor máximo, o contador volta a zero e recomeça. Isso vale para o contador da figura e para os códigos.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q26": {
+  "texto": "- A: falsa. A memória é compartilhada e não precisa ser dividida igualmente entre os processadores.\n- B: falsa. Com vários processadores, o acesso concorrente aumenta, e os semáforos continuam necessários.\n- C: falsa. A exclusão mútua é possível, com instruções atômicas, travas e semáforos, e várias aplicações rodam ao mesmo tempo.\n- D: falsa. As threads dependem de serviços do sistema operacional para serem criadas e escalonadas nos núcleos.\n- E: correta. Processos podem trocar dados por memória compartilhada, mas é o sistema operacional que cria a área e controla o acesso a ela.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q27": {
+  "texto": "Cada máquina virtual roda o próprio sistema operacional, e ainda há o hipervisor por cima do hardware.\n\n- C: correta. Isso ocupa mais memória física do que o mesmo sistema rodando direto no hardware. Por isso, memória extra ajuda o desempenho.\n- A: falsa. Cada cópia em máquina virtual também precisa de licença.\n- B: falsa. A virtualização não aumenta, por si só, o consumo de rede do sistema distribuído.\n- D: falsa. A virtualização existe justamente para esconder as diferenças entre os computadores físicos.\n- E: falsa. Não existe exigência de disco físico com o dobro do tamanho do virtual.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q28": {
+  "texto": "- I: verdadeira. Na troca de processo, a MMU passa a usar a tabela de páginas do novo processo, e o TLB é invalidado ou recarregado, porque guarda traduções do processo anterior.\n- II: verdadeira. Para isso, a tabela do novo processo vira a atual, carregando a tabela ou um ponteiro para ela em registradores de hardware.\n- Relação: a II explica por que e como a MMU e o TLB são reconfigurados. É uma justificativa correta da I.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q29": {
+  "texto": "Calcule yr = 0,4·x + 2,7 e compare com y. Se yr − y > 0, é vidro; se não, é plástico.\n\n- i = 1: 0,4·3 + 2,7 = 3,9 e 3,9 − 7 < 0 → plástico.\n- i = 2: 5,1 − 6 < 0 → plástico.\n- i = 3: 4,3 − 4 = 0,3 > 0 → vidro.\n- i = 4: 4,7 − 3 > 0 → vidro.\n- i = 5: 3,1 − 2 > 0 → vidro.\n\nSequência: plástico, plástico, vidro, vidro, vidro.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q30": {
+  "texto": "Há conflito de dados quando dois processadores acessam a mesma posição ao mesmo tempo e pelo menos um deles escreve. Duas escritas na mesma posição são o caso mais claro: o valor final depende de quem escreve por último.\n\n- E: os dois escrevem em A[0][0] (10 e 20) ao mesmo tempo. É o conflito.\n- A: só leem o endereço.\n- B: escrevem em posições diferentes.\n- C e D: um escreve na posição e o outro só pega o endereço dela, sem ler o valor.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q31": {
+  "texto": "- I: verdadeira. É o teorema da amostragem (Nyquist): o sinal precisa ter banda limitada e ser amostrado a mais do que o dobro da largura de banda.\n- II: falsa. O espectro do sinal AMOSTRADO não é limitado: ele é o espectro original repetido periodicamente em múltiplos da frequência de amostragem. A reconstrução funciona porque essas cópias não se sobrepõem, e um filtro passa-baixas recupera a original.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q32": {
+  "texto": "A busca gulosa olha só para a frente: a cada passo, vai para o vizinho com a menor distância estimada até São Paulo, sem voltar atrás.\n\n- Manaus: os vizinhos são Macapá (2 665) e Porto Velho (2 464). Vai para Porto Velho.\n- Porto Velho: os vizinhos são Palmas (1 489) e Cuiabá (1 326). Vai para Cuiabá.\n- Cuiabá: o vizinho é Goiânia (809).\n- Goiânia: o vizinho é São Paulo (0).\n\nRota: Manaus → Porto Velho → Cuiabá → Goiânia → São Paulo.\n\nResposta: B.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q33": {
+  "texto": "- I: falsa. A parte integral só precisa de um acumulador, uma variável somando os erros. Não é preciso guardar o histórico numa fila.\n- II: verdadeira. A ação proporcional é o ganho vezes o erro atual (temperatura desejada menos temperatura atual).\n- III: verdadeira, pelo gabarito. A derivada só usa o erro atual e o anterior, então basta guardar as duas últimas amostras, e o gabarito considera a pilha adequada para isso. Na prática, uma única variável com o erro anterior já resolve.\n\nResposta: D.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q34": {
+  "texto": "- I: falsa. A FIFO não diferencia fluxos: rajadas longas enchem a fila e fazem descartar pacotes de todos. Ela é justamente ruim nesse cenário.\n- II: verdadeira. No WFQ, cada fila recebe um peso, que define quanto de banda (quantos bits) ela ganha a cada rodada.\n- III: falsa. A fila por prioridade sempre atende primeiro a de maior prioridade, e por isso PODE deixar as de menor prioridade sem atendimento (starvation). Não usa Round-Robin.\n- IV: verdadeira. O RED acompanha o tamanho médio da fila e, acima de um limiar, descarta pacotes aleatoriamente, antes de a fila encher.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q35": {
+  "texto": "- I: verdadeira. Sockets sobre TCP dão um canal confiável, com entrega garantida e em ordem.\n- II: verdadeira. O UDP não estabelece conexão, não confirma entrega e não retransmite, então tem menos overhead e envia mais rápido.\n- III: verdadeira. Em voz e vídeo ao vivo, chegar a tempo importa mais do que chegar tudo, então perder um pouco é aceitável. O UDP é a escolha natural.\n\nResposta: E.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q36": {
+  "texto": "Mais threads e mais núcleos ajudam até certo ponto. Depois disso, o ganho para por causa:\n\n- da parte sequencial do programa (lei de Amdahl);\n- da sincronização e da disputa por memória;\n- da troca de contexto.\n\nEsse limite depende da aplicação.\n\n- A: falsa. O ganho não é linear.\n- B: falsa. O número de núcleos não é insignificante.\n- D: falsa. Sem threads para ocupar os núcleos, eles ficam ociosos.\n- E: falsa. Os dois fatores importam, e não só o algoritmo.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q37": {
+  "texto": "- I: falsa. A criptografia não detecta vulnerabilidade: ela protege a confidencialidade, deixando os dados ilegíveis para quem não tem a chave.\n- II: falsa. Verificar a identidade é a autenticação. A auditoria registra e analisa eventos para verificar o que aconteceu.\n- III: verdadeira. Controle de acesso é definir e gerenciar quem pode acessar o quê e fazer quais operações.\n- IV: verdadeira. Os sistemas de detecção e de prevenção de intrusão (IDS e IPS) identificam atividade maliciosa e agem para bloqueá-la.\n\nResposta: C.",
+  "autor": "IA",
+  "auditado": false
+ },
+ "2023-CE-Q38": {
+  "texto": "Cada microsserviço pode ser escalado sozinho: só o serviço sobrecarregado ganha mais instâncias. Esse é o benefício central.\n\n- B: falsa. Com dados espalhados entre os serviços, a consistência fica MAIS difícil.\n- C e D: falsas. Mais chamadas pela rede e mais instâncias costumam custar desempenho e recursos.\n- E: falsa. A comunicação entre componentes fica mais complexa, não menos.\n\nResposta: A.",
+  "autor": "IA",
+  "auditado": false
+ }
+}
