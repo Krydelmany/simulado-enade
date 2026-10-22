@@ -20,7 +20,8 @@
 		apagarConta,
 		pendentes,
 		enviarFila,
-		simuladosDaTurma
+		simuladosDaTurma,
+		salvarNome
 	} from '$lib/nuvem.js';
 
 	let carregando = $state(true);
@@ -35,6 +36,7 @@
 	let linkEnviado = $state(false);
 
 	// entrar na turma
+	let nome = $state('');
 	let codigo = $state('');
 	let apelido = $state('');
 	let ra = $state('');
@@ -51,6 +53,9 @@
 	let fila = $state(0);
 	let confirmarApagar = $state(false);
 	let confirmarSair = $state(false);
+	// mudar o nome em "Sua conta"
+	let editandoNome = $state(false);
+	let novoNome = $state('');
 
 	// o próximo simulado da turma que a pessoa ainda pode fazer
 	let proximoSimulado = $state(null);
@@ -79,6 +84,7 @@
 		try {
 			usuario = await usuarioAtual();
 			turmas = usuario ? await minhasTurmas() : [];
+			if (!nome && usuario?.nome) nome = usuario.nome;
 			if (!apelido && usuario?.nome) apelido = usuario.nome.split(/\s+/)[0].slice(0, 24);
 			if (turmas.length && !turmaAberta) abrirTurma(turmas[0].turma);
 			fila = pendentes();
@@ -133,6 +139,9 @@
 	function enviarTurma(ev) {
 		ev.preventDefault();
 		acao(async () => {
+			// quem entrou por link de e-mail não tem nome: sem ele, o professor
+			// só via o apelido no painel e não sabia quem era
+			if (nome.trim() !== (usuario?.nome ?? '')) usuario.nome = await salvarNome(nome);
 			const t = await entrarTurma({ codigo, apelido, ra, noRanking, consentiu });
 			mostrarFormTurma = false;
 			turmaAberta = null;
@@ -150,6 +159,15 @@
 			turmaAberta = null;
 			await recarregar();
 		});
+
+	const guardarNome = (ev) => {
+		ev.preventDefault();
+		acao(async () => {
+			usuario.nome = await salvarNome(novoNome);
+			nome = usuario.nome;
+			editandoNome = false;
+		});
+	};
 
 	const sairConta = () =>
 		acao(async () => {
@@ -319,6 +337,20 @@
 						oninput={() => (codigo = codigo.toUpperCase())}
 						class="mt-1.5 min-h-12 w-full rounded-xl border-2 border-line bg-paper px-3 font-code text-lg tracking-[0.2em] uppercase"
 					/>
+				</div>
+
+				<div>
+					<label for="nome" class="text-sm font-bold">Seu nome</label>
+					<input
+						id="nome"
+						required
+						minlength="2"
+						maxlength="120"
+						autocomplete="name"
+						bind:value={nome}
+						class="mt-1.5 min-h-12 w-full rounded-xl border-2 border-line bg-paper px-3 text-base"
+					/>
+					<p class="mt-1 text-xs text-ink-soft">Só o professor vê. É como ele acha você na lista da turma.</p>
 				</div>
 
 				<div>
@@ -528,7 +560,39 @@
 	{#if usuario}
 		<section class="mt-8 border-t border-line pt-5" aria-labelledby="t-conta">
 			<h2 id="t-conta" class="text-label font-bold text-ink-soft">Sua conta</h2>
-			<p class="mt-2 text-sm">{usuario.nome}{usuario.email && usuario.email !== usuario.nome ? ` · ${usuario.email}` : ''}</p>
+			{#if editandoNome}
+				<form class="mt-2 flex flex-col gap-2 sm:flex-row" onsubmit={guardarNome}>
+					<label class="sr-only" for="novo-nome">Seu nome</label>
+					<input
+						id="novo-nome"
+						required
+						minlength="2"
+						maxlength="120"
+						autocomplete="name"
+						bind:value={novoNome}
+						class="min-h-11 flex-1 rounded-xl border-2 border-line bg-paper px-3 text-base"
+					/>
+					<div class="flex gap-2">
+						<button type="submit" disabled={ocupado} class="btn3d duo-btn min-h-11 rounded-xl px-4 text-sm font-bold disabled:opacity-60">Salvar</button>
+						<button type="button" onclick={() => (editandoNome = false)} class="min-h-11 px-3 text-sm font-bold text-ink-soft">Cancelar</button>
+					</div>
+				</form>
+			{:else}
+				<p class="mt-2 text-sm">
+					<strong class="font-semibold">{usuario.nome || 'Sem nome'}</strong>
+					{#if usuario.email}<span class="block text-ink-soft">{usuario.email}</span>{/if}
+				</p>
+				<button
+					type="button"
+					onclick={() => {
+						novoNome = usuario.nome;
+						editandoNome = true;
+					}}
+					class="min-h-11 text-sm font-bold text-accent-ink"
+				>
+					Mudar nome
+				</button>
+			{/if}
 			<p class="mt-1 text-xs text-ink-soft" role="status">
 				{#if fila}
 					{fila} {fila === 1 ? 'resposta esperando' : 'respostas esperando'} internet para subir.

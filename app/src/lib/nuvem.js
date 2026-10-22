@@ -286,11 +286,27 @@ export async function usuarioAtual() {
 	const u = data.session?.user;
 	if (!u) return null;
 	lembrarConta(u.id);
+	// o nome que vale é o do perfil (a pessoa pode ter corrigido); o do Google
+	// é só o ponto de partida. Quem entrou por link de e-mail não tem nenhum.
+	const { data: p } = await c.from('perfis').select('nome').eq('id', u.id);
 	return {
 		id: u.id,
 		email: u.email ?? '',
-		nome: u.user_metadata?.full_name || u.user_metadata?.name || u.email || ''
+		nome: p?.[0]?.nome || u.user_metadata?.full_name || u.user_metadata?.name || ''
 	};
+}
+
+/** Muda o nome que o professor vê (o banco só deixa editar o próprio). */
+export async function salvarNome(nome) {
+	const limpo = String(nome || '').trim().replace(/\s+/g, ' ');
+	if (limpo.length < 2 || limpo.length > 120) throw new Error('O nome precisa ter de 2 a 120 caracteres.');
+	const c = await obrigatorio();
+	const { data: s } = await c.auth.getSession();
+	const eu = s.session?.user?.id;
+	if (!eu) throw new Error('Entre na sua conta primeiro.');
+	const { error } = await c.from('perfis').update({ nome: limpo }).eq('id', eu);
+	if (error) throw falhou(error, 'Não deu para salvar o nome. Tente de novo.');
+	return limpo;
 }
 
 function voltarPara(caminho) {

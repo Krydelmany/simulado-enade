@@ -186,6 +186,10 @@ some na próxima gravação.
   por vez; o convite é `/conta/?turma=CODIGO`), `/professor/?turma=<uuid>` e
   `/privacidade/`. Nenhuma fica na tab bar: o acesso é o ícone no header e o
   rodapé.
+- **Nome:** o que o professor vê é `perfis.nome`. Ele nasce do Google
+  (`criar_perfil`), mas quem entra por link de e-mail não tem nome: o
+  formulário da turma pede o nome (pré-preenchido) e "Sua conta" deixa
+  mudar (`salvarNome`). `usuarioAtual` lê o nome do perfil, não do Google.
 - **`/privacidade/` descreve o que o banco guarda.** Coluna ou tabela nova
   com dado de aluno muda essa página no mesmo PR.
 - **Simulado da turma (D12):** o professor agenda na aba Simulados do painel.

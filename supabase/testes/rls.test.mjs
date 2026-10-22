@@ -98,6 +98,16 @@ await teste('perfil nasce do login com o nome do Google', async () => {
 	assert.deepEqual(r, [{ nome: 'Nome ana' }]);
 });
 
+await teste('cada um muda só o próprio nome (e só o nome)', async () => {
+	await como(U.ana, `update public.perfis set nome = 'Ana Souza' where id = $1`, [U.ana]);
+	await como(U.ana, `update public.perfis set nome = 'Hackeado' where id = $1`, [U.beto]);
+	const r = (await db.query('select id, nome from public.perfis where id in ($1, $2) order by nome', [U.ana, U.beto])).rows;
+	assert.deepEqual(r.map((x) => x.nome), ['Ana Souza', 'Nome beto']);
+	await falha(como(U.ana, `update public.perfis set criado_em = now() where id = $1`, [U.ana]), /permission denied/);
+	await falha(como(U.ana, `update public.perfis set nome = $2 where id = $1`, [U.ana, 'x'.repeat(121)]), /check constraint/);
+	await como(U.ana, `update public.perfis set nome = 'Nome ana' where id = $1`, [U.ana]);
+});
+
 await teste('anon não lê nada além de cursos', async () => {
 	assert.equal((await como(null, 'select * from public.cursos')).length, 1);
 	await falha(como(null, 'select * from public.respostas'), /permission denied/);
