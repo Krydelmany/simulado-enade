@@ -341,12 +341,20 @@ export async function apagarConta() {
 /** Matrículas do usuário: `[{papel, apelido, ra, no_ranking, turma: {...}}]`. */
 export async function minhasTurmas() {
 	const c = await obrigatorio();
+	const { data: s } = await c.auth.getSession();
+	const eu = s.session?.user?.id;
+	if (!eu) return [];
+	// O filtro por usuário é OBRIGATÓRIO: a RLS deixa o professor ler as
+	// matrículas da turma toda (é o que o painel usa). Sem ele, a lista do
+	// professor trazia a mesma turma uma vez por aluno, e a tela da conta
+	// travava no carregamento (chave repetida no {#each}).
 	const { data, error } = await c
 		.from('membros')
 		.select('papel, apelido, ra, no_ranking, entrou_em, turma:turmas(id, nome, instituicao, curso, data_prova, codigo, ranking_ativo)')
+		.eq('usuario_id', eu)
 		.order('entrou_em');
 	if (error) throw falhou(error);
-	return data ?? [];
+	return (data ?? []).filter((m) => m.turma?.id);
 }
 
 export async function entrarTurma({ codigo, apelido, ra = null, noRanking = true, consentiu = false }) {
