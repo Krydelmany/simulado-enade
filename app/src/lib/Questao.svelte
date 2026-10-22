@@ -19,8 +19,10 @@
 		SkipForward,
 		UserCircle,
 		Warning,
+		WarningCircle,
 		XCircle
 	} from 'phosphor-svelte';
+	import { nuvemLigada, reportarQuestao, MOTIVOS_REPORTE } from './nuvem.js';
 	import TextoRico from './TextoRico.svelte';
 	import { copiarQuestao } from './copiar.js';
 	import { carregarResolucoes, rotuloAutoria } from './resolucoes.js';
@@ -245,6 +247,29 @@
 		const texto = q.alternativas[letra];
 		if (!texto) return 'Alternativa ' + letra + ' (na imagem)';
 		return 'Alternativa ' + letra + ': ' + texto.replace(MARCA_BLOCO, '');
+	}
+
+	// Reportar erro (D13): abre no próprio cartão, sem modal — um modal seria
+	// mais uma camada para o voltar do sistema em três rotas.
+	let reporteAberto = $state(false);
+	let motivo = $state('');
+	let detalhe = $state('');
+	let reporte = $state(''); // '' | 'enviando' | 'ok'
+	let erroReporte = $state('');
+
+	async function enviarReporte(ev) {
+		ev.preventDefault();
+		if (!motivo || reporte === 'enviando') return;
+		erroReporte = '';
+		reporte = 'enviando';
+		try {
+			await reportarQuestao({ questaoId: q.id, motivo, detalhe });
+			reporte = 'ok';
+			reporteAberto = false;
+		} catch (e) {
+			reporte = '';
+			erroReporte = e.message;
+		}
 	}
 
 	function classeAlt(letra) {
@@ -622,5 +647,72 @@
 				</div>
 			{/if}
 		</section>
+	{/if}
+	{#if nuvemLigada && !prova}
+		<div class="mt-4 border-t border-line pt-2" data-sem-gesto>
+			{#if reporte === 'ok'}
+				<p class="flex min-h-11 items-center gap-2 text-sm font-semibold text-ok-fg" role="status">
+					<CheckCircle size={18} weight="bold" aria-hidden="true" /> Obrigado! Vamos conferir esta questão.
+				</p>
+			{:else if !reporteAberto}
+				<button
+					type="button"
+					onclick={() => (reporteAberto = true)}
+					class="flex min-h-11 items-center gap-1.5 text-sm font-bold text-ink-soft hover:text-ink"
+				>
+					<WarningCircle size={18} weight="bold" aria-hidden="true" /> Achou um erro nesta questão?
+				</button>
+			{:else}
+				<form class="pt-2" onsubmit={enviarReporte}>
+					<fieldset>
+						<legend class="text-sm font-bold">O que está errado?</legend>
+						<div class="mt-1.5 space-y-0.5">
+							{#each MOTIVOS_REPORTE as [valor, rotulo] (valor)}
+								<label class="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl px-2 hover:bg-tile">
+									<input
+										type="radio"
+										name="motivo-{q.id}"
+										value={valor}
+										required
+										bind:group={motivo}
+										class="h-5 w-5 shrink-0 accent-[var(--accent)]"
+									/>
+									<span class="text-sm">{rotulo}</span>
+								</label>
+							{/each}
+						</div>
+					</fieldset>
+					<label class="mt-3 block">
+						<span class="text-sm font-bold">Detalhes <span class="font-semibold text-ink-soft">(opcional)</span></span>
+						<textarea
+							bind:value={detalhe}
+							maxlength="1000"
+							rows="3"
+							placeholder="Ex.: na folha oficial do INEP o gabarito é C."
+							class="mt-1.5 w-full rounded-2xl border-2 border-line bg-card p-3 text-sm leading-relaxed text-ink focus:border-ink focus:outline-none"
+						></textarea>
+					</label>
+					{#if erroReporte}
+						<p class="mt-2 text-sm font-semibold text-bad-fg" role="alert">{erroReporte}</p>
+					{/if}
+					<div class="mt-3 flex flex-wrap gap-2">
+						<button
+							type="submit"
+							disabled={!motivo || reporte === 'enviando'}
+							class="btn3d duo-btn min-h-11 rounded-xl px-5 text-sm font-bold disabled:opacity-50"
+						>
+							{reporte === 'enviando' ? 'Enviando…' : 'Enviar'}
+						</button>
+						<button
+							type="button"
+							onclick={() => (reporteAberto = false)}
+							class="min-h-11 rounded-xl px-3 text-sm font-bold text-ink-soft hover:text-ink"
+						>
+							Cancelar
+						</button>
+					</div>
+				</form>
+			{/if}
+		</div>
 	{/if}
 </article>
