@@ -311,6 +311,44 @@ await teste('reporte: teto por hora segura enxurrada', async () => {
 	await falha(como(U.ana, `select public.reportar_questao('2019-CE-Q11', 'outro', '')`), /muitos_reportes/);
 });
 
+// --- visitas (20261022010000_visitas.sql) ---------------------------------
+const APARELHO = '22222222-2222-4222-8222-222222222222';
+const visita = (usuario, caminho, extra = {}) =>
+	como(usuario, `select public.registrar_visita($1, $2, $3, $4, $5, $6)`, [
+		extra.aparelho ?? APARELHO,
+		caminho,
+		extra.convite ?? false,
+		extra.origem ?? null,
+		!!usuario,
+		extra.tela ?? 'celular'
+	]);
+
+await teste('visitas: anônimo e logado registram; ninguém lê pelo site', async () => {
+	await visita(null, '/conta/', { convite: true, origem: 'WhatsApp.com' });
+	await visita(U.ana, '/treino/');
+	const r = (await db.query('select caminho, convite, origem, logado from public.visitas order by id')).rows;
+	assert.deepEqual(r, [
+		{ caminho: '/conta/', convite: true, origem: 'whatsapp.com', logado: false },
+		{ caminho: '/treino/', convite: false, origem: null, logado: true }
+	]);
+	await falha(como(null, 'select * from public.visitas'), /permission denied/);
+	await falha(como(U.ana, 'select * from public.visitas_por_dia'), /permission denied/);
+	const [d] = (await db.query('select visitas::int, pessoas::int, abriram_convite::int from public.visitas_por_dia')).rows;
+	assert.deepEqual(d, { visitas: 2, pessoas: 1, abriram_convite: 1 });
+});
+
+await teste('visitas: caminho com query ou origem com endereço inteiro são recusados', async () => {
+	await falha(visita(null, '/conta/?turma=ENGC26'), /check constraint/);
+	await falha(visita(null, '/', { origem: 'https://evil.com/x?y' }), /check constraint/);
+});
+
+await teste('visitas: teto por aparelho ignora o excesso sem dar erro', async () => {
+	const outro = '33333333-3333-4333-8333-333333333333';
+	for (let k = 0; k < 125; k++) await visita(null, '/', { aparelho: outro });
+	const [{ n }] = (await db.query('select count(*)::int as n from public.visitas where aparelho = $1', [outro])).rows;
+	assert.equal(n, 120);
+});
+
 await teste('sair da turma tira do painel, mas mantém as respostas do aluno', async () => {
 	await como(U.beto, 'delete from public.membros');
 	assert.equal((await como(U.prof, 'select * from public.painel_alunos($1)', [turma.id])).length, 1);

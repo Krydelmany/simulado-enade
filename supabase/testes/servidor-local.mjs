@@ -162,10 +162,11 @@ const FUNCOES = new Set([
 	'simulados_turma',
 	'painel_simulado',
 	'painel_simulado_questoes',
-	'reportar_questao'
+	'reportar_questao',
+	'registrar_visita'
 ]);
 // devolvem `void`: o PostgREST responde `null`, não uma linha
-const FUNCOES_VOID = new Set(['apagar_minha_conta', 'apagar_simulado', 'reportar_questao']);
+const FUNCOES_VOID = new Set(['apagar_minha_conta', 'apagar_simulado', 'reportar_questao', 'registrar_visita']);
 
 function erroPg(res, e) {
 	const status = /permission denied|row-level/.test(e.message) ? 403 : 400;
