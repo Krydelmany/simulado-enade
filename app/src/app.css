@@ -34,8 +34,8 @@
 	--color-warn-fg: var(--warn-fg);
 	--color-warn-line: var(--warn-line);
 	/* preenchimento das barras de progresso — separado do acento sólido porque
-	   no escuro o vermelho #b3271e fica com ~1,8:1 sobre o trilho navy; a barra
-	   usa um vermelho mais claro e o botão sólido segue com branco por cima. */
+	   no escuro o azul do botão (#3a62e0) fica fraco sobre o trilho navy; a
+	   barra usa um azul mais claro e o botão sólido segue com branco por cima. */
 	--color-accent-bar: var(--accent-bar);
 	--color-accent-edge: var(--accent-edge);
 
@@ -44,7 +44,7 @@
 	--font-code: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, monospace;
 
 	/* Escala tipográfica explícita. Antes cada tela inventava um text-[42px]/
-	   tracking-tight; agora há 3 degraus de display + 1 etiqueta mono.
+	   tracking-tight; agora há 3 degraus de display + 1 etiqueta.
 	   O hero usa clamp() para valer de 390 px ao desktop sem classes extras. */
 	--text-hero: clamp(2.3rem, 1.65rem + 3vw, 3.25rem);
 	--text-hero--line-height: 0.98;
@@ -55,68 +55,81 @@
 	--text-heading: 1.2rem;
 	--text-heading--line-height: 1.25;
 	--text-heading--letter-spacing: -0.005em;
-	--text-label: 0.6875rem;
-	--text-label--line-height: 1.1;
-	--text-label--letter-spacing: 0.16em;
+	/* Etiqueta: sans, caixa normal, sem espaçamento. Era mono em CAIXA ALTA
+	   espaçada (0.16em) — a forma mais difícil de ler para quem tem dislexia,
+	   e justamente nos rótulos que orientam a tela. */
+	--text-label: 0.8125rem;
+	--text-label--line-height: 1.3;
+	--text-label--letter-spacing: 0;
 }
 
+/* "Folha de prova": papel, caneta azul de quem responde, caneta vermelha de
+   quem corrige. Cada cor tem UM significado — antes o vermelho era a marca E
+   o erro, e o aluno via a própria linha do ranking e a contagem de dias em
+   vermelho como se tivesse errado. Agora:
+     azul (accent)  = ação e "isto é seu" (botão, marcação, seleção, progresso)
+     vermelho (bad) = errou / alerta
+     verde (ok)     = acertou
+     âmbar (warn)   = atenção, parcial
+   Contraste AA conferido nos dois temas (texto ≥ 4,5:1; borda/barra ≥ 3:1). */
 :root {
-	--paper: #f6f1e7;
-	--card: #fffdf8;
-	--tile: #ece4d3;
-	--panel: #faf6ee;
-	--line: #ddd2bd;
-	--track: #c7d0dd;
-	--skel: #dde3ec;
-	--chip: #dde3ec;
+	--paper: #f4f2ed;
+	--card: #fdfcf9;
+	--tile: #e8e5dd;
+	--panel: #f9f8f4;
+	--line: #dbd6cb;
+	--track: #d3d8e2;
+	--skel: #e2e5eb;
+	--chip: #e2e5eb;
 	--ink: #1c2434;
 	--ink-soft: #4a5468;
 	--bar: #1a2340;
 	--bar-fg: #cbd5e1;
-	--accent: #b3271e;
-	--accent-ink: #8f1f1f;
-	--accent-soft: #f9e2d7;
+	--accent: #3459e0;
+	--accent-ink: #1f3d9f;
+	--accent-soft: #e2e8fa;
 	--accent-bar: var(--accent);
-	--accent-edge: #7c1a1a;
+	--accent-edge: #1e3a9e;
 	--btn: #1c2434;
 	--btn-fg: #ffffff;
 	--ok-bg: #e7f7ef;
 	--ok-fg: #065f46;
 	--ok-solid: #047857;
-	--bad-bg: #fdeef1;
-	--bad-fg: #9f1239;
-	--bad-solid: #be123c;
+	--bad-bg: #fcebea;
+	--bad-fg: #a3201f;
+	--bad-solid: #c22a22;
 	--warn-bg: #fffaeb;
 	--warn-fg: #78350f;
 	--warn-line: #d97706;
 }
 
 .dark {
-	--paper: #141118;
-	--card: #1e1a20;
-	--tile: #100d14;
-	--panel: #171320;
-	--line: rgba(255, 255, 255, 0.14);
-	--track: #2a3a58;
-	--skel: #1d2b47;
-	--chip: #24344f;
-	--ink: #f2ede2;
-	--ink-soft: #b3a99b;
-	--bar: #0c0a10;
+	--paper: #10141c;
+	--card: #192029;
+	--tile: #0c0f15;
+	--panel: #141a23;
+	--line: rgba(255, 255, 255, 0.12);
+	--track: #28324a;
+	--skel: #1e2636;
+	--chip: #243049;
+	--ink: #ecebe6;
+	--ink-soft: #a7adba;
+	/* navy de verdade, não quase-preto: no escuro a faixa do topo sumia no fundo */
+	--bar: #172038;
 	--bar-fg: #cbd5e1;
-	--accent: #c8412f;
-	--accent-ink: #f0a08a;
-	--accent-soft: rgba(194, 65, 12, 0.25);
-	--accent-bar: #e0533f;
-	--accent-edge: #6f2114;
-	--btn: #f2ede2;
+	--accent: #3a62e0;
+	--accent-ink: #9fb6ff;
+	--accent-soft: rgba(91, 128, 255, 0.18);
+	--accent-bar: #7092ff;
+	--accent-edge: #1d348a;
+	--btn: #ecebe6;
 	--btn-fg: #1c2434;
 	--ok-bg: rgba(4, 120, 87, 0.2);
 	--ok-fg: #6ee7b7;
 	--ok-solid: #047857;
-	--bad-bg: rgba(190, 18, 60, 0.2);
-	--bad-fg: #fda4af;
-	--bad-solid: #e11d48;
+	--bad-bg: rgba(209, 44, 44, 0.2);
+	--bad-fg: #fca5a5;
+	--bad-solid: #d12c2c;
 	--warn-bg: rgba(217, 119, 6, 0.14);
 	--warn-fg: #fcd34d;
 	--warn-line: #d97706;
@@ -216,7 +229,7 @@ html.dark {
 	--btn-edge: #0a1120;
 }
 .dark {
-	--btn-edge: #8fa1c0;
+	--btn-edge: #9aa3b5;
 }
 .duo-btn:hover {
 	filter: brightness(1.06);
@@ -315,6 +328,24 @@ html.dark {
 .dotgrid {
 	background-image: radial-gradient(rgba(28, 36, 52, 0.13) 1px, transparent 1px);
 	background-size: 18px 18px;
+}
+
+/* Faixa navy do topo das telas (hero, topo da sessão, resultado). No celular
+   ela continua o header: colada nele, sem raio em cima. A partir de 640 px vira
+   um cartão solto — colada, era uma aba pendurada no header e mais estreita
+   que ele. Em `@layer components` para utilitários (px-*, pt-*) valerem. */
+@layer components {
+	.faixa {
+		margin: -1.5rem -1rem 0;
+		border-radius: 0 0 26px 26px;
+		background-color: var(--bar);
+	}
+	@media (min-width: 40rem) {
+		.faixa {
+			margin: 0;
+			border-radius: 1.5rem;
+		}
+	}
 }
 
 /* grade de blueprint p/ zonas navy: microdetalhe de engenharia */

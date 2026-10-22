@@ -8,6 +8,7 @@
 	import BordaVoltar from '$lib/BordaVoltar.svelte';
 	import { foco } from '$lib/foco.svelte.js';
 	import { iniciarNuvem, nuvemLigada } from '$lib/nuvem.js';
+	import Marca from '$lib/Marca.svelte';
 
 	const tabs = [
 		{ href: '/treino/', label: 'Treino', icone: InfinityIcon },
@@ -51,10 +52,11 @@
 
 <header class="bg-bar text-white">
 	<nav class="mx-auto flex h-16 w-full max-w-3xl items-center gap-1 px-4 lg:max-w-5xl" aria-label="Principal">
-		<a href="/" class="mr-2">
+		<a href="/" class="mr-2 flex items-center gap-2.5">
+			<Marca tamanho={30} />
 			<span class="leading-tight">
 				<span class="block font-display text-[15px] font-bold tracking-tight">Simulado ENADE</span>
-				<span class="block text-[11px] font-medium text-bar-fg">Eng. de Computação</span>
+				<span class="block text-xs font-medium text-bar-fg">Eng. de Computação</span>
 			</span>
 		</a>
 		<span class="flex-1"></span>
@@ -104,14 +106,16 @@
 	<footer class="border-t border-line">
 		<div class="mx-auto grid w-full max-w-3xl gap-8 px-4 py-10 sm:grid-cols-3 lg:max-w-5xl">
 			<div>
-				<p class="font-display text-sm font-extrabold tracking-tight">Simulado ENADE</p>
+				<p class="flex items-center gap-2 font-display text-sm font-extrabold tracking-tight">
+					<Marca tamanho={22} /> Simulado ENADE
+				</p>
 				<p class="mt-1 text-xs leading-relaxed text-pretty text-ink-soft">
 					Estudo para a prova com questões oficiais do INEP.
 					{nuvemLigada ? 'Conta só se você quiser entrar numa turma.' : 'Sem conta, sem servidor.'}
 				</p>
 			</div>
 			<nav aria-label="Modos">
-				<p class="text-label font-bold text-ink-soft uppercase">Modos</p>
+				<p class="text-label font-bold text-ink-soft">Modos</p>
 				<ul class="mt-2 space-y-1 text-sm font-semibold">
 					<li><a href="/treino/" class="hover:text-accent-ink">Treino livre</a></li>
 					<li><a href="/estudo/" class="hover:text-accent-ink">Estudo por níveis</a></li>
@@ -122,13 +126,10 @@
 				</ul>
 			</nav>
 			<div>
-				<p class="text-label font-bold text-ink-soft uppercase">Fonte</p>
+				<p class="text-label font-bold text-ink-soft">Fonte</p>
 				<p class="mt-2 text-xs leading-relaxed text-pretty text-ink-soft">
-					Provas ENADE Engenharia de Computação (INEP) + simulado da turma. Formato 2026:
-					Portaria INEP nº 161.
-				</p>
-				<p class="mt-2 font-code text-label text-ink-soft" aria-hidden="true">
-					REV A · GERADO DE PROVAS INEP · 2014/2017/2019/2023
+					Provas de Engenharia de Computação do INEP de 2014, 2017, 2019 e 2023. Formato
+					2026: Portaria INEP nº 161.
 				</p>
 			</div>
 		</div>
@@ -143,11 +144,15 @@
 				<a
 					href={t.href}
 					aria-current={$page.url.pathname === t.href ? 'page' : undefined}
-					class="flex min-h-[60px] flex-1 flex-col items-center justify-center gap-1 py-2 text-xs font-bold transition-colors active:scale-[0.97] {$page.url.pathname ===
+					class="relative flex min-h-[60px] flex-1 flex-col items-center justify-center gap-1 py-2 text-xs font-bold transition-colors active:scale-[0.97] {$page.url.pathname ===
 					t.href
 						? 'text-accent-ink'
 						: 'text-ink-soft'}"
 				>
+					{#if $page.url.pathname === t.href}
+						<!-- traço de caneta sobre a aba ativa: a cor sozinha não basta para quem não distingue azul -->
+						<span class="absolute top-0 h-[3px] w-10 rounded-b-full bg-accent" aria-hidden="true"></span>
+					{/if}
 					<t.icone size={24} weight="bold" aria-hidden="true" />
 					{t.label}
 				</a>

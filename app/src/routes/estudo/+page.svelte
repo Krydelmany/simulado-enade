@@ -466,7 +466,7 @@
 	</div>
 {:else if escolhaE && salvaE}
 	<div class="rise rounded-3xl bg-card p-6 text-center shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]">
-		<p class="font-code text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">Sessão de estudo pausada</p>
+		<p class="text-label font-bold text-ink-soft">Sessão de estudo pausada</p>
 		<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight">Continuar de onde parou?</h2>
 		<p class="nums mt-2 text-sm text-ink-soft">
 			{NIVEIS[salvaE.nivel]?.nome ?? 'Sessão'}{materiaExiste(salvaE.materia) ? ` · ${nomeMateria(salvaE.materia)}` : ''} · questão {salvaE.i + 1} de {salvaE.sessao.length} · {salvaECertas}/{salvaEfeitas} certas
@@ -516,7 +516,7 @@
 			</span>
 		</div>
 	{/if}
-	<p class="mb-2 font-code text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">Revisão por nível</p>
+	<p class="mb-2 text-label font-bold text-ink-soft">Revisão por nível</p>
 	<div class="space-y-3">
 		{#each ESCADA as n, k (n)}
 			<button
@@ -541,7 +541,7 @@
 			</button>
 		{/each}
 	</div>
-	<p class="mt-6 mb-2 font-code text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">Prova oficial</p>
+	<p class="mt-6 mb-2 text-label font-bold text-ink-soft">Prova oficial</p>
 	<button
 		type="button"
 		onclick={() => comecar(NIVEL_ENADE)}
@@ -558,7 +558,7 @@
 		</span>
 	</button>
 {:else if fim}
-	<div class="blueprint -mx-4 -mt-6 bg-bar px-4 pt-8 pb-10 text-center text-white" style="border-radius: 0 0 26px 26px;">
+	<div class="blueprint faixa px-4 pt-8 pb-10 text-center text-white">
 		<p class="text-sm font-medium text-bar-fg">Estudo · {NIVEIS[nivel].nome}{materiaFiltro !== 'todas' ? ` · ${nomeMateria(materiaFiltro)}` : ''}</p>
 		<h2 class="mt-1 font-display text-3xl font-extrabold tracking-tight">Sessão concluída</h2>
 		<p class="springin mx-auto mt-4 flex h-24 w-24 items-center justify-center rounded-full bg-accent-soft">
@@ -575,15 +575,15 @@
 	<div class="mx-auto -mt-0 grid max-w-xs grid-cols-3 gap-2 pt-4 text-center">
 		<div class="rounded-2xl bg-card p-3 shadow-sm">
 			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold"><Target size={17} weight="bold" class="text-accent" aria-hidden="true" />{feitas ? Math.round((certas / feitas) * 100) : 0}%</p>
-			<p class="text-[11px] font-semibold text-ink-soft">Precisão</p>
+			<p class="text-xs font-semibold text-ink-soft">Precisão</p>
 		</div>
 		<div class="rounded-2xl bg-card p-3 shadow-sm">
 			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold"><Timer size={17} weight="bold" class="text-accent" aria-hidden="true" />{mmss()}</p>
-			<p class="text-[11px] font-semibold text-ink-soft">Tempo</p>
+			<p class="text-xs font-semibold text-ink-soft">Tempo</p>
 		</div>
 		<div class="rounded-2xl bg-card p-3 shadow-sm">
 			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold"><Lightning size={17} weight="fill" class="text-accent" aria-hidden="true" />+{xpGanho}</p>
-			<p class="text-[11px] font-semibold text-ink-soft">XP ganho</p>
+			<p class="text-xs font-semibold text-ink-soft">XP ganho</p>
 		</div>
 	</div>
 	{#if porMateria().length}

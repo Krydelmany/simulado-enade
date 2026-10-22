@@ -121,7 +121,7 @@
 					Nada encontrado para <span class="font-bold">{query}</span>. Tente outras palavras ou o número da questão.
 				</p>
 			{:else}
-				<p class="px-2 py-1 text-[11px] font-bold text-ink-soft" role="status">
+				<p class="px-2 py-1 text-xs font-bold text-ink-soft" role="status">
 					{Math.min(resultados.length, TETO)} de {resultados.length}
 					{resultados.length > 1 ? 'questões' : 'questão'} · clique para ir direto nela
 				</p>
@@ -137,7 +137,7 @@
 								class="w-full rounded-2xl border border-line bg-card p-3 text-left transition-colors hover:border-ink/40 active:scale-[0.99]"
 							>
 								<div class="flex flex-wrap items-center gap-1.5">
-									<span class="font-code text-[11px] font-bold text-accent-ink uppercase">
+									<span class="text-label font-bold text-accent-ink">
 										{rotuloQuestao(r.q)}
 									</span>
 									{#if r.q.materia}
@@ -152,7 +152,7 @@
 								<p class="mt-1.5 flex items-center gap-1.5 text-xs font-bold">
 									<span class="text-ink-soft">Resposta:</span>
 									<span
-										class="nums inline-flex h-5 min-w-5 items-center justify-center rounded-md px-1 font-display text-[11px] {r.q.gabarito ===
+										class="nums inline-flex h-5 min-w-5 items-center justify-center rounded-md px-1 font-display text-xs {r.q.gabarito ===
 										'ANULADA'
 											? 'bg-warn-bg text-warn-fg'
 											: 'bg-ok-solid text-white'}"
@@ -186,7 +186,7 @@
 					{/each}
 				</ul>
 				{#if resultados.length > TETO}
-					<p class="mt-1 px-2 pb-1 text-[11px] text-ink-soft">
+					<p class="mt-1 px-2 pb-1 text-xs text-ink-soft">
 						Refine a busca para ver as outras {resultados.length - TETO}.
 					</p>
 				{/if}

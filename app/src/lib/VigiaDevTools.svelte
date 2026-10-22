@@ -70,8 +70,8 @@
 		role="status"
 		aria-live="polite"
 	>
-		<div class="flex items-start gap-3 rounded-2xl border-2 border-accent/40 bg-card p-4 shadow-lg shadow-ink/10">
-			<span class="mt-0.5 shrink-0 text-accent-ink" aria-hidden="true">
+		<div class="flex items-start gap-3 rounded-2xl border-2 border-warn-line/50 bg-card p-4 shadow-lg shadow-ink/10">
+			<span class="mt-0.5 shrink-0 text-warn-fg" aria-hidden="true">
 				<Warning size={22} weight="fill" />
 			</span>
 			<div class="min-w-0 flex-1">

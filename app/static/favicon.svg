@@ -1,8 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-	<rect width="64" height="64" rx="14" fill="#14213d" />
-	<rect x="10" y="14" width="44" height="10" rx="5" fill="#c2410c" />
-	<rect x="16" y="30" width="32" height="6" rx="3" fill="#ffffff" opacity="0.9" />
-	<rect x="22" y="41" width="20" height="6" rx="3" fill="#ffffff" opacity="0.55" />
-	<circle cx="50" cy="46" r="7" fill="#c2410c" />
-	<path d="M50 42.5v4M50 50v.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" />
+	<!-- linha de cartão-resposta, bolha do meio marcada a caneta azul (= src/lib/Marca.svelte) -->
+	<rect width="64" height="64" rx="16" fill="#1a2340" />
+	<circle cx="17" cy="32" r="8" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.4" />
+	<circle cx="47" cy="32" r="8" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.4" />
+	<circle cx="32" cy="32" r="10" fill="#5b7cff" />
 </svg>

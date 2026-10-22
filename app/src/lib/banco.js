@@ -297,13 +297,15 @@ export const idEstavel = chaveQuestao;
 
 export function rotuloQuestao(q) {
 	if (!q) return '';
-	// gerada não tem edição nem parte de prova: o id já diz tudo (GER-XVIII-F1)
-	if (ehGerada(q)) return `Questão ${String(q.numero ?? '')}`;
+	// gerada não tem edição nem parte de prova. "Questão D1" (o número interno)
+	// não dizia nada ao aluno; matéria e nível já vêm nas etiquetas ao lado.
+	if (ehGerada(q)) return 'Questão de revisão';
 	// `numero` pode vir número em algum JSON — normaliza antes de montar o rótulo.
 	const numero = String(q.numero ?? '');
 	const n = q.tipo === 'discursiva' ? `Discursiva ${numero}` : `Questão ${numero}`;
 	// O rótulo antigo era `REF 2014-CE-Q10`: jargão de extração, não informação
 	// para quem está estudando. O chip ao lado já diz a parte (FG/CE), então
 	// aqui sobra o que o aluno quer saber — de que prova e qual questão.
-	return `ENADE ${q.edicao} · ${n}`;
+	// vírgula, não "·": o rótulo é lido como frase ("ENADE 2019, questão 09")
+	return `ENADE ${q.edicao}, ${n.toLowerCase()}`;
 }

@@ -53,9 +53,10 @@ app/                       o site: SvelteKit 2 + Svelte 5 + Tailwind 4 + Vite 6
                            resumo.js, tema.js, motion.js, foco.svelte.js,
                            sessao.js, gestos.js, camadas.svelte.js,
                            copiar.js (botão de copiar a questão),
-                           resolucoes.js ("como resolver") e os
-                           componentes (Questao, TextoRico, SessaoTopo, BarraAcao,
-                           Contador, VigiaDevTools, BordaVoltar, DicaGestos)
+                           resolucoes.js ("como resolver"), enade.js (data da
+                           prova) e os componentes (Questao, TextoRico,
+                           SessaoTopo, BarraAcao, Contador, VigiaDevTools,
+                           BordaVoltar, DicaGestos, Marca)
   static/banco/            O BANCO que o site carrega: enadeAAAA-{fg,ce}.json,
                            geradas.json, resolucoes.json e img/   ← SAÍDA de scripts
   vercel.json              build e cache headers (tem de ficar em app/)
@@ -450,10 +451,10 @@ Ordem dentro dos arquivos:
 3. Cada id ganha uma linha em `classificacao.json`.
 4. Rode `digita.py --banco`, `paragrafo.py --banco` e depois
    validar/testes/versão.
-5. Atualize os textos fixos na tela: o `META` da home (oficiais menos as
-   anuladas; hoje 156), o
-   "2014/2017/2019/2023" do rodapé do layout e o "provas de 2014 a 2023" do
-   simulado.
+5. Atualize os textos fixos na tela: o "2014, 2017, 2019 e 2023" do rodapé
+   do layout e o "provas de 2014 a 2023" do simulado. A home monta a lista de
+   edições e as contagens a partir do banco. Edição nova do ENADE também muda
+   `DATA_ENADE` em `lib/enade.js` (contagem de dias da home).
 
 ### Extração dos PDFs (raro; não roda nesta máquina Windows)
 
@@ -663,8 +664,11 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
     `bad-*`, `warn-*`. Para botões, `btn3d` + `duo-accent`/`duo-btn`.
   - **Nunca use `dark:` nas telas:** o `.dark` troca os tokens sozinho.
   - Exceções que já estão em uso: `text-white` e `bg-white/N` sobre as faixas
-    `bg-bar` e o botão vermelho, `bg-black/50` no backdrop de modal e âmbar
+    `bg-bar` e o botão azul, `bg-black/50` no backdrop de modal e âmbar
     no estado "parcial".
+  - Faixa navy do topo (hero, topo da sessão, resultado): classe `faixa` +
+    `blueprint`. No celular ela continua o header; a partir de 640 px vira
+    cartão solto. Não volte a usar `-mx-4 -mt-6` + `border-radius` inline.
 - **Token novo entra em três lugares de `app.css`:** `--color-<nome>:
   var(--<nome>)` em `@theme inline`, o valor claro em `:root` e o escuro em
   `.dark`.
@@ -674,13 +678,27 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
     o `theme-color` do `app.html`, as sombras `rgba(20,33,61,…)` (estão nas
     rotas e no `Questao.svelte`: procure em todo o `src/`) e as texturas
     `.dotgrid`/`.pauta`/`.blueprint`.
-- **Direção visual:** "papel de prova + caneta vermelha".
+- **Direção visual:** "folha de prova": papel, **caneta azul** de quem
+  responde e **caneta vermelha** de quem corrige. Cada cor tem um significado
+  só, e não se mistura:
+  - `accent` (azul): ação e "isto é seu" (botão principal, marcação na
+    prova, seleção, aba ativa, progresso, a sua linha no ranking);
+  - `bad-*` (vermelho): errou, alerta, tempo acabando, ação destrutiva;
+  - `ok-*` (verde): acertou; `warn-*` (âmbar): atenção, parcial.
+  Até out/2026 o acento era vermelho, e o aluno lia a própria linha do
+  ranking e a contagem de dias como erro. Não use `accent` para alerta.
+  - A marca (`lib/Marca.svelte`) e o `static/favicon.svg` são o mesmo
+    desenho, uma linha de cartão-resposta com a bolha marcada em azul.
+    Mudou um, mude o outro.
   - Fontes: Archivo (`font-display`, títulos e números), Plus Jakarta Sans
     (padrão do `body`) e JetBrains Mono (`font-code`). Outfit continua
     importada como fallback do display: não a remova sem tirar o fallback.
-  - Títulos usam `text-hero/title/heading`, e etiquetas mono usam
-    `text-label`. Texto corrido usa as classes do Tailwind; evite criar
-    `text-[NNpx]` novo.
+  - Títulos usam `text-hero/title/heading`, e etiquetas usam `text-label`
+    (sans, caixa normal, sem espaçamento). **Nada de etiqueta em CAIXA ALTA,
+    mono ou com `tracking-[…]`**: é a forma mais difícil de ler para quem
+    tem dislexia. Mono (`font-code`) é só para código e relógio. Texto
+    corrido usa as classes do Tailwind; o menor tamanho é `text-xs` (12 px),
+    e evite criar `text-[NNpx]` novo.
   - Ícones `phosphor-svelte` com `weight="bold"` e `aria-hidden="true"`. O
     `weight="fill"` fica para Play/Pause, troféu, raio do XP e estados ligados.
     Zero emoji.
@@ -770,7 +788,7 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
   órfão).
 - **`PLANO.md` e `ROADMAP.md`:**
   - Falam em Outfit, "navy + laranja" e streak. Hoje é Archivo + Plus
-    Jakarta, o acento é vermelho e o streak foi removido.
+    Jakarta, o acento é azul (veja "Direção visual") e o streak foi removido.
   - "Anulada = ponto para todos" não vale mais: as anuladas saíram do site
     (`banco/anuladas.json`).
   - O `ROADMAP.md` cita um "preview LAN :8123" que não existe e deixa o
