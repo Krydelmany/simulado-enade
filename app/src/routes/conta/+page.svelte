@@ -20,7 +20,7 @@
 		apagarConta,
 		pendentes,
 		enviarFila,
-		simuladosDaTurma,
+		meusSimulados,
 		salvarNome
 	} from '$lib/nuvem.js';
 
@@ -210,13 +210,13 @@
 		const t = turmaAberta;
 		proximoSimulado = null;
 		if (!t) return;
-		simuladosDaTurma(t.id)
+		meusSimulados()
 			.then((l) => {
 				const agora = Date.now();
-				const feitos = lerFeitosDaTurma();
+				const feitos = lerFeitosDaTurma(usuario?.id);
 				proximoSimulado =
 					l
-						.filter((x) => !feitos[x.id] && new Date(x.fecha_em).getTime() >= agora)
+						.filter((x) => x.turma.id === t.id && !feitos[x.id] && !x.entregueNoServidor && new Date(x.fecha_em).getTime() >= agora)
 						.sort((a, b) => new Date(a.abre_em) - new Date(b.abre_em))
 						.map((x) => ({ ...x, aberto: new Date(x.abre_em).getTime() <= agora }))[0] ?? null;
 			})
@@ -402,6 +402,31 @@
 		</section>
 	{:else}
 		<!-- Etapa 3: a turma -->
+		{#if !usuario.nome}
+			<!-- quem entrou na turma antes de o formulário pedir o nome (ou pelo
+			     link de e-mail) aparecia como "Sem nome" para o professor e a turma -->
+			<form class="mt-6 rounded-3xl border-2 border-warn-line bg-card p-5 sm:p-6" onsubmit={guardarNome} aria-labelledby="t-falta-nome">
+				<h2 id="t-falta-nome" class="font-display text-heading font-extrabold">Falta o seu nome</h2>
+				<p class="mt-1 text-sm text-pretty text-ink-soft">
+					É como o professor acha você na lista e como você aparece no ranking. Hoje aparece "Sem nome".
+				</p>
+				<div class="mt-3 flex flex-col gap-2 sm:flex-row">
+					<label class="sr-only" for="nome-faltando">Seu nome</label>
+					<input
+						id="nome-faltando"
+						required
+						minlength="2"
+						maxlength="120"
+						autocomplete="name"
+						bind:value={novoNome}
+						class="min-h-12 flex-1 rounded-xl border-2 border-line bg-paper px-3 text-base"
+					/>
+					<button type="submit" disabled={ocupado} class="btn3d duo-accent min-h-12 rounded-xl px-5 font-display text-base font-bold disabled:opacity-60">
+						Salvar nome
+					</button>
+				</div>
+			</form>
+		{/if}
 		{#if turmas.length > 1}
 			<div class="mt-6 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Suas turmas">
 				{#each turmas as m (m.turma.id)}

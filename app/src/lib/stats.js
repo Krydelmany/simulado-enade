@@ -391,8 +391,9 @@ export function aoRegistrarResposta(fn) {
  * nunca o enunciado — o texto já vive no JSON do banco e duplicá-lo estouraria
  * o storage rápido.
  *
- * `modo` (`'treino'`, `'estudo'`, `'simulado'`) e `simuladoId` (prova agendada
- * pelo professor) só vão para os ouvintes: o agregado local não os guarda.
+ * `modo` (`'treino'`, `'estudo'`, `'simulado'`), `simuladoId` (prova agendada
+ * pelo professor) e `escolha` (a letra marcada) só vão para os ouvintes: o
+ * agregado local não os guarda.
  *
  * `parcial` (discursiva autoavaliada) e `anulada` contam como "respondida" mas
  * não como acerto nem erro — mesma semântica das telas de treino/estudo.
@@ -408,6 +409,7 @@ export function registrarResposta({
 	tema,
 	modo,
 	simuladoId = null,
+	escolha = null,
 	duracaoMs = 0
 } = {}) {
 	if (!id) return null;
@@ -440,7 +442,7 @@ export function registrarResposta({
 	gravarEstado(e);
 	for (const fn of ouvintes) {
 		try {
-			fn({ id, certa, parcial, anulada, materia, modo, simuladoId, duracaoMs: inteiro(duracaoMs), em: agora });
+			fn({ id, certa, parcial, anulada, materia, modo, simuladoId, escolha, duracaoMs: inteiro(duracaoMs), em: agora });
 		} catch {
 			// a nuvem é extra: falhar lá não pode perder a resposta aqui
 		}

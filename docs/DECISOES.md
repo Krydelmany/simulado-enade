@@ -228,3 +228,33 @@ Decidida em 22/10/2026 (substitui o "apelido no ranking" do D6).
 **Por quê:** pedir nome e apelido no mesmo formulário ficou repetido, e a
 turma se conhece pelo nome. Com o apelido único, dois "João" seriam
 barrados na entrada.
+
+### D16. Métricas do painel: só o que muda uma decisão do professor
+
+Decidida em 22/10/2026, com base em como ferramentas de avaliação fazem: o
+relatório de estatística de questionário do Moodle (acerto e análise de
+respostas por questão), os relatórios do ASSISTments (primeira tentativa,
+dificuldade da questão e o erro mais comum) e os relatórios de curso do
+INEP (acerto por questão e por conteúdo).
+
+**Decisão:**
+- **Acerto = primeira tentativa** de cada aluno a cada questão objetiva.
+  Refazer a revisão até acertar não infla o aluno, a matéria nem a turma.
+  O volume (quantas respondeu) continua contando tudo.
+- **A discursiva fica fora** de todo acerto: é autoavaliada.
+- **Percentual só com amostra mínima**, com o `n` sempre ao lado.
+- **Evolução = simulado contra simulado** (mesma prova para a turma toda).
+  O acerto semana a semana saiu: ele sobe e desce com a dificuldade das
+  questões que cada um pegou, não com o aprendizado.
+- **Por questão, o erro mais comum** (a letra errada mais marcada). É o que
+  vira aula: "40% marcaram C" diz qual é o engano. Para isso, cada resposta
+  passa a guardar a alternativa (`respostas.escolha`).
+- **Ranking por questões diferentes**: repetir a mesma questão não sobe.
+- Cada bloco responde a uma pergunta do professor: a turma está
+  estudando? quem sumiu? onde ela erra? o que ninguém viu? está melhorando?
+  Número que não responde nenhuma ficou de fora ("onde o aluno estuda",
+  acerto semanal).
+
+**Por quê:** número que só parece informação leva a decisão errada. Antes
+o painel contava toda tentativa, misturava a discursiva autoavaliada no
+acerto e mostrava acerto semanal, que não mede evolução.

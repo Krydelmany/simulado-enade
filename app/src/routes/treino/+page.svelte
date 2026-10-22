@@ -321,6 +321,7 @@
 			certa: !!r.certa,
 			parcial: !!r.parcial,
 			anulada: !!r.anulada,
+			escolha: r.escolha ?? null,
 			materia: q?.materia,
 			tema: q?.tema,
 			duracaoMs: Date.now() - (ultimoToque || inicio)

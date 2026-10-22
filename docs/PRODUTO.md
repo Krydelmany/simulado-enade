@@ -75,6 +75,12 @@ para a turma ter **pelo menos 3 semanas de uso** antes da prova.
   convite. Na home, quem não entrou na conta vê "Tem turma? Entre com o
   código".
 
+- [x] **Painel do professor v2 (D16):** Visão geral (quem estudou na
+  semana, quem sumiu, onde a turma erra, o que ninguém treinou, evolução
+  pelos simulados), ficha de cada aluno (dias de estudo, matérias contra a
+  média da turma, questões que mais erra com a letra marcada, simulados) e,
+  por questão, o gabarito e o erro mais comum.
+
 ### Próximos, em ordem de prioridade
 
 1. **P5: Analytics de produto** (PostHog): retenção e eventos dentro das
@@ -137,9 +143,10 @@ Pagamento, app nativo, outros cursos, editor de questões, tutor com IA.
 
 6. **Migrações novas:** cada arquivo de `supabase/migrations/` roda **uma
    vez**, em ordem, no SQL Editor, e **antes** do deploy que usa o arquivo.
-   Hoje são quatro: `20261021000000_turmas.sql`,
-   `20261022000000_simulados_reportes.sql`, `20261022010000_visitas.sql` e
-   `20261022020000_ranking_com_nome.sql`.
+   Hoje são seis: `20261021000000_turmas.sql`,
+   `20261022000000_simulados_reportes.sql`, `20261022010000_visitas.sql`,
+   `20261022020000_ranking_com_nome.sql`, `20261022030000_apelido_sem_email.sql`
+   e `20261022040000_painel_primeira_tentativa.sql`.
 
 ### Ver as visitas ao site (D14)
 

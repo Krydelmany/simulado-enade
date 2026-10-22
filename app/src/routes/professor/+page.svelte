@@ -4,7 +4,11 @@
 	// funções devolvem vazio e esta tela mostra "sem acesso".
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import { ArrowLeft, CalendarPlus, Check, Copy, DownloadSimple, Trash } from 'phosphor-svelte';
+	import { ArrowLeft, CalendarPlus, CaretDown, CaretUp, Check, Copy, DownloadSimple, Trash } from 'phosphor-svelte';
+	import { ligarCamadas } from '$lib/camadas.svelte.js';
+	import VisaoGeral from '$lib/painel/VisaoGeral.svelte';
+	import FichaAluno from '$lib/painel/FichaAluno.svelte';
+	import { num, pct, fmtPct, quando, diaHora } from '$lib/painel/formato.js';
 	import {
 		nuvemLigada,
 		usuarioAtual,
@@ -26,7 +30,11 @@
 	let dados = $state(null);
 	let banco = $state.raw([]);
 	let porId = $state.raw(new Map());
-	let aba = $state('alunos');
+	let aba = $state('geral');
+	// ficha de um aluno aberta por cima do painel (camada: o voltar fecha)
+	let alunoAberto = $state(null);
+	// ordenação da tabela de alunos
+	let ordem = $state({ coluna: 'semana', desc: true });
 	let copiado = $state(false);
 
 	// simulados da turma
@@ -43,40 +51,73 @@
 	let confirmaApagar = $state(null);
 
 	const abas = [
+		['geral', 'Visão geral'],
 		['alunos', 'Alunos'],
 		['simulados', 'Simulados'],
 		['materias', 'Matérias'],
-		['questoes', 'Questões'],
-		['semanas', 'Semanas']
+		['questoes', 'Questões']
 	];
 
-	const OBJETIVAS = FORMATO.fg + FORMATO.ce;
+	ligarCamadas(
+		() => (alunoAberto ? ['aluno'] : []),
+		() => (alunoAberto = null)
+	);
 
-	const num = (v) => Number(v) || 0;
-	const pct = (c, t) => (num(t) ? Math.round((num(c) / num(t)) * 100) : null);
-	const fmtPct = (c, t) => (pct(c, t) === null ? '—' : `${pct(c, t)}%`);
-
-	function quando(iso) {
-		if (!iso) return 'nunca';
-		const dias = Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000);
-		if (dias <= 0) return 'hoje';
-		if (dias === 1) return 'ontem';
-		return `há ${dias} dias`;
+	function abrirAluno(id) {
+		alunoAberto = id;
 	}
+
+	function irPara(v) {
+		aba = v;
+		window.scrollTo({ top: 0 });
+	}
+
+	// acerto na primeira tentativa (D16); antes da migração 6 a coluna não
+	// existe e cai no acerto de todas as tentativas
+	const acertoDe = (a) => (a.primeiras === undefined ? pct(a.certas, a.respondidas) : pct(a.primeiras_certas, a.primeiras));
+
+	const COLUNAS = {
+		nome: (a) => (a.nome || a.apelido || '').toLocaleLowerCase('pt-BR'),
+		semana: (a) => num(a.respondidas_7d),
+		total: (a) => num(a.respondidas),
+		acerto: (a) => acertoDe(a) ?? -1,
+		ultima: (a) => (a.ultima_em ? new Date(a.ultima_em).getTime() : 0)
+	};
+
+	let alunosOrdenados = $derived.by(() => {
+		if (!dados) return [];
+		const chave = COLUNAS[ordem.coluna];
+		return [...dados.alunos].sort((x, y) => {
+			const a = chave(x);
+			const b = chave(y);
+			const c = a < b ? -1 : a > b ? 1 : 0;
+			return ordem.desc ? -c : c;
+		});
+	});
+
+	function ordenar(coluna) {
+		ordem = ordem.coluna === coluna ? { coluna, desc: !ordem.desc } : { coluna, desc: coluna !== 'nome' };
+	}
+
+	// matérias da turma somando oficiais e revisão (a ficha compara com isto)
+	let turmaPorMateria = $derived.by(() => {
+		if (!dados) return [];
+		const mapa = new Map();
+		for (const m of dados.materias) {
+			if (!m.materia) continue;
+			const x = mapa.get(m.materia) ?? { materia: m.materia, respondidas: 0, certas: 0 };
+			x.respondidas += num(m.respondidas);
+			x.certas += num(m.certas);
+			mapa.set(m.materia, x);
+		}
+		return [...mapa.values()];
+	});
+
+	const OBJETIVAS = FORMATO.fg + FORMATO.ce;
 
 	function diasAte(data) {
 		if (!data) return null;
 		return Math.max(0, Math.ceil((new Date(`${String(data).slice(0, 10)}T00:00:00-03:00`).getTime() - Date.now()) / 86_400_000));
-	}
-
-	// "sex 31/10 às 23:59"
-	function diaHora(iso) {
-		const d = new Date(iso);
-		if (Number.isNaN(d.getTime())) return '';
-		const dia = d.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', '');
-		const data = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-		const hora = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-		return `${dia} ${data} às ${hora}`;
 	}
 
 	// Date → "2026-10-23T08:00" no fuso do aparelho (formato do datetime-local)
@@ -294,9 +335,11 @@
 	<title>Painel da turma · Simulado ENADE</title>
 </svelte:head>
 
-<a href="/conta/" class="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-ink-soft hover:text-ink">
-	<ArrowLeft size={17} weight="bold" aria-hidden="true" /> Conta e turma
-</a>
+{#if !alunoAberto}
+	<a href="/conta/" class="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-ink-soft hover:text-ink">
+		<ArrowLeft size={17} weight="bold" aria-hidden="true" /> Conta e turma
+	</a>
+{/if}
 
 {#if carregando}
 	<div class="mt-4 space-y-3" role="status" aria-label="Carregando o painel">
@@ -307,6 +350,14 @@
 	<p class="mt-4 text-[15px] text-ink-soft">A conta ainda não está ligada neste site.</p>
 {:else if erro}
 	<p role="alert" class="mt-4 rounded-2xl border border-bad-fg/30 bg-bad-bg p-3 text-sm font-semibold text-bad-fg">{erro}</p>
+{:else if dados && alunoAberto}
+	<FichaAluno
+		turmaId={turma.id}
+		alunoId={alunoAberto}
+		{turmaPorMateria}
+		{porId}
+		onFechar={() => history.back()}
+	/>
 {:else if dados && resumo}
 	{@const dias = diasAte(turma.data_prova)}
 	<header class="mt-2 flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
@@ -329,24 +380,6 @@
 		</div>
 	</header>
 
-	<dl class="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
-		<div class="rounded-2xl bg-tile p-3">
-			<dd class="nums text-2xl font-extrabold">{resumo.alunos}</dd>
-			<dt class="mt-0.5 text-xs font-semibold text-ink-soft">Alunos na turma</dt>
-		</div>
-		<div class="rounded-2xl bg-tile p-3">
-			<dd class="nums text-2xl font-extrabold">{resumo.ativos}</dd>
-			<dt class="mt-0.5 text-xs font-semibold text-ink-soft">Estudaram nos últimos 7 dias</dt>
-		</div>
-		<div class="rounded-2xl bg-tile p-3">
-			<dd class="nums text-2xl font-extrabold">{resumo.respondidas.toLocaleString('pt-BR')}</dd>
-			<dt class="mt-0.5 text-xs font-semibold text-ink-soft">Questões respondidas</dt>
-		</div>
-		<div class="rounded-2xl bg-tile p-3">
-			<dd class="nums text-2xl font-extrabold">{resumo.acerto}</dd>
-			<dt class="mt-0.5 text-xs font-semibold text-ink-soft">Acerto da turma</dt>
-		</div>
-	</dl>
 
 	{#if resumo.alunos === 0}
 		<section class="mt-6 rounded-3xl border border-line bg-card p-5 sm:p-6">
@@ -380,9 +413,11 @@
 	</div>
 
 	<div id="painel-{aba}" role="tabpanel" tabindex="0" aria-labelledby="aba-{aba}" class="mt-4">
-		{#if aba === 'alunos'}
+		{#if aba === 'geral'}
+			<VisaoGeral {dados} {simulados} onAbrirAluno={abrirAluno} onIrPara={irPara} />
+		{:else if aba === 'alunos'}
 			<div class="flex flex-wrap items-center justify-between gap-2">
-				<p class="text-xs text-ink-soft">Mais ativos primeiro. "7 dias" mostra quem está estudando agora.</p>
+				<p class="text-xs text-ink-soft">Toque no nome para ver a ficha. Acerto conta a primeira tentativa de cada questão.</p>
 				{#if dados.alunos.length}
 					<button type="button" onclick={csvAlunos} class="flex min-h-11 items-center gap-1.5 rounded-xl px-2 text-sm font-bold text-accent-ink">
 						<DownloadSimple size={17} weight="bold" aria-hidden="true" /> Baixar planilha
@@ -396,26 +431,42 @@
 					<table class="w-full min-w-[560px] text-left text-sm">
 						<thead class="bg-tile text-xs text-ink-soft">
 							<tr>
-								<th scope="col" class="px-3 py-2 font-bold">Aluno</th>
+								{#snippet cabeca(coluna, rotulo, direita = false)}
+									<th scope="col" class="px-1 py-1 font-bold" aria-sort={ordem.coluna === coluna ? (ordem.desc ? 'descending' : 'ascending') : 'none'}>
+										<button
+											type="button"
+											onclick={() => ordenar(coluna)}
+											class="flex min-h-9 w-full items-center gap-1 rounded-lg px-2 hover:text-ink {direita ? 'justify-end' : ''} {ordem.coluna === coluna ? 'text-ink' : ''}"
+										>
+											{rotulo}
+											{#if ordem.coluna === coluna}
+												{#if ordem.desc}<CaretDown size={12} weight="bold" aria-hidden="true" />{:else}<CaretUp size={12} weight="bold" aria-hidden="true" />{/if}
+											{/if}
+										</button>
+									</th>
+								{/snippet}
+								{@render cabeca('nome', 'Aluno')}
 								<th scope="col" class="px-3 py-2 font-bold">RA</th>
-								<th scope="col" class="px-3 py-2 text-right font-bold">7 dias</th>
-								<th scope="col" class="px-3 py-2 text-right font-bold">Total</th>
-								<th scope="col" class="px-3 py-2 text-right font-bold">Acerto</th>
-								<th scope="col" class="px-3 py-2 font-bold">Última vez</th>
+								{@render cabeca('semana', '7 dias', true)}
+								{@render cabeca('total', 'Total', true)}
+								{@render cabeca('acerto', 'Acerto', true)}
+								{@render cabeca('ultima', 'Última vez')}
 							</tr>
 						</thead>
 						<tbody>
-							{#each dados.alunos as a (a.usuario_id)}
+							{#each alunosOrdenados as a (a.usuario_id)}
 								<tr class="border-t border-line">
 									<td class="px-3 py-2">
-										<span class="font-semibold">{a.nome || a.apelido}</span>
+										<button type="button" onclick={() => abrirAluno(a.usuario_id)} class="min-h-9 text-left font-semibold text-accent-ink underline-offset-2 hover:underline">
+											{a.nome || a.apelido}
+										</button>
 										<!-- desde D15 o apelido é o começo do nome: só mostra o antigo, quando difere -->
 										{#if a.nome && a.apelido && !a.nome.startsWith(a.apelido)}<span class="block text-xs text-ink-soft">{a.apelido}</span>{/if}
 									</td>
 									<td class="px-3 py-2 font-code text-xs">{a.ra ?? '—'}</td>
 									<td class="nums px-3 py-2 text-right font-bold">{num(a.respondidas_7d)}</td>
 									<td class="nums px-3 py-2 text-right">{num(a.respondidas)}</td>
-									<td class="nums px-3 py-2 text-right">{fmtPct(a.certas, a.respondidas)}</td>
+									<td class="nums px-3 py-2 text-right">{acertoDe(a) === null ? '—' : `${acertoDe(a)}%`}</td>
 									<td class="px-3 py-2 text-xs {a.ultima_em ? '' : 'font-bold text-bad-fg'}">{quando(a.ultima_em)}</td>
 								</tr>
 							{/each}
@@ -588,6 +639,9 @@
 															<span class="nums shrink-0 text-sm font-bold">{fmtPct(q.certas, q.respondidas)} acertaram</span>
 														</div>
 														{#if b?.tema}<p class="mt-0.5 text-xs text-pretty text-ink-soft">{b.tema}</p>{/if}
+														{#if b?.gabarito && q.escolha_comum}
+															<p class="mt-1 text-xs">Gabarito <strong>{b.gabarito}</strong>. Erro mais comum: <strong>{q.escolha_comum}</strong> ({num(q.escolha_comum_n)} de {num(q.erros_com_escolha)})</p>
+														{/if}
 													</li>
 												{/each}
 											</ol>
@@ -600,7 +654,7 @@
 				</ul>
 			{/if}
 		{:else if aba === 'materias'}
-			<p class="text-xs text-ink-soft">Pior acerto primeiro: é onde uma aula de revisão rende mais.</p>
+			<p class="text-xs text-ink-soft">Pior acerto primeiro, na primeira tentativa: é onde uma aula de revisão rende mais.</p>
 			{#if materias.length === 0}
 				<p class="mt-3 text-sm text-ink-soft">Sem respostas ainda.</p>
 			{:else}
@@ -624,7 +678,10 @@
 				</ul>
 			{/if}
 		{:else if aba === 'questoes'}
-			<p class="text-xs text-ink-soft">As que a turma mais erra (só entram questões com 3 ou mais tentativas).</p>
+			<p class="text-xs text-pretty text-ink-soft">
+				As que a turma mais erra, na primeira tentativa de cada aluno (só entram questões que 3 ou mais alunos
+				responderam). O erro mais comum mostra qual engano corrigir em aula.
+			</p>
 			{#if dados.questoes.length === 0}
 				<p class="mt-3 text-sm text-ink-soft">Ainda não há tentativas suficientes.</p>
 			{:else}
@@ -639,32 +696,16 @@
 							<p class="mt-1 text-xs text-pretty text-ink-soft">
 								{b?.tema ?? ''}{b?.tema && q.materia ? ', ' : ''}{q.materia ? nomeMateria(q.materia) : ''}
 							</p>
-							<p class="nums mt-1 text-xs text-ink-soft">{num(q.tentativas)} tentativas de {num(q.alunos)} {num(q.alunos) === 1 ? 'aluno' : 'alunos'}</p>
+							{#if b?.gabarito && q.escolha_comum}
+								<p class="mt-1.5 text-sm">
+									Gabarito <strong>{b.gabarito}</strong>. Erro mais comum: <strong>{q.escolha_comum}</strong>
+									<span class="text-ink-soft">({num(q.escolha_comum_n)} de {num(q.erros_com_escolha)} {num(q.erros_com_escolha) === 1 ? 'erro' : 'erros'})</span>
+								</p>
+							{/if}
+							<p class="nums mt-1 text-xs text-ink-soft">{num(q.alunos)} {num(q.alunos) === 1 ? 'aluno respondeu' : 'alunos responderam'}</p>
 						</li>
 					{/each}
 				</ol>
-			{/if}
-		{:else}
-			<p class="text-xs text-ink-soft">Quantos estudaram em cada semana e como foram.</p>
-			{#if dados.semanas.length === 0}
-				<p class="mt-3 text-sm text-ink-soft">Sem respostas ainda.</p>
-			{:else}
-				{@const maximo = Math.max(...dados.semanas.map((s) => num(s.respondidas)), 1)}
-				<ul class="mt-3 space-y-2">
-					{#each dados.semanas as s (s.semana)}
-						<li class="grid grid-cols-[3rem_1fr_8.5rem] items-center gap-3 text-sm">
-							<span class="nums text-xs font-semibold text-ink-soft">
-								{new Date(`${String(s.semana).slice(0, 10)}T12:00:00`).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
-							</span>
-							<div class="h-6 overflow-hidden rounded-lg bg-track" aria-hidden="true">
-								<div class="h-full rounded-lg bg-accent-bar" style="width: {(num(s.respondidas) / maximo) * 100}%"></div>
-							</div>
-							<span class="nums text-right text-xs">
-								<strong>{num(s.respondidas)}</strong>, {num(s.alunos_ativos)} {num(s.alunos_ativos) === 1 ? 'aluno' : 'alunos'}, {fmtPct(s.certas, s.respondidas)}
-							</span>
-						</li>
-					{/each}
-				</ul>
 			{/if}
 		{/if}
 	</div>
