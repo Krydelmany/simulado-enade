@@ -129,7 +129,7 @@ Todas as chaves têm o prefixo `enade-`:
 | localStorage | `enade-sessao-estudo` | estudo pausado (`v: 2`), gravado direto pela rota, fora do `stats.js` |
 | localStorage | `enade-simulado` | prova em andamento ou entregue (`v: 1`) |
 | localStorage | `enade-simulado-ultimo` | resumo da última prova entregue |
-| localStorage | `enade-simulados-turma` | simulados da turma já entregues neste aparelho: `{[id]: {em, certas, total}}` |
+| localStorage | `enade-simulados-turma` | simulados da turma entregues neste aparelho, por conta: `{[usuarioId]: {[simuladoId]: {em, certas, total}}}` (o formato de 22/10 sem a conta é ignorado) |
 | localStorage | `enade-dica-gestos` | ids das dicas de gesto já vistas (`'questoes'`, `'simulado'`) |
 | localStorage | `enade-streak` | legado, só lido por `getStreak` (deprecated) |
 | localStorage | `enade-nuvem-conta` | id do usuário logado (só com Supabase ligado; `nuvem.js`) |
@@ -204,6 +204,22 @@ some na próxima gravação.
   `simuladoId`, e o `nuvem.js` só manda a coluna `simulado_id` quando há
   vínculo. **Mudar o `FORMATO` invalida os simulados já agendados**: eles
   deixam de abrir até o professor agendar de novo.
+- **Painel do professor (D16):** abas Visão geral, Alunos, Simulados,
+  Matérias e Questões; tocar num aluno abre a ficha (`lib/painel/`), que é
+  uma camada (o voltar fecha). Regras de métrica que não podem voltar atrás:
+  - **acerto = primeira tentativa** de cada aluno a cada questão objetiva
+    (view `primeiras_objetivas`); volume (quantas respondeu) conta tudo;
+  - discursiva fica fora de todo acerto (é autoavaliada);
+  - percentual só com amostra mínima (5 por matéria na turma, 3 no aluno,
+    3 alunos por questão), e o `n` aparece ao lado;
+  - evolução de acerto é **simulado contra simulado** (mesma prova); o
+    acerto semanal não entra, porque muda com a dificuldade das questões;
+  - por questão: gabarito e a alternativa errada mais marcada
+    (`respostas.escolha`, que `registrarResposta` recebe como `escolha`);
+  - ranking conta questões diferentes, não tentativas.
+  O simulado da turma entregue vem do servidor (`entregueNoServidor` em
+  `meusSimulados`) além do registro do aparelho, e a prova da turma em
+  andamento guarda o `dono`: outra conta no mesmo aparelho não a continua.
 - **Reportar erro (D13):** o formulário fica no fim do `<Questao>`, fora da
   prova, e abre no próprio cartão (sem modal, para não criar camada).
   Funciona sem conta; o banco limita por hora. Os reportes são lidos no
