@@ -186,10 +186,13 @@ some na próxima gravação.
   por vez; o convite é `/conta/?turma=CODIGO`), `/professor/?turma=<uuid>` e
   `/privacidade/`. Nenhuma fica na tab bar: o acesso é o ícone no header e o
   rodapé.
-- **Nome:** o que o professor vê é `perfis.nome`. Ele nasce do Google
-  (`criar_perfil`), mas quem entra por link de e-mail não tem nome: o
-  formulário da turma pede o nome (pré-preenchido) e "Sua conta" deixa
-  mudar (`salvarNome`). `usuarioAtual` lê o nome do perfil, não do Google.
+- **Nome:** o que o professor e o ranking mostram é `perfis.nome` (D15).
+  Ele nasce do Google (`criar_perfil`), mas quem entra por link de e-mail
+  não tem nome: o formulário da turma pede o nome (pré-preenchido) e "Sua
+  conta" deixa mudar (`salvarNome`). `usuarioAtual` lê o nome do perfil,
+  não do Google. `membros.apelido` é só reserva (o app manda o começo do
+  nome); a coluna do `ranking_turma` ainda se chama `apelido`, mas traz o
+  nome.
 - **`/privacidade/` descreve o que o banco guarda.** Coluna ou tabela nova
   com dado de aluno muda essa página no mesmo PR.
 - **Simulado da turma (D12):** o professor agenda na aba Simulados do painel.

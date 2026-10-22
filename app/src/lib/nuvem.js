@@ -266,8 +266,9 @@ function falhou(error, padrao = 'Não deu para falar com o servidor. Tente de no
 		muitos_reportes: 'Muitos reportes em pouco tempo. Tente de novo daqui a pouco.'
 	};
 	for (const [k, v] of Object.entries(mensagens)) if (m.includes(k)) return new Error(v);
-	if (/membros_apelido_unico/.test(m)) return new Error('Alguém da turma já usa esse apelido. Escolha outro.');
-	if (/apelido|membros_apelido/.test(m)) return new Error('O apelido precisa ter de 2 a 24 caracteres.');
+	// só antes da migração 4 (D15): o índice único de apelido ainda existe
+	if (/membros_apelido_unico/.test(m)) return new Error('Alguém da turma já entrou com esse mesmo nome. Acrescente um sobrenome.');
+	if (/apelido|membros_apelido/.test(m)) return new Error('O nome precisa ter pelo menos 2 letras.');
 	if (/membros_ra/.test(m)) return new Error('RA inválido: use só números e letras (3 a 20).');
 	return new Error(padrao);
 }

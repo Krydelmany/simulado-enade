@@ -409,7 +409,8 @@
 								<tr class="border-t border-line">
 									<td class="px-3 py-2">
 										<span class="font-semibold">{a.nome || a.apelido}</span>
-										{#if a.nome && a.apelido}<span class="block text-xs text-ink-soft">{a.apelido}</span>{/if}
+										<!-- desde D15 o apelido é o começo do nome: só mostra o antigo, quando difere -->
+										{#if a.nome && a.apelido && !a.nome.startsWith(a.apelido)}<span class="block text-xs text-ink-soft">{a.apelido}</span>{/if}
 									</td>
 									<td class="px-3 py-2 font-code text-xs">{a.ra ?? '—'}</td>
 									<td class="nums px-3 py-2 text-right font-bold">{num(a.respondidas_7d)}</td>
