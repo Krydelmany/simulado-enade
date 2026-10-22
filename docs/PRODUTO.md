@@ -40,9 +40,9 @@ para a turma ter **pelo menos 3 semanas de uso** antes da prova.
 ### MVP (feito na branch `backend-turma`, falta só ligar)
 
 - [x] Login com Google ou link por e-mail. A conta é opcional (D2).
-- [x] Entrar na turma pelo **link/código do convite**, com apelido, RA opcional e consentimento (D6, D7).
+- [x] Entrar na turma pelo **link/código do convite**, com nome, RA opcional e consentimento (D6, D7, D15).
 - [x] Cada resposta (treino, estudo, simulado) sobe para o servidor, com fila offline (D4).
-- [x] **Ranking da turma** (semana / geral) por acertos, só com apelido, com opção de sair.
+- [x] **Ranking da turma** (semana / geral) por acertos, com o nome (D15) e opção de sair.
 - [x] **Painel do professor** (`/professor/?turma=…`):
   - números da turma: alunos, ativos em 7 dias, respondidas, acerto;
   - **Alunos**: nome, RA, últimos 7 dias, total, acerto, última vez;
@@ -137,8 +137,9 @@ Pagamento, app nativo, outros cursos, editor de questões, tutor com IA.
 
 6. **Migrações novas:** cada arquivo de `supabase/migrations/` roda **uma
    vez**, em ordem, no SQL Editor, e **antes** do deploy que usa o arquivo.
-   Hoje são três: `20261021000000_turmas.sql`,
-   `20261022000000_simulados_reportes.sql` e `20261022010000_visitas.sql`.
+   Hoje são quatro: `20261021000000_turmas.sql`,
+   `20261022000000_simulados_reportes.sql`, `20261022010000_visitas.sql` e
+   `20261022020000_ranking_com_nome.sql`.
 
 ### Ver as visitas ao site (D14)
 

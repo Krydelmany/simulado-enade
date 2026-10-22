@@ -37,7 +37,7 @@
 					<strong>Do login:</strong> seu e-mail e seu nome. O nome vem do Google, ou você digita ao entrar
 					na turma, e dá para mudar em Conta e turma.
 				</li>
-				<li><strong>Da turma:</strong> o apelido que você escolher e o RA, se você informar. O RA é opcional.</li>
+				<li><strong>Da turma:</strong> o RA, se você informar (é opcional), e se você quer aparecer no ranking.</li>
 				<li>
 					<strong>De cada resposta:</strong> qual questão, se acertou, a matéria, o modo (treino, estudo ou
 					simulado), quanto tempo levou e quando respondeu. O texto que você escreve na discursiva
@@ -51,11 +51,11 @@
 			<h2 id="p-quem" class="font-display text-heading font-bold">Quem vê o quê</h2>
 			<ul class="mt-2 list-disc space-y-1.5 pl-5">
 				<li>
-					<strong>O professor da sua turma</strong> vê seu nome, apelido, RA (se houver) e seu desempenho:
+					<strong>O professor da sua turma</strong> vê seu nome, RA (se houver) e seu desempenho:
 					quantas questões respondeu, acertos por matéria e resultado nos simulados da turma.
 				</li>
 				<li>
-					<strong>Os colegas da turma</strong> veem só o seu apelido e seus acertos no ranking. Se você
+					<strong>Os colegas da turma</strong> veem só o seu nome e seus acertos no ranking. Se você
 					desmarcar "Aparecer no ranking", nem isso.
 				</li>
 				<li><strong>Ninguém mais.</strong> Não vendemos nem passamos seus dados para ninguém, e o site não tem anúncios.</li>

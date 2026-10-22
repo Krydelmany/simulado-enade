@@ -38,7 +38,6 @@
 	// entrar na turma
 	let nome = $state('');
 	let codigo = $state('');
-	let apelido = $state('');
 	let ra = $state('');
 	let noRanking = $state(true);
 	let consentiu = $state(false);
@@ -85,7 +84,6 @@
 			usuario = await usuarioAtual();
 			turmas = usuario ? await minhasTurmas() : [];
 			if (!nome && usuario?.nome) nome = usuario.nome;
-			if (!apelido && usuario?.nome) apelido = usuario.nome.split(/\s+/)[0].slice(0, 24);
 			if (turmas.length && !turmaAberta) abrirTurma(turmas[0].turma);
 			fila = pendentes();
 		} catch (e) {
@@ -139,9 +137,11 @@
 	function enviarTurma(ev) {
 		ev.preventDefault();
 		acao(async () => {
-			// quem entrou por link de e-mail não tem nome: sem ele, o professor
-			// só via o apelido no painel e não sabia quem era
+			// quem entrou por link de e-mail não tem nome; e o nome é o que o
+			// ranking mostra (D15), então ele vai para o perfil antes de entrar
 			if (nome.trim() !== (usuario?.nome ?? '')) usuario.nome = await salvarNome(nome);
+			// `apelido` no banco virou reserva: vai o começo do nome (2 a 24)
+			const apelido = nome.trim().slice(0, 24).trim();
 			const t = await entrarTurma({ codigo, apelido, ra, noRanking, consentiu });
 			mostrarFormTurma = false;
 			turmaAberta = null;
@@ -350,20 +350,7 @@
 						bind:value={nome}
 						class="mt-1.5 min-h-12 w-full rounded-xl border-2 border-line bg-paper px-3 text-base"
 					/>
-					<p class="mt-1 text-xs text-ink-soft">Só o professor vê. É como ele acha você na lista da turma.</p>
-				</div>
-
-				<div>
-					<label for="apelido" class="text-sm font-bold">Apelido no ranking</label>
-					<input
-						id="apelido"
-						required
-						minlength="2"
-						maxlength="24"
-						bind:value={apelido}
-						class="mt-1.5 min-h-12 w-full rounded-xl border-2 border-line bg-paper px-3 text-base"
-					/>
-					<p class="mt-1 text-xs text-ink-soft">É o que a turma vê. Seu nome só o professor vê.</p>
+					<p class="mt-1 text-xs text-ink-soft">É como o professor acha você na lista e como você aparece no ranking.</p>
 				</div>
 
 				<div>
@@ -381,15 +368,15 @@
 
 				<label class="flex min-h-11 cursor-pointer items-start gap-3">
 					<input type="checkbox" bind:checked={noRanking} class="mt-1 h-5 w-5 shrink-0 accent-[var(--accent)]" />
-					<span class="text-sm leading-relaxed">Aparecer no ranking da turma</span>
+					<span class="text-sm leading-relaxed">Aparecer no ranking da turma, com meu nome e meus acertos</span>
 				</label>
 
 				<label class="flex cursor-pointer items-start gap-3 rounded-2xl bg-tile p-3">
 					<input type="checkbox" required bind:checked={consentiu} class="mt-1 h-5 w-5 shrink-0 accent-[var(--accent)]" />
 					<span class="text-sm leading-relaxed text-pretty">
 						Concordo que o professor desta turma veja meu nome, RA (se eu informar) e meu desempenho no
-						site: quantas questões respondi, acertos por matéria e simulados. Posso sair da turma ou apagar a
-						conta quando quiser. <a href="/privacidade/" target="_blank" class="font-bold underline">Como seus dados são usados</a>
+						site: quantas questões respondi, acertos por matéria e simulados. Se eu ficar no ranking, a turma vê
+						meu nome e meus acertos. Posso sair da turma ou apagar a conta quando quiser. <a href="/privacidade/" target="_blank" class="font-bold underline">Como seus dados são usados</a>
 					</span>
 				</label>
 

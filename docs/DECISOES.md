@@ -85,6 +85,8 @@ deixa isso auditável.
 
 ### D6. Identificação: nome do Google, RA opcional, apelido no ranking
 
+**Revista em 22/10:** o ranking passou a mostrar o nome (ver D15).
+
 **Decisão:**
 - O nome vem do Google.
 - O **RA é opcional** e fica na matrícula da turma (não no perfil).
@@ -208,3 +210,21 @@ privacidade e, no plano grátis, mais um limite. O uuid conta pessoas em vez
 de cliques sem ligar a visita a ninguém.
 
 **Revisar:** quando entrar o P5 (PostHog ou parecido).
+
+### D15. O ranking mostra o nome, sem apelido à parte
+
+Decidida em 22/10/2026 (substitui o "apelido no ranking" do D6).
+
+**Decisão:**
+- O formulário da turma pede só o **nome**, que vem preenchido com o do
+  Google.
+- O ranking mostra `perfis.nome`; trocar o nome em "Sua conta" muda o
+  ranking na hora.
+- `membros.apelido` continua no banco, preenchido com o começo do nome,
+  só como reserva. O índice que exigia apelido único saiu.
+- Quem não quer ser visto pelos colegas desmarca "Aparecer no ranking".
+  O consentimento e a `/privacidade/` dizem que a turma vê o nome.
+
+**Por quê:** pedir nome e apelido no mesmo formulário ficou repetido, e a
+turma se conhece pelo nome. Com o apelido único, dois "João" seriam
+barrados na entrada.

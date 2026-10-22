@@ -136,8 +136,9 @@ await teste('entrar de novo atualiza a matrícula sem virar professor', async ()
 	assert.deepEqual(r, [{ apelido: 'Aninha', papel: 'aluno' }]);
 });
 
-await teste('apelido repetido na turma é recusado (sem diferença de caixa)', async () => {
-	await falha(como(U.beto, `select * from public.entrar_turma('ENGC26', 'ANINHA', null, true, true)`), /membros_apelido_unico/);
+await teste('dois alunos com o mesmo começo de nome entram (o ranking usa o nome)', async () => {
+	await como(U.beto, `select * from public.entrar_turma('ENGC26', 'ANINHA', null, false, true)`);
+	await como(U.beto, `select * from public.entrar_turma('ENGC26', 'Beto', null, false, true)`);
 });
 
 await teste('aluno não se promove a professor nem entra em turma direto', async () => {
@@ -214,11 +215,15 @@ await teste('painel: matérias e semanas agregam a turma', async () => {
 	assert.deepEqual(s, [{ alunos_ativos: 2, respondidas: 4 }]);
 });
 
-await teste('ranking: só apelido, quem saiu do ranking some (menos para si)', async () => {
+await teste('ranking: mostra o nome do perfil, nunca o RA; quem saiu do ranking some (menos para si)', async () => {
 	const ana = await como(U.ana, 'select apelido, eu from public.ranking_turma($1)', [turma.id]);
-	assert.deepEqual(ana, [{ apelido: 'Aninha', eu: true }]);
+	assert.deepEqual(ana, [{ apelido: 'Nome ana', eu: true }]);
 	const beto = await como(U.beto, 'select apelido, eu from public.ranking_turma($1)', [turma.id]);
-	assert.deepEqual(beto.map((x) => x.apelido).sort(), ['Aninha', 'Beto']);
+	assert.deepEqual(beto.map((x) => x.apelido).sort(), ['Nome ana', 'Nome beto']);
+	// trocar o nome muda o ranking na hora
+	await como(U.ana, `update public.perfis set nome = 'Ana Souza' where id = $1`, [U.ana]);
+	assert.equal((await como(U.ana, 'select apelido from public.ranking_turma($1)', [turma.id]))[0].apelido, 'Ana Souza');
+	await como(U.ana, `update public.perfis set nome = 'Nome ana' where id = $1`, [U.ana]);
 	assert.equal((await como(U.intruso, 'select * from public.ranking_turma($1)', [turma.id])).length, 0);
 	const cols = Object.keys(beto[0]);
 	assert.ok(!cols.includes('nome') && !cols.includes('ra'));
