@@ -548,7 +548,7 @@
 	</div>
 {:else if escolha && salva}
 	<div class="rise rounded-3xl bg-card p-6 text-center shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]">
-		<p class="font-code text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">Sessão pausada</p>
+		<p class="text-label font-bold text-ink-soft">Sessão pausada</p>
 		<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight">Continuar de onde parou?</h2>
 		<p class="nums mt-2 text-sm text-ink-soft">
 			Questão {salva.i + 1} · {salva.certas}/{salva.feitas} certas{salva.filtro && salva.filtro !== 'todos' ? ` · ${nomeMateria(salva.filtro)}` : ''}
@@ -566,7 +566,7 @@
 		</button>
 	</div>
 {:else if encerrada}
-	<div class="blueprint -mx-4 -mt-6 bg-bar px-4 pt-8 pb-10 text-center text-white" style="border-radius: 0 0 26px 26px;">
+	<div class="blueprint faixa px-4 pt-8 pb-10 text-center text-white">
 		<p class="text-sm font-medium text-bar-fg">{revisao ? 'Revisão de erros' : 'Treino livre'}</p>
 		<h2 class="mt-1 font-display text-3xl font-extrabold tracking-tight">Sessão concluída</h2>
 		<p class="springin mx-auto mt-4 flex h-24 w-24 items-center justify-center rounded-full bg-accent-soft">
@@ -580,15 +580,15 @@
 	<div class="mx-auto -mt-0 grid max-w-xs grid-cols-3 gap-2 pt-4 text-center">
 		<div class="rounded-2xl bg-card p-3 shadow-sm">
 			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold"><Target size={17} weight="bold" class="text-accent" aria-hidden="true" />{feitas ? Math.round((certas / feitas) * 100) : 0}%</p>
-			<p class="text-[11px] font-semibold text-ink-soft">Precisão</p>
+			<p class="text-xs font-semibold text-ink-soft">Precisão</p>
 		</div>
 		<div class="rounded-2xl bg-card p-3 shadow-sm">
 			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold"><Timer size={17} weight="bold" class="text-accent" aria-hidden="true" />{mmss()}</p>
-			<p class="text-[11px] font-semibold text-ink-soft">Tempo</p>
+			<p class="text-xs font-semibold text-ink-soft">Tempo</p>
 		</div>
 		<div class="rounded-2xl bg-card p-3 shadow-sm">
 			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold"><Lightning size={17} weight="fill" class="text-accent" aria-hidden="true" />+{xpGanho}</p>
-			<p class="text-[11px] font-semibold text-ink-soft">XP ganho</p>
+			<p class="text-xs font-semibold text-ink-soft">XP ganho</p>
 		</div>
 	</div>
 	{#if porMateria().length}
@@ -691,7 +691,7 @@
 		</div>
 		{#if fimVolta}
 			<div class="rise rounded-3xl bg-card p-5 shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]">
-				<p class="font-code text-[11px] font-bold tracking-[0.14em] text-accent-ink uppercase">Volta {volta + 1} concluída</p>
+				<p class="text-label font-bold text-accent-ink">Volta {volta + 1} concluída</p>
 				<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight">Você deu a volta na fila</h2>
 				<p class="nums mt-2 text-sm text-ink-soft">
 					Nesta volta: {resumoVolta.feitas} respondidas · {resumoVolta.certas} certas · {resumoVolta.puladas} puladas

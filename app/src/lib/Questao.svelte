@@ -250,8 +250,9 @@
 	function classeAlt(letra) {
 		const base =
 			'flex w-full items-start gap-3 rounded-2xl border-2 p-3.5 text-left text-[15px] leading-relaxed transition-[border-color,background-color,color,transform] duration-150 active:scale-[0.99] disabled:cursor-default ';
-		if (prova) return base + (letra === escolha ? 'border-ink bg-tile' : 'border-line bg-card hover:border-ink');
-		if (!respondida) return base + 'border-line bg-card hover:border-ink';
+		// caneta azul: a marcação é do aluno; verde/vermelho ficam só para a correção
+		if (prova) return base + (letra === escolha ? 'border-accent bg-accent-soft' : 'border-line bg-card hover:border-accent');
+		if (!respondida) return base + 'border-line bg-card hover:border-accent';
 		if (anulada) return base + 'border-line bg-tile';
 		if (letra === q.gabarito) return base + 'border-ok-solid bg-ok-solid text-white pop';
 		if (letra === escolha) return base + 'border-bad-solid bg-bad-solid text-white';
@@ -262,7 +263,7 @@
 		// bolha de cartão-resposta: preenche como caneta ao marcar
 		const base =
 			'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-[2.5px] text-sm font-extrabold transition-colors duration-150 ';
-		if (prova) return base + (letra === escolha ? 'border-ink bg-ink text-paper' : 'border-ink/30 text-ink');
+		if (prova) return base + (letra === escolha ? 'border-accent bg-accent text-white' : 'border-ink/30 text-ink');
 		if (!respondida) return base + 'border-ink/30 text-ink';
 		if (anulada) return letra === escolha ? base + 'border-white bg-white/25 text-white' : base + 'border-line text-ink-soft';
 		if (letra === q.gabarito) return base + 'border-white bg-white/25 text-white';
@@ -275,22 +276,22 @@
 
 <article class="rounded-3xl bg-card p-4 shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)] sm:p-6">
 	<div class="flex flex-wrap items-center gap-2">
-		<p class="font-code text-[11px] font-bold tracking-[0.14em] text-accent-ink uppercase">
+		<p class="text-label font-bold text-ink-soft">
 			{rotuloQuestao(q)}
 		</p>
 		{#if q.materia}
-			<p class="flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-[11px] font-bold text-accent-ink">
+			<p class="flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-bold text-accent-ink">
 				<Atom size={12} weight="bold" aria-hidden="true" />
 				{nomeMateria(q.materia)}
 			</p>
 		{/if}
 		{#if ehGerada(q)}
 			<!-- gerada não é prova: o que importa ao aluno é o nível, não a parte -->
-			<p class="rounded-full border border-line px-2.5 py-0.5 text-[11px] font-bold text-ink-soft">
-				Revisão · {q.dificuldade === 'Média' ? 'Médio' : q.dificuldade}
+			<p class="rounded-full border border-line px-2.5 py-0.5 text-xs font-bold text-ink-soft">
+				Nível {q.dificuldade === 'Média' ? 'médio' : (q.dificuldade ?? '').toLowerCase()}
 			</p>
 		{:else if q.parte}
-			<p class="rounded-full border border-line px-2.5 py-0.5 text-[11px] font-bold text-ink-soft">
+			<p class="rounded-full border border-line px-2.5 py-0.5 text-xs font-bold text-ink-soft">
 				{q.parte === 'FG' ? 'Formação Geral' : q.parte}
 			</p>
 		{/if}
@@ -398,7 +399,7 @@
 		</p>
 	{/if}
 
-	<div class="enunciado mt-3 max-w-[65ch] text-[15px] leading-relaxed"><TextoRico texto={q.enunciado} /></div>
+	<div class="enunciado mt-3 max-w-[56ch] text-[15px] leading-relaxed"><TextoRico texto={q.enunciado} /></div>
 
 	{#if q.tipo === 'objetiva'}
 		{#if anulada && !respondida}
@@ -466,8 +467,8 @@
 			{:else}
 			{#if respostaAluno}
 				<div class="mb-3 rounded-2xl border border-line bg-tile p-4">
-					<p class="text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">Sua resposta</p>
-					<p class="enunciado mt-2 max-w-[65ch] text-sm leading-relaxed">{respostaAluno}</p>
+					<p class="text-label font-bold text-ink-soft">Sua resposta</p>
+					<p class="enunciado mt-2 max-w-[56ch] text-sm leading-relaxed">{respostaAluno}</p>
 				</div>
 			{/if}
 			{#if q.padrao_placeholder}
@@ -496,11 +497,11 @@
 				</button>
 			{:else}
 				<div in:fly={{ y: 8, duration: DUR }} class="rounded-2xl border border-line bg-panel p-4">
-					<p class="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">
+					<p class="flex items-center gap-1.5 text-label font-bold text-ink-soft">
 						<SealCheck size={15} weight="bold" aria-hidden="true" />
-						Padrão de resposta · INEP
+						Padrão de resposta do INEP
 					</p>
-					<p class="enunciado mt-2 max-w-[65ch] text-sm leading-relaxed"><TextoRico texto={q.padrao} /></p>
+					<p class="enunciado mt-2 max-w-[56ch] text-sm leading-relaxed"><TextoRico texto={q.padrao} /></p>
 				</div>
 				{#if !respondida}
 					<p class="mt-3 text-sm font-bold">Compare com a sua. Como foi?</p>
@@ -590,7 +591,7 @@
 			>
 				<!-- autoria no topo esquerdo: quem escreveu e se alguém conferiu -->
 				<span
-					class="flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold {resolucao.auditado
+					class="flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold {resolucao.auditado
 						? 'bg-ok-bg text-ok-fg'
 						: 'bg-warn-bg text-warn-fg'}"
 				>
@@ -611,7 +612,7 @@
 			</button>
 			{#if resolucaoVisivel}
 				<div class="px-4 pb-4">
-					<p class="enunciado max-w-[65ch] text-sm leading-relaxed"><TextoRico texto={resolucao.texto} /></p>
+					<p class="enunciado max-w-[56ch] text-sm leading-relaxed"><TextoRico texto={resolucao.texto} /></p>
 					{#if !resolucao.auditado}
 						<p class="mt-3 text-xs text-ink-soft">
 							Escrita por {resolucao.autor || 'IA'} e ainda não conferida por uma pessoa: pode ter erro.

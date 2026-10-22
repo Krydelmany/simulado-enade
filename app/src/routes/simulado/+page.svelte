@@ -477,7 +477,7 @@
 	</div>
 {:else if tela === 'prova' && prova}
 	<!-- ===================== PROVA ===================== -->
-	<div class="blueprint -mx-4 -mt-6 bg-bar px-4 pt-4 pb-5 text-white" style="border-radius: 0 0 26px 26px;">
+	<div class="blueprint faixa px-4 pt-4 pb-5 text-white">
 		<div class="mx-auto max-w-3xl">
 			<div class="flex items-center gap-3">
 				<button
@@ -492,7 +492,7 @@
 				<p
 					class="nums flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-code text-sm font-extrabold {restante <=
 					ALERTA_MS
-						? 'bg-accent text-white'
+						? 'bg-bad-solid text-white'
 						: 'bg-white/10 text-white'}"
 					role="timer"
 					aria-label="Tempo restante: {relogio(restante)}"
@@ -518,7 +518,7 @@
 					style="width: {(respondidas / questoes.length) * 100}%"
 				></div>
 			</div>
-			<p class="nums mt-1.5 font-code text-label font-bold text-white/55">{respondidas} de {questoes.length} respondidas</p>
+			<p class="nums mt-1.5 text-label font-semibold text-white/65">{respondidas} de {questoes.length} respondidas</p>
 		</div>
 	</div>
 
@@ -600,7 +600,7 @@
 			<ArrowLeft size={18} weight="bold" aria-hidden="true" /> Resultado
 		</button>
 		<span class="flex-1"></span>
-		<p class="nums font-code text-label font-bold text-ink-soft uppercase">
+		<p class="nums text-label font-bold text-ink-soft">
 			{NOME_BLOCO[blocoDe(i)]} · {i + 1} de {questoes.length}
 		</p>
 	</div>
@@ -656,7 +656,7 @@
 	</BarraAcao>
 {:else if tela === 'resultado' && prova && res}
 	<!-- ===================== RESULTADO ===================== -->
-	<div class="blueprint -mx-4 -mt-6 bg-bar px-4 pt-8 pb-10 text-center text-white" style="border-radius: 0 0 26px 26px;">
+	<div class="blueprint faixa px-4 pt-8 pb-10 text-center text-white">
 		<p class="text-sm font-medium text-bar-fg">Simulado · {dataCurta(prova.entregueEm)}</p>
 		<h1 class="mt-1 font-display text-3xl font-extrabold tracking-tight">
 			{prova.tempoEsgotado ? 'Tempo esgotado' : 'Prova entregue'}
@@ -673,17 +673,17 @@
 	<div class="mx-auto grid max-w-md grid-cols-3 gap-2 pt-4 text-center">
 		<div class="rounded-2xl bg-card p-3 shadow-sm">
 			<p class="nums text-xl font-extrabold">{res.fg.certas}/{res.fg.total}</p>
-			<p class="text-[11px] font-semibold text-ink-soft">Formação Geral</p>
+			<p class="text-xs font-semibold text-ink-soft">Formação Geral</p>
 		</div>
 		<div class="rounded-2xl bg-card p-3 shadow-sm">
 			<p class="nums text-xl font-extrabold">{res.ce.certas}/{res.ce.total}</p>
-			<p class="text-[11px] font-semibold text-ink-soft">Específico</p>
+			<p class="text-xs font-semibold text-ink-soft">Específico</p>
 		</div>
 		<div class="rounded-2xl bg-card p-3 shadow-sm">
 			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold">
 				<Hourglass size={16} weight="bold" class="text-accent" aria-hidden="true" />{relogio(prova.gastoMs)}
 			</p>
-			<p class="text-[11px] font-semibold text-ink-soft">Tempo</p>
+			<p class="text-xs font-semibold text-ink-soft">Tempo</p>
 		</div>
 	</div>
 	{#if res.objetivas.brancos}
@@ -750,7 +750,7 @@
 		<p class="font-display text-lg font-bold">Gabarito corrigido</p>
 		<p class="mt-0.5 text-xs text-ink-soft">Toque numa questão para ver a correção.</p>
 		{#each BLOCOS as b (b.id)}
-			<p class="mt-4 mb-2 font-code text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">{NOME_BLOCO[b.id]}</p>
+			<p class="mt-4 mb-2 text-label font-bold text-ink-soft">{NOME_BLOCO[b.id]}</p>
 			<div class="grid grid-cols-8 gap-1.5 sm:grid-cols-10">
 				{#each res.itens.slice(b.de, b.ate) as it (it.k)}
 					<button
@@ -764,7 +764,7 @@
 				{/each}
 			</div>
 		{/each}
-		<div class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-semibold text-ink-soft" aria-hidden="true">
+		<div class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-ink-soft" aria-hidden="true">
 			<span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-ok-solid"></span> certa</span>
 			<span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-bad-solid"></span> errada</span>
 			<span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded border border-line bg-track"></span> em branco</span>
@@ -810,7 +810,7 @@
 		<section
 			class="blueprint rise rounded-3xl bg-bar p-5 text-white shadow-[0_10px_30px_-12px_rgba(20,33,61,0.45)] sm:p-6"
 		>
-			<p class="flex items-center gap-2 font-code text-label font-bold text-bar-fg uppercase">
+			<p class="flex items-center gap-2 text-label font-bold text-bar-fg">
 				<Timer size={15} weight="bold" aria-hidden="true" /> Formato ENADE 2026
 			</p>
 			<dl class="nums mt-4 space-y-2 text-[15px] font-semibold">
@@ -832,7 +832,7 @@
 
 		{#if emAndamento}
 			<section class="rise rounded-3xl border-2 border-accent bg-card p-5 shadow-sm sm:p-6" aria-label="Prova em andamento">
-				<p class="font-code text-[11px] font-bold tracking-[0.14em] text-accent-ink uppercase">Prova em andamento</p>
+				<p class="text-label font-bold text-accent-ink">Prova em andamento</p>
 				<p class="nums mt-1 font-display text-xl font-extrabold">
 					{respondidas} de {questoes.length} respondidas · {relogio(restante)} restantes
 				</p>
@@ -871,7 +871,7 @@
 
 		{#if ultimo}
 			<section class="rise rounded-3xl border border-line bg-card p-5 shadow-sm" style="animation-delay: 120ms" aria-label="Último simulado">
-				<p class="font-code text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">Último simulado · {dataCurta(ultimo.em)}</p>
+				<p class="text-label font-bold text-ink-soft">Último simulado · {dataCurta(ultimo.em)}</p>
 				<p class="nums mt-1 font-display text-xl font-extrabold">
 					{ultimo.certas}/{ultimo.total} · {Math.round((ultimo.certas / ultimo.total) * 100)}%
 				</p>
@@ -948,7 +948,7 @@
 				</div>
 				<p class="nums mt-1 text-sm text-ink-soft">{respondidas} respondidas · {brancos} em branco · {relogio(restante)} restantes</p>
 				{#each BLOCOS as b (b.id)}
-					<p class="mt-4 mb-2 font-code text-[11px] font-bold tracking-[0.14em] text-ink-soft uppercase">{NOME_BLOCO[b.id]}</p>
+					<p class="mt-4 mb-2 text-label font-bold text-ink-soft">{NOME_BLOCO[b.id]}</p>
 					<div class="grid grid-cols-8 gap-1.5 sm:grid-cols-10">
 						{#each questoes.slice(b.de, b.ate) as q, j (q.id)}
 							{@const k = b.de + j}

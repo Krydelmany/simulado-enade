@@ -8,10 +8,8 @@
 	let pct = $derived(Math.round(progresso * 100));
 </script>
 
-<div class="blueprint -mx-4 -mt-6 bg-bar px-4 pt-4 pb-5 text-white" style="border-radius: 0 0 26px 26px;">
+<div class="blueprint faixa px-4 pt-4 pb-5 text-white">
 	<div class="relative mx-auto max-w-3xl">
-		<span class="pointer-events-none absolute top-0 left-0 font-code text-sm text-white/30" aria-hidden="true">+</span>
-		<span class="pointer-events-none absolute top-0 right-0 font-code text-sm text-white/30" aria-hidden="true">+</span>
 		<div class="flex items-center gap-3">
 			<button
 				type="button"
@@ -33,7 +31,7 @@
 				{#if detalhe}
 					<p class="text-sm font-medium text-bar-fg">{detalhe}</p>
 				{/if}
-				<p class="nums font-code text-label font-bold text-white/55">{pct}% concluído</p>
+				<p class="nums text-label font-semibold text-white/65">{pct}% concluído</p>
 			</div>
 		</div>
 		<div
