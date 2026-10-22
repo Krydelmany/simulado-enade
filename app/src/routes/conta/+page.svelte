@@ -5,7 +5,8 @@
 	// ranking e progresso em mais de um aparelho.
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import { GoogleLogo, EnvelopeSimple, Trophy, ChartBar, SignOut, Trash, UsersThree } from 'phosphor-svelte';
+	import { GoogleLogo, EnvelopeSimple, Trophy, ChartBar, SignOut, Trash, UsersThree, Timer } from 'phosphor-svelte';
+	import { lerFeitosDaTurma } from '$lib/simulado.js';
 	import {
 		nuvemLigada,
 		usuarioAtual,
@@ -18,7 +19,8 @@
 		sair,
 		apagarConta,
 		pendentes,
-		enviarFila
+		enviarFila,
+		simuladosDaTurma
 	} from '$lib/nuvem.js';
 
 	let carregando = $state(true);
@@ -48,6 +50,10 @@
 
 	let fila = $state(0);
 	let confirmarApagar = $state(false);
+	let confirmarSair = $state(false);
+
+	// o próximo simulado da turma que a pessoa ainda pode fazer
+	let proximoSimulado = $state(null);
 
 	let precisaTurma = $derived(usuario && (turmas.length === 0 || mostrarFormTurma));
 
@@ -140,6 +146,7 @@
 	const sairTurma = (t) =>
 		acao(async () => {
 			await sairDaTurma(t.id);
+			confirmarSair = false;
 			turmaAberta = null;
 			await recarregar();
 		});
@@ -180,6 +187,33 @@
 	$effect(() => {
 		if (turmaAberta && periodo) carregarRanking();
 	});
+
+	$effect(() => {
+		const t = turmaAberta;
+		proximoSimulado = null;
+		if (!t) return;
+		simuladosDaTurma(t.id)
+			.then((l) => {
+				const agora = Date.now();
+				const feitos = lerFeitosDaTurma();
+				proximoSimulado =
+					l
+						.filter((x) => !feitos[x.id] && new Date(x.fecha_em).getTime() >= agora)
+						.sort((a, b) => new Date(a.abre_em) - new Date(b.abre_em))
+						.map((x) => ({ ...x, aberto: new Date(x.abre_em).getTime() <= agora }))[0] ?? null;
+			})
+			.catch(() => {});
+	});
+
+	// "sex 31/10 às 23:59"
+	function diaHora(iso) {
+		const d = new Date(iso);
+		if (Number.isNaN(d.getTime())) return '';
+		const dia = d.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', '');
+		const data = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+		const hora = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+		return `${dia} ${data} às ${hora}`;
+	}
 </script>
 
 <svelte:head>
@@ -323,7 +357,7 @@
 					<span class="text-sm leading-relaxed text-pretty">
 						Concordo que o professor desta turma veja meu nome, RA (se eu informar) e meu desempenho no
 						site: quantas questões respondi, acertos por matéria e simulados. Posso sair da turma ou apagar a
-						conta quando quiser.
+						conta quando quiser. <a href="/privacidade/" target="_blank" class="font-bold underline">Como seus dados são usados</a>
 					</span>
 				</label>
 
@@ -392,6 +426,29 @@
 				{/if}
 			</section>
 
+			{#if proximoSimulado && m?.papel !== 'professor'}
+				<section class="mt-6 rounded-3xl border-2 border-accent bg-card p-5 sm:p-6" aria-labelledby="t-proximo">
+					<p class="flex items-center gap-2 text-label font-bold text-accent-ink">
+						<Timer size={16} weight="bold" aria-hidden="true" />
+						{proximoSimulado.aberto ? 'Simulado aberto agora' : 'Próximo simulado da turma'}
+					</p>
+					<h2 id="t-proximo" class="mt-1 font-display text-heading font-extrabold text-pretty">{proximoSimulado.titulo}</h2>
+					<p class="mt-1 text-sm text-ink-soft">
+						{proximoSimulado.aberto
+							? `Faça até ${diaHora(proximoSimulado.fecha_em)}.`
+							: `Abre ${diaHora(proximoSimulado.abre_em)} e fica aberto até ${diaHora(proximoSimulado.fecha_em)}.`}
+					</p>
+					{#if proximoSimulado.aberto}
+						<a
+							href="/simulado/"
+							class="btn3d duo-accent mt-4 flex min-h-[52px] items-center justify-center gap-2 rounded-[14px] px-6 font-display text-base font-bold"
+						>
+							Ir para o simulado
+						</a>
+					{/if}
+				</section>
+			{/if}
+
 			{#if turmaAberta.ranking_ativo}
 				<section class="mt-6 rounded-3xl border border-line bg-card p-5 sm:p-6" aria-labelledby="t-ranking">
 					<div class="flex items-center justify-between gap-3">
@@ -434,14 +491,37 @@
 				</section>
 			{/if}
 
-			<div class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+			<div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
 				<button type="button" onclick={() => (mostrarFormTurma = true)} class="min-h-11 font-bold text-ink-soft hover:text-ink">
 					Entrar em outra turma
 				</button>
-				<button type="button" onclick={() => sairTurma(turmaAberta)} disabled={ocupado} class="min-h-11 font-bold text-ink-soft hover:text-bad-fg">
-					Sair desta turma
-				</button>
+				<!-- Professor não sai pelo site: voltar exige o admin (SQL), e um toque
+				     sem querer tirava o painel dele. Aluno sai, mas confirmando. -->
+				{#if m?.papel !== 'professor'}
+					{#if confirmarSair}
+						<button
+							type="button"
+							onclick={() => sairTurma(turmaAberta)}
+							disabled={ocupado}
+							class="min-h-11 rounded-xl bg-bad-solid px-4 font-bold text-white"
+						>
+							Sim, sair da turma
+						</button>
+						<button type="button" onclick={() => (confirmarSair = false)} class="min-h-11 px-2 font-bold text-ink-soft">
+							Cancelar
+						</button>
+					{:else}
+						<button type="button" onclick={() => (confirmarSair = true)} class="min-h-11 font-bold text-ink-soft hover:text-bad-fg">
+							Sair desta turma
+						</button>
+					{/if}
+				{/if}
 			</div>
+			{#if confirmarSair}
+				<p class="text-xs text-pretty text-bad-fg">
+					O professor deixa de ver você e você sai do ranking. Para voltar, use o código da turma de novo.
+				</p>
+			{/if}
 		{/if}
 	{/if}
 
