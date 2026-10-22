@@ -146,3 +146,41 @@ quem está logado. Material de terceiro nunca vai para o repositório público.
 - O **e-mail embutido do Supabase** manda poucos e-mails por hora. Por isso o Google é o login principal. Para escalar o link por e-mail, configurar um SMTP próprio (ex.: Resend).
 
 Conferir os limites atuais nas páginas de preço antes de cada mudança de fase.
+
+### D12. Simulado agendado: o professor sorteia, o banco guarda a lista
+
+Decidida em 22/10/2026.
+
+**Decisão:**
+- O professor sorteia a prova no próprio navegador, com o mesmo
+  `montarProva` do simulado individual. O banco guarda só a lista de ids,
+  na ordem da prova (`simulados.questoes`).
+- O aluno monta a prova a partir dessa lista. Se a lista não couber no banco
+  do site (questão que saiu, formato novo), a prova não começa: corrigir por
+  posição com outra questão daria nota errada.
+- Cada resposta sobe com `simulado_id`, e o resultado é uma consulta sobre
+  `respostas`, como o resto do painel.
+- Vale a **primeira** resposta de cada questão: refazer depois de ver a
+  correção não muda a nota. A discursiva fica fora (é autoavaliada).
+- Antes de abrir, a lista não chega ao aluno.
+- Resposta com `simulado_id` de outra turma entra **sem** o vínculo, em vez
+  de ser recusada.
+
+**Por quê:**
+- Sortear no servidor exigiria levar o banco de questões para o Supabase,
+  que é o trabalho da correção no servidor (D9) e não cabe no prazo.
+- Recusar a resposta travaria a fila do aparelho: o lote inteiro voltaria
+  com erro para sempre, levando junto as respostas do treino.
+
+### D13. Reportar erro não exige conta
+
+Decidida em 22/10/2026.
+
+**Decisão:** o botão "Achou um erro nesta questão?" funciona para quem
+estuda sem conta. O reporte vai para a tabela `reportes`, que ninguém lê
+pelo site; nós lemos no painel do Supabase. O teto é de 20 por hora por
+pessoa logada e de 200 por hora somando os anônimos.
+
+**Por quê:** as resoluções foram escritas por IA e ainda não foram
+auditadas, e quem acha erro de gabarito não é só quem tem conta. Exigir
+login perderia justamente o aviso que mais importa.

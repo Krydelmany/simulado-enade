@@ -1,6 +1,6 @@
 # Produto: Simulado ENADE (piloto com a turma)
 
-Atualizado em 21/10/2026. Decisões numeradas (D1…) em `docs/DECISOES.md`.
+Atualizado em 22/10/2026. Decisões numeradas (D1…) em `docs/DECISOES.md`.
 
 ## Problema
 
@@ -52,21 +52,30 @@ para a turma ter **pelo menos 3 semanas de uso** antes da prova.
 - [x] Sair da turma; apagar a conta (LGPD).
 - [x] Contagem de dias até a prova na tela da turma e no painel.
 
+### Feito em 22/10 (branch `piloto-turma`, precisa da migração 2)
+
+- [x] **P1: Simulado agendado.** Na aba **Simulados** do painel, o professor
+  dá nome, abertura e fechamento e clica em "Sortear a prova e agendar". A
+  turma inteira recebe **a mesma prova** (D12):
+  - o aluno vê o simulado em `/simulado/` e em `/conta/`;
+  - antes de abrir, a lista de questões não chega ao aluno;
+  - o resultado aparece por aluno (quem não fez também), por matéria e com
+    as questões que a turma mais errou.
+- [x] **P2: Página de privacidade** em `/privacidade/`, com link no rodapé
+  e no consentimento da turma.
+- [x] **P3: Reportar erro na questão.** Fica no fim de cada questão, fora da
+  prova, e funciona sem conta (D13). Os reportes ficam na tabela `reportes`
+  do Supabase, que lemos no Table Editor.
+- [x] **P4: Exportar em CSV**: o botão "Baixar planilha" na aba Alunos e no
+  resultado de cada simulado. O arquivo abre direto no Excel em português.
+- [x] Sair da turma pede confirmação, e o professor não tem esse botão
+  (antes, um toque sem querer tirava o painel dele).
+
 ### Próximos, em ordem de prioridade
 
-1. **P1: Simulado agendado.** O professor escolhe a data e a turma inteira
-   faz **a mesma prova** (mesmo sorteio), e o painel mostra o resultado
-   consolidado por matéria. É a função de maior valor para o professor e o
-   que mais puxa adesão. Precisa de uma tabela `simulados` (turma, data, ids
-   sorteados) e de o simulado aceitar uma prova "dada" em vez de sortear.
-2. **P2: Página de privacidade** (curta: o que coletamos, quem vê, como
-   apagar). É obrigatória antes do lançamento de 01/11.
-3. **P3: Reportar erro na questão.** Um botão que grava numa tabela. As
-   resoluções feitas por IA ainda não foram auditadas, e com o professor
-   olhando, erro custa credibilidade.
-4. **P4: Exportar o painel em CSV**, para o professor levar à coordenação.
-5. **P5: Analytics de produto** (PostHog): funil e retenção.
-6. **Depois do piloto:**
+1. **P5: Analytics de produto** (PostHog): funil e retenção.
+2. **Ler os reportes** toda semana durante o piloto (SQL abaixo).
+3. **Depois do piloto:**
    - correção no servidor (D9);
    - outras turmas e cursos;
    - material do professor (D10);
@@ -113,11 +122,28 @@ Pagamento, app nativo, outros cursos, editor de questões, tutor com IA.
    values ('engcomp', 'Unisalesiano', 'Eng. de Computação 2026', '2026-11-29', 'ENGC26')
    returning id;
 
-   -- e-mail do professor → vira professor da turma
-   insert into public.membros (turma_id, usuario_id, papel, apelido)
-   select '<id da turma>', id, 'professor', 'Prof'
-   from auth.users where email = '<email do professor>';
+   -- e-mail do professor → vira professor da turma. O `on conflict` cobre
+   -- o professor que já tinha entrado pelo convite (como aluno).
+   insert into public.membros (turma_id, usuario_id, papel, apelido, consentiu_em)
+   select '<id da turma>', id, 'professor', 'Prof', now()
+   from auth.users where email = '<email do professor>'
+   on conflict (turma_id, usuario_id) do update set papel = 'professor';
    ```
+
+6. **Migrações novas:** cada arquivo de `supabase/migrations/` roda **uma
+   vez**, em ordem, no SQL Editor, e **antes** do deploy que usa o arquivo.
+   Hoje são dois: `20261021000000_turmas.sql` e
+   `20261022000000_simulados_reportes.sql`.
+
+### Ler os reportes de erro
+
+```sql
+select criado_em, questao_id, motivo, detalhe
+from public.reportes where resolvido_em is null order by criado_em desc;
+
+-- depois de corrigir (ou ver que não era erro):
+update public.reportes set resolvido_em = now() where questao_id = '2019-CE-Q09';
+```
 
    O convite é `https://<site>/conta/?turma=ENGC26`. Use um código de 6 a 12
    caracteres, sem 0/O/1/I/L.

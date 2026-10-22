@@ -54,9 +54,10 @@ app/                       o site: SvelteKit 2 + Svelte 5 + Tailwind 4 + Vite 6
                            sessao.js, gestos.js, camadas.svelte.js,
                            copiar.js (botão de copiar a questão),
                            resolucoes.js ("como resolver"), enade.js (data da
-                           prova) e os componentes (Questao, TextoRico,
-                           SessaoTopo, BarraAcao, Contador, VigiaDevTools,
-                           BordaVoltar, DicaGestos, Marca)
+                           prova), csv.js (planilha do painel) e os
+                           componentes (Questao, TextoRico, SessaoTopo,
+                           BarraAcao, Contador, VigiaDevTools, BordaVoltar,
+                           DicaGestos, Marca)
   static/banco/            O BANCO que o site carrega: enadeAAAA-{fg,ce}.json,
                            geradas.json, resolucoes.json e img/   ← SAÍDA de scripts
   vercel.json              build e cache headers (tem de ficar em app/)
@@ -128,6 +129,7 @@ Todas as chaves têm o prefixo `enade-`:
 | localStorage | `enade-sessao-estudo` | estudo pausado (`v: 2`), gravado direto pela rota, fora do `stats.js` |
 | localStorage | `enade-simulado` | prova em andamento ou entregue (`v: 1`) |
 | localStorage | `enade-simulado-ultimo` | resumo da última prova entregue |
+| localStorage | `enade-simulados-turma` | simulados da turma já entregues neste aparelho: `{[id]: {em, certas, total}}` |
 | localStorage | `enade-dica-gestos` | ids das dicas de gesto já vistas (`'questoes'`, `'simulado'`) |
 | localStorage | `enade-streak` | legado, só lido por `getStreak` (deprecated) |
 | localStorage | `enade-nuvem-conta` | id do usuário logado (só com Supabase ligado; `nuvem.js`) |
@@ -147,9 +149,9 @@ cada chave lida com isso hoje:
 - **`enade-historico`:** grava `v: 1`, mas `normalizarEstado` ignora esse
   campo e regrava sempre `v: 1`. A migração, se precisar, entra em
   `normalizarEstado`.
-- **`enade-simulado-ultimo`, `enade-xp`, `enade-erros`, `enade-revisar`,
-  `enade-dica-gestos`:** não têm `v`. A leitura só descarta o que não tem a
-  forma esperada.
+- **`enade-simulado-ultimo`, `enade-simulados-turma`, `enade-xp`,
+  `enade-erros`, `enade-revisar`, `enade-dica-gestos`:** não têm `v`. A
+  leitura só descarta o que não tem a forma esperada.
 
 `stats.js` nunca lança: storage bloqueado, cheio ou com JSON inválido volta
 ao valor padrão, e o histórico é cortado para caber (os tetos estão em
@@ -180,8 +182,24 @@ some na próxima gravação.
   aparelho (`enade-nuvem-conta`) ou na volta do login (`?code=`). Não
   importe a biblioteca de forma estática em outro lugar.
 - **Rotas:** `/conta/` (entrar → entrar na turma → turma/ranking, uma etapa
-  por vez; o convite é `/conta/?turma=CODIGO`) e `/professor/?turma=<uuid>`.
-  Nenhuma das duas fica na tab bar: o acesso é o ícone no header e o rodapé.
+  por vez; o convite é `/conta/?turma=CODIGO`), `/professor/?turma=<uuid>` e
+  `/privacidade/`. Nenhuma fica na tab bar: o acesso é o ícone no header e o
+  rodapé.
+- **`/privacidade/` descreve o que o banco guarda.** Coluna ou tabela nova
+  com dado de aluno muda essa página no mesmo PR.
+- **Simulado da turma (D12):** o professor agenda na aba Simulados do painel.
+  O sorteio é o `montarProva` no navegador dele, e o banco guarda só os ids
+  (`simulados.questoes`, na ordem da prova). O aluno monta a prova com
+  `montarProvaDada`, que recusa lista que não cabe no `FORMATO` atual
+  (`questoesDaLista`). A prova da turma é a mesma `enade-simulado` (`v: 1`)
+  com o campo opcional `simulado`. Na entrega, `registrarResposta` leva
+  `simuladoId`, e o `nuvem.js` só manda a coluna `simulado_id` quando há
+  vínculo. **Mudar o `FORMATO` invalida os simulados já agendados**: eles
+  deixam de abrir até o professor agendar de novo.
+- **Reportar erro (D13):** o formulário fica no fim do `<Questao>`, fora da
+  prova, e abre no próprio cartão (sem modal, para não criar camada).
+  Funciona sem conta; o banco limita por hora. Os reportes são lidos no
+  painel do Supabase (`docs/PRODUTO.md`).
 - **Testar sem Supabase:** `supabase/testes/servidor-local.mjs` (veja
   `docs/PRODUTO.md`). O gabarito continua no navegador de propósito (D9).
 
