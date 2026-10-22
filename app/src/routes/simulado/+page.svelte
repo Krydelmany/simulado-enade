@@ -319,6 +319,7 @@
 			if (it.bloco === 'DISC' || it.status === 'branco') continue;
 			const q = questoes[it.k];
 			registrarResposta({
+				modo: 'simulado',
 				id: q.id,
 				certa: it.status === 'certa',
 				anulada: q.gabarito === 'ANULADA',
@@ -366,6 +367,7 @@
 		if (q?.tipo !== 'discursiva') return;
 		prova.discAuto = r.auto;
 		registrarResposta({
+			modo: 'simulado',
 			id: q.id,
 			certa: !!r.certa,
 			parcial: !!r.parcial,
