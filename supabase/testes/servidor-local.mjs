@@ -145,7 +145,8 @@ function paginaEscolha(volta) {
 	return `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width">
 	<title>Login local</title><body style="font:16px system-ui;padding:24px;max-width:420px;margin:auto">
 	<h1 style="font-size:20px">Login local (dublê do Google)</h1><ul style="line-height:2.2">${op}
-	<li><a href="/auth/v1/escolher?como=novo&volta=${encodeURIComponent(volta)}">Aluno novo (sem turma)</a></li></ul>`;
+	<li><a href="/auth/v1/escolher?como=novo&volta=${encodeURIComponent(volta)}">Aluno novo (sem turma)</a></li>
+	<li><a href="/auth/v1/escolher?como=semnome&volta=${encodeURIComponent(volta)}">Aluno por e-mail (sem nome)</a></li></ul>`;
 }
 
 // --- PostgREST mínimo -------------------------------------------------------
@@ -163,8 +164,12 @@ const FUNCOES = new Set([
 	'painel_simulado',
 	'painel_simulado_questoes',
 	'reportar_questao',
-	'registrar_visita'
+	'registrar_visita',
+	'painel_aluno',
+	'painel_simulados_resumo'
 ]);
+// devolvem um valor só (jsonb): o PostgREST manda o valor, não uma lista
+const FUNCOES_ESCALARES = new Set(['painel_aluno']);
 // devolvem `void`: o PostgREST responde `null`, não uma linha
 const FUNCOES_VOID = new Set(['apagar_minha_conta', 'apagar_simulado', 'reportar_questao', 'registrar_visita']);
 
@@ -210,7 +215,8 @@ const servidor = createServer(async (req, res) => {
 				await db.query(`insert into auth.users (id, email, raw_user_meta_data) values ($1, $2, $3)`, [
 					id,
 					`aluno${n}@exemplo.com`,
-					JSON.stringify({ full_name: `Aluno Novo ${n}` })
+					// "semnome" imita quem entra por link de e-mail: o Auth não traz nome
+					JSON.stringify(url.searchParams.get('como') === 'semnome' ? {} : { full_name: `Aluno Novo ${n}` })
 				]);
 			}
 			const codigo = randomUUID();
@@ -243,6 +249,7 @@ const servidor = createServer(async (req, res) => {
 			const nomes = Object.keys(args);
 			const lista = nomes.map((k, i) => `${k} => $${i + 1}`).join(', ');
 			const linhas = await como(sub, `select * from public.${rpc[1]}(${lista})`, nomes.map((k) => args[k]));
+			if (FUNCOES_ESCALARES.has(rpc[1])) return json(res, 200, linhas[0]?.[rpc[1]] ?? null);
 			return json(res, 200, FUNCOES_VOID.has(rpc[1]) ? null : linhas);
 		}
 
@@ -279,13 +286,20 @@ const servidor = createServer(async (req, res) => {
 			await como(sub, `delete from public.membros where turma_id = $1`, [t]);
 			return res.writeHead(204).end();
 		}
+		if (url.pathname === '/rest/v1/respostas' && req.method === 'GET') {
+			// só o que o app usa: `simulado_id=in.(a,b)`; a RLS filtra o resto
+			const ids = ((url.searchParams.get('simulado_id') || '').match(/^in\.\((.*)\)$/)?.[1] || '')
+				.split(',').map((x) => x.replace(/"/g, '')).filter(Boolean);
+			const linhas = await como(sub, `select distinct simulado_id from public.respostas where simulado_id = any($1::uuid[])`, [ids]);
+			return json(res, 200, linhas);
+		}
 		if (url.pathname === '/rest/v1/respostas' && req.method === 'POST') {
 			const corpo = await lerCorpo(req);
 			const linhas = Array.isArray(corpo) ? corpo : [corpo];
 			await como(
 				sub,
-				`insert into public.respostas (id, curso, questao_id, oficial, parte, materia, modo, resultado, duracao_ms, respondida_em, simulado_id)
-				 select id, curso, questao_id, oficial, parte, materia, modo, resultado, duracao_ms, respondida_em, simulado_id
+				`insert into public.respostas (id, curso, questao_id, oficial, parte, materia, modo, resultado, duracao_ms, respondida_em, simulado_id, escolha)
+				 select id, curso, questao_id, oficial, parte, materia, modo, resultado, duracao_ms, respondida_em, simulado_id, escolha
 				 from json_populate_recordset(null::public.respostas, $1::json)
 				 on conflict (id) do nothing`,
 				[JSON.stringify(linhas)]

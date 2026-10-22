@@ -108,6 +108,17 @@ await teste('cada um muda só o próprio nome (e só o nome)', async () => {
 	await como(U.ana, `update public.perfis set nome = 'Nome ana' where id = $1`, [U.ana]);
 });
 
+await teste('migração do apelido: nenhum apelido com @ sobrevive', async () => {
+	// o arquivo roda de novo aqui com um apelido de e-mail plantado
+	await db.query(`update public.membros set apelido = 'Prof' where papel = 'professor'`);
+	await db.query(`update public.membros set apelido = 'fulano@gmail.co' where papel = 'professor'`);
+	const sql = readFileSync(join(pastaMigracoes, '20261022030000_apelido_sem_email.sql'), 'utf8');
+	await db.exec(sql);
+	const r = (await db.query(`select apelido from public.membros where papel = 'professor'`)).rows;
+	assert.deepEqual(r, [{ apelido: 'Sem nome' }]);
+	await db.query(`update public.membros set apelido = 'Prof' where papel = 'professor'`);
+});
+
 await teste('anon não lê nada além de cursos', async () => {
 	assert.equal((await como(null, 'select * from public.cursos')).length, 1);
 	await falha(como(null, 'select * from public.respostas'), /permission denied/);
@@ -308,6 +319,70 @@ await teste('simulado: painel conta a primeira resposta e ignora a discursiva', 
 	assert.equal((await como(U.ana, 'select * from public.painel_simulado_questoes($1)', [simulado.id])).length, 0);
 });
 
+// --- ficha do aluno (20261022040000_ficha_do_aluno.sql) -------------------
+await teste('ficha: professor vê o aluno da turma; aluno, intruso e aluno de fora, nada', async () => {
+	const [{ f }] = await como(U.prof, 'select public.painel_aluno($1, $2) as f', [turma.id, U.ana]);
+	assert.equal(f.perfil.nome, 'Nome ana');
+	assert.equal(f.perfil.ra, '123456');
+	assert.ok(Number(f.total) >= 5);
+	assert.ok(f.dias.length >= 1);
+	// Q10: errada (reenvio, agora), errada e certa (no simulado, de manhã)
+	const q10 = f.erradas.find((q) => q.questao_id === '2019-CE-Q10');
+	assert.deepEqual([q10.tentativas, q10.erros, q10.ultima_certa], [3, 2, false]);
+	const sim = f.simulados.find((s) => s.id === simulado.id);
+	assert.deepEqual([sim.respondidas, sim.certas], [2, 1]);
+	assert.equal((await como(U.ana, 'select public.painel_aluno($1, $2) as f', [turma.id, U.ana]))[0].f, null);
+	assert.equal((await como(U.intruso, 'select public.painel_aluno($1, $2) as f', [turma.id, U.ana]))[0].f, null);
+	// o intruso não é aluno da turma: o professor não lê a ficha dele
+	assert.equal((await como(U.prof, 'select public.painel_aluno($1, $2) as f', [turma.id, U.intruso]))[0].f, null);
+	await falha(como(null, 'select public.painel_aluno($1, $2)', [turma.id, U.ana]), /permission denied/);
+});
+
+// --- primeira tentativa e alternativa marcada (D16) -----------------------
+const respLetra = (usuario, questao, resultado, escolha, em) =>
+	como(
+		usuario,
+		`insert into public.respostas (id, questao_id, oficial, parte, materia, modo, resultado, escolha, respondida_em)
+		 values (gen_random_uuid(), $1, true, 'CE', 'redes', 'treino', $2, $3, $4::timestamptz)`,
+		[questao, resultado, escolha, em]
+	);
+
+await teste('D16: refazer até acertar não infla o acerto da turma', async () => {
+	await respLetra(U.ana, '2019-CE-Q20', 'errada', 'C', '2026-10-20T10:00:00Z');
+	await respLetra(U.ana, '2019-CE-Q20', 'certa', 'B', '2026-10-20T10:05:00Z');
+	await respLetra(U.ana, '2019-CE-Q20', 'certa', 'B', '2026-10-20T10:06:00Z');
+	await respLetra(U.beto, '2019-CE-Q20', 'errada', 'C', '2026-10-20T11:00:00Z');
+	const [m] = await como(U.prof, `select respondidas::int, certas::int from public.painel_materias($1) where materia = 'redes'`, [turma.id]);
+	assert.deepEqual(m, { respondidas: 2, certas: 0 });
+	const a = await como(U.prof, 'select apelido, primeiras::int, primeiras_certas::int from public.painel_alunos($1)', [turma.id]);
+	assert.deepEqual(a.find((x) => x.apelido === 'Aninha'), { apelido: 'Aninha', primeiras: 3, primeiras_certas: 1 });
+});
+
+await teste('D16: por questão, a alternativa errada mais marcada', async () => {
+	const [q] = await como(
+		U.prof,
+		`select tentativas::int, erros::int, escolha_comum, escolha_comum_n::int, erros_com_escolha::int
+		 from public.painel_questoes($1, 2) where questao_id = '2019-CE-Q20'`,
+		[turma.id]
+	);
+	assert.deepEqual(q, { tentativas: 2, erros: 2, escolha_comum: 'C', escolha_comum_n: 2, erros_com_escolha: 2 });
+	await falha(respLetra(U.ana, '2019-CE-Q21', 'errada', 'Z', '2026-10-20T12:00:00Z'), /check constraint/);
+});
+
+await teste('D16: ranking conta questões diferentes, repetir não sobe ninguém', async () => {
+	const antes = (await como(U.ana, 'select certas::int from public.ranking_turma($1) where eu', [turma.id]))[0].certas;
+	await respLetra(U.ana, '2019-CE-Q20', 'certa', 'B', '2026-10-20T13:00:00Z');
+	await respLetra(U.ana, '2019-CE-Q20', 'certa', 'B', '2026-10-20T13:01:00Z');
+	const depois = (await como(U.ana, 'select certas::int from public.ranking_turma($1) where eu', [turma.id]))[0].certas;
+	assert.equal(depois, antes);
+});
+
+await teste('D16: resumo dos simulados (participação e média de quem fez)', async () => {
+	const r = await como(U.prof, 'select titulo, alunos_fizeram::int, media_certas::float from public.painel_simulados_resumo($1)', [turma.id]);
+	assert.deepEqual(r, [{ titulo: 'Simulado 1', alunos_fizeram: 1, media_certas: 1 }]);
+	assert.equal((await como(U.ana, 'select * from public.painel_simulados_resumo($1)', [turma.id])).length, 0);
+});
+
 // --- reporte de erro -------------------------------------------------------
 await teste('reporte: anônimo e logado reportam; ninguém lê pelo site', async () => {
 	await como(null, `select public.reportar_questao('2019-CE-Q09', 'gabarito', 'A letra certa é a C')`);
@@ -367,7 +442,7 @@ await teste('visitas: teto por aparelho ignora o excesso sem dar erro', async ()
 await teste('sair da turma tira do painel, mas mantém as respostas do aluno', async () => {
 	await como(U.beto, 'delete from public.membros');
 	assert.equal((await como(U.prof, 'select * from public.painel_alunos($1)', [turma.id])).length, 1);
-	assert.equal((await como(U.beto, 'select * from public.respostas')).length, 2);
+	assert.equal((await como(U.beto, 'select * from public.respostas')).length, 3); // 2 + a Q20 do teste D16
 });
 
 await teste('apagar a conta leva perfil e respostas junto', async () => {
