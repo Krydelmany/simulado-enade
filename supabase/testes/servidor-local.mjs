@@ -248,14 +248,19 @@ const servidor = createServer(async (req, res) => {
 
 		// ---- tabelas que o app usa
 		if (url.pathname === '/rest/v1/membros' && req.method === 'GET') {
+			// Igual ao PostgREST: só filtra o que a URL pede (`usuario_id=eq.…`) e
+			// deixa o resto para a RLS. Antes o dublê filtrava por conta própria e
+			// escondeu o bug do professor que recebia a turma uma vez por aluno.
+			const usuario = (url.searchParams.get('usuario_id') || '').replace(/^eq\./, '') || null;
 			const linhas = await como(
 				sub,
 				`select m.papel, m.apelido, m.ra, m.no_ranking, m.entrou_em,
 					json_build_object('id', t.id, 'nome', t.nome, 'instituicao', t.instituicao, 'curso', t.curso,
 						'data_prova', t.data_prova, 'codigo', t.codigo, 'ranking_ativo', t.ranking_ativo) as turma
 				 from public.membros m join public.turmas t on t.id = m.turma_id
-				 where m.usuario_id = auth.uid()
-				 order by m.entrou_em`
+				 where ($1::uuid is null or m.usuario_id = $1::uuid)
+				 order by m.entrou_em`,
+				[usuario]
 			);
 			return json(res, 200, linhas);
 		}
