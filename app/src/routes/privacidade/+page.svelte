@@ -33,7 +33,10 @@
 			<h2 id="p-conta" class="font-display text-heading font-bold">Com conta e turma</h2>
 			<p class="mt-2">A conta serve para entrar na turma do seu professor. Quando você entra, guardamos:</p>
 			<ul class="mt-2 list-disc space-y-1.5 pl-5">
-				<li><strong>Do login:</strong> seu nome e e-mail, que vêm do Google (ou só o e-mail, se entrar por link).</li>
+				<li>
+					<strong>Do login:</strong> seu e-mail e seu nome. O nome vem do Google, ou você digita ao entrar
+					na turma, e dá para mudar em Conta e turma.
+				</li>
 				<li><strong>Da turma:</strong> o apelido que você escolher e o RA, se você informar. O RA é opcional.</li>
 				<li>
 					<strong>De cada resposta:</strong> qual questão, se acertou, a matéria, o modo (treino, estudo ou

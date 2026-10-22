@@ -264,6 +264,16 @@ const servidor = createServer(async (req, res) => {
 			);
 			return json(res, 200, linhas);
 		}
+		if (url.pathname === '/rest/v1/perfis' && req.method === 'GET') {
+			const id = (url.searchParams.get('id') || '').replace(/^eq\./, '') || null;
+			return json(res, 200, await como(sub, `select id, nome from public.perfis where ($1::uuid is null or id = $1::uuid)`, [id]));
+		}
+		if (url.pathname === '/rest/v1/perfis' && req.method === 'PATCH') {
+			const id = (url.searchParams.get('id') || '').replace(/^eq\./, '');
+			const corpo = await lerCorpo(req);
+			await como(sub, `update public.perfis set nome = $2 where id = $1::uuid`, [id, corpo.nome]);
+			return res.writeHead(204).end();
+		}
 		if (url.pathname === '/rest/v1/membros' && req.method === 'DELETE') {
 			const t = (url.searchParams.get('turma_id') || '').replace(/^eq\./, '');
 			await como(sub, `delete from public.membros where turma_id = $1`, [t]);
