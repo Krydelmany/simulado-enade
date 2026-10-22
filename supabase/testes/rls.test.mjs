@@ -214,6 +214,103 @@ await teste('ranking: só apelido, quem saiu do ranking some (menos para si)', a
 	assert.ok(!cols.includes('nome') && !cols.includes('ra'));
 });
 
+// --- simulado agendado (20261022000000_simulados_reportes.sql) ---------------
+const PROVA = ['2019-FG-Q02', '2019-CE-Q09', '2019-CE-Q10', '2019-CE-D01'];
+const criarSimulado = (usuario, abre = "now() - interval '1 hour'") =>
+	como(
+		usuario,
+		`select id, titulo from public.criar_simulado($1, ' Simulado 1 ', $2, 3, ${abre}, now() + interval '7 days')`,
+		[turma.id, PROVA]
+	);
+let simulado;
+
+await teste('simulado: só o professor da turma agenda', async () => {
+	await falha(criarSimulado(U.ana), /sem_permissao/);
+	await falha(criarSimulado(U.intruso), /sem_permissao/);
+	await falha(como(null, `select * from public.criar_simulado($1, 'x', '{}', 1, now(), now())`, [turma.id]), /permission denied/);
+	[simulado] = await criarSimulado(U.prof);
+	assert.equal(simulado.titulo, 'Simulado 1');
+	await falha(como(U.ana, 'select * from public.simulados'), /permission denied/);
+});
+
+await teste('simulado: id de questão torto ou janela invertida são recusados', async () => {
+	await falha(
+		como(U.prof, `select * from public.criar_simulado($1, 'x1', '{"2019-CE-Q09; drop"}', 1, now(), now() + interval '1 day')`, [turma.id]),
+		/check constraint/
+	);
+	await falha(
+		como(U.prof, `select * from public.criar_simulado($1, 'x2', $2, 1, now(), now() - interval '1 day')`, [turma.id, PROVA]),
+		/check constraint/
+	);
+});
+
+await teste('simulado: membro vê a prova aberta; a futura vem sem as questões; intruso não vê', async () => {
+	const [futuro] = await criarSimulado(U.prof, "now() + interval '2 days'");
+	const ana = await como(U.ana, 'select id, questoes from public.simulados_turma($1)', [turma.id]);
+	assert.deepEqual(ana.find((s) => s.id === simulado.id).questoes, PROVA);
+	assert.equal(ana.find((s) => s.id === futuro.id).questoes, null);
+	const prof = await como(U.prof, 'select id, questoes from public.simulados_turma($1)', [turma.id]);
+	assert.deepEqual(prof.find((s) => s.id === futuro.id).questoes, PROVA);
+	assert.equal((await como(U.intruso, 'select * from public.simulados_turma($1)', [turma.id])).length, 0);
+	await falha(como(U.ana, 'select public.apagar_simulado($1)', [futuro.id]), /sem_permissao/);
+	await como(U.prof, 'select public.apagar_simulado($1)', [futuro.id]);
+	assert.equal((await como(U.prof, 'select * from public.simulados_turma($1)', [turma.id])).length, 1);
+});
+
+const respSim = (usuario, questao, resultado, simuladoId, em = null) =>
+	como(
+		usuario,
+		`insert into public.respostas (id, questao_id, oficial, parte, materia, modo, resultado, respondida_em, simulado_id)
+		 values (gen_random_uuid(), $1, true, 'CE', 'algoritmos', 'simulado', $2, coalesce($4::timestamptz, now()), $3)
+		 returning simulado_id`,
+		[questao, resultado, simuladoId, em]
+	);
+
+await teste('simulado: resposta de fora da turma entra sem o vínculo (a fila não trava)', async () => {
+	const [r] = await respSim(U.intruso, '2019-CE-Q09', 'certa', simulado.id);
+	assert.equal(r.simulado_id, null);
+	const [r2] = await respSim(U.ana, '2019-CE-Q09', 'certa', '99999999-9999-9999-9999-999999999999');
+	assert.equal(r2.simulado_id, null);
+});
+
+await teste('simulado: painel conta a primeira resposta e ignora a discursiva', async () => {
+	await respSim(U.ana, '2019-CE-Q09', 'certa', simulado.id, '2026-10-22T10:00:00Z');
+	await respSim(U.ana, '2019-CE-Q10', 'errada', simulado.id, '2026-10-22T10:00:00Z');
+	await respSim(U.ana, '2019-CE-D01', 'certa', simulado.id, '2026-10-22T10:00:00Z');
+	// refez depois da correção: não muda a nota
+	await respSim(U.ana, '2019-CE-Q10', 'certa', simulado.id, '2026-10-22T11:00:00Z');
+	const r = await como(U.prof, 'select apelido, respondidas::int, certas::int from public.painel_simulado($1)', [simulado.id]);
+	assert.deepEqual(r, [
+		{ apelido: 'Aninha', respondidas: 2, certas: 1 },
+		{ apelido: 'Beto', respondidas: 0, certas: 0 }
+	]);
+	const q = await como(U.prof, 'select questao_id, respondidas::int, certas::int from public.painel_simulado_questoes($1)', [simulado.id]);
+	assert.deepEqual(q, [
+		{ questao_id: '2019-CE-Q10', respondidas: 1, certas: 0 },
+		{ questao_id: '2019-CE-Q09', respondidas: 1, certas: 1 }
+	]);
+	assert.equal((await como(U.ana, 'select * from public.painel_simulado($1)', [simulado.id])).length, 0);
+	assert.equal((await como(U.ana, 'select * from public.painel_simulado_questoes($1)', [simulado.id])).length, 0);
+});
+
+// --- reporte de erro -------------------------------------------------------
+await teste('reporte: anônimo e logado reportam; ninguém lê pelo site', async () => {
+	await como(null, `select public.reportar_questao('2019-CE-Q09', 'gabarito', 'A letra certa é a C')`);
+	await como(U.ana, `select public.reportar_questao('2019-CE-Q10', 'enunciado', '')`);
+	const r = (await db.query('select usuario_id, motivo from public.reportes order by criado_em')).rows;
+	assert.deepEqual(r, [
+		{ usuario_id: null, motivo: 'gabarito' },
+		{ usuario_id: U.ana, motivo: 'enunciado' }
+	]);
+	await falha(como(U.ana, 'select * from public.reportes'), /permission denied/);
+	await falha(como(null, `select public.reportar_questao('2019-CE-Q09', 'xingamento', '')`), /check constraint/);
+});
+
+await teste('reporte: teto por hora segura enxurrada', async () => {
+	for (let k = 0; k < 19; k++) await como(U.ana, `select public.reportar_questao('2019-CE-Q11', 'outro', '')`);
+	await falha(como(U.ana, `select public.reportar_questao('2019-CE-Q11', 'outro', '')`), /muitos_reportes/);
+});
+
 await teste('sair da turma tira do painel, mas mantém as respostas do aluno', async () => {
 	await como(U.beto, 'delete from public.membros');
 	assert.equal((await como(U.prof, 'select * from public.painel_alunos($1)', [turma.id])).length, 1);

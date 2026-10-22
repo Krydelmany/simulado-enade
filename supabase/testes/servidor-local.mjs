@@ -156,8 +156,16 @@ const FUNCOES = new Set([
 	'painel_alunos',
 	'painel_materias',
 	'painel_questoes',
-	'painel_semanas'
+	'painel_semanas',
+	'criar_simulado',
+	'apagar_simulado',
+	'simulados_turma',
+	'painel_simulado',
+	'painel_simulado_questoes',
+	'reportar_questao'
 ]);
+// devolvem `void`: o PostgREST responde `null`, não uma linha
+const FUNCOES_VOID = new Set(['apagar_minha_conta', 'apagar_simulado', 'reportar_questao']);
 
 function erroPg(res, e) {
 	const status = /permission denied|row-level/.test(e.message) ? 403 : 400;
@@ -234,8 +242,7 @@ const servidor = createServer(async (req, res) => {
 			const nomes = Object.keys(args);
 			const lista = nomes.map((k, i) => `${k} => $${i + 1}`).join(', ');
 			const linhas = await como(sub, `select * from public.${rpc[1]}(${lista})`, nomes.map((k) => args[k]));
-			const vazio = linhas.length === 1 && Object.keys(linhas[0]).length === 1 && rpc[1] === 'apagar_minha_conta';
-			return json(res, 200, vazio ? null : linhas);
+			return json(res, 200, FUNCOES_VOID.has(rpc[1]) ? null : linhas);
 		}
 
 		// ---- tabelas que o app usa
@@ -261,8 +268,8 @@ const servidor = createServer(async (req, res) => {
 			const linhas = Array.isArray(corpo) ? corpo : [corpo];
 			await como(
 				sub,
-				`insert into public.respostas (id, curso, questao_id, oficial, parte, materia, modo, resultado, duracao_ms, respondida_em)
-				 select id, curso, questao_id, oficial, parte, materia, modo, resultado, duracao_ms, respondida_em
+				`insert into public.respostas (id, curso, questao_id, oficial, parte, materia, modo, resultado, duracao_ms, respondida_em, simulado_id)
+				 select id, curso, questao_id, oficial, parte, materia, modo, resultado, duracao_ms, respondida_em, simulado_id
 				 from json_populate_recordset(null::public.respostas, $1::json)
 				 on conflict (id) do nothing`,
 				[JSON.stringify(linhas)]
