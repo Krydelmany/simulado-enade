@@ -5,6 +5,7 @@
 	import { resumoProgresso } from '$lib/resumo.js';
 	import { DATA_ENADE, diasAteEnade } from '$lib/enade.js';
 	import { nomeMateria } from '$lib/materias.js';
+	import { nuvemLigada, contaLocal } from '$lib/nuvem.js';
 	import {
 		ArrowRight,
 		CalendarBlank,
@@ -12,7 +13,8 @@
 		Infinity as InfinityIcon,
 		Lightning,
 		Stairs,
-		Timer
+		Timer,
+		UsersThree
 	} from 'phosphor-svelte';
 
 	let total = $state(0);
@@ -29,6 +31,10 @@
 	let paraRevisar = $state([]);
 	// null até montar: no prerender a contagem ficaria congelada no dia do build
 	let dias = $state(null);
+	// Quem chega pelo link da home (e não pelo convite) estudava sem conta e
+	// nunca aparecia no painel do professor. Só depois de montar: no prerender
+	// não há localStorage para saber se a pessoa já entrou.
+	let convidarTurma = $state(false);
 
 	let temProgresso = $derived(Boolean(prog?.temDados));
 
@@ -75,6 +81,7 @@
 
 	onMount(async () => {
 		dias = diasAteEnade();
+		convidarTurma = nuvemLigada && !contaLocal();
 		try {
 			const b = await carregarBanco();
 			// `contagens` é a mesma função que o resto do app usa, então a home
@@ -155,6 +162,21 @@
 		estava sendo montado, que não dizia nada para o aluno.
 	-->
 	<aside class="mt-6 lg:mt-0" aria-label={temProgresso ? 'Seu progresso' : 'O que tem no banco'}>
+		{#if convidarTurma}
+			<a
+				href="/conta/"
+				class="rise group mb-4 flex items-center gap-3 rounded-3xl border-2 border-accent bg-card p-4 transition-colors hover:bg-accent-soft"
+			>
+				<span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-accent-soft" aria-hidden="true">
+					<UsersThree size={24} weight="bold" class="text-accent-ink" />
+				</span>
+				<span class="min-w-0 flex-1">
+					<span class="block font-display text-base font-bold">Tem turma? Entre com o código</span>
+					<span class="block text-sm leading-snug text-ink-soft">Seu professor acompanha seu progresso e você entra no ranking.</span>
+				</span>
+				<CaretRight size={20} weight="bold" class="shrink-0 text-accent-ink transition-transform group-hover:translate-x-1" aria-hidden="true" />
+			</a>
+		{/if}
 		<div
 			class="rise rounded-3xl border border-line bg-card p-5 shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)] sm:p-6"
 			style="animation-delay: 150ms"

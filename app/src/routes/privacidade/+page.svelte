@@ -21,10 +21,11 @@
 
 	<div class="mt-6 space-y-8 text-[15px] leading-relaxed text-pretty">
 		<section aria-labelledby="p-sem-conta">
-			<h2 id="p-sem-conta" class="font-display text-heading font-bold">Sem conta, nada sai do seu aparelho</h2>
+			<h2 id="p-sem-conta" class="font-display text-heading font-bold">Sem conta, seu progresso fica no aparelho</h2>
 			<p class="mt-2">
 				Para estudar não precisa de conta. Seu progresso (respostas, erros, questões marcadas e
-				simulados) fica só no navegador deste aparelho. Ninguém mais vê, nem nós.
+				simulados) fica só no navegador deste aparelho. Ninguém mais vê, nem nós. A única coisa que sai
+				é a contagem de visitas, explicada abaixo.
 			</p>
 		</section>
 
@@ -79,6 +80,19 @@
 					turmas e todas as respostas que subiram. O progresso no seu aparelho continua.
 				</li>
 			</ul>
+		</section>
+
+		<section aria-labelledby="p-visitas">
+			<h2 id="p-visitas" class="font-display text-heading font-bold">Contagem de visitas</h2>
+			<p class="mt-2">
+				Para saber quantas pessoas usam o site, contamos cada página aberta: qual página, de que site
+				você chegou (só o nome, como whatsapp.com), se é celular ou computador e se você estava na conta.
+			</p>
+			<p class="mt-2">
+				Para contar pessoas e não cliques, o navegador guarda um código sorteado. Ele não tem ligação
+				com seu nome nem com sua conta, e some se você limpar os dados do site. Não guardamos seu IP nas
+				visitas. Com o "não rastrear" ligado no navegador, não contamos nada.
+			</p>
 		</section>
 
 		<section aria-labelledby="p-reporte">
