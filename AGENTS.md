@@ -135,6 +135,7 @@ Todas as chaves têm o prefixo `enade-`:
 | localStorage | `enade-nuvem-conta` | id do usuário logado (só com Supabase ligado; `nuvem.js`) |
 | localStorage | `enade-nuvem-fila` | respostas esperando subir, cada uma com `dono` (teto `TETO_FILA`) |
 | localStorage | `enade-nuvem-auth` | sessão do Supabase Auth (gravada pelo `supabase-js`) |
+| localStorage | `enade-aparelho` | uuid sorteado no navegador, só para contar visitas (D14); sem ligação com a conta |
 | sessionStorage | `enade-banco` | cache do banco |
 
 Não existe servidor para migrar dados. **Qualquer mudança no formato gravado
@@ -200,6 +201,11 @@ some na próxima gravação.
   prova, e abre no próprio cartão (sem modal, para não criar camada).
   Funciona sem conta; o banco limita por hora. Os reportes são lidos no
   painel do Supabase (`docs/PRODUTO.md`).
+- **Visitas (D14):** o `afterNavigate` do layout chama `registrarVisita`,
+  que manda um `fetch` direto (sem `supabase-js`) para `registrar_visita`.
+  Só vai o caminho, sem a query; o convite vira o booleano `convite`. Nunca
+  lança, e não faz nada sem a migração, sem rede ou com "não rastrear".
+  Campo novo na visita muda também a `/privacidade/`.
 - **Testar sem Supabase:** `supabase/testes/servidor-local.mjs` (veja
   `docs/PRODUTO.md`). O gabarito continua no navegador de propósito (D9).
 
