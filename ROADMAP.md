@@ -25,8 +25,16 @@
 - [x] Simulado cronometrado: 15 FG + 30 CE + 1 discursiva em 4 h, sorteio por matéria, cartão-resposta, pausa, correção na entrega
 - [ ] Repo GitHub + deploy Vercel + link p/ turma
 
-## Fase 2 (só se a turma pedir)
+## Fase 2: piloto com a turma (ENADE 29/11/2026) → ver `docs/PRODUTO.md`
 
-- [ ] Backend p/ placar compartilhado (hoje é localStorage = por aparelho)
+O professor vai rodar o app com a turma. Prazo, requisitos e decisões estão
+em `docs/PRODUTO.md` e `docs/DECISOES.md`.
+
+- [x] Backend (Supabase): login, turma por convite, respostas no servidor, ranking, painel do professor (branch `backend-turma`)
+- [ ] Ligar: projeto Supabase + Google OAuth + variáveis na Vercel (até 24/10)
+- [ ] Página de privacidade (antes de 01/11)
+- [ ] Lançamento para a turma (01/11)
+- [ ] Simulado agendado pelo professor (até 08/11)
+- [ ] Reportar erro na questão
 - [ ] PWA (instalar no celular, offline)
 - [ ] Revisão espaçada de verdade

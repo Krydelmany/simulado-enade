@@ -2,11 +2,12 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import { Infinity as InfinityIcon, Moon, Stairs, Sun, Timer } from 'phosphor-svelte';
+	import { Infinity as InfinityIcon, Moon, Stairs, Sun, Timer, UserCircle } from 'phosphor-svelte';
 	import { alternarTema, iniciarTema, temaAtual } from '$lib/tema.js';
 	import VigiaDevTools from '$lib/VigiaDevTools.svelte';
 	import BordaVoltar from '$lib/BordaVoltar.svelte';
 	import { foco } from '$lib/foco.svelte.js';
+	import { iniciarNuvem, nuvemLigada } from '$lib/nuvem.js';
 
 	const tabs = [
 		{ href: '/treino/', label: 'Treino', icone: InfinityIcon },
@@ -35,6 +36,8 @@
 	onMount(() => {
 		iniciarTema();
 		escuro = temaAtual() === 'dark';
+		// sem Supabase configurado no build, não faz nada (site 100% local)
+		return iniciarNuvem();
 	});
 
 	function trocar() {
@@ -67,6 +70,16 @@
 				{t.label}
 			</a>
 		{/each}
+		{#if nuvemLigada}
+			<a
+				href="/conta/"
+				aria-label="Conta e turma"
+				aria-current={$page.url.pathname === '/conta/' ? 'page' : undefined}
+				class="flex h-11 min-h-11 min-w-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10 active:scale-95 {$page.url.pathname === '/conta/' ? 'bg-white/15' : ''}"
+			>
+				<UserCircle size={22} weight="bold" aria-hidden="true" />
+			</a>
+		{/if}
 		<button
 			type="button"
 			onclick={trocar}
@@ -93,7 +106,8 @@
 			<div>
 				<p class="font-display text-sm font-extrabold tracking-tight">Simulado ENADE</p>
 				<p class="mt-1 text-xs leading-relaxed text-pretty text-ink-soft">
-					Estudo para a prova com questões oficiais do INEP. Sem conta, sem servidor.
+					Estudo para a prova com questões oficiais do INEP.
+					{nuvemLigada ? 'Conta só se você quiser entrar numa turma.' : 'Sem conta, sem servidor.'}
 				</p>
 			</div>
 			<nav aria-label="Modos">
@@ -102,6 +116,9 @@
 					<li><a href="/treino/" class="hover:text-accent-ink">Treino livre</a></li>
 					<li><a href="/estudo/" class="hover:text-accent-ink">Estudo por níveis</a></li>
 					<li><a href="/simulado/" class="hover:text-accent-ink">Simulado real</a></li>
+					{#if nuvemLigada}
+						<li><a href="/conta/" class="hover:text-accent-ink">Conta e turma</a></li>
+					{/if}
 				</ul>
 			</nav>
 			<div>

@@ -9,3 +9,7 @@ __pycache__/
 
 # recortes de questão gerados por banco/olho.py — saída, não fonte
 revisao/img/
+
+# variáveis locais (o .env.example é versionado)
+.env
+.env.local

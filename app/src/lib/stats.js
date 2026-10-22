@@ -372,10 +372,26 @@ function gravarEstado(e) {
 	return gravar(CHAVE_HISTORICO, magro);
 }
 
+// Quem quiser saber de cada resposta (hoje: a fila da nuvem, `nuvem.js`) se
+// inscreve aqui. O `stats.js` continua sem saber que existe servidor.
+const ouvintes = new Set();
+
+/**
+ * Inscreve `fn` para receber cada resposta registrada. Devolve o cancelamento.
+ * Um ouvinte que lança não derruba o registro (regra de ouro deste arquivo).
+ * @param {(r: {id: string, certa: boolean, parcial: boolean, anulada: boolean, materia?: string, modo?: string, duracaoMs: number, em: number}) => void} fn
+ */
+export function aoRegistrarResposta(fn) {
+	ouvintes.add(fn);
+	return () => ouvintes.delete(fn);
+}
+
 /**
  * Registra UMA resposta. Guarda só o agregado por questão (`id` + contadores),
  * nunca o enunciado — o texto já vive no JSON do banco e duplicá-lo estouraria
  * o storage rápido.
+ *
+ * `modo` (`'treino'`, `'estudo'`, `'simulado'`) só vai para os ouvintes.
  *
  * `parcial` (discursiva autoavaliada) e `anulada` contam como "respondida" mas
  * não como acerto nem erro — mesma semântica das telas de treino/estudo.
@@ -389,6 +405,7 @@ export function registrarResposta({
 	anulada = false,
 	materia,
 	tema,
+	modo,
 	duracaoMs = 0
 } = {}) {
 	if (!id) return null;
@@ -419,6 +436,13 @@ export function registrarResposta({
 	q.ultimaEm = agora;
 
 	gravarEstado(e);
+	for (const fn of ouvintes) {
+		try {
+			fn({ id, certa, parcial, anulada, materia, modo, duracaoMs: inteiro(duracaoMs), em: agora });
+		} catch {
+			// a nuvem é extra: falhar lá não pode perder a resposta aqui
+		}
+	}
 	return q;
 }
 

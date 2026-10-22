@@ -15,9 +15,13 @@ comentários, commits, PRs e textos da tela. Siga o mesmo idioma.
 ## O que é
 
 É um site estático de estudo para o ENADE de Engenharia de Computação, feito
-para uma turma. Não tem backend nem login. O banco de questões é um conjunto
-de arquivos JSON publicados junto com o site, e o progresso do aluno fica no
-`localStorage` do aparelho. O site tem três modos:
+para uma turma. O banco de questões é um conjunto de arquivos JSON publicados
+junto com o site, e o progresso do aluno fica no `localStorage` do aparelho.
+A **conta é opcional**: com o Supabase configurado no build, quem entra numa
+turma sincroniza as respostas, aparece no ranking e no painel do professor
+(veja "Conta e turma"). Sem configuração, o site é 100% local, como antes.
+Produto, prazo e decisões: `docs/PRODUTO.md` e `docs/DECISOES.md`. O site tem
+três modos:
 
 - **Treino livre** (`/treino/`): uma fila contínua e embaralhada com o banco
   **inteiro** (questões oficiais e geradas), com filtro por matéria. Há
@@ -66,6 +70,9 @@ revisao/                   markdown de revisão: lotes da extração (histórico
                            revisao/geradas/*.md (reescritos pelo geradas.py)
 testes-mob/                harness Playwright de QA mobile (desatualizado)
 design/                    prints antigos, anteriores à direção visual atual
+supabase/migrations/       schema do backend (tabelas, RLS, funções do painel)
+supabase/testes/           testes de RLS (PGlite) + servidor-local.mjs (dublê do Supabase)
+docs/                      PRODUTO.md (piloto, requisitos, prazo) e DECISOES.md (D1…)
 README.md · PLANO.md · ROADMAP.md · INVENTARIO.md   docs de produto e de fontes
 ```
 
@@ -122,6 +129,9 @@ Todas as chaves têm o prefixo `enade-`:
 | localStorage | `enade-simulado-ultimo` | resumo da última prova entregue |
 | localStorage | `enade-dica-gestos` | ids das dicas de gesto já vistas (`'questoes'`, `'simulado'`) |
 | localStorage | `enade-streak` | legado, só lido por `getStreak` (deprecated) |
+| localStorage | `enade-nuvem-conta` | id do usuário logado (só com Supabase ligado; `nuvem.js`) |
+| localStorage | `enade-nuvem-fila` | respostas esperando subir, cada uma com `dono` (teto `TETO_FILA`) |
+| localStorage | `enade-nuvem-auth` | sessão do Supabase Auth (gravada pelo `supabase-js`) |
 | sessionStorage | `enade-banco` | cache do banco |
 
 Não existe servidor para migrar dados. **Qualquer mudança no formato gravado
@@ -146,6 +156,33 @@ ao valor padrão, e o histórico é cortado para caber (os tetos estão em
 e revisar. `carregarSessao()` devolve o JSON cru, então quem chama precisa
 validar. Campo novo no histórico tem de entrar em `normalizarEstado`, senão
 some na próxima gravação.
+
+### Conta e turma (`src/lib/nuvem.js` + `routes/conta/`, `routes/professor/`)
+
+- **Ligado ou não:** `nuvemLigada` = existem `VITE_SUPABASE_URL` e
+  `VITE_SUPABASE_ANON_KEY` no build (Vercel → Environment Variables). Sem
+  elas, nada faz rede, o ícone de conta some do header e as duas rotas dizem
+  que a conta não está ligada.
+- **Quem pode o quê mora no banco**, não no app: RLS e as funções
+  `security definer` de `supabase/migrations/`. Mudou permissão? Mude a
+  migração (arquivo NOVO, nunca edite um que já rodou em produção) e
+  acrescente o caso em `supabase/testes/rls.test.mjs` (`npm test` lá dentro).
+- **Respostas:** o `stats.js` não sabe que existe servidor. Ele avisa os
+  ouvintes de `aoRegistrarResposta`; o `nuvem.js` se inscreve no
+  `iniciarNuvem()` (chamado no `+layout.svelte`) e põe cada resposta na fila.
+  A fila só enche com alguém logado, sobe em lotes de 200 com id gerado no
+  aparelho (`on conflict do nothing`) e tenta de novo ao voltar a rede ou
+  esconder a aba. Toda chamada de `registrarResposta` passa `modo`.
+- **`oficial` e `parte` saem do id** (`linhaDaResposta`): `AAAA-FG|CE-…` é
+  oficial, `GER-…` é gerada (CE). Formato novo de id tem de entrar ali.
+- **O `supabase-js` é import dinâmico:** só baixa para quem já entrou neste
+  aparelho (`enade-nuvem-conta`) ou na volta do login (`?code=`). Não
+  importe a biblioteca de forma estática em outro lugar.
+- **Rotas:** `/conta/` (entrar → entrar na turma → turma/ranking, uma etapa
+  por vez; o convite é `/conta/?turma=CODIGO`) e `/professor/?turma=<uuid>`.
+  Nenhuma das duas fica na tab bar: o acesso é o ícone no header e o rodapé.
+- **Testar sem Supabase:** `supabase/testes/servidor-local.mjs` (veja
+  `docs/PRODUTO.md`). O gabarito continua no navegador de propósito (D9).
 
 ### Simulado (`src/lib/simulado.js` + `routes/simulado/+page.svelte`)
 

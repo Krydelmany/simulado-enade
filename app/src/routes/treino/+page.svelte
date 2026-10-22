@@ -316,6 +316,7 @@
 		// histórico persistente — sem esta chamada o módulo de progresso
 		// escrevia em vazio e a home mostrava zeros para sempre
 		registrarResposta({
+			modo: 'treino',
 			id: r.id,
 			certa: !!r.certa,
 			parcial: !!r.parcial,

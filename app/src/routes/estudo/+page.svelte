@@ -201,6 +201,7 @@
 		const q = sessao[i];
 		// histórico persistente — ver nota equivalente em `treino/+page.svelte`
 		registrarResposta({
+			modo: 'estudo',
 			id: r.id,
 			certa: !!r.certa,
 			parcial: !!r.parcial,
