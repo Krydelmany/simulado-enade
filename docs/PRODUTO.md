@@ -71,9 +71,14 @@ para a turma ter **pelo menos 3 semanas de uso** antes da prova.
 - [x] Sair da turma pede confirmação, e o professor não tem esse botão
   (antes, um toque sem querer tirava o painel dele).
 
+- [x] Visitas ao site (D14): contagem própria no Supabase, com o funil do
+  convite. Na home, quem não entrou na conta vê "Tem turma? Entre com o
+  código".
+
 ### Próximos, em ordem de prioridade
 
-1. **P5: Analytics de produto** (PostHog): funil e retenção.
+1. **P5: Analytics de produto** (PostHog): retenção e eventos dentro das
+   telas. As visitas (D14) já cobrem o básico até lá.
 2. **Ler os reportes** toda semana durante o piloto (SQL abaixo).
 3. **Depois do piloto:**
    - correção no servidor (D9);
@@ -132,8 +137,31 @@ Pagamento, app nativo, outros cursos, editor de questões, tutor com IA.
 
 6. **Migrações novas:** cada arquivo de `supabase/migrations/` roda **uma
    vez**, em ordem, no SQL Editor, e **antes** do deploy que usa o arquivo.
-   Hoje são dois: `20261021000000_turmas.sql` e
-   `20261022000000_simulados_reportes.sql`.
+   Hoje são três: `20261021000000_turmas.sql`,
+   `20261022000000_simulados_reportes.sql` e `20261022010000_visitas.sql`.
+
+### Ver as visitas ao site (D14)
+
+No Table Editor, abra a view **`visitas_por_dia`**: visitas, pessoas
+(aparelhos diferentes), quantas abriram o convite, quantas estavam logadas
+e quantas no celular. Para o funil do convite e as origens:
+
+```sql
+-- abriram o convite x entraram na turma (desde o início)
+select
+  (select count(distinct aparelho) from public.visitas where convite) as abriram_convite,
+  (select count(*) from public.membros where papel = 'aluno') as entraram_na_turma;
+
+-- de onde as pessoas chegam
+select origem, count(distinct aparelho) as pessoas
+from public.visitas where origem is not null
+group by 1 order by 2 desc;
+
+-- páginas mais abertas na última semana
+select caminho, count(*) as visitas, count(distinct aparelho) as pessoas
+from public.visitas where criado_em > now() - interval '7 days'
+group by 1 order by 2 desc;
+```
 
 ### Ler os reportes de erro
 

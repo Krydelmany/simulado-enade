@@ -184,3 +184,27 @@ pessoa logada e de 200 por hora somando os anônimos.
 **Por quê:** as resoluções foram escritas por IA e ainda não foram
 auditadas, e quem acha erro de gabarito não é só quem tem conta. Exigir
 login perderia justamente o aviso que mais importa.
+
+### D14. Visitas contadas no próprio banco, sem identificar a pessoa
+
+Decidida em 22/10/2026.
+
+**Decisão:** cada página aberta vira uma linha em `visitas`, gravada pela
+função `registrar_visita`. A linha guarda:
+- a página, sem a query;
+- se veio pelo convite;
+- o domínio de onde a pessoa chegou;
+- se é celular ou computador;
+- se estava logada;
+- um uuid sorteado no navegador (`enade-aparelho`).
+
+Não guarda nome, e-mail, IP nem o id da conta. Com "não rastrear" ligado,
+nada é enviado. O envio é um `fetch` direto, sem o `supabase-js`.
+
+**Por quê:** o painel só via quem já tinha entrado na turma. A pergunta do
+lançamento é outra: quantos abriram o convite e desistiram antes de entrar.
+Um serviço de analytics de fora é mais uma conta, mais um aviso de
+privacidade e, no plano grátis, mais um limite. O uuid conta pessoas em vez
+de cliques sem ligar a visita a ninguém.
+
+**Revisar:** quando entrar o P5 (PostHog ou parecido).

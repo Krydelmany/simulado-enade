@@ -484,3 +484,69 @@ export async function reportarQuestao({ questaoId, motivo, detalhe = '' }) {
 	});
 	if (error) throw falhou(error, 'Não deu para enviar agora. Tente de novo.');
 }
+
+// ---------------------------------------------------------------------------
+// Visitas ao site (D14) — contagem própria até o P5 (analytics)
+// ---------------------------------------------------------------------------
+
+// uuid sorteado neste navegador: conta pessoas em vez de cliques. Não tem
+// ligação com a conta, e quem limpa o site ganha outro.
+const CHAVE_APARELHO = 'enade-aparelho';
+
+function aparelho() {
+	let id = ler(CHAVE_APARELHO, null);
+	if (typeof id !== 'string' || !UUID.test(id)) {
+		id = uuid();
+		gravar(CHAVE_APARELHO, id);
+	}
+	return id;
+}
+
+let ultimaVisita = '';
+let primeiraVisita = true;
+
+/**
+ * Conta a abertura de uma página. Fogo e esquece: sem rede, sem a migração
+ * de visitas ou com "não rastrear" ligado, não faz nada e nunca lança.
+ * Usa `fetch` direto (não o `supabase-js`): quem só visita não baixa a
+ * biblioteca.
+ * @param {URL} url
+ */
+export function registrarVisita(url) {
+	if (!nuvemLigada || typeof window === 'undefined') return;
+	try {
+		if (navigator.doNotTrack === '1' || navigator.globalPrivacyControl) return;
+		const caminho = url.pathname;
+		if (!/^\/[a-z0-9/-]{0,60}$/.test(caminho)) return;
+		// o layout pode avisar duas vezes a mesma navegação
+		const chave = caminho + url.search;
+		if (chave === ultimaVisita) return;
+		ultimaVisita = chave;
+		// de onde veio vale só na chegada: depois, o `referrer` continua sendo
+		// o do primeiro clique e toda página pareceria vir do WhatsApp
+		let origem = null;
+		if (primeiraVisita && document.referrer) {
+			const r = new URL(document.referrer);
+			if (r.host !== location.host) origem = r.hostname.replace(/^www\./, '').toLowerCase().slice(0, 100);
+		}
+		primeiraVisita = false;
+		const cabecalhos = { apikey: CHAVE_ANON, 'Content-Type': 'application/json' };
+		// chave antiga (JWT `anon`) também precisa ir no Authorization; a nova
+		// (`sb_publishable_…`) não é JWT e vai só no `apikey`
+		if (CHAVE_ANON.startsWith('eyJ')) cabecalhos.Authorization = `Bearer ${CHAVE_ANON}`;
+		fetch(`${URL_SUPABASE}/rest/v1/rpc/registrar_visita`, {
+			method: 'POST',
+			headers: cabecalhos,
+			body: JSON.stringify({
+				p_aparelho: aparelho(),
+				p_caminho: caminho,
+				p_convite: url.searchParams.has('turma'),
+				p_origem: origem && /^[a-z0-9.-]{1,100}$/.test(origem) ? origem : null,
+				p_logado: Boolean(contaLocal()),
+				p_tela: matchMedia('(pointer: coarse)').matches ? 'celular' : 'computador'
+			})
+		}).catch(() => {});
+	} catch {
+		// visita é extra: nada aqui pode atrapalhar a página
+	}
+}

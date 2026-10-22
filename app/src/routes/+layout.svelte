@@ -1,13 +1,14 @@
 <script>
 	import '../app.css';
 	import { onMount } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Infinity as InfinityIcon, Moon, Stairs, Sun, Timer, UserCircle } from 'phosphor-svelte';
 	import { alternarTema, iniciarTema, temaAtual } from '$lib/tema.js';
 	import VigiaDevTools from '$lib/VigiaDevTools.svelte';
 	import BordaVoltar from '$lib/BordaVoltar.svelte';
 	import { foco } from '$lib/foco.svelte.js';
-	import { iniciarNuvem, nuvemLigada } from '$lib/nuvem.js';
+	import { iniciarNuvem, nuvemLigada, registrarVisita } from '$lib/nuvem.js';
 	import Marca from '$lib/Marca.svelte';
 
 	const tabs = [
@@ -39,6 +40,11 @@
 		escuro = temaAtual() === 'dark';
 		// sem Supabase configurado no build, não faz nada (site 100% local)
 		return iniciarNuvem();
+	});
+
+	// conta cada página aberta (inclusive a primeira); ver `registrarVisita`
+	afterNavigate(({ to }) => {
+		if (to?.url) registrarVisita(to.url);
 	});
 
 	function trocar() {
