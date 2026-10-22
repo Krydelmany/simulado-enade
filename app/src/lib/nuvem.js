@@ -175,6 +175,9 @@ export function linhaDaResposta(r, dono) {
 	// só manda a coluna quando há vínculo: um banco ainda sem a migração de
 	// simulados recusaria o lote inteiro por causa de uma coluna sempre nula
 	if (UUID.test(String(r.simuladoId ?? ''))) linha.simulado_id = String(r.simuladoId);
+	// a letra marcada vira "o erro mais comum" no painel (D16); mesma regra:
+	// só vai quando existe, para um banco sem a migração 6 não recusar o lote
+	if (/^[A-E]$/.test(String(r.escolha ?? ''))) linha.escolha = r.escolha;
 	return linha;
 }
 
@@ -408,11 +411,12 @@ export async function ranking(turmaId, desde = null) {
 /** Tudo que o painel do professor mostra, numa ida só. */
 export async function painel(turmaId) {
 	const c = await obrigatorio();
-	const [alunos, materias, questoes, semanas] = await Promise.all([
+	const [alunos, materias, questoes, semanas, simulados] = await Promise.all([
 		c.rpc('painel_alunos', { p_turma: turmaId }),
 		c.rpc('painel_materias', { p_turma: turmaId }),
 		c.rpc('painel_questoes', { p_turma: turmaId, p_minimo: 3, p_limite: 20 }),
-		c.rpc('painel_semanas', { p_turma: turmaId })
+		c.rpc('painel_semanas', { p_turma: turmaId }),
+		c.rpc('painel_simulados_resumo', { p_turma: turmaId })
 	]);
 	const erro = [alunos, materias, questoes, semanas].find((r) => r.error)?.error;
 	if (erro) throw falhou(erro);
@@ -420,7 +424,9 @@ export async function painel(turmaId) {
 		alunos: alunos.data ?? [],
 		materias: materias.data ?? [],
 		questoes: questoes.data ?? [],
-		semanas: semanas.data ?? []
+		semanas: semanas.data ?? [],
+		// sem a migração 6 a função não existe: o painel abre sem a evolução
+		simulados: simulados.error ? [] : (simulados.data ?? [])
 	};
 }
 
@@ -451,7 +457,18 @@ export async function meusSimulados() {
 			(await simuladosDaTurma(m.turma.id)).map((s) => ({ ...s, turma: m.turma, papel: m.papel }))
 		)
 	);
-	return listas.flat();
+	const todos = listas.flat();
+	// Quais a pessoa já entregou, segundo o SERVIDOR (a RLS só mostra as
+	// próprias respostas). O registro do aparelho some ao trocar de celular ou
+	// limpar o navegador, e aí a prova voltava a ser oferecida.
+	const ids = todos.map((s) => s.id);
+	if (ids.length) {
+		const c = await obrigatorio();
+		const { data } = await c.from('respostas').select('simulado_id').in('simulado_id', ids);
+		const feitos = new Set((data ?? []).map((r) => r.simulado_id));
+		for (const s of todos) s.entregueNoServidor = feitos.has(s.id);
+	}
+	return todos;
 }
 
 /** O professor agenda: `questoes` é a lista sorteada pelo `montarProva`. */
@@ -574,4 +591,17 @@ export function registrarVisita(url) {
 	} catch {
 		// visita é extra: nada aqui pode atrapalhar a página
 	}
+}
+
+/**
+ * Ficha de um aluno para o painel do professor: perfil, modos, dias (35),
+ * matérias, questões que mais erra e simulados da turma. `null` se quem pede
+ * não é professor da turma ou o aluno não é dela.
+ */
+export async function painelAluno(turmaId, alunoId) {
+	const c = await obrigatorio();
+	const { data, error } = await c.rpc('painel_aluno', { p_turma: turmaId, p_aluno: alunoId });
+	if (error?.code === 'PGRST202') throw new Error('A ficha do aluno ainda não está ligada no banco (falta a migração 6).');
+	if (error) throw falhou(error);
+	return data ?? null;
 }

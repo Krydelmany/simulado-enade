@@ -17,9 +17,12 @@ export const TOTAL_QUESTOES = FORMATO.fg + FORMATO.ce + FORMATO.discursivas;
 
 const CHAVE = 'enade-simulado';
 const CHAVE_ULTIMO = 'enade-simulado-ultimo';
-// simulados da turma já entregues neste aparelho: {[id]: {em, certas, total}}.
-// A prova entregue some de `enade-simulado` quando o aluno começa outra, e o
-// cartão da turma não pode voltar a oferecer uma prova que ele já fez.
+// simulados da turma já entregues neste aparelho, POR CONTA:
+// {[usuarioId]: {[simuladoId]: {em, certas, total}}}. A prova entregue some de
+// `enade-simulado` quando o aluno começa outra, e o cartão da turma não pode
+// voltar a oferecer uma prova que ele já fez. Sem a conta na chave, num
+// computador compartilhado (laboratório) o segundo aluno via "Você entregou"
+// com a nota do primeiro e não conseguia fazer a prova.
 const CHAVE_TURMA = 'enade-simulados-turma';
 
 // Anulada fica fora do sorteio: ponto de graça distorce a nota de quem está
@@ -144,6 +147,8 @@ export function montarProvaDada(banco, simulado) {
 		discAuto: null,
 		simulado: {
 			id: simulado.id,
+			// de quem é a prova: outra conta no mesmo aparelho não a continua
+			dono: simulado.dono ?? null,
 			titulo: simulado.titulo,
 			turmaId: simulado.turma?.id ?? null,
 			turmaNome: simulado.turma?.nome ?? '',
@@ -273,16 +278,30 @@ export function relogio(ms) {
 	return `${h}:${String(m).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
 }
 
-/** Simulados da turma entregues neste aparelho: `{[id]: {em, certas, total}}`. */
-export function lerFeitosDaTurma() {
+function lerTodosFeitos() {
 	const v = ler(CHAVE_TURMA);
-	return v && typeof v === 'object' && !Array.isArray(v) ? v : {};
+	if (!v || typeof v !== 'object' || Array.isArray(v)) return {};
+	// formato de 22/10 (sem a conta, `{[simuladoId]: {em…}}`): não dá para
+	// saber de quem era, então é ignorado e regravado no formato novo
+	return Object.fromEntries(
+		Object.entries(v).filter(([, x]) => x && typeof x === 'object' && !('em' in x))
+	);
 }
 
-/** Marca um simulado da turma como entregue (guarda só o placar). */
-export function marcarFeitoDaTurma(id, resumo) {
-	if (!id) return false;
-	const feitos = lerFeitosDaTurma();
-	feitos[id] = { em: resumo.em, certas: resumo.certas, total: resumo.total };
-	return gravar(CHAVE_TURMA, feitos);
+/**
+ * Simulados da turma que ESTA conta entregou neste aparelho:
+ * `{[simuladoId]: {em, certas, total}}`. Sem conta, `{}`.
+ * @param {string | null} dono id do usuário logado
+ */
+export function lerFeitosDaTurma(dono) {
+	if (!dono) return {};
+	return lerTodosFeitos()[dono] ?? {};
+}
+
+/** Marca um simulado da turma como entregue por `dono` (guarda só o placar). */
+export function marcarFeitoDaTurma(id, resumo, dono) {
+	if (!id || !dono) return false;
+	const todos = lerTodosFeitos();
+	todos[dono] = { ...(todos[dono] ?? {}), [id]: { em: resumo.em, certas: resumo.certas, total: resumo.total } };
+	return gravar(CHAVE_TURMA, todos);
 }

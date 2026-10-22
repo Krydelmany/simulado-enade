@@ -39,8 +39,8 @@
 				</li>
 				<li><strong>Da turma:</strong> o RA, se você informar (é opcional), e se você quer aparecer no ranking.</li>
 				<li>
-					<strong>De cada resposta:</strong> qual questão, se acertou, a matéria, o modo (treino, estudo ou
-					simulado), quanto tempo levou e quando respondeu. O texto que você escreve na discursiva
+					<strong>De cada resposta:</strong> qual questão, qual alternativa você marcou, se acertou, a matéria,
+					o modo (treino, estudo ou simulado), quanto tempo levou e quando respondeu. O texto que você escreve na discursiva
 					<strong>não</strong> sai do aparelho.
 				</li>
 			</ul>

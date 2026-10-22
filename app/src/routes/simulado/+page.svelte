@@ -41,7 +41,7 @@
 		somarXP,
 		contarParaRevisar
 	} from '$lib/stats.js';
-	import { nuvemLigada, meusSimulados } from '$lib/nuvem.js';
+	import { nuvemLigada, meusSimulados, contaLocal } from '$lib/nuvem.js';
 	import {
 		ArrowLeft,
 		ArrowRight,
@@ -166,7 +166,8 @@
 				const abre = new Date(s.abre_em).getTime();
 				const fecha = new Date(s.fecha_em).getTime();
 				const estado = t < abre ? 'agendado' : t <= fecha ? 'aberto' : 'encerrado';
-				return { ...s, estado, feito: feitos[s.id] ?? null };
+				// placar do aparelho; sem ele, o servidor ainda sabe que foi entregue
+				return { ...s, estado, feito: feitos[s.id] ?? (s.entregueNoServidor ? { semPlacar: true } : null) };
 			})
 			.filter((s) => s.id !== emCurso && (s.estado !== 'encerrado' || s.feito))
 			.sort((a, b) => ['aberto', 'agendado', 'encerrado'].indexOf(a.estado) - ['aberto', 'agendado', 'encerrado'].indexOf(b.estado) || new Date(a.abre_em) - new Date(b.abre_em))
@@ -220,10 +221,13 @@
 			}
 			bancoParcial = !completo;
 			ultimo = lerUltimo();
-			feitos = lerFeitosDaTurma();
+			feitos = lerFeitosDaTurma(contaLocal());
 			// sem conta neste aparelho, `meusSimulados` nem baixa a biblioteca
 			if (nuvemLigada) meusSimulados().then((l) => (daTurma = l)).catch(() => {});
-			const p = lerProva();
+			let p = lerProva();
+			// prova da turma de OUTRA conta (computador compartilhado): não abre
+			// para esta pessoa; fica no aparelho até alguém começar outra prova
+			if (p?.simulado?.dono && p.simulado.dono !== contaLocal()) p = null;
 			if (p) {
 				const mapa = new Map(banco.map((q) => [q.id, q]));
 				const lista = p.ids.map((id) => mapa.get(id));
@@ -278,7 +282,7 @@
 		if (pendenteTurma) {
 			const s = pendenteTurma;
 			pendenteTurma = null;
-			iniciar(montarProvaDada(banco, s));
+			iniciar(montarProvaDada(banco, { ...s, dono: contaLocal() }));
 			return;
 		}
 		const p = montarProva(banco);
@@ -295,7 +299,7 @@
 			confirmaNova = true;
 			return;
 		}
-		iniciar(montarProvaDada(banco, s));
+		iniciar(montarProvaDada(banco, { ...s, dono: contaLocal() }));
 	}
 
 	function iniciar(p) {
@@ -387,6 +391,7 @@
 				id: q.id,
 				certa: it.status === 'certa',
 				anulada: q.gabarito === 'ANULADA',
+				escolha: it.marca ?? null,
 				materia: q.materia,
 				tema: q.tema,
 				simuladoId: prova.simulado?.id ?? null
@@ -413,8 +418,8 @@
 		};
 		gravarUltimo(ultimo);
 		if (prova.simulado?.id) {
-			marcarFeitoDaTurma(prova.simulado.id, ultimo);
-			feitos = lerFeitosDaTurma();
+			marcarFeitoDaTurma(prova.simulado.id, ultimo, contaLocal());
+			feitos = lerFeitosDaTurma(contaLocal());
 		}
 		gravarProva($state.snapshot(prova));
 		confirmaEntrega = false;
@@ -913,7 +918,9 @@
 					<UsersThree size={16} weight="bold" aria-hidden="true" /> Simulado da turma {s.turma.nome}
 				</p>
 				<h2 id="sim-{s.id}" class="mt-1 font-display text-xl font-extrabold text-pretty">{s.titulo}</h2>
-				{#if s.feito}
+				{#if s.feito?.semPlacar}
+					<p class="mt-2 text-[15px]">Você já entregou este simulado.</p>
+				{:else if s.feito}
 					<p class="nums mt-2 text-[15px]">
 						Você entregou: <strong>{s.feito.certas} de {s.feito.total}</strong>
 						({Math.round((s.feito.certas / s.feito.total) * 100)}%).
