@@ -148,14 +148,18 @@ function uuid() {
 	return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
 }
 
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 /**
  * Converte uma resposta do `stats.js` na linha da tabela `respostas`.
  * `oficial` e `parte` saem do id: oficial = `AAAA-FG|CE-…`, gerada = `GER-…`.
+ * `simulado_id` liga a resposta à prova agendada pelo professor; um id torto
+ * viraria erro 22P02 e o lote inteiro seria descartado, então só passa uuid.
  */
 export function linhaDaResposta(r, dono) {
 	const id = String(r.id);
 	const parte = /^\d{4}-(FG|CE)-/.exec(id)?.[1] ?? (id.startsWith('GER-') ? 'CE' : null);
-	return {
+	const linha = {
 		id: uuid(),
 		dono,
 		curso: CURSO,
@@ -168,6 +172,10 @@ export function linhaDaResposta(r, dono) {
 		duracao_ms: Math.min(Math.max(Math.round(Number(r.duracaoMs) || 0), 0), 86_400_000),
 		respondida_em: new Date(r.em || Date.now()).toISOString()
 	};
+	// só manda a coluna quando há vínculo: um banco ainda sem a migração de
+	// simulados recusaria o lote inteiro por causa de uma coluna sempre nula
+	if (UUID.test(String(r.simuladoId ?? ''))) linha.simulado_id = String(r.simuladoId);
+	return linha;
 }
 
 /** Põe uma resposta na fila (sem ninguém logado, não faz nada). */
@@ -253,7 +261,9 @@ function falhou(error, padrao = 'Não deu para falar com o servidor. Tente de no
 	const mensagens = {
 		sem_login: 'Entre na sua conta primeiro.',
 		sem_consentimento: 'Para entrar na turma, marque que concorda com o compartilhamento.',
-		codigo_invalido: 'Esse código de turma não existe. Confira com o professor.'
+		codigo_invalido: 'Esse código de turma não existe. Confira com o professor.',
+		sem_permissao: 'Só o professor da turma pode fazer isso.',
+		muitos_reportes: 'Muitos reportes em pouco tempo. Tente de novo daqui a pouco.'
 	};
 	for (const [k, v] of Object.entries(mensagens)) if (m.includes(k)) return new Error(v);
 	if (/membros_apelido_unico/.test(m)) return new Error('Alguém da turma já usa esse apelido. Escolha outro.');
@@ -387,4 +397,90 @@ export async function painel(turmaId) {
 		questoes: questoes.data ?? [],
 		semanas: semanas.data ?? []
 	};
+}
+
+// ---------------------------------------------------------------------------
+// Simulado agendado pelo professor (D12)
+// ---------------------------------------------------------------------------
+
+/**
+ * Simulados da turma: `[{id, titulo, questoes, objetivas, abre_em, fecha_em}]`.
+ * Antes de abrir, `questoes` vem `null` para o aluno (o banco esconde).
+ */
+export async function simuladosDaTurma(turmaId) {
+	const c = await obrigatorio();
+	const { data, error } = await c.rpc('simulados_turma', { p_turma: turmaId });
+	if (error) throw falhou(error);
+	return data ?? [];
+}
+
+/**
+ * Simulados de todas as turmas de quem está logado, com a turma junto.
+ * Sem ninguém logado neste aparelho, devolve `[]` sem baixar a biblioteca.
+ */
+export async function meusSimulados() {
+	if (!nuvemLigada || !contaLocal()) return [];
+	const turmas = await minhasTurmas();
+	const listas = await Promise.all(
+		turmas.map(async (m) =>
+			(await simuladosDaTurma(m.turma.id)).map((s) => ({ ...s, turma: m.turma, papel: m.papel }))
+		)
+	);
+	return listas.flat();
+}
+
+/** O professor agenda: `questoes` é a lista sorteada pelo `montarProva`. */
+export async function criarSimulado({ turmaId, titulo, questoes, objetivas, abreEm, fechaEm }) {
+	const c = await obrigatorio();
+	const { data, error } = await c.rpc('criar_simulado', {
+		p_turma: turmaId,
+		p_titulo: String(titulo || '').trim(),
+		p_questoes: questoes,
+		p_objetivas: objetivas,
+		p_abre: new Date(abreEm).toISOString(),
+		p_fecha: new Date(fechaEm).toISOString()
+	});
+	if (error) throw falhou(error, 'Não deu para agendar. Confira o título e as datas.');
+	return data?.[0] ?? null;
+}
+
+export async function apagarSimulado(simuladoId) {
+	const c = await obrigatorio();
+	const { error } = await c.rpc('apagar_simulado', { p_simulado: simuladoId });
+	if (error) throw falhou(error);
+}
+
+/** Resultado de um simulado para o painel: por aluno e por questão. */
+export async function resultadoSimulado(simuladoId) {
+	const c = await obrigatorio();
+	const [alunos, questoes] = await Promise.all([
+		c.rpc('painel_simulado', { p_simulado: simuladoId }),
+		c.rpc('painel_simulado_questoes', { p_simulado: simuladoId })
+	]);
+	const erro = alunos.error || questoes.error;
+	if (erro) throw falhou(erro);
+	return { alunos: alunos.data ?? [], questoes: questoes.data ?? [] };
+}
+
+// ---------------------------------------------------------------------------
+// Reporte de erro em questão (D13) — funciona sem conta
+// ---------------------------------------------------------------------------
+
+/** Motivos aceitos pelo banco, na ordem em que a tela mostra. */
+export const MOTIVOS_REPORTE = [
+	['gabarito', 'O gabarito está errado'],
+	['enunciado', 'O enunciado ou uma alternativa tem erro'],
+	['resolucao', 'A resolução está errada'],
+	['imagem', 'A imagem não aparece ou está cortada'],
+	['outro', 'Outro problema']
+];
+
+export async function reportarQuestao({ questaoId, motivo, detalhe = '' }) {
+	const c = await obrigatorio();
+	const { error } = await c.rpc('reportar_questao', {
+		p_questao: String(questaoId),
+		p_motivo: motivo,
+		p_detalhe: String(detalhe || '').slice(0, 1000)
+	});
+	if (error) throw falhou(error, 'Não deu para enviar agora. Tente de novo.');
 }

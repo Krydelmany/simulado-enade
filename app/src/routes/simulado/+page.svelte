@@ -19,6 +19,9 @@
 		bancoCompleto,
 		disponiveis,
 		montarProva,
+		montarProvaDada,
+		lerFeitosDaTurma,
+		marcarFeitoDaTurma,
 		corrigir,
 		lerProva,
 		gravarProva,
@@ -38,6 +41,7 @@
 		somarXP,
 		contarParaRevisar
 	} from '$lib/stats.js';
+	import { nuvemLigada, meusSimulados } from '$lib/nuvem.js';
 	import {
 		ArrowLeft,
 		ArrowRight,
@@ -55,6 +59,7 @@
 		Stairs,
 		Timer,
 		Trophy,
+		UsersThree,
 		X,
 		XCircle
 	} from 'phosphor-svelte';
@@ -90,6 +95,12 @@
 	let zoomAberto = $state(false);
 	// sentido da última troca de questão: a nova entra deslizando por ele
 	let direcao = $state(0);
+	// simulados agendados pelo professor (só com conta e turma)
+	let daTurma = $state([]);
+	let feitos = $state({});
+	// simulado da turma esperando o "descartar a prova em andamento?"
+	let pendenteTurma = $state(null);
+	let erroTurma = $state('');
 
 	// A tela inicial é a base da rota; prova, resultado e revisão são camadas
 	// por cima. Antes, o voltar do sistema no meio da prova saía do simulado
@@ -143,6 +154,24 @@
 	);
 	let brancos = $derived(questoes.length - respondidas);
 	let res = $derived(prova?.entregue ? corrigir(prova, questoes) : null);
+
+	// Cartões da turma no início: aberto primeiro, depois agendado; encerrado só
+	// se a pessoa fez (para ver o placar). O que está em andamento já aparece no
+	// cartão "Prova em andamento".
+	let cartoesTurma = $derived.by(() => {
+		const t = Date.now();
+		const emCurso = emAndamento ? prova?.simulado?.id : null;
+		return daTurma
+			.map((s) => {
+				const abre = new Date(s.abre_em).getTime();
+				const fecha = new Date(s.fecha_em).getTime();
+				const estado = t < abre ? 'agendado' : t <= fecha ? 'aberto' : 'encerrado';
+				return { ...s, estado, feito: feitos[s.id] ?? null };
+			})
+			.filter((s) => s.id !== emCurso && (s.estado !== 'encerrado' || s.feito))
+			.sort((a, b) => ['aberto', 'agendado', 'encerrado'].indexOf(a.estado) - ['aberto', 'agendado', 'encerrado'].indexOf(b.estado) || new Date(a.abre_em) - new Date(b.abre_em))
+			.slice(0, 3);
+	});
 	let pct = $derived(res ? Math.round((res.objetivas.certas / res.objetivas.total) * 100) : 0);
 
 	// a prova e a revisão ocupam a tela toda: sem tab bar, com barra de ação fixa
@@ -174,6 +203,11 @@
 		if (confirmaEntrega && refEntrega) refEntrega.focus();
 	});
 
+	// fechar o "descartar?" por qualquer caminho (Esc, fundo, voltar) desiste do pedido
+	$effect(() => {
+		if (!confirmaNova) pendenteTurma = null;
+	});
+
 	onMount(() => {
 		(async () => {
 			let completo = false;
@@ -186,6 +220,9 @@
 			}
 			bancoParcial = !completo;
 			ultimo = lerUltimo();
+			feitos = lerFeitosDaTurma();
+			// sem conta neste aparelho, `meusSimulados` nem baixa a biblioteca
+			if (nuvemLigada) meusSimulados().then((l) => (daTurma = l)).catch(() => {});
 			const p = lerProva();
 			if (p) {
 				const mapa = new Map(banco.map((q) => [q.id, q]));
@@ -238,8 +275,35 @@
 	}
 
 	function comecar() {
+		if (pendenteTurma) {
+			const s = pendenteTurma;
+			pendenteTurma = null;
+			iniciar(montarProvaDada(banco, s));
+			return;
+		}
 		const p = montarProva(banco);
-		if (!p) return;
+		if (p) iniciar(p);
+	}
+
+	// A prova da turma é a lista que o professor sorteou. Se o banco do site
+	// mudou depois (questão saiu, formato novo), a lista não fecha e a prova
+	// não começa: corrigir por posição com outra questão daria nota errada.
+	function comecarDaTurma(s) {
+		erroTurma = '';
+		if (emAndamento) {
+			pendenteTurma = s;
+			confirmaNova = true;
+			return;
+		}
+		iniciar(montarProvaDada(banco, s));
+	}
+
+	function iniciar(p) {
+		if (!p) {
+			confirmaNova = false;
+			erroTurma = 'Esta prova usa questões que este site não tem mais. Avise o professor.';
+			return;
+		}
 		const mapa = new Map(banco.map((q) => [q.id, q]));
 		prova = p;
 		questoes = p.ids.map((id) => mapa.get(id));
@@ -324,7 +388,8 @@
 				certa: it.status === 'certa',
 				anulada: q.gabarito === 'ANULADA',
 				materia: q.materia,
-				tema: q.tema
+				tema: q.tema,
+				simuladoId: prova.simulado?.id ?? null
 			});
 			if (it.status === 'certa') removerErro(q.id);
 			else registrarErro(q.id);
@@ -347,6 +412,10 @@
 			gastoMs: prova.gastoMs
 		};
 		gravarUltimo(ultimo);
+		if (prova.simulado?.id) {
+			marcarFeitoDaTurma(prova.simulado.id, ultimo);
+			feitos = lerFeitosDaTurma();
+		}
 		gravarProva($state.snapshot(prova));
 		confirmaEntrega = false;
 		cartaoAberto = false;
@@ -372,7 +441,8 @@
 			certa: !!r.certa,
 			parcial: !!r.parcial,
 			materia: q.materia,
-			tema: q.tema
+			tema: q.tema,
+			simuladoId: prova.simulado?.id ?? null
 		});
 		gravarProva($state.snapshot(prova));
 	}
@@ -433,6 +503,16 @@
 		if (it.status === 'parcial') return 'border-amber-600 bg-amber-500 text-white';
 		if (it.status === 'pendente') return 'border-dashed border-ink-soft bg-card text-ink';
 		return 'border-line bg-track text-ink-soft';
+	}
+
+	// "sex 31/10 às 23:59"
+	function diaHora(iso) {
+		const d = new Date(iso);
+		if (Number.isNaN(d.getTime())) return '';
+		const dia = d.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', '');
+		const data = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+		const hora = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+		return `${dia} ${data} às ${hora}`;
 	}
 
 	function dataCurta(ms) {
@@ -503,6 +583,12 @@
 					{relogio(restante)}
 				</p>
 			</div>
+			{#if prova.simulado}
+				<p class="mt-3 flex items-center gap-1.5 text-sm font-semibold text-bar-fg">
+					<UsersThree size={16} weight="bold" aria-hidden="true" />
+					<span class="min-w-0 truncate">{prova.simulado.titulo}</span>
+				</p>
+			{/if}
 			<div class="mt-3 flex items-baseline justify-between gap-3">
 				<p class="font-display text-[17px] font-bold">Questão {i + 1} de {questoes.length}</p>
 				<p class="shrink-0 text-sm font-medium text-bar-fg">{NOME_BLOCO[blocoDe(i)]}</p>
@@ -659,7 +745,9 @@
 {:else if tela === 'resultado' && prova && res}
 	<!-- ===================== RESULTADO ===================== -->
 	<div class="blueprint faixa px-4 pt-8 pb-10 text-center text-white">
-		<p class="text-sm font-medium text-bar-fg">Simulado · {dataCurta(prova.entregueEm)}</p>
+		<p class="text-sm font-medium text-bar-fg">
+			{prova.simulado ? prova.simulado.titulo : 'Simulado'}, {dataCurta(prova.entregueEm)}
+		</p>
 		<h1 class="mt-1 font-display text-3xl font-extrabold tracking-tight">
 			{prova.tempoEsgotado ? 'Tempo esgotado' : 'Prova entregue'}
 		</h1>
@@ -688,6 +776,12 @@
 			<p class="text-xs font-semibold text-ink-soft">Tempo</p>
 		</div>
 	</div>
+	{#if prova.simulado}
+		<p class="mx-auto mt-3 flex max-w-md items-start gap-2 rounded-2xl bg-accent-soft p-3 text-sm text-accent-ink" role="status">
+			<UsersThree size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
+			<span>O resultado vai para o professor da turma. Sem internet agora, ele sobe sozinho quando ela voltar.</span>
+		</p>
+	{/if}
 	{#if res.objetivas.brancos}
 		<p class="nums mt-2 text-center text-xs font-semibold text-ink-soft">
 			{res.objetivas.brancos} {res.objetivas.brancos === 1 ? 'objetiva ficou' : 'objetivas ficaram'} em branco
@@ -808,7 +902,40 @@
 		</p>
 	{/if}
 
+	{#if erroTurma}
+		<p class="mb-4 rounded-2xl border border-bad-fg/30 bg-bad-bg p-3 text-sm font-semibold text-bad-fg" role="alert">{erroTurma}</p>
+	{/if}
+
 	<div class="space-y-4">
+		{#each cartoesTurma as s (s.id)}
+			<section class="rise rounded-3xl border-2 border-accent bg-card p-5 shadow-sm sm:p-6" aria-labelledby="sim-{s.id}">
+				<p class="flex items-center gap-2 text-label font-bold text-accent-ink">
+					<UsersThree size={16} weight="bold" aria-hidden="true" /> Simulado da turma {s.turma.nome}
+				</p>
+				<h2 id="sim-{s.id}" class="mt-1 font-display text-xl font-extrabold text-pretty">{s.titulo}</h2>
+				{#if s.feito}
+					<p class="nums mt-2 text-[15px]">
+						Você entregou: <strong>{s.feito.certas} de {s.feito.total}</strong>
+						({Math.round((s.feito.certas / s.feito.total) * 100)}%).
+					</p>
+					<p class="mt-1 text-sm text-ink-soft">O professor já recebeu o resultado.</p>
+				{:else if s.estado === 'aberto'}
+					<p class="mt-1 text-sm text-ink-soft">Aberto até {diaHora(s.fecha_em)}. Toda a turma faz a mesma prova, com 4 horas de relógio.</p>
+					<button
+						type="button"
+						onclick={() => comecarDaTurma(s)}
+						class="btn3d duo-accent mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold"
+					>
+						<Play size={20} weight="fill" aria-hidden="true" /> Fazer o simulado da turma
+					</button>
+				{:else if s.estado === 'agendado'}
+					<p class="mt-1 text-sm text-ink-soft">
+						Abre {diaHora(s.abre_em)} e fica aberto até {diaHora(s.fecha_em)}. Toda a turma faz a mesma prova.
+					</p>
+				{/if}
+			</section>
+		{/each}
+
 		<section
 			class="blueprint rise rounded-3xl bg-bar p-5 text-white shadow-[0_10px_30px_-12px_rgba(20,33,61,0.45)] sm:p-6"
 		>
@@ -834,7 +961,9 @@
 
 		{#if emAndamento}
 			<section class="rise rounded-3xl border-2 border-accent bg-card p-5 shadow-sm sm:p-6" aria-label="Prova em andamento">
-				<p class="text-label font-bold text-accent-ink">Prova em andamento</p>
+				<p class="text-label font-bold text-accent-ink">
+					{prova.simulado ? `${prova.simulado.titulo} em andamento` : 'Prova em andamento'}
+				</p>
 				<p class="nums mt-1 font-display text-xl font-extrabold">
 					{respondidas} de {questoes.length} respondidas · {relogio(restante)} restantes
 				</p>
@@ -1010,7 +1139,8 @@
 			<div role="dialog" aria-modal="true" aria-labelledby="nova-titulo" class="relative w-full max-w-sm rounded-3xl bg-card p-5 shadow">
 				<h2 id="nova-titulo" class="font-display text-xl font-extrabold tracking-tight">Descartar a prova em andamento?</h2>
 				<p class="nums mt-1 text-sm text-ink-soft">
-					As {respondidas} respostas dela se perdem e uma prova nova é sorteada.
+					As {respondidas} respostas dela se perdem e
+					{pendenteTurma ? `começa o simulado da turma, ${pendenteTurma.titulo}.` : 'uma prova nova é sorteada.'}
 				</p>
 				<div class="mt-4 space-y-2">
 					<button type="button" onclick={comecar} class="w-full rounded-[14px] border-2 border-bad-solid bg-bad-solid p-3.5 font-display text-base font-bold text-white">

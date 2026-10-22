@@ -123,6 +123,7 @@
 					{#if nuvemLigada}
 						<li><a href="/conta/" class="hover:text-accent-ink">Conta e turma</a></li>
 					{/if}
+					<li><a href="/privacidade/" class="hover:text-accent-ink">Privacidade</a></li>
 				</ul>
 			</nav>
 			<div>

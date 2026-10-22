@@ -17,6 +17,10 @@ export const TOTAL_QUESTOES = FORMATO.fg + FORMATO.ce + FORMATO.discursivas;
 
 const CHAVE = 'enade-simulado';
 const CHAVE_ULTIMO = 'enade-simulado-ultimo';
+// simulados da turma já entregues neste aparelho: {[id]: {em, certas, total}}.
+// A prova entregue some de `enade-simulado` quando o aluno começa outra, e o
+// cartão da turma não pode voltar a oferecer uma prova que ele já fez.
+const CHAVE_TURMA = 'enade-simulados-turma';
 
 // Anulada fica fora do sorteio: ponto de graça distorce a nota de quem está
 // medindo o próprio preparo. Discursiva sem padrão publicado (só desenho)
@@ -96,6 +100,55 @@ export function montarProva(banco) {
 		entregueEm: null,
 		tempoEsgotado: false,
 		discAuto: null
+	};
+}
+
+/**
+ * Confere se a lista de ids de uma prova agendada cabe no formato atual: o
+ * tamanho certo e, em cada posição, o tipo que o bloco pede (FG objetiva, CE
+ * objetiva, discursiva do CE). A correção é por POSIÇÃO (`blocoDe`), então
+ * uma lista de outro formato seria corrigida com os blocos trocados.
+ * Devolve as questões na ordem, ou `null`.
+ */
+export function questoesDaLista(banco, ids) {
+	if (!Array.isArray(ids) || ids.length !== TOTAL_QUESTOES) return null;
+	const mapa = new Map((Array.isArray(banco) ? banco : []).map((q) => [q.id, q]));
+	const lista = ids.map((id) => mapa.get(id));
+	const cabe = lista.every((q, k) => {
+		if (!q || ehGerada(q)) return false;
+		const b = blocoDe(k);
+		if (b === 'DISC') return q.parte === 'CE' && q.tipo === 'discursiva';
+		return q.parte === b && q.tipo === 'objetiva';
+	});
+	return cabe ? lista : null;
+}
+
+/**
+ * Prova a partir da lista sorteada pelo professor (simulado da turma). Igual a
+ * `montarProva`, mais o campo `simulado` — opcional, então provas antigas
+ * (`v: 1` sem ele) continuam valendo. `null` se a lista não cabe no banco.
+ */
+export function montarProvaDada(banco, simulado) {
+	if (!questoesDaLista(banco, simulado?.questoes)) return null;
+	return {
+		v: 1,
+		ids: [...simulado.questoes],
+		criadaEm: Date.now(),
+		gastoMs: 0,
+		marcas: {},
+		rascunho: '',
+		i: 0,
+		entregue: false,
+		entregueEm: null,
+		tempoEsgotado: false,
+		discAuto: null,
+		simulado: {
+			id: simulado.id,
+			titulo: simulado.titulo,
+			turmaId: simulado.turma?.id ?? null,
+			turmaNome: simulado.turma?.nome ?? '',
+			fechaEm: simulado.fecha_em
+		}
 	};
 }
 
@@ -218,4 +271,18 @@ export function relogio(ms) {
 	const m = Math.floor((s % 3600) / 60);
 	const ss = s % 60;
 	return `${h}:${String(m).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
+}
+
+/** Simulados da turma entregues neste aparelho: `{[id]: {em, certas, total}}`. */
+export function lerFeitosDaTurma() {
+	const v = ler(CHAVE_TURMA);
+	return v && typeof v === 'object' && !Array.isArray(v) ? v : {};
+}
+
+/** Marca um simulado da turma como entregue (guarda só o placar). */
+export function marcarFeitoDaTurma(id, resumo) {
+	if (!id) return false;
+	const feitos = lerFeitosDaTurma();
+	feitos[id] = { em: resumo.em, certas: resumo.certas, total: resumo.total };
+	return gravar(CHAVE_TURMA, feitos);
 }
