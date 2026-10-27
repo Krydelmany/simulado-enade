@@ -302,6 +302,8 @@ def conferir_materias(areas):
                 chaves.add(normalizar(chave))
         for chave in materia.get('ava') or []:
             chaves.add(normalizar(chave))
+        for chave in materia.get('pilar') or []:
+            chaves.add(normalizar(chave))
 
     def casa(nome):
         n = normalizar(nome)
@@ -309,9 +311,10 @@ def conferir_materias(areas):
             return True
         if n in chaves:
             return True
-        # mesma regra do `materiaPorArea` no app: prefixo, o mais específico
+        # mesma regra do `materiaPorArea` no app: prefixo só com 12+ letras,
+        # o mais específico; nome curto exato já está em `chaves`
         for chave in chaves:
-            if len(chave) >= 8 and (chave.startswith(n + ' ') or n.startswith(chave + ' ')):
+            if len(chave) >= 12 and (chave.startswith(n + ' ') or n.startswith(chave + ' ')):
                 return True
         return False
 
