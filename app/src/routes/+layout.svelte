@@ -128,6 +128,7 @@
 					<li><a href="/simulado/" class="hover:text-accent-ink">Simulado real</a></li>
 					{#if nuvemLigada}
 						<li><a href="/conta/" class="hover:text-accent-ink">Conta e turma</a></li>
+						<li><a href="/desempenho/" class="hover:text-accent-ink">Simulado em papel</a></li>
 					{/if}
 					<li><a href="/privacidade/" class="hover:text-accent-ink">Privacidade</a></li>
 				</ul>

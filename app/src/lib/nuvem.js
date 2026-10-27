@@ -431,6 +431,20 @@ export async function sairDaTurma(turmaId) {
 	if (error) throw falhou(error);
 }
 
+/**
+ * O aluno informa ou troca o RA depois de já estar na turma (antes só dava
+ * para fazer isso saindo e entrando de novo). Devolve o RA salvo, ou null.
+ */
+export async function salvarRa(turmaId, ra) {
+	const c = await obrigatorio();
+	const { data, error } = await c.rpc('salvar_ra', {
+		p_turma: turmaId,
+		p_ra: ra ? String(ra) : null
+	});
+	if (error) throw falhou(error);
+	return data ?? null;
+}
+
 /** Ranking da turma; `desde` (Date) limita o período (ex.: esta semana). */
 export async function ranking(turmaId, desde = null) {
 	const c = await obrigatorio();
@@ -638,4 +652,36 @@ export async function painelAluno(turmaId, alunoId) {
 	if (error?.code === 'PGRST202') throw new Error('A ficha do aluno ainda não está ligada no banco (falta a migração 6).');
 	if (error) throw falhou(error);
 	return data ?? null;
+}
+
+/**
+ * Retrato do simulado em papel de quem está logado. Vazio antes da migração
+ * ou enquanto o admin não importar: a tela mostra o estado, não um erro.
+ * @returns {Promise<Array<{simulado_id: string, rotulo: string, acertos: number, total: number, percentual: number, areas: object, prioridades: Array, turma: object, discursiva: object|null, importado_em: string}>>}
+ */
+export async function desempenhoPapel() {
+	if (!nuvemLigada || !contaLocal()) return [];
+	const c = await obrigatorio();
+	const { data, error } = await c
+		.from('desempenho_papel')
+		.select('simulado_id, rotulo, acertos, total, percentual, areas, prioridades, turma, discursiva, importado_em')
+		.order('importado_em', { ascending: false });
+	if (error) {
+		// a migração ainda não foi aplicada: a tela diz "ainda não importado"
+		if (error.code === 'PGRST205' || error.code === '42P01') return [];
+		throw falhou(error);
+	}
+	return data ?? [];
+}
+
+/**
+ * Retrato do simulado em papel de um aluno, para a ficha do professor.
+ * Sem a migração, volta vazio e a ficha abre sem o bloco, em vez de quebrar.
+ */
+export async function painelPapel(turmaId, alunoId) {
+	const c = await obrigatorio();
+	const { data, error } = await c.rpc('painel_papel', { p_turma: turmaId, p_aluno: alunoId });
+	if (error?.code === 'PGRST202') return [];
+	if (error) throw falhou(error);
+	return data ?? [];
 }

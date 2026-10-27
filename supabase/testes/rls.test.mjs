@@ -439,6 +439,66 @@ await teste('visitas: teto por aparelho ignora o excesso sem dar erro', async ()
 	assert.equal(n, 120);
 });
 
+// --- simulado em papel (20261027000000_desempenho_papel.sql) ----------------
+// O admin importa o retrato (o script gera este insert); o aluno só lê o
+// próprio, e o professor lê a turma pela RPC.
+await db.query(
+	`insert into public.desempenho_papel
+		(usuario_id, curso, simulado_id, rotulo, acertos, total, percentual, areas, prioridades, turma, discursiva)
+	 values ($1, 'engcomp', '2026-b1', 'Simulado B1', 24, 40, 0.6000, $2::jsonb, $3::jsonb, $4::jsonb, $5::jsonb)`,
+	[
+		U.ana,
+		JSON.stringify({
+			'Redes de Computadores': { total: 6, percentual: 0.3333, turma: 0.55 },
+			'Inteligência Artificial': { total: 5, percentual: 0.4, turma: 0.6 }
+		}),
+		JSON.stringify([{ area: 'Redes de Computadores', percentual: 0.3333, tendencia: 'piorou' }]),
+		JSON.stringify({ total_questoes: 40, media_acertos: 23.5, mediana_acertos: 24 }),
+		JSON.stringify({ nota_1: 7.5, nota_2: 8 })
+	]
+);
+
+await teste('papel: aluno lê só o próprio retrato e ninguém escreve pelo site', async () => {
+	assert.equal((await como(U.ana, 'select rotulo from public.desempenho_papel')).length, 1);
+	assert.equal((await como(U.beto, 'select * from public.desempenho_papel')).length, 0);
+	await falha(como(null, 'select * from public.desempenho_papel'), /permission denied/);
+	await falha(
+		como(
+			U.ana,
+			`insert into public.desempenho_papel (usuario_id, simulado_id, rotulo, acertos, total, percentual)
+			 values ($1, 'x', 'x', 1, 1, 1)`,
+			[U.ana]
+		),
+		/permission denied/
+	);
+	await falha(como(U.ana, 'update public.desempenho_papel set acertos = 40'), /permission denied/);
+	await falha(como(U.ana, 'delete from public.desempenho_papel'), /permission denied/);
+});
+
+await teste('papel: professor lê pela painel_papel; aluno, intruso e anon, nada', async () => {
+	const r = await como(U.prof, 'select rotulo, acertos, total, percentual::float from public.painel_papel($1, $2)', [
+		turma.id,
+		U.ana
+	]);
+	assert.deepEqual(r, [{ rotulo: 'Simulado B1', acertos: 24, total: 40, percentual: 0.6 }]);
+	assert.equal((await como(U.prof, 'select * from public.painel_papel($1)', [turma.id])).length, 1);
+	assert.equal((await como(U.ana, 'select * from public.painel_papel($1)', [turma.id])).length, 0);
+	assert.equal((await como(U.intruso, 'select * from public.painel_papel($1)', [turma.id])).length, 0);
+	await falha(como(null, 'select * from public.painel_papel($1)', [turma.id]), /permission denied/);
+});
+
+await teste('papel: o aluno informa o RA depois de entrar e só mexe no próprio', async () => {
+	assert.equal((await como(U.ana, `select public.salvar_ra($1, ' 654321 ') as ra`, [turma.id]))[0].ra, '654321');
+	assert.equal((await como(U.ana, 'select ra from public.membros'))[0].ra, '654321');
+	// o Beto continua sem RA: a função só toca a matrícula de quem chama
+	assert.equal((await db.query('select ra from public.membros where usuario_id = $1', [U.beto])).rows[0].ra, null);
+	await falha(como(U.ana, `select public.salvar_ra($1, 'x')`, [turma.id]), /check constraint/);
+	await falha(como(U.intruso, `select public.salvar_ra($1, '123456')`, [turma.id]), /nao_e_membro/);
+	await falha(como(null, `select public.salvar_ra($1, '123456')`, [turma.id]), /permission denied/);
+	// volta ao RA do começo, que os testes anteriores usaram
+	assert.equal((await como(U.ana, `select public.salvar_ra($1, '123456') as ra`, [turma.id]))[0].ra, '123456');
+});
+
 await teste('sair da turma tira do painel, mas mantém as respostas do aluno', async () => {
 	await como(U.beto, 'delete from public.membros');
 	assert.equal((await como(U.prof, 'select * from public.painel_alunos($1)', [turma.id])).length, 1);
@@ -449,6 +509,8 @@ await teste('apagar a conta leva perfil e respostas junto', async () => {
 	await como(U.ana, 'select public.apagar_minha_conta()');
 	assert.equal((await db.query(`select * from public.respostas where usuario_id = $1`, [U.ana])).rows.length, 0);
 	assert.equal((await db.query(`select * from public.perfis where id = $1`, [U.ana])).rows.length, 0);
+	// o retrato do simulado em papel cai na cascata de `perfis`
+	assert.equal((await db.query(`select * from public.desempenho_papel where usuario_id = $1`, [U.ana])).rows.length, 0);
 });
 
 console.log(`\n${n} testes passaram`);

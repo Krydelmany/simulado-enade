@@ -4,9 +4,9 @@
 	// confere se quem pede é professor da turma e se o aluno é dela.
 	import { onMount } from 'svelte';
 	import { ArrowLeft, CheckCircle, WarningCircle, XCircle } from 'phosphor-svelte';
-	import { painelAluno } from '$lib/nuvem.js';
+	import { painelAluno, painelPapel } from '$lib/nuvem.js';
 	import { rotuloQuestao } from '$lib/banco.js';
-	import { MATERIAS_CE, nomeMateria } from '$lib/materias.js';
+	import { MATERIAS_CE, materiaPorArea, nomeMateria } from '$lib/materias.js';
 	import GraficoColunas from './GraficoColunas.svelte';
 	import { diaMes, isoDia, num, pct, plural, quando } from './formato.js';
 
@@ -28,6 +28,7 @@
 	const MINIMO = 3;
 
 	let f = $state(null);
+	let papel = $state([]);
 	let erro = $state('');
 
 	onMount(async () => {
@@ -35,9 +36,32 @@
 		try {
 			f = await painelAluno(turmaId, alunoId);
 			if (!f) erro = 'Este aluno não está mais na turma.';
+			// O retrato do simulado em papel é opcional: sem a migração ou sem
+			// importação, a ficha continua abrindo.
+			if (f) papel = await painelPapel(turmaId, alunoId).catch(() => []);
 		} catch (e) {
 			erro = e.message;
 		}
+	});
+
+	let papelAtual = $derived(papel[0] ?? null);
+	let papelTurma = $derived(papelAtual?.turma ?? {});
+	// as três piores áreas do papel, com o nome que o site usa
+	let papelAreas = $derived.by(() => {
+		const areas = papelAtual?.areas ?? {};
+		return Object.entries(areas)
+			.map(([nome, valor]) => {
+				const id = materiaPorArea(nome);
+				return {
+					nome: id ? nomeMateria(id) : nome,
+					percentual: Math.round(Number(valor?.percentual ?? 0) * 100),
+					turma: valor?.turma == null ? null : Math.round(Number(valor.turma) * 100),
+					total: Number(valor?.total ?? 0)
+				};
+			})
+			.filter((a) => a.total > 0)
+			.sort((a, b) => a.percentual - b.percentual)
+			.slice(0, 3);
 	});
 
 	let totais = $derived.by(() => {
@@ -217,6 +241,53 @@
 					</ul>
 				{/if}
 			</section>
+
+			{#if papelAtual}
+				<section class="rounded-3xl border border-line bg-card p-4 sm:p-5" aria-labelledby="t-aluno-papel">
+					<h2 id="t-aluno-papel" class="font-display text-heading font-bold">Simulado em papel</h2>
+					<p class="text-xs text-ink-soft">Importado do site do professor {quando(papelAtual.importado_em)}.</p>
+					<p class="mt-2">
+						<strong class="nums font-display text-2xl font-extrabold">{num(papelAtual.acertos)}/{num(papelAtual.total)}</strong>
+						<span class="nums text-sm text-ink-soft">({pct(papelAtual.acertos, papelAtual.total)}%)</span>
+					</p>
+					<p class="nums text-xs text-ink-soft">
+						Turma: média {papelTurma.media_acertos == null ? '—' : Number(papelTurma.media_acertos).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}
+						· mediana {papelTurma.mediana_acertos == null ? '—' : Number(papelTurma.mediana_acertos).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}
+					</p>
+					{#if papelAreas.length}
+						<p class="mt-3 text-xs font-semibold text-ink-soft">Piores áreas, com a média da turma:</p>
+						<ul class="mt-1 space-y-2">
+							{#each papelAreas as a (a.nome)}
+								<li>
+									<div class="flex items-baseline justify-between gap-3 text-sm">
+										<span class="min-w-0 truncate font-semibold">{a.nome}</span>
+										<span class="nums shrink-0"><strong>{a.percentual}%</strong>{#if a.turma !== null}<span class="text-ink-soft"> (turma {a.turma}%)</span>{/if}</span>
+									</div>
+									<div class="relative mt-1 h-2 rounded-full bg-track" aria-hidden="true">
+										<div class="h-full rounded-full bg-accent-bar" style="width: {a.percentual}%"></div>
+										{#if a.turma !== null}
+											<span class="absolute -top-1 h-4 w-0.5 rounded-full bg-ink ring-2 ring-card" style="left: calc({a.turma}% - 1px)"></span>
+										{/if}
+									</div>
+								</li>
+							{/each}
+						</ul>
+					{/if}
+					{#if papel.length > 1}
+						<details class="mt-2 text-xs">
+							<summary class="min-h-9 cursor-pointer font-semibold">Outros {papel.length - 1} simulados</summary>
+							<ul class="mt-1 space-y-1">
+								{#each papel.slice(1) as p (p.simulado_id)}
+									<li class="flex items-baseline justify-between gap-2">
+										<span class="min-w-0 truncate">{p.rotulo}</span>
+										<span class="nums shrink-0">{num(p.acertos)}/{num(p.total)} ({pct(p.acertos, p.total)}%)</span>
+									</li>
+								{/each}
+							</ul>
+						</details>
+					{/if}
+				</section>
+			{/if}
 		</div>
 	</div>
 

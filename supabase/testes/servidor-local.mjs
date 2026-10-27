@@ -92,6 +92,28 @@ for (const [k, q, materia, resultado, diasAtras] of exemplo) {
 	);
 }
 
+// Retrato do simulado em papel (importado do pilar) para a tela /desempenho/
+// não nascer vazia no dublê. É dado de exemplo, não vai para produção.
+await db.query(
+	`insert into public.desempenho_papel
+		(usuario_id, curso, simulado_id, rotulo, acertos, total, percentual, areas, prioridades, turma, discursiva)
+	 values ($1, 'engcomp', '2026-b1', 'Simulado B1', 24, 40, 0.6000, $2::jsonb, $3::jsonb, $4::jsonb, $5::jsonb)`,
+	[
+		PESSOAS.ana.id,
+		JSON.stringify({
+			'Redes de Computadores': { total: 6, percentual: 0.3333, turma: 0.55 },
+			'Inteligência Artificial': { total: 5, percentual: 0.4, turma: 0.6 },
+			'Matemática Discreta': { total: 4, percentual: 0.75, turma: 0.7 }
+		}),
+		JSON.stringify([
+			{ area: 'Redes de Computadores', percentual: 0.3333, tendencia: 'piorou' },
+			{ area: 'Inteligência Artificial', percentual: 0.4, tendencia: 'estavel' }
+		]),
+		JSON.stringify({ total_questoes: 40, media_acertos: 23.5, mediana_acertos: 24 }),
+		JSON.stringify({ nota_1: 7.5, nota_2: 8 })
+	]
+);
+
 // --- SQL como um usuário ----------------------------------------------------
 async function como(sub, sql, params = []) {
 	return db.transaction(async (tx) => {
@@ -166,10 +188,12 @@ const FUNCOES = new Set([
 	'reportar_questao',
 	'registrar_visita',
 	'painel_aluno',
-	'painel_simulados_resumo'
+	'painel_simulados_resumo',
+	'painel_papel',
+	'salvar_ra'
 ]);
 // devolvem um valor só (jsonb): o PostgREST manda o valor, não uma lista
-const FUNCOES_ESCALARES = new Set(['painel_aluno']);
+const FUNCOES_ESCALARES = new Set(['painel_aluno', 'salvar_ra']);
 // devolvem `void`: o PostgREST responde `null`, não uma linha
 const FUNCOES_VOID = new Set(['apagar_minha_conta', 'apagar_simulado', 'reportar_questao', 'registrar_visita']);
 
@@ -268,6 +292,15 @@ const servidor = createServer(async (req, res) => {
 				 where ($1::uuid is null or m.usuario_id = $1::uuid)
 				 order by m.entrou_em`,
 				[usuario]
+			);
+			return json(res, 200, linhas);
+		}
+		if (url.pathname === '/rest/v1/desempenho_papel' && req.method === 'GET') {
+			// o app só lê o próprio retrato (RLS); a ordem é a da tela
+			const linhas = await como(
+				sub,
+				`select simulado_id, rotulo, acertos, total, percentual, areas, prioridades, turma, discursiva, importado_em
+				 from public.desempenho_papel order by importado_em desc`
 			);
 			return json(res, 200, linhas);
 		}

@@ -265,3 +265,44 @@ INEP (acerto por questão e por conteúdo).
 **Por quê:** número que só parece informação leva a decisão errada. Antes
 o painel contava toda tentativa, misturava a discursiva autoavaliada no
 acerto e mostrava acerto semanal, que não mede evolução.
+
+### D17. Simulado em papel: retrato importado, somente leitura
+
+Decidida em 27/10/2026, quando o professor já tinha o resultado do simulado
+em papel no site dele (pilar.ia.br/enade2026) e a turma começou a usar o
+nosso site.
+
+**Decisão:**
+- O resultado do simulado em papel é **importado uma vez** do site do
+  professor para o nosso Supabase. O dado lá é fixo: a prova já aconteceu e
+  não há outro simulado marcado.
+- A tabela `desempenho_papel` guarda só o resumo por aluno e por simulado:
+  acertos, total, percentual, percentual por área, prioridades com tendência,
+  média/mediana da turma e as notas das discursivas quando existirem.
+  **Não** guarda cookie, resposta por questão nem uma segunda cópia do RA.
+- O aluno vê o próprio retrato em `/desempenho/` e pode informar/trocar o RA
+  em `/conta/` (o RA é opcional e fica na matrícula). O professor vê o do
+  aluno na ficha do painel, pela RPC `painel_papel`.
+- As áreas viram matérias do site por `materiaPorArea`; o botão "Treinar"
+  abre `/treino/?materia=<id>`. Área sem par aparece com o nome cru e sem
+  filtro.
+- O cliente **não escreve** na tabela: só `select` do próprio aluno. A
+  importação é um SQL gerado por `supabase/importar-pilar.py` e rodado pelo
+  admin no SQL Editor. Isso também impede o aluno de inflar os próprios
+  números pelo DevTools.
+
+**Por quê:** sem CORS no pilar e com sessão por cookie, o navegador do nosso
+site não consegue ler a API. Um proxy em tempo real (Edge Function) seria
+mais uma peça e um deploy para um dado que não muda. Importar uma vez deixa a
+página instantânea, funciona com o pilar fora do ar e põe o número no mesmo
+lugar em que o professor já olha o uso do site.
+
+**LGPD:** o RA continua opcional. Quando informado, a `/privacidade/` diz que
+o resumo do simulado em papel é guardado para o aluno e o professor verem; a
+tabela tem `on delete cascade` a partir de `perfis`/`auth.users`, então apagar
+a conta apaga o retrato junto. Guardamos o resumo, não a prova.
+
+**Revisar:** se houver outro simulado em papel, rode o script de novo (o
+insert é idempotente por `(usuario_id, curso, simulado_id)`). Se o professor
+quiser sincronizar todos os alunos de uma vez, é outra decisão: exige chave
+de serviço e varredura de RAs de quem não abriu o site.

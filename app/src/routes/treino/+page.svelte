@@ -152,6 +152,14 @@
 		} finally {
 			carregou = true;
 		}
+		// Link do /desempenho/: "treinar esta área" abre a fila já filtrada.
+		// A sessão pausada continua tendo prioridade: se a pessoa escolher
+		// continuar, o `montar(false)` restaura o filtro da sessão salva.
+		const daUrl = $page.url.searchParams.get('materia');
+		if (materiaExiste(daUrl)) {
+			filtro = daUrl;
+			filtroAnterior = daUrl;
+		}
 		iniciar();
 	});
 

@@ -48,7 +48,7 @@ app/                       o site: SvelteKit 2 + Svelte 5 + Tailwind 4 + Vite 6
   src/app.css              design tokens (@theme inline), classes próprias, motion
   src/routes/              +layout.svelte (nav, tab bar, rodapé), +layout.js
                            (prerender), +error.svelte (404), / , treino/, estudo/,
-                           simulado/
+                           simulado/, conta/, professor/, desempenho/, privacidade/
   src/lib/                 banco.js, stats.js, simulado.js, materias.js(.json),
                            resumo.js, tema.js, motion.js, foco.svelte.js,
                            sessao.js, gestos.js, camadas.svelte.js,
@@ -73,6 +73,7 @@ revisao/                   markdown de revisão: lotes da extração (histórico
 testes-mob/                harness Playwright de QA mobile (desatualizado)
 design/                    prints antigos, anteriores à direção visual atual
 supabase/migrations/       schema do backend (tabelas, RLS, funções do painel)
+supabase/importar-pilar.py importa o simulado em papel do site do professor (roda à mão)
 supabase/testes/           testes de RLS (PGlite) + servidor-local.mjs (dublê do Supabase)
 docs/                      PRODUTO.md (piloto, requisitos, prazo) e DECISOES.md (D1…)
 README.md · PLANO.md · ROADMAP.md · INVENTARIO.md   docs de produto e de fontes
@@ -242,6 +243,48 @@ some na próxima gravação.
   Campo novo na visita muda também a `/privacidade/`.
 - **Testar sem Supabase:** `supabase/testes/servidor-local.mjs` (veja
   `docs/PRODUTO.md`). O gabarito continua no navegador de propósito (D9).
+
+### Simulado em papel (site do professor)
+
+O resultado do simulado **em papel** vem de https://pilar.ia.br/enade2026/
+(login por RA + curso, sem senha; a API é `/api/login`, `/api/student` e
+`/api/evolucao`, com sessão por cookie). O dado é **fixo** — a prova já
+aconteceu e não há outra marcada —, então o site Não fala com o pilar em
+tempo de execução: sem CORS e sem cookie entre domínios, a página leria um
+erro. Em vez disso, uma importação única grava o resumo no Supabase e o site
+só lê.
+
+- **Importar:** `python3 supabase/importar-pilar.py --ras <csv>`. O CSV tem
+  uma coluna `ra` (a saída do SQL Editor) ou um RA por linha. O script entra
+  no pilar por RA, pega `student` + `evolucao` e gera
+  `/tmp/opencode/desempenho-papel.sql`; o admin roda esse SQL no SQL Editor
+  do Supabase. O insert faz o de-para por `membros.ra`, então RA sem conta
+  no site não grava nada, e o `select` do fim lista os que não casaram. O
+  script mascara os RAs no terminal e avisa quais nomes de área não têm par
+  em `materias.json`.
+- **Tabela `desempenho_papel`** (`supabase/migrations/20261027000000_…`):
+  chave `(usuario_id, curso, simulado_id)`, só o resumo (acertos,
+  percentual, `areas` jsonb, `prioridades`, `turma`, `discursiva`,
+  `importado_em`). `usuario_id` cai em cascata com `perfis`/`auth.users`.
+  **O cliente não escreve nela**: tem só `grant select` e a policy do próprio
+  aluno. Quem grava é o SQL do admin (roda como postgres). Professor lê a
+  turma pela RPC `painel_papel` (mesmo padrão das outras `painel_*`).
+- **Telas:** `/desempenho/` mostra o retrato do aluno (acertos, comparação
+  com a turma, áreas pior primeiro com tendência e botão para treinar);
+  `/conta/` tem o cartão "Simulado em papel", que informa/troca o RA pela RPC
+  `salvar_ra` e leva para a página; a ficha do aluno no painel recebe o
+  bloco `papel` por `painelPapel`. A página tem estados para conta
+  desligada, sem login, sem RA e sem retrato importado.
+- **Nome de área → matéria:** `materiaPorArea` em `materias.js` casa pelo
+  id, nome, nome oficial e AVA; sem igual, aceita prefixo e fica com o mais
+  específico ("Matemática Discreta" → "Matemática Discreta e Grafos"). Sem
+  par, a tela mostra o nome cru e o link cai no treino sem filtro.
+- **Treino filtrado:** `/treino/?materia=<id>` (`materiaExiste`). A query é
+  lida no `onMount`, antes de `iniciar()`; uma sessão pausada continua tendo
+  prioridade, e "Nova sessão" usa o filtro da URL.
+- **Nunca** commite o CSV de RAs nem o SQL gerado (dado pessoal). O SQL fica
+  em `/tmp/opencode/`. A `/privacidade/` diz que o resumo do papel é
+  guardado quando o aluno informa o RA, e apagar a conta apaga junto.
 
 ### Simulado (`src/lib/simulado.js` + `routes/simulado/+page.svelte`)
 
@@ -573,6 +616,14 @@ python banco/validar.py
 python banco/testes.py
 python banco/versao.py              # só mostra; --escrever grava
 
+# simulado em papel (da raiz): gera o SQL para colar no Supabase
+python3 supabase/importar-pilar.py --ras /root/.pilar-ras.csv
+#   --base http://127.0.0.1:8765 para testar com um pilar falso
+
+# RLS e dublê do Supabase (dentro de supabase/testes/)
+npm test
+node servidor-local.mjs             # http://127.0.0.1:54321, turma ENGC26
+
 # o app/build de verdade, com a 404 da Vercel (depois do build).
 # Só o conteúdo imita a Vercel: o status sai 200 e os headers do vercel.json
 # não são aplicados. Use rotas com barra no fim e sem query
@@ -674,6 +725,12 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
     questão:** o zoom da figura é `position: fixed` lá dentro, e um transform
     vira o bloco de contenção dele. O `deslizarQuestoes` limpa o transform ao
     soltar; o `in:fly` só existe durante a animação.
+19. **O retrato do simulado em papel é somente leitura no cliente.** A
+    tabela `desempenho_papel` tem só `grant select` e a policy do próprio
+    aluno; quem grava é o SQL do admin gerado por
+    `supabase/importar-pilar.py`. Não abra insert/update para o navegador
+    (o aluno inflaria os próprios números) e não commite o CSV de RAs nem o
+    SQL gerado: os dois têm dado pessoal e ficam fora do repo.
 
 ## Padrões de código
 
