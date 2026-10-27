@@ -7,6 +7,7 @@
 	import { page } from '$app/stores';
 	import { GoogleLogo, EnvelopeSimple, Trophy, ChartBar, SignOut, Trash, UsersThree, Timer } from 'phosphor-svelte';
 	import { lerFeitosDaTurma } from '$lib/simulado.js';
+	import CodigoTurma from '$lib/CodigoTurma.svelte';
 	import {
 		nuvemLigada,
 		usuarioAtual,
@@ -21,7 +22,11 @@
 		pendentes,
 		enviarFila,
 		meusSimulados,
-		salvarNome
+		salvarNome,
+		limparCodigo,
+		lembrarConvite,
+		conviteGuardado,
+		TAMANHO_CODIGO
 	} from '$lib/nuvem.js';
 
 	let carregando = $state(true);
@@ -38,9 +43,10 @@
 	// entrar na turma
 	let nome = $state('');
 	let codigo = $state('');
+	// o código que veio no link (ou guardado antes do login), para a dica do campo
+	let codigoDoConvite = $state('');
 	let ra = $state('');
 	let noRanking = $state(true);
-	let consentiu = $state(false);
 	let mostrarFormTurma = $state(false);
 
 	// turma aberta + ranking
@@ -84,6 +90,13 @@
 			usuario = await usuarioAtual();
 			turmas = usuario ? await minhasTurmas() : [];
 			if (!nome && usuario?.nome) nome = usuario.nome;
+			// abriu o convite de uma turma em que já está: mostra a turma. Entrar
+			// de novo regravava a matrícula e apagava o RA (o form vem sem ele)
+			const jaMembro = codigo && turmas.find((m) => m.turma.codigo === codigo);
+			if (jaMembro) {
+				esquecerConvite();
+				abrirTurma(jaMembro.turma);
+			}
 			if (turmas.length && !turmaAberta) abrirTurma(turmas[0].turma);
 			fila = pendentes();
 		} catch (e) {
@@ -91,6 +104,14 @@
 		} finally {
 			carregando = false;
 		}
+	}
+
+	// o convite cumpriu o papel (entrou, já era da turma ou cancelou)
+	function esquecerConvite() {
+		lembrarConvite(null);
+		codigo = '';
+		mostrarFormTurma = false;
+		if (location.search) history.replaceState(history.state, '', '/conta/');
 	}
 
 	// o ranking é carregado pelo $effect lá embaixo (turma ou período mudou)
@@ -142,13 +163,13 @@
 			if (nome.trim() !== (usuario?.nome ?? '')) usuario.nome = await salvarNome(nome);
 			// `apelido` no banco virou reserva: vai o começo do nome (2 a 24)
 			const apelido = nome.trim().slice(0, 24).trim();
-			const t = await entrarTurma({ codigo, apelido, ra, noRanking, consentiu });
-			mostrarFormTurma = false;
+			// o aceite é o próprio toque em "Entrar na turma", com o aviso do que o
+			// professor vê logo abaixo do botão (D7)
+			const t = await entrarTurma({ codigo, apelido, ra, noRanking, consentiu: true });
+			esquecerConvite();
 			turmaAberta = null;
 			await recarregar();
 			if (t) abrirTurma(t);
-			// a URL do convite já cumpriu o papel
-			history.replaceState(history.state, '', '/conta/');
 		});
 	}
 
@@ -191,7 +212,9 @@
 		});
 
 	onMount(() => {
-		codigo = ($page.url.searchParams.get('turma') || '').toUpperCase();
+		const daUrl = limparCodigo($page.url.searchParams.get('turma'));
+		if (daUrl) lembrarConvite(daUrl);
+		codigo = codigoDoConvite = daUrl || conviteGuardado();
 		if (codigo) mostrarFormTurma = true;
 		if (!nuvemLigada) {
 			carregando = false;
@@ -327,16 +350,14 @@
 			<form class="mt-5 space-y-5" onsubmit={enviarTurma}>
 				<div>
 					<label for="codigo" class="text-sm font-bold">Código da turma</label>
-					<input
-						id="codigo"
-						required
-						autocomplete="off"
-						autocapitalize="characters"
-						spellcheck="false"
-						bind:value={codigo}
-						oninput={() => (codigo = codigo.toUpperCase())}
-						class="mt-1.5 min-h-12 w-full rounded-xl border-2 border-line bg-paper px-3 font-code text-lg tracking-[0.2em] uppercase"
-					/>
+					<div class="mt-1.5">
+						<CodigoTurma bind:valor={codigo} descricao="codigo-dica" />
+					</div>
+					<p id="codigo-dica" class="mt-1 text-xs text-ink-soft">
+						{codigo === codigoDoConvite && codigo.length === TAMANHO_CODIGO
+							? 'Já veio preenchido pelo link do convite.'
+							: `${TAMANHO_CODIGO} letras e números. Dá para colar o link do convite.`}
+					</p>
 				</div>
 
 				<div>
@@ -371,15 +392,6 @@
 					<span class="text-sm leading-relaxed">Aparecer no ranking da turma, com meu nome e meus acertos</span>
 				</label>
 
-				<label class="flex cursor-pointer items-start gap-3 rounded-2xl bg-tile p-3">
-					<input type="checkbox" required bind:checked={consentiu} class="mt-1 h-5 w-5 shrink-0 accent-[var(--accent)]" />
-					<span class="text-sm leading-relaxed text-pretty">
-						Concordo que o professor desta turma veja meu nome, RA (se eu informar) e meu desempenho no
-						site: quantas questões respondi, acertos por matéria e simulados. Se eu ficar no ranking, a turma vê
-						meu nome e meus acertos. Posso sair da turma ou apagar a conta quando quiser. <a href="/privacidade/" target="_blank" class="font-bold underline">Como seus dados são usados</a>
-					</span>
-				</label>
-
 				<div class="flex flex-col gap-2 sm:flex-row">
 					<button
 						type="submit"
@@ -391,13 +403,18 @@
 					{#if turmas.length}
 						<button
 							type="button"
-							onclick={() => (mostrarFormTurma = false)}
+							onclick={esquecerConvite}
 							class="min-h-11 rounded-xl px-4 text-sm font-bold text-ink-soft hover:text-ink"
 						>
 							Cancelar
 						</button>
 					{/if}
 				</div>
+				<p class="text-xs leading-relaxed text-pretty text-ink-soft">
+					Ao entrar, o professor desta turma vê seu nome, seu RA (se você informar) e seu desempenho no site.
+					Dá para sair da turma ou apagar a conta quando quiser.
+					<a href="/privacidade/" target="_blank" class="font-bold underline">Como seus dados são usados</a>
+				</p>
 			</form>
 		</section>
 	{:else}

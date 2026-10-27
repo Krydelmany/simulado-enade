@@ -181,8 +181,8 @@ from public.reportes where resolvido_em is null order by criado_em desc;
 update public.reportes set resolvido_em = now() where questao_id = '2019-CE-Q09';
 ```
 
-   O convite é `https://<site>/conta/?turma=ENGC26`. Use um código de 6 a 12
-   caracteres, sem 0/O/1/I/L.
+   O convite é `https://<site>/conta/?turma=ENGC26`. Use um código de
+   **6** caracteres (a tela tem 6 quadradinhos), sem 0/O/1/I/L.
 
 ## Desenvolver sem Supabase
 

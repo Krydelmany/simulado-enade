@@ -57,7 +57,7 @@ app/                       o site: SvelteKit 2 + Svelte 5 + Tailwind 4 + Vite 6
                            prova), csv.js (planilha do painel) e os
                            componentes (Questao, TextoRico, SessaoTopo,
                            BarraAcao, Contador, VigiaDevTools, BordaVoltar,
-                           DicaGestos, Marca)
+                           DicaGestos, Marca, CodigoTurma)
   static/banco/            O BANCO que o site carrega: enadeAAAA-{fg,ce}.json,
                            geradas.json, resolucoes.json e img/   ← SAÍDA de scripts
   vercel.json              build e cache headers (tem de ficar em app/)
@@ -135,6 +135,7 @@ Todas as chaves têm o prefixo `enade-`:
 | localStorage | `enade-nuvem-conta` | id do usuário logado (só com Supabase ligado; `nuvem.js`) |
 | localStorage | `enade-nuvem-fila` | respostas esperando subir, cada uma com `dono` (teto `TETO_FILA`) |
 | localStorage | `enade-nuvem-auth` | sessão do Supabase Auth (gravada pelo `supabase-js`) |
+| localStorage | `enade-convite` | `{codigo, em}` do link `?turma=`, guardado até entrar na turma (vale 24 h; `nuvem.js`) |
 | localStorage | `enade-aparelho` | uuid sorteado no navegador, só para contar visitas (D14); sem ligação com a conta |
 | sessionStorage | `enade-banco` | cache do banco |
 
@@ -186,6 +187,16 @@ some na próxima gravação.
   por vez; o convite é `/conta/?turma=CODIGO`), `/professor/?turma=<uuid>` e
   `/privacidade/`. Nenhuma fica na tab bar: o acesso é o ícone no header e o
   rodapé.
+- **Convite:** o código do `?turma=` vai para `enade-convite` ao abrir o
+  link, porque o login sai do site e a volta pode chegar sem a query. Ele
+  aparece nos quadradinhos de `CodigoTurma.svelte` (um input só por cima
+  de `TAMANHO_CODIGO` = 6 caixas; aceita colar o link inteiro). Quem já está
+  na turma do código vê a turma, não o formulário: entrar de novo regravava
+  a matrícula sem o RA. Código de turma novo tem de ter 6 caracteres, senão
+  não cabe na tela (o banco aceita de 6 a 12).
+- **Aceite (D7):** não há checkbox de consentimento. O aviso do que o
+  professor vê fica embaixo do botão "Entrar na turma", e o toque no botão
+  manda `p_consentiu = true` (o banco continua exigindo).
 - **Nome:** o que o professor e o ranking mostram é `perfis.nome` (D15).
   Ele nasce do Google (`criar_perfil`), mas quem entra por link de e-mail
   não tem nome: o formulário da turma pede o nome (pré-preenchido) e "Sua

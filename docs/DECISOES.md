@@ -107,6 +107,13 @@ faculdade: outra turma ou instituição não precisa dele.
 - O aluno pode sair da turma ou **apagar a conta** sozinho. Perfil, matrículas e respostas vão juntos.
 - Falta uma página curta de privacidade antes do lançamento (pendência em `PRODUTO.md`).
 
+**Atualização (27/10/2026):** o checkbox "Concordo…" saiu do formulário da
+turma. Era mais um toque obrigatório num formulário que já vem preenchido
+pelo convite. O aviso do que o professor vê ficou embaixo do botão, com o
+link para `/privacidade/`, e o toque em "Entrar na turma" é o aceite. O
+banco continua recusando `p_consentiu = false`. "Aparecer no ranking"
+continua, marcado por padrão.
+
 ### D8. Ids de questão não mudam; o curso vai na resposta
 
 **Decisão:** os ids (`2019-CE-Q09`, `GER-…`) continuam como estão. A tabela

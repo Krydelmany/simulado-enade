@@ -317,6 +317,40 @@ function voltarPara(caminho) {
 	return new URL(caminho, location.origin).href;
 }
 
+/** Quantos caracteres tem o código da turma (a tela mostra um quadradinho por caractere). */
+export const TAMANHO_CODIGO = 6;
+
+/**
+ * Código da turma a partir do que a pessoa digitou ou colou: aceita o
+ * código solto ("engc26") e o link inteiro do convite (".../conta/?turma=ENGC26").
+ */
+export function limparCodigo(texto) {
+	const s = String(texto || '');
+	const doLink = s.match(/[?&]turma=([^&#\s]+)/i);
+	return (doLink ? doLink[1] : s)
+		.toUpperCase()
+		.replace(/[^A-Z0-9]/g, '')
+		.slice(0, TAMANHO_CODIGO);
+}
+
+// O convite (?turma=) vem na URL, mas o login sai do site e volta: se o
+// Supabase não devolver a query (URL fora da lista de redirect) ou o link
+// mágico abrir em outra aba, o código sumia e o aluno tinha de pedir de novo.
+const CHAVE_CONVITE = 'enade-convite';
+const VALIDADE_CONVITE_MS = 24 * 3600_000;
+
+/** Guarda o código do convite até o aluno entrar na turma (null apaga). */
+export function lembrarConvite(codigo) {
+	gravar(CHAVE_CONVITE, codigo ? { codigo: limparCodigo(codigo), em: Date.now() } : null);
+}
+
+/** O código do convite guardado nas últimas 24 h, ou '' se não houver. */
+export function conviteGuardado() {
+	const v = ler(CHAVE_CONVITE, null);
+	if (!v || typeof v.codigo !== 'string' || !(Date.now() - v.em < VALIDADE_CONVITE_MS)) return '';
+	return limparCodigo(v.codigo);
+}
+
 export async function entrarComGoogle(volta = location.pathname + location.search) {
 	const c = await obrigatorio();
 	const { error } = await c.auth.signInWithOAuth({
