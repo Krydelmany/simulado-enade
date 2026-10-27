@@ -5,7 +5,7 @@
 	// ranking e progresso em mais de um aparelho.
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import { GoogleLogo, EnvelopeSimple, Trophy, ChartBar, SignOut, Trash, UsersThree, Timer } from 'phosphor-svelte';
+	import { GoogleLogo, EnvelopeSimple, Trophy, ChartBar, SignOut, Trash, UsersThree, Timer, ArrowRight } from 'phosphor-svelte';
 	import { lerFeitosDaTurma } from '$lib/simulado.js';
 	import CodigoTurma from '$lib/CodigoTurma.svelte';
 	import {
@@ -23,6 +23,7 @@
 		enviarFila,
 		meusSimulados,
 		salvarNome,
+		salvarRa,
 		limparCodigo,
 		lembrarConvite,
 		conviteGuardado,
@@ -48,6 +49,9 @@
 	let ra = $state('');
 	let noRanking = $state(true);
 	let mostrarFormTurma = $state(false);
+	// o RA pode ser informado/trocado depois de entrar; antes só saindo da turma
+	let editandoRa = $state(false);
+	let novoRa = $state('');
 
 	// turma aberta + ranking
 	let turmaAberta = $state(null);
@@ -117,6 +121,9 @@
 	// o ranking é carregado pelo $effect lá embaixo (turma ou período mudou)
 	function abrirTurma(t) {
 		turmaAberta = t;
+		// trocar de aba com o formulário de RA aberto não pode salvar na turma errada
+		editandoRa = false;
+		novoRa = '';
 	}
 
 	async function carregarRanking() {
@@ -187,6 +194,16 @@
 			usuario.nome = await salvarNome(novoNome);
 			nome = usuario.nome;
 			editandoNome = false;
+		});
+	};
+
+	// O RA fica na matrícula (membros), não no perfil: é por turma.
+	const guardarRa = (ev) => {
+		ev.preventDefault();
+		acao(async () => {
+			const salvo = await salvarRa(turmaAberta.id, novoRa);
+			turmas = turmas.map((x) => (x.turma.id === turmaAberta.id ? { ...x, ra: salvo } : x));
+			editandoRa = false;
 		});
 	};
 
@@ -384,7 +401,10 @@
 						bind:value={ra}
 						class="mt-1.5 min-h-12 w-full rounded-xl border-2 border-line bg-paper px-3 text-base"
 					/>
-					<p class="mt-1 text-xs text-ink-soft">Ajuda o professor a achar você na lista de chamada.</p>
+					<p class="mt-1 text-xs text-ink-soft">
+						Além de ajudar o professor a achar você na lista, o RA libera o seu resultado do simulado em
+						papel nesta conta.
+					</p>
 				</div>
 
 				<label class="flex min-h-11 cursor-pointer items-start gap-3">
@@ -411,8 +431,8 @@
 					{/if}
 				</div>
 				<p class="text-xs leading-relaxed text-pretty text-ink-soft">
-					Ao entrar, o professor desta turma vê seu nome, seu RA (se você informar) e seu desempenho no site.
-					Dá para sair da turma ou apagar a conta quando quiser.
+					Ao entrar, o professor desta turma vê seu nome, seu RA (se você informar), seu desempenho no site
+					e, com o RA, o resultado do simulado em papel. Dá para sair da turma ou apagar a conta quando quiser.
 					<a href="/privacidade/" target="_blank" class="font-bold underline">Como seus dados são usados</a>
 				</p>
 			</form>
@@ -486,6 +506,70 @@
 					</a>
 				{/if}
 			</section>
+
+			<!-- RA e resultado do simulado em papel: o RA fica na matrícula, então
+			     dá para informar/trocar depois de entrar sem sair da turma. -->
+			{#if m?.papel !== 'professor'}
+				<section class="mt-6 rounded-3xl border border-line bg-card p-5 sm:p-6" aria-labelledby="t-papel">
+					<h2 id="t-papel" class="font-display text-heading font-extrabold">Simulado em papel</h2>
+					{#if m?.ra && !editandoRa}
+						<p class="mt-2 text-sm">Seu RA é <strong class="nums">{m.ra}</strong>.</p>
+						<p class="mt-1 text-sm leading-relaxed text-pretty text-ink-soft">
+							O resultado do simulado em papel, importado do site do professor, fica disponível para você
+							e para o professor.
+						</p>
+						<div class="mt-3 flex flex-wrap items-center gap-3">
+							<a
+								href="/desempenho/"
+								class="btn3d duo-accent flex min-h-11 items-center gap-2 rounded-xl px-4 text-sm font-bold"
+							>
+								Ver meu resultado <ArrowRight size={16} weight="bold" aria-hidden="true" />
+							</a>
+							<button
+								type="button"
+								onclick={() => {
+									novoRa = m?.ra ?? '';
+									editandoRa = true;
+								}}
+								class="min-h-11 text-sm font-bold text-ink-soft hover:text-ink"
+							>
+								Trocar RA
+							</button>
+						</div>
+					{:else}
+						<p class="mt-1 text-sm leading-relaxed text-pretty text-ink-soft">
+							Se você fez o simulado em papel, informe o RA para ver aqui o seu resultado. Ele fica visível
+							para você e para o professor.
+						</p>
+						<form class="mt-3" onsubmit={guardarRa}>
+							<label for="ra-conta" class="text-sm font-bold">Seu RA</label>
+							<div class="mt-1.5 flex flex-col gap-2 sm:flex-row">
+								<input
+									id="ra-conta"
+									inputmode="numeric"
+									autocomplete="off"
+									maxlength="20"
+									bind:value={novoRa}
+									class="min-h-12 flex-1 rounded-xl border-2 border-line bg-paper px-3 text-base"
+								/>
+								<button
+									type="submit"
+									disabled={ocupado}
+									class="btn3d duo-accent min-h-12 rounded-xl px-5 font-display text-base font-bold disabled:opacity-60"
+								>
+									Salvar RA
+								</button>
+								{#if m?.ra}
+									<button type="button" onclick={() => (editandoRa = false)} class="min-h-11 px-3 text-sm font-bold text-ink-soft">
+										Cancelar
+									</button>
+								{/if}
+							</div>
+							<p class="mt-1 text-xs text-ink-soft">É o mesmo RA da lista de chamada. Sem ele, o site não sabe qual resultado é o seu.</p>
+						</form>
+					{/if}
+				</section>
+			{/if}
 
 			{#if proximoSimulado && m?.papel !== 'professor'}
 				<section class="mt-6 rounded-3xl border-2 border-accent bg-card p-5 sm:p-6" aria-labelledby="t-proximo">

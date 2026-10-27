@@ -1,6 +1,6 @@
 # Produto: Simulado ENADE (piloto com a turma)
 
-Atualizado em 22/10/2026. Decisões numeradas (D1…) em `docs/DECISOES.md`.
+Atualizado em 27/10/2026. Decisões numeradas (D1…) em `docs/DECISOES.md`.
 
 ## Problema
 
@@ -80,6 +80,22 @@ para a turma ter **pelo menos 3 semanas de uso** antes da prova.
   pelos simulados), ficha de cada aluno (dias de estudo, matérias contra a
   média da turma, questões que mais erra com a letra marcada, simulados) e,
   por questão, o gabarito e o erro mais comum.
+
+### Feito em 27/10 (simulado em papel, D17)
+
+- [x] **Importação única** do resultado do simulado em papel do site do
+  professor (`pilar.ia.br/enade2026`) para o Supabase. O script
+  `supabase/importar-pilar.py` entra por RA, gera um SQL idempotente e não
+  imprime os RAs; o admin roda no SQL Editor. Sem proxy em tempo real.
+- [x] **Página `/desempenho/`** para o aluno: acertos, comparação com a
+  turma, áreas pior primeiro com tendência e botão para treinar cada área.
+- [x] **Cartão na conta** para informar ou trocar o RA depois de já estar na
+  turma (antes só saindo e entrando de novo) e abrir o resultado.
+- [x] **Treino filtrado** por `?materia=<id>`, ligado ao botão de cada área.
+- [x] **Ficha do professor** com o retrato do papel e as três piores áreas,
+  ao lado do uso do site.
+- [x] **Privacidade** atualizada: o resumo do papel é guardado quando o aluno
+  informa o RA e apaga junto com a conta.
 
 ### Próximos, em ordem de prioridade
 

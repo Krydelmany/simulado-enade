@@ -4,7 +4,7 @@
 	// Mudou o que o banco guarda (supabase/migrations/)? Mude esta página junto.
 	import { ArrowLeft } from 'phosphor-svelte';
 
-	const ATUALIZADA = '22 de outubro de 2026';
+	const ATUALIZADA = '27 de outubro de 2026';
 </script>
 
 <svelte:head>
@@ -39,6 +39,11 @@
 				</li>
 				<li><strong>Da turma:</strong> o RA, se você informar (é opcional), e se você quer aparecer no ranking.</li>
 				<li>
+					<strong>Do simulado em papel:</strong> se você informar o RA, guardamos o resumo do seu
+					resultado no simulado em papel (acertos, percentual por área e a comparação com a turma),
+					importado do site do professor. Não guardamos as suas respostas da prova em papel.
+				</li>
+				<li>
 					<strong>De cada resposta:</strong> qual questão, qual alternativa você marcou, se acertou, a matéria,
 					o modo (treino, estudo ou simulado), quanto tempo levou e quando respondeu. O texto que você escreve na discursiva
 					<strong>não</strong> sai do aparelho.
@@ -52,7 +57,8 @@
 			<ul class="mt-2 list-disc space-y-1.5 pl-5">
 				<li>
 					<strong>O professor da sua turma</strong> vê seu nome, RA (se houver) e seu desempenho:
-					quantas questões respondeu, acertos por matéria e resultado nos simulados da turma.
+					quantas questões respondeu, acertos por matéria, resultado nos simulados da turma e, com o
+					RA, o resultado do simulado em papel.
 				</li>
 				<li>
 					<strong>Os colegas da turma</strong> veem só o seu nome e seus acertos no ranking. Se você
@@ -80,7 +86,8 @@
 				</li>
 				<li>
 					<strong>Apagar tudo:</strong> na mesma tela, "Apagar minha conta". Apaga na hora sua conta, suas
-					turmas e todas as respostas que subiram. O progresso no seu aparelho continua.
+					turmas, todas as respostas que subiram e o retrato do simulado em papel. O progresso no seu
+					aparelho continua.
 				</li>
 			</ul>
 		</section>

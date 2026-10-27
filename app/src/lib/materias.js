@@ -40,3 +40,47 @@ export function nomeMateria(id) {
 export function incisoMateria(id) {
 	return POR_ID.get(id)?.inciso ?? null;
 }
+
+/** "Matemática e Estatística" → "matematica e estatistica". */
+function normalizarArea(nome) {
+	return String(nome || '')
+		.normalize('NFD')
+		.replace(/\p{Diacritic}/gu, '')
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, ' ')
+		.trim();
+}
+
+// Nomes de área que vêm de fora (o site do professor usa os seus) → id.
+const POR_AREA = new Map();
+for (const m of [...MATERIAS_CE, ...MATERIAS_FG]) {
+	for (const chave of [m.id, m.nome, m.oficial, ...(m.ava ?? [])]) {
+		const n = normalizarArea(chave);
+		if (n && !POR_AREA.has(n)) POR_AREA.set(n, m.id);
+	}
+}
+const CHAVES_AREA = [...POR_AREA.keys()];
+
+/**
+ * Id da matéria a partir do nome de área que vem do site do professor (o
+ * simulado em papel). Casa pelo id, nome, nome oficial e nome do AVA; se não
+ * houver igual, aceita o começo de um nome maior ("Matemática Discreta" ×
+ * "Matemática Discreta e Grafos"). Sem par, devolve `null`: a tela mostra o
+ * nome como veio, em vez de chutar a matéria errada.
+ */
+export function materiaPorArea(nome) {
+	const n = normalizarArea(nome);
+	if (!n) return null;
+	const exato = POR_AREA.get(n);
+	if (exato) return exato;
+	let melhor = null;
+	for (const chave of CHAVES_AREA) {
+		if (chave.length < 8) continue;
+		if (chave.startsWith(`${n} `) || n.startsWith(`${chave} `)) {
+			// o mais específico vence: "Matemática Discreta" casa com
+			// "matemática discreta e grafos", não com "matemática"
+			if (!melhor || chave.length > melhor.length) melhor = chave;
+		}
+	}
+	return melhor ? POR_AREA.get(melhor) : null;
+}
