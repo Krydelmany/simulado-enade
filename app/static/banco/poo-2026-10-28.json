@@ -1,0 +1,144 @@
+{
+ "_": "Questionário diário de Programação Orientada a Objetos, passado pelo professor em 28/10/2026. Fonte: PDF Simulado-ENADE-2026-10-EC-POO (Pedro P. Souza). O gabarito é preliminar: a questão 5 foi conferida no ENADE 2011 (q39) e as demais foram resolvidas; o professor confirma em aula. Este arquivo não entra em ARQUIVOS_BANCO: é um questionário independente, não o banco do ENADE.",
+ "titulo": "Programação Orientada a Objetos",
+ "lancado_em": "2026-10-28",
+ "fonte": "Questões passadas pelo professor Pedro P. Souza em 28/10/2026.",
+ "nota": "Gabarito preliminar: a questão 5 foi conferida no ENADE 2011 (q39) e as demais foram resolvidas. O professor confirma em aula.",
+ "questoes": [
+  {
+   "id": "poo-2026-10-28-01",
+   "tema": "Encapsulamento, herança e polimorfismo",
+   "enunciado": "Analise as seguintes afirmativas.\n\nI. Encapsulamento é a capacidade de uma operação ao atuar de modos diversos em classes diferentes.\nII. Polimorfismo é o compartilhamento de atributos e métodos entre classes com base em um relacionamento hierárquico.\nIII. Herança consiste no processo de ocultação dos detalhes internos de implementação de um objeto.\nIV. Sobreposição é a redefinição das funções de um método herdado. Os métodos apresentam assinaturas iguais.\nV. Em JAVA, todos os métodos numa classe abstrata devem ser declarados como abstratos.\n\nA partir da análise, pode-se concluir que",
+   "alternativas": {
+    "A": "apenas a afirmativa IV está correta.",
+    "B": "apenas as afirmativas III e IV estão corretas.",
+    "C": "apenas as afirmativas I, IV e V estão corretas.",
+    "D": "apenas as afirmativas I, III e V estão corretas.",
+    "E": "todas as afirmativas são falsas."
+   },
+   "gabarito": "A"
+  },
+  {
+   "id": "poo-2026-10-28-02",
+   "tema": "Sobrescrita, sobrecarga e herança múltipla",
+   "enunciado": "Analise as seguintes afirmativas.\n\nI. Ocultar dados dentro das classes e torná-los disponíveis apenas por meio de métodos é uma técnica muito usada em programas orientados a objetos e é chamada de sobrescrita de atributos.\nII. Uma subclasse pode implementar novamente métodos que foram herdados de uma superclasse. Chamamos isso de sobrecarga de métodos.\nIII. Em Java não existe herança múltipla como em C++. A única maneira de se obter algo parecido é via interfaces.\n\nA análise permite concluir que",
+   "alternativas": {
+    "A": "apenas a afirmativa I está incorreta.",
+    "B": "apenas a afirmativa II está incorreta.",
+    "C": "apenas a afirmativa III está incorreta.",
+    "D": "apenas as afirmativas I e III estão incorretas.",
+    "E": "apenas as afirmativas I e II estão incorretas."
+   },
+   "gabarito": "E"
+  },
+  {
+   "id": "poo-2026-10-28-03",
+   "tema": "Interfaces e classes abstratas em Java",
+   "enunciado": "Analise as seguintes afirmativas.\n\nI. Encapsulamento permite que uma classe defina métodos com o mesmo nome de métodos presentes em sua superclasse desde que esses métodos tenham argumentos um pouco diferentes.\nII. Em Java, uma instância de uma classe C que implementa uma interface I é membro tanto do tipo definido pela interface I quanto do tipo definido pela classe C.\nIII. Em Java, classes abstratas não precisam ser completamente abstratas; ao contrário das interfaces, classes abstratas podem ter métodos implementados que serão herdados por suas subclasses.\n\nA análise permite concluir que",
+   "alternativas": {
+    "A": "apenas as afirmativas II e III estão corretas.",
+    "B": "apenas as afirmativas I e II estão corretas.",
+    "C": "apenas as afirmativas I e III estão corretas.",
+    "D": "apenas a afirmativa II está correta.",
+    "E": "apenas a afirmativa I está correta."
+   },
+   "gabarito": "A"
+  },
+  {
+   "id": "poo-2026-10-28-04",
+   "tema": "Herança e ligação de métodos em C++",
+   "enunciado": "O mecanismo de herança, no paradigma da programação orientada a objetos, é uma forma de reutilização de software na qual uma nova classe é criada, absorvendo membros de uma classe existente e aprimorada com capacidades novas ou modificadas.\n\nConsidere as seguintes classes descritas na linguagem C++.\n\n```cpp\n#include <iostream>\nusing namespace std;\n\nclass A {\nprotected:\n    int v;\npublic:\n    A() { v = 0; }\n    void m1() {\n        v += 10;\n        m2();\n    }\n    void m2() {\n        v += 20;\n    }\n    int getv() { return v; }\n};\n\nclass B : public A {\npublic:\n    void m2() {\n        v += 30;\n    }\n};\n\nint main() {\n    B *Obj = new B();\n    Obj->m1();\n    Obj->m2();\n    cout << Obj->getv() << endl;\n    return 0;\n}\n```\n\nA saída do código computacional dentro de main() será:",
+   "alternativas": {
+    "A": "30",
+    "B": "40",
+    "C": "50",
+    "D": "60",
+    "E": "70"
+   },
+   "gabarito": "D"
+  },
+  {
+   "id": "poo-2026-10-28-05",
+   "tema": "Tipo de Dados Abstrato (TDA)",
+   "enunciado": "O conceito de Tipo de Dados Abstrato (TDA) é popular em linguagens de programação orientadas a objetos. Nesse contexto, analise as afirmativas a seguir.\n\nI. A especificação de um TDA é composta das operações aplicáveis a ele, da sua representação interna e das implementações das operações.\nII. Dois mecanismos utilizáveis na implementação de um TDA em programas orientados a objetos são a composição e a herança.\nIII. Se S é um subtipo de T, então instâncias do tipo S em um programa podem ser substituídas por instâncias do tipo T, sem alterar a corretude desse programa.\nIV. O encapsulamento em linguagens de programação orientadas a objetos é um efeito positivo da implementação de TDA.\n\nÉ correto apenas o que se afirma em:",
+   "alternativas": {
+    "A": "I e II.",
+    "B": "II e III.",
+    "C": "I e IV.",
+    "D": "II e IV.",
+    "E": "III e IV."
+   },
+   "gabarito": "E"
+  },
+  {
+   "id": "poo-2026-10-28-06",
+   "tema": "Diagrama de classes UML",
+   "enunciado": "De acordo com o diagrama de classes UML a seguir, assinale a alternativa correta.",
+   "imagem": {
+    "src": "/banco/img/poo-2026-10-28-q06.png",
+    "alt": "Diagrama de classes UML com Aerofólio, Artefato, Veículo, Roda e Pneu. Veículo, Roda e Pneu herdam de Artefato; Veículo compõe Roda, que compõe Pneu; Aerofólio agrega Veículo.",
+    "legenda": "Diagrama de classes UML da questão 6."
+   },
+   "alternativas": {
+    "A": "O relacionamento entre “Veículo” e “Roda” se relaciona diretamente com polimorfismo.",
+    "B": "O relacionamento entre “Roda” e “Pneu” se relaciona diretamente com polimorfismo.",
+    "C": "O relacionamento entre “Veículo” e “Pneu” se relaciona diretamente com polimorfismo.",
+    "D": "O relacionamento entre “Artefato” e “Veículo” se relaciona diretamente com polimorfismo.",
+    "E": "O relacionamento entre “Veículo” e “Aerofólio” se relaciona diretamente com polimorfismo."
+   },
+   "gabarito": "D"
+  },
+  {
+   "id": "poo-2026-10-28-07",
+   "tema": "Abstração de processo",
+   "enunciado": "Quando um programa precisa classificar uma matriz de objetos de dados numéricos de algum tipo, normalmente usa um subprograma (ou função) para o processo de classificação. No ponto em que o processo de classificação é necessário, uma instrução como sort_int(list, list_len) é colocada no programa.\n\nEssa chamada é um exemplo de abstração de:",
+   "alternativas": {
+    "A": "Dados.",
+    "B": "Encapsulamento.",
+    "C": "Repetição.",
+    "D": "Condição.",
+    "E": "Processo."
+   },
+   "gabarito": "E"
+  },
+  {
+   "id": "poo-2026-10-28-08",
+   "tema": "Tipos de dados e conversão implícita",
+   "enunciado": "Sobre tipos de dados, é correto afirmar que:",
+   "alternativas": {
+    "A": "Tipos booleanos são valores que são mantidos fixos pelo compilador.",
+    "B": "O double é um tipo inteiro duplo com menor precisão do que o tipo inteiro.",
+    "C": "A faixa de valores dos tipos inteiros tem somente dois elementos: um para verdadeiro e outro para falso.",
+    "D": "Uma conversão de tipos implícita consiste em uma modificação do tipo de dados executado, automaticamente, pelo compilador.",
+    "E": "Vetores, matrizes e ponteiros são exemplos de tipos de dados primitivos (básicos)."
+   },
+   "gabarito": "D"
+  },
+  {
+   "id": "poo-2026-10-28-09",
+   "tema": "Visibilidade de atributos e métodos",
+   "enunciado": "O encapsulamento dos dados tem como objetivo ocultar os detalhes da implementação de um determinado módulo. Em linguagens orientadas a objeto, o ocultamento de informação é tornado explícito requerendo-se que todos os métodos e atributos em uma classe tenham um nível particular de visibilidade com relação às suas subclasses e às classes clientes.\n\nEm relação aos atributos de visibilidade, assinale a alternativa correta.",
+   "alternativas": {
+    "A": "Um atributo ou método público é visível a qualquer classe cliente e subclasse da classe a que ele pertence.",
+    "B": "Um atributo ou método protegido é visível somente à classe a que ele pertence, mas não às suas subclasses ou aos seus clientes.",
+    "C": "Um atributo ou método privado é visível somente às subclasses da classe a que ele pertence.",
+    "D": "Um método protegido não pode acessar os atributos privados declarados na classe a que ele pertence, sendo necessária a chamada de outro método privado da classe.",
+    "E": "Um método público pode acessar somente atributos públicos declarados na classe a que ele pertence."
+   },
+   "gabarito": "A"
+  },
+  {
+   "id": "poo-2026-10-28-10",
+   "tema": "Herança, polimorfismo e saída de código Java",
+   "enunciado": "Considere as classes Java, que pertencem ao mesmo pacote, a seguir.\n\n```java\nabstract public class C1 {\n    abstract public Object cria();\n    public void mostra() {\n        System.out.print(\"Poscomp 2014\");\n    }\n}\n\npublic class C2 extends C1 {\n    static int i = 0;\n    Integer j;\n    public Object cria() {\n        i++;\n        j = new Integer(i);\n        return j;\n    }\n    public void mostra() {\n        System.out.print(\"j=\" + j);\n    }\n}\n\npublic class C3 extends C1 {\n    double d = 3.14;\n    Float f;\n    public Object cria() {\n        d = d + 1.0;\n        f = new Float(d);\n        return f;\n    }\n    public void mostra() {\n        System.out.print(\"f=\" + f);\n    }\n}\n\npublic class PosComp2014 {\n    public static void main(String[] z) {\n        C1 a, b, c;\n        Object o1, o2, o3;\n        a = new C2();\n        b = new C2();\n        c = new C3();\n        o1 = a.cria();\n        o1 = a.cria();\n        o2 = b.cria();\n        o3 = c.cria();\n        o3 = c.cria();\n        a.mostra();\n        System.out.print(\" \");\n        b.mostra();\n        System.out.print(\" \");\n        c.mostra();\n        System.out.print(\" \" + o1);\n        System.out.print(\" \" + o2);\n        System.out.print(\" \" + o3);\n    }\n}\n```\n\nAssinale a alternativa que apresenta, corretamente, os valores impressos pela execução desse programa.",
+   "alternativas": {
+    "A": "O programa está sintaticamente incorreto, não sendo possível executá-lo.",
+    "B": "j = 2 j = 1 f = 5.14 2 1 5.14",
+    "C": "j = 2 j = 3 f = 5.14 2 3 5.14",
+    "D": "Poscomp 2014 Poscomp 2014 Poscomp 2014 2 1 5.14",
+    "E": "Poscomp 2014 Poscomp 2014 Poscomp 2014 2 3 5.14"
+   },
+   "gabarito": "C"
+  }
+ ]
+}

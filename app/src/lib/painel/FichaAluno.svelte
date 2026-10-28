@@ -251,9 +251,18 @@
 						<span class="nums text-sm text-ink-soft">({pct(papelAtual.acertos, papelAtual.total)}%)</span>
 					</p>
 					<p class="nums text-xs text-ink-soft">
-						Turma: média {papelTurma.media_acertos == null ? '—' : Number(papelTurma.media_acertos).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}
+						Turma {#if papelTurma.total_questoes}(de {num(papelTurma.total_questoes)}){/if}:
+						média {papelTurma.media_acertos == null ? '—' : Number(papelTurma.media_acertos).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}
 						· mediana {papelTurma.mediana_acertos == null ? '—' : Number(papelTurma.mediana_acertos).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}
 					</p>
+					{#if num(papelTurma.total_questoes) > num(papelAtual.total)}
+						<p class="mt-0.5 text-xs text-ink-soft">
+							{num(papelTurma.total_questoes) - num(papelAtual.total)}
+							{num(papelTurma.total_questoes) - num(papelAtual.total) === 1
+								? 'questão ficou fora das áreas'
+								: 'questões ficaram fora das áreas'} (não conta no percentual).
+						</p>
+					{/if}
 					{#if papelAreas.length}
 						<p class="mt-3 text-xs font-semibold text-ink-soft">Piores áreas, com a média da turma:</p>
 						<ul class="mt-1 space-y-2">

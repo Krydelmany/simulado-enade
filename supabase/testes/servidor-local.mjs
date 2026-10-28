@@ -97,7 +97,7 @@ for (const [k, q, materia, resultado, diasAtras] of exemplo) {
 await db.query(
 	`insert into public.desempenho_papel
 		(usuario_id, curso, simulado_id, rotulo, acertos, total, percentual, areas, prioridades, turma, discursiva)
-	 values ($1, 'engcomp', '2026-b1', 'Simulado B1', 24, 40, 0.6000, $2::jsonb, $3::jsonb, $4::jsonb, $5::jsonb)`,
+	 values ($1, 'engcomp', '2026-b1', 'Simulado B1', 19, 43, 0.4419, $2::jsonb, $3::jsonb, $4::jsonb, $5::jsonb)`,
 	[
 		PESSOAS.ana.id,
 		JSON.stringify({
@@ -109,7 +109,7 @@ await db.query(
 			{ area: 'Redes de Computadores', percentual: 0.3333, tendencia: 'piorou' },
 			{ area: 'Inteligência Artificial', percentual: 0.4, tendencia: 'estavel' }
 		]),
-		JSON.stringify({ total_questoes: 40, media_acertos: 23.5, mediana_acertos: 24 }),
+		JSON.stringify({ total_questoes: 44, media_acertos: 23.5, mediana_acertos: 24 }),
 		JSON.stringify({ nota_1: 7.5, nota_2: 8 })
 	]
 );

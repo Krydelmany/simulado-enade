@@ -36,6 +36,10 @@ três modos:
   161/2026), com 15 objetivas de Formação Geral (FG), 30 do Componente
   Específico (CE) e 1 discursiva, em 4 h. Tem cartão-resposta, pausa e
   correção só na entrega. A home e o simulado contam apenas as oficiais.
+- **Questionário do professor** (`/poo/`): as 10 questões de Programação
+  Orientada a Objetos que o professor passou em 28/10/2026, com correção na
+  hora. É um conteúdo à parte do banco oficial (arquivo próprio, sem
+  stats/servidor); o gabarito é preliminar e o professor confirma.
 
 A branch `main` é o que está no ar: cada merge publica em produção na Vercel,
 e cada PR ganha uma URL de preview.
@@ -48,7 +52,7 @@ app/                       o site: SvelteKit 2 + Svelte 5 + Tailwind 4 + Vite 6
   src/app.css              design tokens (@theme inline), classes próprias, motion
   src/routes/              +layout.svelte (nav, tab bar, rodapé), +layout.js
                            (prerender), +error.svelte (404), / , treino/, estudo/,
-                           simulado/, conta/, professor/, desempenho/, privacidade/
+                           simulado/, conta/, professor/, desempenho/, poo/, privacidade/
   src/lib/                 banco.js, stats.js, simulado.js, materias.js(.json),
                            resumo.js, tema.js, motion.js, foco.svelte.js,
                            sessao.js, gestos.js, camadas.svelte.js,
@@ -60,6 +64,8 @@ app/                       o site: SvelteKit 2 + Svelte 5 + Tailwind 4 + Vite 6
                            DicaGestos, Marca, CodigoTurma)
   static/banco/            O BANCO que o site carrega: enadeAAAA-{fg,ce}.json,
                            geradas.json, resolucoes.json e img/   ← SAÍDA de scripts
+                           + poo-2026-10-28.json (questionário do professor,
+                           fora do ARQUIVOS_BANCO) e img/poo-2026-10-28-q06.png
   vercel.json              build e cache headers (tem de ficar em app/)
 banco/                     scripts Python que produzem e conferem o banco, mais as
                            FONTES editáveis: classificacao.json, digitadas.json,
@@ -269,6 +275,13 @@ só lê.
   **O cliente não escreve nela**: tem só `grant select` e a policy do próprio
   aluno. Quem grava é o SQL do admin (roda como postgres). Professor lê a
   turma pela RPC `painel_papel` (mesmo padrão das outras `painel_*`).
+- **Total do placar:** `desempenho_papel.total` é o denominador do
+  percentual — as questões que entraram nas áreas (hoje 43);
+  `turma.total_questoes` é o total da prova (44). O pilar calcula
+  `aluno.percentual` sobre 43, e o placar/ficha usam esse `total`. A linha
+  "de 44" e o aviso "1 questão ficou fora das áreas" vêm da diferença.
+  **Nunca use `turma.total_questoes` no denominador do placar:** era isso
+  que mostrava 19/44 e 44% na mesma linha.
 - **Telas:** `/desempenho/` mostra o retrato do aluno (acertos, comparação
   com a turma, áreas pior primeiro com tendência e botão para treinar);
   `/conta/` tem o cartão "Simulado em papel", que informa/troca o RA pela RPC
@@ -285,6 +298,30 @@ só lê.
 - **Nunca** commite o CSV de RAs nem o SQL gerado (dado pessoal). O SQL fica
   em `/tmp/opencode/`. A `/privacidade/` diz que o resumo do papel é
   guardado quando o aluno informa o RA, e apagar a conta apaga junto.
+
+### Questionário do professor (POO)
+
+O professor passou 10 questões de Programação Orientada a Objetos em
+28/10/2026 (PDF `Simulado-ENADE-2026-10-EC-POO.pdf`, de Pedro P. Souza). A
+tela `/poo/` é um teste diário com correção na hora e resultado local.
+
+- **Dados:** `app/static/banco/poo-2026-10-28.json`, **fora** de
+  `ARQUIVOS_BANCO` e do pipeline do banco. Não é questão oficial do ENADE:
+  não entra no treino/estudo/simulado, no `stats`, no ranking nem no painel
+  do professor. A imagem da UML é
+  `app/static/banco/img/poo-2026-10-28-q06.png`; o código C++ (Q4) e Java
+  (Q10) vai no `enunciado`, em fences ```cpp/```java.
+- **Gabarito preliminar:** a Q5 foi conferida no ENADE 2011 (q39, resposta
+  III e IV); as outras foram resolvidas. A intro e o resultado dizem isso e
+  o professor confirma em aula. Para corrigir, edite o JSON e, se for outro
+  dia, o nome do arquivo (a página busca `poo-2026-10-28.json`).
+- **Página:** valida id, A–E, gabarito e enunciado ao carregar; liga
+  `foco.quiz` durante o quiz e desliga no fim/cleanup (regra 14). A intro e
+  o resultado são páginas normais, com a tab bar.
+- **Home:** cartão destacado "Novo · Lançado hoje · 28/10", antes dos modos.
+- **Sem tracking:** o resultado fica no aparelho; se um dia o professor
+  quiser ver quem fez, é outra decisão (novo modo/tabela), não reaproveite o
+  `respostas` do ENADE sem pensar nas métricas.
 
 ### Simulado (`src/lib/simulado.js` + `routes/simulado/+page.svelte`)
 
@@ -731,6 +768,10 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
     `supabase/importar-pilar.py`. Não abra insert/update para o navegador
     (o aluno inflaria os próprios números) e não commite o CSV de RAs nem o
     SQL gerado: os dois têm dado pessoal e ficam fora do repo.
+20. **O questionário do professor (`poo-2026-10-28.json`) fica fora do
+    banco.** Não o coloque em `ARQUIVOS_BANCO`, no `geradas.json` nem no
+    `stats`: é um teste diário local, com gabarito preliminar. Se ele virar
+    questão oficial, é outra decisão e passa pelo pipeline do banco.
 
 ## Padrões de código
 

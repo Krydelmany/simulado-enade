@@ -202,14 +202,27 @@ def resumir(dados, evolucao):
             'turma': percentual(da_turma.get('percentual')) if isinstance(da_turma, dict) else None,
         }
 
-    total = inteiro(turma.get('total_questoes'), 0)
+    # O pilar calcula o percentual sobre as questões que entraram nas áreas
+    # (43), mas o total da prova é 44. Usar o total da prova no placar
+    # mostrava "19/44" e "44%" na mesma linha. `total` é o denominador do
+    # percentual; `turma.total_questoes` continua sendo o total da prova.
+    total_turma = inteiro(turma.get('total_questoes'), 0)
+    acertos = inteiro(aluno.get('acertos'), 0)
+    pct = percentual(aluno.get('percentual'))
+    soma_areas = sum(a['total'] for a in areas.values())
+
+    total = inteiro(aluno.get('total_questoes'), 0)
+    if total <= 0 and pct and acertos:
+        inferido = round(acertos / pct)
+        if abs(inferido - total_turma) <= 2:
+            total = inferido
+    if total <= 0 and soma_areas and abs(soma_areas - total_turma) <= 2:
+        total = soma_areas
     if total <= 0:
-        total = sum(a['total'] for a in areas.values())
+        total = soma_areas or total_turma
     if total <= 0:
         raise ValueError('o pilar não informou o total de questões')
 
-    acertos = inteiro(aluno.get('acertos'), 0)
-    pct = percentual(aluno.get('percentual'))
     if pct is None:
         pct = acertos / total
     pct = max(0.0, min(1.0, pct))
@@ -244,7 +257,7 @@ def resumir(dados, evolucao):
         'areas': areas,
         'prioridades': prioridades,
         'turma': {
-            'total_questoes': total,
+            'total_questoes': total_turma or total,
             'media_acertos': numero(turma.get('media_acertos'), None),
             'mediana_acertos': numero(turma.get('mediana_acertos'), None),
         },
