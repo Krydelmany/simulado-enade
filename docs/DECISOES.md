@@ -286,6 +286,10 @@ nosso site.
 - As áreas viram matérias do site por `materiaPorArea`; o botão "Treinar"
   abre `/treino/?materia=<id>`. Área sem par aparece com o nome cru e sem
   filtro.
+- O `total` do retrato é o denominador do percentual: as questões que
+  entraram nas áreas (43). O total da prova (44) fica em
+  `turma.total_questoes`; a tela mostra os dois e avisa que 1 questão ficou
+  fora das áreas.
 - O cliente **não escreve** na tabela: só `select` do próprio aluno. A
   importação é um SQL gerado por `supabase/importar-pilar.py` e rodado pelo
   admin no SQL Editor. Isso também impede o aluno de inflar os próprios

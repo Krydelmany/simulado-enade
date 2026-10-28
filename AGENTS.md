@@ -269,6 +269,13 @@ só lê.
   **O cliente não escreve nela**: tem só `grant select` e a policy do próprio
   aluno. Quem grava é o SQL do admin (roda como postgres). Professor lê a
   turma pela RPC `painel_papel` (mesmo padrão das outras `painel_*`).
+- **Total do placar:** `desempenho_papel.total` é o denominador do
+  percentual — as questões que entraram nas áreas (hoje 43);
+  `turma.total_questoes` é o total da prova (44). O pilar calcula
+  `aluno.percentual` sobre 43, e o placar/ficha usam esse `total`. A linha
+  "de 44" e o aviso "1 questão ficou fora das áreas" vêm da diferença.
+  **Nunca use `turma.total_questoes` no denominador do placar:** era isso
+  que mostrava 19/44 e 44% na mesma linha.
 - **Telas:** `/desempenho/` mostra o retrato do aluno (acertos, comparação
   com a turma, áreas pior primeiro com tendência e botão para treinar);
   `/conta/` tem o cartão "Simulado em papel", que informa/troca o RA pela RPC

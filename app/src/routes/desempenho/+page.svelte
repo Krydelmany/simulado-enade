@@ -20,7 +20,12 @@
 	let turma = $derived(atual?.turma ?? {});
 	let media = $derived(turma.media_acertos == null ? null : Number(turma.media_acertos));
 	let mediana = $derived(turma.mediana_acertos == null ? null : Number(turma.mediana_acertos));
-	let totalQuestoes = $derived(Number(turma.total_questoes ?? atual?.total ?? 0));
+	let totalQuestoes = $derived(Number(atual?.total ?? 0));
+	// total da prova (44) != total que entra no percentual (43): uma questão
+	// fica fora das áreas. O placar usa o do aluno; a comparação com a turma
+	// usa o da prova, e a linha abaixo explica a diferença.
+	let totalProva = $derived(Number(turma.total_questoes ?? 0));
+	let foraAreas = $derived(Math.max(0, totalProva - totalQuestoes));
 	let notas = $derived(
 		atual?.discursiva ? [atual.discursiva.nota_1, atual.discursiva.nota_2].filter((n) => n != null) : []
 	);
@@ -152,11 +157,21 @@
 		<p class="nums mt-4 font-display text-6xl leading-none font-black tracking-tight">
 			{atual.acertos}<span class="text-2xl font-bold text-bar-fg">/{totalQuestoes || atual.total}</span>
 		</p>
-		<p class="mt-2 text-sm font-semibold text-bar-fg">
-			{pctAtual}% de acerto
-			{#if media !== null}· turma: média {media.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}{/if}
-			{#if mediana !== null}· mediana {mediana.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}{/if}
-		</p>
+		<p class="mt-2 text-sm font-semibold text-bar-fg">{pctAtual}% de acerto</p>
+		{#if media !== null || mediana !== null}
+			<p class="mt-0.5 text-xs text-bar-fg">
+				Turma{#if totalProva} (de {totalProva}){/if}:
+				{#if media !== null}média {media.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}{/if}
+				{#if mediana !== null}· mediana {mediana.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}{/if}
+			</p>
+		{/if}
+		{#if foraAreas > 0}
+			<p class="mt-1 text-xs text-bar-fg">
+				{foraAreas} {foraAreas === 1
+					? 'questão ficou fora das áreas e não conta no percentual'
+					: 'questões ficaram fora das áreas e não contam no percentual'}.
+			</p>
+		{/if}
 		{#if notas.length}
 			<p class="mt-1 text-sm text-bar-fg">
 				Dissertativas: {notas.map((n) => Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })).join(' · ')}
