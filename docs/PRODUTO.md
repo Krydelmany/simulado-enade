@@ -100,7 +100,7 @@ para a turma ter **pelo menos 3 semanas de uso** antes da prova.
 ### Feito em 28/10 (questionário POO do professor)
 
 - [x] **`/poo/`**: as 10 questões de Programação Orientada a Objetos que o
-  professor passou em 28/10, com correção na hora e resultado.
+  professor passou em 28/10, com correção no fim e resultado.
 - [x] **Selo "Novo" e data** na home ("Lançado hoje · 28/10") e na intro.
 - [x] **Gabarito preliminar:** a Q5 foi conferida no ENADE 2011 (q39); as
   demais foram resolvidas; o professor confirma em aula.

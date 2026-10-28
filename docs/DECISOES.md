@@ -321,7 +321,7 @@ turma resolver.
   de `ARQUIVOS_BANCO` e do pipeline do banco. É um teste diário, não uma
   questão oficial do ENADE: não entra no treino/estudo/simulado, no
   `stats`, no ranking nem no painel do professor.
-- A tela `/poo/` tem intro com "Novo"/"Lançado hoje", correção na hora e
+- A tela `/poo/` tem intro com "Novo"/"Lançado hoje", correção no fim e
   resultado local; a home ganha o cartão destacado antes dos modos.
 - O gabarito é **preliminar**: a Q5 foi conferida no ENADE 2011 (q39); as
   outras foram resolvidas. A tela diz isso e o professor confirma em aula.

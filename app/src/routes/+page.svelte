@@ -303,7 +303,7 @@
 					Programação Orientada a Objetos
 				</h2>
 				<p class="mt-1 text-sm leading-relaxed text-pretty text-ink-soft">
-					10 questões que o professor passou hoje, com correção na hora.
+					10 questões que o professor passou hoje, com correção no fim.
 				</p>
 			</div>
 			<CaretRight

@@ -37,8 +37,8 @@ três modos:
   Específico (CE) e 1 discursiva, em 4 h. Tem cartão-resposta, pausa e
   correção só na entrega. A home e o simulado contam apenas as oficiais.
 - **Questionário do professor** (`/poo/`): as 10 questões de Programação
-  Orientada a Objetos que o professor passou em 28/10/2026, com correção na
-  hora. É um conteúdo à parte do banco oficial (arquivo próprio, sem
+  Orientada a Objetos que o professor passou em 28/10/2026, com correção no
+  fim. É um conteúdo à parte do banco oficial (arquivo próprio, sem
   stats/servidor); o gabarito é preliminar e o professor confirma.
 
 A branch `main` é o que está no ar: cada merge publica em produção na Vercel,
@@ -303,7 +303,7 @@ só lê.
 
 O professor passou 10 questões de Programação Orientada a Objetos em
 28/10/2026 (PDF `Simulado-ENADE-2026-10-EC-POO.pdf`, de Pedro P. Souza). A
-tela `/poo/` é um teste diário com correção na hora e resultado local.
+tela `/poo/` é um teste diário com correção no fim e resultado local.
 
 - **Dados:** `app/static/banco/poo-2026-10-28.json`, **fora** de
   `ARQUIVOS_BANCO` e do pipeline do banco. Não é questão oficial do ENADE:
