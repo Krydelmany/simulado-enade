@@ -10,6 +10,7 @@
 		ArrowRight,
 		CalendarBlank,
 		CaretRight,
+		Code,
 		Infinity as InfinityIcon,
 		Lightning,
 		Stairs,
@@ -281,6 +282,42 @@
 		</div>
 	</aside>
 </div>
+
+<!-- 2.5 Questionário do professor: um conteúdo novo, com data e selo. -->
+<section class="mt-6" aria-labelledby="titulo-poo">
+	<a
+		href="/poo/"
+		class="rise group block rounded-3xl border-2 border-accent bg-card p-5 transition-colors hover:bg-accent-soft sm:p-6"
+		style="animation-delay: 210ms"
+	>
+		<div class="flex flex-wrap items-center gap-2">
+			<span class="rounded-full bg-accent px-2.5 py-1 text-xs font-extrabold text-white">Novo</span>
+			<span class="text-xs font-semibold text-accent-ink">Lançado hoje · 28/10</span>
+		</div>
+		<div class="mt-3 flex items-start gap-3">
+			<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-soft" aria-hidden="true">
+				<Code size={24} weight="bold" class="text-accent-ink" />
+			</span>
+			<div class="min-w-0 flex-1">
+				<h2 id="titulo-poo" class="font-display text-heading font-extrabold text-pretty">
+					Programação Orientada a Objetos
+				</h2>
+				<p class="mt-1 text-sm leading-relaxed text-pretty text-ink-soft">
+					10 questões que o professor passou hoje, com correção na hora.
+				</p>
+			</div>
+			<CaretRight
+				size={22}
+				weight="bold"
+				class="mt-1 hidden shrink-0 text-accent-ink transition-transform group-hover:translate-x-1 sm:block"
+				aria-hidden="true"
+			/>
+		</div>
+		<span class="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-accent-ink">
+			Fazer o questionário <ArrowRight size={16} weight="bold" aria-hidden="true" />
+		</span>
+	</a>
+</section>
 
 <!-- 3. Modos: três caminhos claros, sem nenhum botão morto. -->
 <section class="mt-10 lg:mt-12" aria-labelledby="titulo-modos">

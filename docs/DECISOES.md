@@ -310,3 +310,29 @@ a conta apaga o retrato junto. Guardamos o resumo, não a prova.
 insert é idempotente por `(usuario_id, curso, simulado_id)`). Se o professor
 quiser sincronizar todos os alunos de uma vez, é outra decisão: exige chave
 de serviço e varredura de RAs de quem não abriu o site.
+
+### D18. Questionário do professor: conteúdo separado, gabarito preliminar
+
+Decidida em 28/10/2026, quando o professor passou 10 questões de POO para a
+turma resolver.
+
+**Decisão:**
+- O questionário fica em `app/static/banco/poo-2026-10-28.json`, **fora**
+  de `ARQUIVOS_BANCO` e do pipeline do banco. É um teste diário, não uma
+  questão oficial do ENADE: não entra no treino/estudo/simulado, no
+  `stats`, no ranking nem no painel do professor.
+- A tela `/poo/` tem intro com "Novo"/"Lançado hoje", correção na hora e
+  resultado local; a home ganha o cartão destacado antes dos modos.
+- O gabarito é **preliminar**: a Q5 foi conferida no ENADE 2011 (q39); as
+  outras foram resolvidas. A tela diz isso e o professor confirma em aula.
+  O JSON é a fonte para corrigir.
+- O código C++/Java vai no enunciado; a UML é uma imagem recortada do PDF.
+
+**Por quê:** misturar o quiz do professor no banco oficial faria as questões
+aparecerem no treino/estudo/simulado e nas métricas, e um gabarito sem
+auditoria entraria como oficial. Separado, o aluno resolve o que o professor
+passou hoje e o banco continua sendo só ENADE.
+
+**Revisar:** quando o professor confirmar/corrigir o gabarito, atualize o
+JSON e a data. Se o quiz virar uma trilha recorrente, aí sim vale um modelo
+de curso/modo e tracking.

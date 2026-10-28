@@ -97,6 +97,16 @@ para a turma ter **pelo menos 3 semanas de uso** antes da prova.
 - [x] **Privacidade** atualizada: o resumo do papel é guardado quando o aluno
   informa o RA e apaga junto com a conta.
 
+### Feito em 28/10 (questionário POO do professor)
+
+- [x] **`/poo/`**: as 10 questões de Programação Orientada a Objetos que o
+  professor passou em 28/10, com correção na hora e resultado.
+- [x] **Selo "Novo" e data** na home ("Lançado hoje · 28/10") e na intro.
+- [x] **Gabarito preliminar:** a Q5 foi conferida no ENADE 2011 (q39); as
+  demais foram resolvidas; o professor confirma em aula.
+- [x] **Separado do banco oficial:** arquivo próprio, sem stats/servidor;
+  não aparece no treino/estudo/simulado nem no painel.
+
 ### Próximos, em ordem de prioridade
 
 1. **P5: Analytics de produto** (PostHog): retenção e eventos dentro das
