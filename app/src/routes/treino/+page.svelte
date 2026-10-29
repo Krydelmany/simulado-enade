@@ -31,7 +31,7 @@
 		carregarSessao,
 		limparSessao
 	} from '$lib/stats.js';
-	import { ArrowLeft, ArrowsClockwise, Flag, Lightning, Play, Tag, Target, Timer, Trophy } from 'phosphor-svelte';
+	import { ArrowsClockwise, Flag, Lightning, Play, Tag, Target, Timer, Trophy } from 'phosphor-svelte';
 
 	let banco = $state([]);
 	let fila = $state([]);
@@ -519,16 +519,7 @@
 		return [...mapa.entries()].sort((a, b) => b[1].n - a[1].n).slice(0, 3);
 	}
 
-	function bolinha(k) {
-		if (k === i) return 'bg-accent';
-		const r = respostas[k];
-		if (r?.pulada) return 'bg-track';
-		if (r?.certa) return 'bg-ok-solid';
-		if (r) return 'bg-bad-solid';
-		return 'bg-line';
-	}
 </script>
-
 <svelte:window onkeydown={aoTecla} />
 
 <div class="mx-auto w-full max-w-3xl" style="padding-bottom: calc(1rem + env(safe-area-inset-bottom));">
@@ -764,30 +755,9 @@
 				desabilitado={!podeAvancar}
 				aviso="Escolha uma alternativa para continuar — ou use Pular questão."
 				onClick={avancar}
-			>
-				<nav class="flex items-center gap-2" aria-label="Navegação da sessão">
-					<button
-						type="button"
-						onclick={voltar}
-						disabled={i === 0}
-						aria-label="Questão anterior"
-						class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line bg-card text-ink transition-transform active:scale-95 disabled:opacity-40"
-					>
-						<ArrowLeft size={20} weight="bold" aria-hidden="true" />
-					</button>
-					<p class="nums flex-1 text-center text-sm font-bold text-ink-soft" role="status" aria-live="polite">
-						Questão {i + 1} de {fila.length}{volta > 0 ? ` · volta ${volta + 1}` : ''}
-					</p>
-					<span class="h-11 w-11 shrink-0" aria-hidden="true"></span>
-				</nav>
-				{#if fila.length <= 12}
-					<div class="mt-1.5 flex justify-center gap-1" aria-hidden="true">
-						{#each fila as _q, k (k)}
-							<span class="h-1.5 w-2.5 rounded-full {bolinha(k)}"></span>
-						{/each}
-					</div>
-				{/if}
-			</BarraAcao>
+				onAnterior={voltar}
+				anteriorDesabilitado={i === 0}
+			/>
 		{/if}
 	{/if}
 {/if}

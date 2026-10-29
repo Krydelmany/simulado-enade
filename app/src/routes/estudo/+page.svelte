@@ -25,7 +25,7 @@
 	registrarResposta,
 	registrarSessao
 } from '$lib/stats.js';
-	import { ArrowLeft, ArrowsClockwise, Info, Lightning, Play, SealCheck, Tag, Target, Timer, Trophy } from 'phosphor-svelte';
+	import { ArrowsClockwise, Info, Lightning, Play, SealCheck, Tag, Target, Timer, Trophy } from 'phosphor-svelte';
 
 	const TOTAL = 10;
 	// 1–3: questões geradas para revisão, em escada de dificuldade.
@@ -427,14 +427,6 @@
 		return [...mapa.entries()].sort((a, b) => b[1].n - a[1].n).slice(0, 3);
 	}
 
-	function bolinha(k) {
-		if (k === i) return 'bg-accent';
-		const r = respostas[k];
-		if (r?.pulada) return 'bg-track';
-		if (r?.certa) return 'bg-ok-solid';
-		if (r) return 'bg-bad-solid';
-		return 'bg-line';
-	}
 </script>
 
 <svelte:window onkeydown={aoTecla} />
@@ -666,30 +658,9 @@
 				desabilitado={!podeAvancar}
 				aviso="Responda (ou pule) para continuar."
 				onClick={avancar}
-			>
-				<nav class="flex items-center gap-2" aria-label="Navegação da sessão">
-					<button
-						type="button"
-						onclick={voltar}
-						disabled={i === 0}
-						aria-label="Questão anterior"
-						class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line bg-card text-ink transition-transform active:scale-95 disabled:opacity-40"
-					>
-						<ArrowLeft size={20} weight="bold" aria-hidden="true" />
-					</button>
-					<p class="nums flex-1 text-center text-sm font-bold text-ink-soft" role="status" aria-live="polite">
-						Questão {i + 1} de {sessao.length}
-					</p>
-					<span class="h-11 w-11 shrink-0" aria-hidden="true"></span>
-				</nav>
-				{#if sessao.length <= 12}
-					<div class="mt-1.5 flex justify-center gap-1" aria-hidden="true">
-						{#each sessao as _q, k (k)}
-							<span class="h-1.5 w-2.5 rounded-full {bolinha(k)}"></span>
-						{/each}
-					</div>
-				{/if}
-			</BarraAcao>
+				onAnterior={voltar}
+				anteriorDesabilitado={i === 0}
+			/>
 		{/if}
 	</div>
 {/if}

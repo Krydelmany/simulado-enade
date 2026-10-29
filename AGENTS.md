@@ -743,9 +743,10 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
     pode ser interativo.
 14. **Tela de quiz fora de `/treino/` e `/estudo/`** precisa ligar
     `foco.quiz` num `$effect` e desligar no cleanup (`foco` é estado de módulo
-    e sobrevive à troca de rota). Sem isso, a tab bar cobre a `BarraAcao` no
-    celular e, em qualquer largura, o `<main>` fica sem o `pb-32` que impede a
-    barra de esconder a última alternativa.
+    e sobrevive à troca de rota). Sem isso, o rodapé fica visível no meio do
+    quiz e a `BordaVoltar` não é ativada. A `BarraAcao` agora é **INLINE**
+    (não fixa): não existe mais `pb-32` reservado nem tab bar inferior; o
+    `<main>` usa `pb-10`.
 15. **Toda camada nova** (modal, overlay, tela montada dentro da página)
     entra no `abertas()` do `ligarCamadas` da rota, com o `fechar`
     correspondente. Sem isso, o voltar do sistema sai da rota com ela aberta.
@@ -814,6 +815,11 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
 
 - **Mobile-first, com referência de 390 px.** No desktop, a nav fica no topo
   e a home tem 2 colunas; o quiz continua em uma coluna de leitura.
+- **Navegação:** header `sticky`; no desktop, abas com ícone + rótulo; no
+  celular, **menu hambúrguer** (fecha no toque fora, Escape e navegação) e
+  **sem tab bar inferior**. A ação do quiz é a `BarraAcao` **inline** no fim
+  da questão (Anterior + CTA), não uma barra fixa. O menu é um disclosure
+  global: não entra no `ligarCamadas`; fecha no `afterNavigate`.
 - **Só design tokens de `app.css`:**
   - Os principais: `bg-paper`, `bg-card`, `bg-tile`, `bg-panel`,
     `border-line`, `bg-bar`, `text-ink`, `text-ink-soft`, `accent*`, `ok-*`,

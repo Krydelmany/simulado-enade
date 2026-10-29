@@ -2,17 +2,17 @@
 	import { puxarParaCima } from './gestos.js';
 
 	/**
-	 * Barra fixa de ação no rodapé.
+	 * Barra de ação INLINE, no fim da questão.
 	 *
-	 * Ela NÃO empurra o conteúdo (position: fixed), então:
-	 *  - respeita a área segura do iOS no fundo (`env(safe-area-inset-bottom)`);
-	 *  - as telas de quiz reservam padding-bottom equivalente (ver `+layout.svelte`)
-	 *    para a última alternativa nunca ficar escondida atrás dela;
-	 *  - `desabilitado` + `aviso` travam o CTA até o aluno responder, dizendo o que fazer.
-	 * Aceita conteúdo (snippet default `children`) para a faixa de navegação acima do CTA.
-	 * Com `onPuxar`, puxar a barra para cima (toque) chama a função — no simulado,
-	 * abre o cartão-resposta — e uma alça aparece no topo no celular. Passe uma
-	 * função ESTÁVEL: trocar a referência refaz o attachment.
+	 * Antes era `position: fixed` no rodapé: no celular ela cobria a última
+	 * alternativa e obrigava o layout a reservar `pb-32`; no desktop ficava
+	 * longe do conteúdo. Agora é um cartão no fluxo, com a mesma dupla
+	 * Anterior/Próxima do questionário POO.
+	 *
+	 * `onAnterior` é opcional: sem ele, o CTA ocupa a linha inteira (o
+	 * simulado usa os próprios controles no bloco de children).
+	 * Com `onPuxar`, puxar o cartão para cima (toque) chama a função — no
+	 * simulado, abre o cartão-resposta. Passe uma função ESTÁVEL.
 	 */
 	let {
 		rotulo,
@@ -21,6 +21,8 @@
 		xpValor = 10,
 		desabilitado = false,
 		aviso = '',
+		onAnterior = null,
+		anteriorDesabilitado = false,
 		onPuxar = null,
 		children
 	} = $props();
@@ -31,39 +33,48 @@
 
 <div
 	data-barra-acao
-	class="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper"
-	style="padding-bottom: env(safe-area-inset-bottom);"
+	class="mt-4 rounded-3xl border border-line bg-card p-4 sm:p-5"
 	{@attach onPuxar && puxarParaCima(onPuxar)}
 >
-	<div class="mx-auto max-w-3xl px-4 pt-2 pb-3">
-		{#if onPuxar}
-			<span aria-hidden="true" class="mx-auto mb-1.5 block h-1 w-9 rounded-full bg-line sm:hidden"></span>
+	{#if onPuxar}
+		<span aria-hidden="true" class="mx-auto mb-2 block h-1 w-9 rounded-full bg-line sm:hidden"></span>
+	{/if}
+	{#if children}
+		<div class="mb-3">{@render children()}</div>
+	{/if}
+	<div class="relative">
+		{#if mostrarXP}
+			<span
+				class="xp-float nums pointer-events-none absolute -top-11 right-3 rounded-full bg-accent-soft px-3 py-1 text-sm font-extrabold text-accent-ink shadow"
+				role="status"
+			>
+				+{xpValor} XP
+			</span>
 		{/if}
-		{#if children}
-			<div class="mb-2">{@render children()}</div>
+		{#if desabilitado && aviso}
+			<p id={idAviso} class="mb-2 text-center text-xs font-semibold text-ink-soft" role="status">
+				{aviso}
+			</p>
 		{/if}
-		<div class="relative">
-			{#if mostrarXP}
-				<span
-					class="xp-float nums pointer-events-none absolute -top-11 right-3 rounded-full bg-accent-soft px-3 py-1 text-sm font-extrabold text-accent-ink shadow"
-					role="status"
+		<div class={onAnterior ? 'flex flex-col gap-2 sm:flex-row' : ''}>
+			{#if onAnterior}
+				<button
+					type="button"
+					onclick={onAnterior}
+					disabled={anteriorDesabilitado}
+					class="min-h-[52px] rounded-[14px] border-2 border-line bg-card px-5 font-display text-base font-bold transition-transform active:scale-[0.98] disabled:opacity-40"
 				>
-					+{xpValor} XP
-				</span>
-			{/if}
-			{#if desabilitado && aviso}
-				<p id={idAviso} class="mb-1.5 text-center text-xs font-semibold text-ink-soft" role="status">
-					{aviso}
-				</p>
+					Anterior
+				</button>
 			{/if}
 			<button
 				type="button"
 				onclick={onClick}
 				disabled={desabilitado}
 				aria-describedby={desabilitado && aviso ? idAviso : undefined}
-				class="min-h-[52px] w-full rounded-[14px] font-display text-lg font-bold {desabilitado
-					? 'cursor-not-allowed bg-tile text-ink-soft'
-					: 'btn3d duo-accent'}"
+				class="min-h-[52px] rounded-[14px] font-display text-lg font-bold transition-transform active:scale-[0.99] {onAnterior
+					? 'flex-1'
+					: 'w-full'} {desabilitado ? 'cursor-not-allowed bg-tile text-ink-soft' : 'btn3d duo-accent'}"
 			>
 				{rotulo}
 			</button>
