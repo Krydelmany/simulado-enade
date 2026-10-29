@@ -3,8 +3,21 @@
 	import { onMount } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { Infinity as InfinityIcon, Moon, Stairs, Sun, Timer, UserCircle } from 'phosphor-svelte';
+	import { fade, fly } from 'svelte/transition';
+	import {
+		FileText,
+		Infinity as InfinityIcon,
+		List,
+		Lock,
+		Moon,
+		Stairs,
+		Sun,
+		Timer,
+		UserCircle,
+		X
+	} from 'phosphor-svelte';
 	import { alternarTema, iniciarTema, temaAtual } from '$lib/tema.js';
+	import { DUR } from '$lib/motion.js';
 	import VigiaDevTools from '$lib/VigiaDevTools.svelte';
 	import BordaVoltar from '$lib/BordaVoltar.svelte';
 	import { foco } from '$lib/foco.svelte.js';
@@ -17,13 +30,17 @@
 		{ href: '/simulado/', label: 'Simulado', icone: Timer }
 	];
 
-	// no fluxo de questão a tela é dona da parte de baixo (CTA fixo) —
-	// a tab bar só aparece fora do quiz, e só no mobile
+	// No quiz, o rodapé e a borda de voltar são a tela; a ação é inline, então
+	// não existe mais barra fixa nem pb-32 reservado para ela.
 	let emQuiz = $derived(
 		$page.url.pathname.startsWith('/treino/') ||
 			$page.url.pathname.startsWith('/estudo/') ||
 			foco.quiz
 	);
+
+	// menu mobile; `cabecalho` serve para fechar ao toque fora.
+	let menuAberto = $state(false);
+	let cabecalho = $state(null);
 
 	let { children } = $props();
 
@@ -42,21 +59,31 @@
 		return iniciarNuvem();
 	});
 
-	// conta cada página aberta (inclusive a primeira); ver `registrarVisita`
 	afterNavigate(({ to }) => {
+		menuAberto = false;
 		if (to?.url) registrarVisita(to.url);
 	});
 
 	function trocar() {
 		escuro = alternarTema() === 'dark';
 	}
+
+	function fecharFora(e) {
+		if (menuAberto && cabecalho && !cabecalho.contains(e.target)) menuAberto = false;
+	}
+
+	function aoTecla(e) {
+		if (e.key === 'Escape' && menuAberto) menuAberto = false;
+	}
 </script>
+
+<svelte:window onpointerdown={fecharFora} onkeydown={aoTecla} />
 
 <a href="#conteudo" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-white">
 	Pular para o conteúdo
 </a>
 
-<header class="bg-bar text-white">
+<header bind:this={cabecalho} class="sticky top-0 z-40 bg-bar text-white">
 	<nav class="mx-auto flex h-16 w-full max-w-3xl items-center gap-1 px-4 lg:max-w-5xl" aria-label="Principal">
 		<a href="/" class="mr-2 flex items-center gap-2.5">
 			<Marca tamanho={30} />
@@ -70,11 +97,12 @@
 			<a
 				href={t.href}
 				aria-current={$page.url.pathname === t.href ? 'page' : undefined}
-				class="hidden rounded-lg px-3 py-2 text-sm font-semibold transition-colors hover:bg-white/10 active:scale-[0.97] sm:block {$page.url.pathname ===
+				class="hidden items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-colors hover:bg-white/10 active:scale-[0.97] sm:flex {$page.url.pathname ===
 				t.href
 					? 'bg-white/15 text-white'
 					: 'text-bar-fg'}"
 			>
+				<t.icone size={17} weight="bold" aria-hidden="true" />
 				{t.label}
 			</a>
 		{/each}
@@ -101,10 +129,85 @@
 				<Moon size={20} weight="bold" aria-hidden="true" />
 			{/if}
 		</button>
+		<button
+			type="button"
+			onclick={() => (menuAberto = !menuAberto)}
+			aria-expanded={menuAberto}
+			aria-controls="menu-mobile"
+			aria-label={menuAberto ? 'Fechar menu' : 'Abrir menu'}
+			class="flex h-11 min-h-11 min-w-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10 active:scale-95 sm:hidden"
+		>
+			{#if menuAberto}
+				<X size={22} weight="bold" aria-hidden="true" />
+			{:else}
+				<List size={22} weight="bold" aria-hidden="true" />
+			{/if}
+		</button>
 	</nav>
+
+	{#if menuAberto}
+		<div
+			id="menu-mobile"
+			class="absolute inset-x-0 top-full z-50 border-t border-white/10 bg-bar text-white shadow-[0_18px_30px_-18px_rgba(0,0,0,0.75)] sm:hidden"
+			in:fly={{ y: -8, duration: DUR }}
+			out:fade={{ duration: DUR }}
+		>
+			<nav class="mx-auto flex w-full max-w-3xl flex-col gap-1 px-4 py-3" aria-label="Menu">
+				{#each tabs as t (t.href)}
+					<a
+						href={t.href}
+						aria-current={$page.url.pathname === t.href ? 'page' : undefined}
+						class="flex min-h-12 items-center gap-3 rounded-xl px-3 text-base font-bold transition-colors active:scale-[0.99] {$page.url.pathname ===
+						t.href
+							? 'bg-white/15'
+							: 'text-bar-fg hover:bg-white/10 hover:text-white'}"
+					>
+						<t.icone size={20} weight="bold" aria-hidden="true" />
+						{t.label}
+					</a>
+				{/each}
+				<div class="my-1 border-t border-white/10"></div>
+				{#if nuvemLigada}
+					<a
+						href="/conta/"
+						aria-current={$page.url.pathname === '/conta/' ? 'page' : undefined}
+						class="flex min-h-12 items-center gap-3 rounded-xl px-3 text-base font-bold transition-colors active:scale-[0.99] {$page.url.pathname ===
+						'/conta/'
+							? 'bg-white/15'
+							: 'text-bar-fg hover:bg-white/10 hover:text-white'}"
+					>
+						<UserCircle size={20} weight="bold" aria-hidden="true" />
+						Conta e turma
+					</a>
+					<a
+						href="/desempenho/"
+						aria-current={$page.url.pathname === '/desempenho/' ? 'page' : undefined}
+						class="flex min-h-12 items-center gap-3 rounded-xl px-3 text-base font-bold transition-colors active:scale-[0.99] {$page.url.pathname ===
+						'/desempenho/'
+							? 'bg-white/15'
+							: 'text-bar-fg hover:bg-white/10 hover:text-white'}"
+					>
+						<FileText size={20} weight="bold" aria-hidden="true" />
+						Simulado em papel
+					</a>
+				{/if}
+				<a
+					href="/privacidade/"
+					aria-current={$page.url.pathname === '/privacidade/' ? 'page' : undefined}
+					class="flex min-h-12 items-center gap-3 rounded-xl px-3 text-base font-bold transition-colors active:scale-[0.99] {$page.url.pathname ===
+					'/privacidade/'
+						? 'bg-white/15'
+						: 'text-bar-fg hover:bg-white/10 hover:text-white'}"
+				>
+					<Lock size={20} weight="bold" aria-hidden="true" />
+					Privacidade
+				</a>
+			</nav>
+		</div>
+	{/if}
 </header>
 
-<main id="conteudo" class="mx-auto w-full max-w-3xl px-4 pt-6 lg:max-w-5xl {emQuiz ? 'pb-32' : 'pb-10'}">
+<main id="conteudo" class="mx-auto w-full max-w-3xl px-4 pt-6 pb-10 lg:max-w-5xl">
 	{@render children()}
 </main>
 
@@ -142,32 +245,6 @@
 			</div>
 		</div>
 	</footer>
-	<nav
-		class="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-card sm:hidden"
-		style="padding-bottom: env(safe-area-inset-bottom);"
-		aria-label="Modos de estudo"
-	>
-		<div class="mx-auto flex max-w-md">
-			{#each tabs as t (t.href)}
-				<a
-					href={t.href}
-					aria-current={$page.url.pathname === t.href ? 'page' : undefined}
-					class="relative flex min-h-[60px] flex-1 flex-col items-center justify-center gap-1 py-2 text-xs font-bold transition-colors active:scale-[0.97] {$page.url.pathname ===
-					t.href
-						? 'text-accent-ink'
-						: 'text-ink-soft'}"
-				>
-					{#if $page.url.pathname === t.href}
-						<!-- traço de caneta sobre a aba ativa: a cor sozinha não basta para quem não distingue azul -->
-						<span class="absolute top-0 h-[3px] w-10 rounded-b-full bg-accent" aria-hidden="true"></span>
-					{/if}
-					<t.icone size={24} weight="bold" aria-hidden="true" />
-					{t.label}
-				</a>
-			{/each}
-		</div>
-	</nav>
-	<div class="h-20 sm:hidden" aria-hidden="true"></div>
 {/if}
 
 <!-- Aviso de DevTools aberto. Fica fora do fluxo e depois do rodapé: é a

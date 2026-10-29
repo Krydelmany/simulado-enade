@@ -336,3 +336,30 @@ passou hoje e o banco continua sendo só ENADE.
 **Revisar:** quando o professor confirmar/corrigir o gabarito, atualize o
 JSON e a data. Se o quiz virar uma trilha recorrente, aí sim vale um modelo
 de curso/modo e tracking.
+
+### D19. Navegação mobile: hambúrguer e ação inline
+
+Decidida em 28/10/2026.
+
+**Decisão:**
+- O site não tem mais a tab bar inferior no celular. Treino, Estudo,
+  Simulado, Conta, Simulado em papel e Privacidade ficam num **menu
+  hambúrguer** no header, que fecha no toque fora, no Escape e na navegação.
+- O header é `sticky`; no desktop as abas ganham ícone e o estado ativo.
+- A `BarraAcao` deixa de ser fixa: vira um **cartão inline** no fim da
+  questão, com Anterior + CTA no mesmo padrão do questionário POO. O
+  treino/estudo perdem o contador/dots duplicados (o `SessaoTopo` já mostra
+  o progresso).
+- O `foco.quiz` continua escondendo o rodapé e ativando a `BordaVoltar`; não
+  existe mais `pb-32` porque não há barra fixa.
+- O menu usa `in:fly`/`out:fade` com `DUR`; a troca de questão do POO usa
+  `in:fly`/`out:fade`; a barra de progresso anima a largura. Tudo respeita
+  `prefers-reduced-motion` (CSS global + `DUR` zero).
+
+**Por quê:** a tab bar inferior e a barra fixa de ação tomavam ~120 px do
+celular e a barra de ação cobria a última alternativa; no desktop a ação
+ficava longe da questão. O hambúrguer libera a tela e a ação inline mantém
+o próximo passo junto do conteúdo, com leitura mais calma.
+
+**Revisar:** se o menu crescer, avaliar um drawer com backdrop/histórico;
+hoje é um disclosure no header, sem entrada no histórico.

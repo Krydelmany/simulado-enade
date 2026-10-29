@@ -5,8 +5,10 @@
 	// propósito (TDAH/dislexia): uma tarefa por tela, sem cronômetro e sem
 	// feedback imediato piscando.
 	import { onMount } from 'svelte';
+	import { fade, fly } from 'svelte/transition';
 	import { ArrowLeft, ArrowRight, ArrowSquareOut, CheckCircle, XCircle } from 'phosphor-svelte';
 	import { foco } from '$lib/foco.svelte.js';
+	import { DUR } from '$lib/motion.js';
 	import TextoRico from '$lib/TextoRico.svelte';
 
 	const LETRAS = ['A', 'B', 'C', 'D', 'E'];
@@ -152,7 +154,7 @@
 	<section class="blueprint faixa px-4 pt-7 pb-8 text-white sm:p-8">
 		<p class="text-sm font-semibold text-bar-fg">POO · questionário do professor</p>
 		<h1 class="mt-1 font-display text-3xl font-extrabold tracking-tight">Resultado</h1>
-		<p class="nums mt-4 font-display text-6xl leading-none font-black tracking-tight">
+		<p class="springin nums mt-4 font-display text-6xl leading-none font-black tracking-tight">
 			{certas}<span class="text-2xl font-bold text-bar-fg">/{questoes.length}</span>
 		</p>
 		<p class="mt-2 text-sm font-semibold text-bar-fg">
@@ -285,10 +287,12 @@
 			<p class="nums text-sm font-bold">{i + 1} de {questoes.length}</p>
 		</header>
 		<div class="mt-2 h-2 overflow-hidden rounded-full bg-track" aria-hidden="true">
-			<div class="h-full rounded-full bg-accent-bar" style="width: {((i + 1) / questoes.length) * 100}%"></div>
+			<div class="h-full rounded-full bg-accent-bar transition-[width] duration-300" style="width: {((i + 1) / questoes.length) * 100}%"></div>
 		</div>
 
-		<section class="mt-4 rounded-3xl border border-line bg-card p-4 sm:p-6" aria-labelledby="t-questao">
+		{#key atual.id}
+			<div in:fly={{ y: 10, duration: DUR }} out:fade={{ duration: DUR }}>
+				<section class="mt-4 rounded-3xl border border-line bg-card p-4 sm:p-6" aria-labelledby="t-questao">
 			<h1 id="t-questao" class="font-display text-title font-extrabold text-pretty">{atual.tema}</h1>
 			<div class="mt-3 max-w-[60ch] text-[17px] leading-8 text-pretty">
 				<TextoRico texto={atual.enunciado} />
@@ -343,14 +347,14 @@
 					type="button"
 					onclick={anterior}
 					disabled={i === 0}
-					class="min-h-[52px] rounded-[14px] border-2 border-line px-5 font-display text-base font-bold disabled:opacity-40"
+					class="min-h-[52px] rounded-[14px] border-2 border-line px-5 font-display text-base font-bold transition-transform active:scale-[0.98] disabled:opacity-40"
 				>
 					Anterior
 				</button>
 				<button
 					type="button"
 					onclick={proxima}
-					class="btn3d duo-accent flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-[14px] px-6 font-display text-base font-bold"
+					class="btn3d duo-accent flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-[14px] px-6 font-display text-base font-bold transition-transform active:scale-[0.99]"
 				>
 					{ultima ? 'Revisar e entregar' : 'Próxima'} <ArrowRight size={18} weight="bold" aria-hidden="true" />
 				</button>
@@ -358,6 +362,8 @@
 			<p class="mt-2 text-xs text-ink-soft" aria-live="polite">
 				{respondidas} de {questoes.length} respondidas · sem cronômetro
 			</p>
-		</section>
+				</section>
+			</div>
+		{/key}
 	</div>
 {/if}
