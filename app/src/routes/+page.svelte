@@ -8,6 +8,7 @@
 	import { nuvemLigada, contaLocal } from '$lib/nuvem.js';
 	import {
 		ArrowRight,
+		BookOpen,
 		CalendarBlank,
 		CaretRight,
 		Code,
@@ -323,6 +324,41 @@
 		</div>
 		<span class="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-accent-ink">
 			Fazer o questionário <ArrowRight size={16} weight="bold" aria-hidden="true" />
+		</span>
+	</a>
+</section>
+
+<!-- 2.6 Guia do Matheus: resumos + simulado autoral, compartilhado na turma. -->
+<section class="mt-4" aria-labelledby="titulo-guia">
+	<a
+		href="/guia/"
+		class="rise group block rounded-3xl border border-line bg-card p-5 transition-colors hover:border-accent sm:p-6"
+	>
+		<div class="flex flex-wrap items-center gap-2">
+			<span class="rounded-full bg-accent px-2.5 py-1 text-xs font-extrabold text-white">Novo</span>
+			<span class="text-xs font-semibold text-accent-ink">Do Matheus · 25/11</span>
+		</div>
+		<div class="mt-3 flex items-start gap-3">
+			<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-soft" aria-hidden="true">
+				<BookOpen size={24} weight="bold" class="text-accent-ink" />
+			</span>
+			<div class="min-w-0 flex-1">
+				<h2 id="titulo-guia" class="font-display text-heading font-extrabold text-pretty">
+					Guia de estudo do Matheus
+				</h2>
+				<p class="mt-1 text-sm leading-relaxed text-pretty text-ink-soft">
+					Resumos por área, folha de fórmulas, perguntas de memória e 24 + 2 questões autorais com gabarito comentado.
+				</p>
+			</div>
+			<CaretRight
+				size={22}
+				weight="bold"
+				class="mt-1 hidden shrink-0 text-accent-ink transition-transform group-hover:translate-x-1 sm:block"
+				aria-hidden="true"
+			/>
+		</div>
+		<span class="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-accent-ink">
+			Abrir o guia <ArrowRight size={16} weight="bold" aria-hidden="true" />
 		</span>
 	</a>
 </section>

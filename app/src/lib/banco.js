@@ -300,6 +300,11 @@ export function rotuloQuestao(q) {
 	// gerada não tem edição nem parte de prova. "Questão D1" (o número interno)
 	// não dizia nada ao aluno; matéria e nível já vêm nas etiquetas ao lado.
 	if (ehGerada(q)) return 'Questão de revisão';
+	// Guia do Matheus (/guia/): autoral, fora do banco oficial — não é "ENADE 2026".
+	if (q.fonte === 'guia') {
+		const numero = String(q.numero ?? '');
+		return `Guia do Matheus, ${q.tipo === 'discursiva' ? 'discursiva' : 'questão'} ${numero}`;
+	}
 	// `numero` pode vir número em algum JSON — normaliza antes de montar o rótulo.
 	const numero = String(q.numero ?? '');
 	const n = q.tipo === 'discursiva' ? `Discursiva ${numero}` : `Questão ${numero}`;

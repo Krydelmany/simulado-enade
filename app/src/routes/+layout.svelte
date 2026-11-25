@@ -6,6 +6,7 @@
 	import { page } from '$app/stores';
 	import { fade, fly } from 'svelte/transition';
 	import {
+		BookOpen,
 		FileText,
 		Infinity as InfinityIcon,
 		List,
@@ -30,6 +31,7 @@
 		{ href: '/treino/', label: 'Treino', icone: InfinityIcon },
 		{ href: '/estudo/', label: 'Estudo', icone: Stairs },
 		{ href: '/treino/?modo=discursivas', label: 'Discursivas', icone: NotePencil },
+		{ href: '/guia/', label: 'Guia', icone: BookOpen },
 		{ href: '/simulado/', label: 'Simulado', icone: Timer }
 	];
 
@@ -250,6 +252,7 @@
 					<li><a href="/treino/" class="hover:text-accent-ink">Treino livre</a></li>
 					<li><a href="/estudo/" class="hover:text-accent-ink">Estudo por níveis</a></li>
 					<li><a href="/treino/?modo=discursivas" class="hover:text-accent-ink">Discursivas do CE</a></li>
+					<li><a href="/guia/" class="hover:text-accent-ink">Guia do Matheus</a></li>
 					<li><a href="/simulado/" class="hover:text-accent-ink">Simulado real</a></li>
 					{#if nuvemLigada}
 						<li><a href="/conta/" class="hover:text-accent-ink">Conta e turma</a></li>

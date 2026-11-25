@@ -1,0 +1,1369 @@
+{
+  "titulo": "Guia ENADE 2026 · Engenharia de Computação",
+  "autor": "Matheus",
+  "pdf": "/guia/matheus.pdf",
+  "nota": "Resumo das disciplinas do boletim (2022/1 a 2026/2), fundamentos com exemplos resolvidos, perguntas de memória e um simulado autoral. Conteúdo montado pelo Matheus com ajuda de IA; o gabarito foi conferido ao entrar no site.",
+  "capitulos": [
+    {
+      "id": "cap-11",
+      "numero": 11,
+      "titulo": "Unidades, funções e álgebra linear",
+      "intro": "Retome a linguagem das contas antes de aplicar uma fórmula. Uma grandeza tem um valor e uma unidade, e uma função diz como uma entrada determina uma saída.",
+      "blocos": [
+        {
+          "subtitulo": "Converta as unidades primeiro",
+          "paragrafos": [
+            "O prefixo mili representa 1/1.000 da unidade. Então 20 ms = 0,020 s e 12 mA = 0,012 A. Micro representa 1/1.000.000. Uma frequência de 50 Hz representa 50 ciclos por segundo. O período de um ciclo é T = 1/f = 1/50 s = 20 ms."
+          ]
+        },
+        {
+          "exemplo": "Potência de uma placa",
+          "paragrafos": [
+            "O circuito recebe 3,3 V e consome 12 mA. 1. Converta a corrente para 0,012 A. 2. Calcule P = V × I = 3,3 × 0,012 = 0,0396 W. 3. Converta o resultado para 39,6 mW. Se usar 12 no lugar de 0,012, você precisa interpretar o resultado diretamente em miliwatts."
+          ]
+        },
+        {
+          "subtitulo": "O que uma função representa",
+          "paragrafos": [
+            "Um sensor idealizado segue V(T) = 0,010T + 0,50, com T em °C e V em volts. O termo 0,50 V é a saída em 0 °C. O coeficiente 0,010 V/°C diz que, a cada 1 °C, a leitura sobe 10 mV. Para descobrir T a partir de 0,80 V, faça (0,80 − 0,50)/0,010 = 30 °C."
+          ]
+        },
+        {
+          "subtitulo": "Coordenadas, vetores e matrizes",
+          "paragrafos": [
+            "Um ponto indica uma posição. Um vetor indica um deslocamento. Do ponto (1, 2) ao ponto (4, 6), o vetor é (3, 4) e sua norma é √(3² + 4²) = 5. Matrizes podem representar rotações. Sistemas lineares reúnem equações que devem valer juntas. Se x + y = 7 e x − y = 1, somar as equações dá 2x = 8. Logo x = 4 e y = 3."
+          ]
+        },
+        {
+          "exemplo": "Rotação de um ponto na tela",
+          "paragrafos": [
+            "Em eixos cartesianos usuais, girar 90° no sentido anti-horário em torno da origem transforma (x, y) em (−y, x). A matriz tem linhas (0, −1) e (1, 0). Assim (3, 1) vira (−1, 3). Para girar em torno de outro ponto, primeiro use esse ponto como origem, gire e depois volte ao sistema original."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "A",
+        "pergunta": "Um sensor produz uma leitura a cada 10 ms. Quantas leituras ele faz por segundo?"
+      }
+    },
+    {
+      "id": "cap-12",
+      "numero": 12,
+      "titulo": "Cálculo e métodos numéricos",
+      "intro": "Use derivada quando o problema pede uma taxa de mudança. Use integral quando o problema pede quanto se acumulou em um intervalo.",
+      "blocos": [
+        {
+          "subtitulo": "Limite, continuidade e derivada",
+          "paragrafos": [
+            "O limite descreve o valor de que a função se aproxima. Para ser contínua num ponto, o limite precisa coincidir com o valor da função ali. A derivada é o limite da taxa média Δx/Δt quando Δt se aproxima de zero. Em um gráfico, ela é a inclinação local. Se a posição é x(t) = 2t² em metros, v(t) = 4t em m/s."
+          ]
+        },
+        {
+          "exemplo": "Do instante ao intervalo",
+          "paragrafos": [
+            "Em t = 2 s, a velocidade é 4 × 2 = 8 m/s. Entre t = 1 s e t = 3 s, a posição vai de 2 m a 18 m. O deslocamento é 16 m, que também é a área sob a velocidade nesse intervalo. Se a grandeza for potência, a integral acumula energia. Com 20 W constantes durante 15 s, E = 20 × 15 = 300 J."
+          ]
+        },
+        {
+          "subtitulo": "Mais de uma variável e modelos dinâmicos",
+          "paragrafos": [
+            "Uma derivada parcial varia uma entrada por vez. O gradiente reúne essas derivadas e, quando diferente de zero, indica a direção de maior crescimento local. Uma equação diferencial descreve como uma grandeza muda no tempo. A transformada de Laplace facilita a resolução de modelos lineares. Séries aproximam funções por somas de termos, como sen(x) ≈ x para x perto de zero em radianos. Números complexos, com j² = −1, ajudam a representar amplitude e fase em circuitos."
+          ]
+        },
+        {
+          "exemplo": "Encontrar uma raiz por bisseção",
+          "paragrafos": [
+            "Para f(x) = x² − 2, comece com [1, 2]. 1. f(1) = −1 e f(2) = 2. Como f é contínua, há uma raiz entre eles. 2. O meio é 1,5 e f(1,5) = 0,25. 3. O novo intervalo é [1, 1,5], pois conserva a troca de sinal. Repita até o intervalo ficar estreito o suficiente para a tolerância pedida."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "B",
+        "pergunta": "Se potência é medida em watts e tempo em segundos, o que a área sob a curva de potência representa?"
+      }
+    },
+    {
+      "id": "cap-13",
+      "numero": 13,
+      "titulo": "Física, materiais e calor",
+      "intro": "Pense primeiro no que está sendo medido. Acelerou, aqueceu, deformou ou induziu uma tensão? Cada efeito pede um modelo diferente.",
+      "blocos": [
+        {
+          "subtitulo": "Força, aceleração e torque",
+          "paragrafos": [
+            "A força resultante é a soma vetorial das forças. Em um carrinho de 2 kg, se a tração é 6 N para a direita e o atrito é 2 N para a esquerda, a resultante é 4 N para a direita. Então a = F/m = 2 m/s². Uma força perpendicular aplicada a 0,20 m do eixo produz torque de 2 N·m quando vale 10 N. O torque indica a tendência de girar."
+          ]
+        },
+        {
+          "subtitulo": "Energia, calor e transferência",
+          "paragrafos": [
+            "Energia pode ser transferida por trabalho elétrico ou mecânico e por calor. Calor é energia em trânsito por diferença de temperatura. A condução ocorre através de um material. Na convecção, um fluido em movimento transporta calor. A radiação transfere energia via ondas eletromagnéticas."
+          ]
+        },
+        {
+          "exemplo": "Dissipação de uma placa",
+          "paragrafos": [
+            "Em regime, o modelo térmico simples dá ΔT = P × Rθ. Uma placa de 5 W com resistência térmica de 4 °C/W fica cerca de 20 °C acima do ambiente. Se o ambiente estiver a 30 °C, a previsão é 50 °C. Um dissipador que reduza Rθ para 2 °C/W reduz a estimativa para 40 °C, nas mesmas condições."
+          ]
+        },
+        {
+          "subtitulo": "Escolha de materiais",
+          "paragrafos": [
+            "Para dissipar calor, compare condutividade térmica. Para limitar a deformação de um suporte, compare rigidez e geometria. A tensão mecânica média sob carga axial simples é força por área. Dividir 100 N por 10 mm² dá 10 N/mm² ou 10 MPa. Um material pode ser bom condutor térmico e precisar de isolamento elétrico na montagem."
+          ]
+        },
+        {
+          "subtitulo": "Campos, indução e ondas",
+          "paragrafos": [
+            "Cargas e correntes geram campos elétricos e magnéticos. A variação do fluxo magnético através de uma espira induz tensão, princípio que aparece em transformadores. Para uma onda que se propaga a velocidade v, v = λf liga comprimento de onda λ e frequência f. No mesmo meio, maior frequência significa menor comprimento de onda."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "C",
+        "pergunta": "Uma placa dissipa 8 W e tem Rθ = 3 °C/W. Se o ambiente está a 25 °C, qual é a temperatura estimada?"
+      }
+    },
+    {
+      "id": "cap-14",
+      "numero": 14,
+      "titulo": "Estatística, probabilidade e otimização",
+      "intro": "Primeiro descreva os dados. Quando houver uma decisão, identifique também o objetivo e os limites que precisam ser respeitados.",
+      "blocos": [
+        {
+          "subtitulo": "Centro e dispersão",
+          "paragrafos": [
+            "A média soma os valores e divide pela quantidade. A mediana é o centro da lista ordenada. Se houver dois valores centrais, faça a média deles. A amplitude é máximo menos mínimo. Quartis dividem a distribuição ordenada em faixas. O desvio padrão resume a dispersão ao redor da média e fica na unidade original."
+          ]
+        },
+        {
+          "exemplo": "Como ler uma lista com um pico",
+          "paragrafos": [
+            "Os tempos são 100, 102, 103, 105 e 500 ms. A média é (100 + 102 + 103 + 105 + 500)/5 = 182 ms. A mediana é o terceiro valor, 103 ms. A amplitude é 500 − 100 = 400 ms. Use a mediana para descrever o centro nesse conjunto e investigue o pico ao avaliar a latência."
+          ]
+        },
+        {
+          "subtitulo": "Amostra e probabilidade condicional",
+          "paragrafos": [
+            "A população reúne todos os casos sobre os quais você quer concluir. A amostra é a parte observada. Se 3 de 50 placas testadas do lote B falham, a proporção observada de falhas dentro de B é 3/50 = 6%. Para saber a proporção de placas do lote B entre todas as que falharam, o denominador passa a ser o total de falhas."
+          ]
+        },
+        {
+          "subtitulo": "O que a amostra permite concluir",
+          "paragrafos": [
+            "Se você medir apenas as placas que voltaram da assistência, sua amostra tende a concentrar defeitos. Para estimar a taxa da produção, selecione placas de forma representativa. Uma estimativa de 6% resume os dados observados. Um intervalo de confiança, calculado sob hipóteses sobre a amostragem, expressa a incerteza da estimativa."
+          ]
+        },
+        {
+          "exemplo": "Maximizar o retorno de dois lotes",
+          "paragrafos": [
+            "Sejam x e y as quantidades inteiras não negativas de lotes A e B. Maximize 4x + 3y com x + y ≤ 4, x ≤ 2 e y ≤ 3. Para x = 0, 1 e 2, os maiores valores viáveis de y são 3, 3 e 2. Como y aumenta o resultado, basta testar esses candidatos para cada x. Os retornos são 9, 13 e 14. A melhor escolha é (2, 2)."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "D",
+        "pergunta": "No problema dos lotes, qual restrição é quebrada pela escolha x = 2 e y = 3?"
+      }
+    },
+    {
+      "id": "cap-15",
+      "numero": 15,
+      "titulo": "Lógica, algoritmos e estruturas de dados",
+      "intro": "Um algoritmo executa instruções em uma ordem definida. A estrutura de dados determina como cada informação pode ser encontrada e atualizada.",
+      "blocos": [
+        {
+          "subtitulo": "Condições e repetição",
+          "paragrafos": [
+            "E exige duas condições verdadeiras. OU exige pelo menos uma. NÃO inverte o valor. Em um laço, a condição ou a lista percorrida determina quantas vezes o bloco roda. Uma função reúne passos que podem ser reutilizados. Variáveis guardam valores que mudam ao longo da execução."
+          ]
+        },
+        {
+          "exemplo": "Rastrear um contador",
+          "paragrafos": [
+            "Conte quantas leituras atingiram 40 °C. Comece com contador = 0. Para cada valor, some 1 se a leitura for ≥ 40. Na lista [37, 40, 52, 35], o contador assume 0, 1, 2, 2. O valor 40 entra na contagem pela igualdade. Ao testar um algoritmo, inclua valores abaixo, iguais e acima do limite."
+          ]
+        },
+        {
+          "subtitulo": "Escolha pela operação frequente",
+          "paragrafos": [],
+          "lista": [
+            "Vetor: posições numeradas com acesso direto por índice. Ex.: amostras consecutivas de um sensor.",
+            "Lista encadeada: cada elemento aponta para o próximo; encontrar um elemento pode exigir percorrer a lista. Ex.: inserir depois de um elemento conhecido.",
+            "Pilha (LIFO): a última inserção é a primeira a sair. Ex.: desfazer a última edição.",
+            "Fila (FIFO): a primeira inserção é a primeira a sair. Ex.: atender chamados por chegada.",
+            "Tabela hash: converte uma chave em posição; colisões exigem tratamento. Ex.: buscar uma obra pelo identificador.",
+            "Árvore balanceada: mantém chaves ordenadas, com profundidade controlada. Ex.: listar registros entre duas datas."
+          ]
+        },
+        {
+          "subtitulo": "Negação de uma condição composta",
+          "paragrafos": [
+            "A expressão “NÃO (X E Y)” é verdadeira sempre que ao menos um dos sinais for falso. Pela lei de De Morgan, ela equivale a “(NÃO X) OU (NÃO Y)”. Em um robô, negar “os dois sensores responderam” significa que pelo menos um deles falhou em responder."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "E",
+        "pergunta": "Coloque A, B e C nessa ordem. Qual item sai primeiro da fila? E da pilha?"
+      }
+    },
+    {
+      "id": "cap-16",
+      "numero": 16,
+      "titulo": "Complexidade, grafos e rotas",
+      "intro": "Complexidade ajuda a estimar como o trabalho cresce. Em grafos, a escolha do algoritmo depende de como você mede um caminho.",
+      "blocos": [
+        {
+          "subtitulo": "O tamanho da entrada importa",
+          "paragrafos": [
+            "Uma varredura completa faz n passos de custo constante e cresce como Θ(n). Dois laços que percorrem n valores, um dentro do outro, fazem n × n passos e crescem como Θ(n²). Se o laço externo dobra sua variável a cada volta, ele faz cerca de log2 n voltas. Com um laço interno linear, o total cresce como Θ(n log n). Θ indica a ordem de crescimento e O indica um limite superior."
+          ]
+        },
+        {
+          "exemplo": "Conte as voltas dos dois laços",
+          "paragrafos": [
+            "Para n = 16, um laço que começa em 1, dobra e executa enquanto k < n entra com k igual a 1, 2, 4 e 8. São 4 voltas, pois 2⁴ = 16. Se cada volta percorre os 16 itens de um vetor, são 4 × 16 = 64 visitas. Aumentar n altera tanto o tamanho da varredura quanto o número de voltas."
+          ]
+        },
+        {
+          "subtitulo": "Busca e ordenação",
+          "paragrafos": [
+            "Em um vetor ordenado, a busca binária compara com o meio e descarta metade da faixa. Seu pior caso cresce como O(log n). Em um vetor sem ordem, a busca linear examina os itens um por um. Ordenar primeiro tem custo. Esse investimento pode compensar ao repetir muitas buscas no mesmo conjunto."
+          ]
+        },
+        {
+          "subtitulo": "Vértices, arestas e pesos",
+          "paragrafos": [
+            "Um vértice representa um ponto, como um roteador. Uma aresta liga dois pontos e pode ter direção e custo. A busca em largura, ou BFS, visita primeiro os vizinhos mais próximos em número de arestas. Dijkstra calcula o menor custo total com pesos não negativos. Uma ordenação topológica organiza dependências em um grafo direcionado sem ciclos."
+          ]
+        },
+        {
+          "exemplo": "Menos saltos ou menor custo",
+          "paragrafos": [
+            "As rotas entre A e D são A → B → D, com dois trechos de custo 5, e A → C → E → D, com custos 1, 1 e 2. Para minimizar saltos, BFS escolhe a rota por B, com 2 trechos. Para minimizar custo, Dijkstra escolhe a rota por C e E, de custo 4. Em Dijkstra, a cada passo é consolidado o menor custo provisório conhecido."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "F",
+        "pergunta": "Em um grafo com tarifas diferentes e não negativas, qual algoritmo resolve o menor custo total?"
+      }
+    },
+    {
+      "id": "cap-17",
+      "numero": 17,
+      "titulo": "Autômatos, linguagens e compiladores",
+      "intro": "Um autômato resume o histórico relevante em um estado. Um compilador usa regras para reconhecer a estrutura de um programa e traduzi-lo.",
+      "blocos": [
+        {
+          "subtitulo": "Da palavra à regra",
+          "paragrafos": [
+            "O alfabeto é o conjunto de símbolos disponíveis. Uma cadeia é uma sequência desses símbolos. A linguagem é o conjunto das cadeias aceitas. A expressão regular ab* descreve a, ab, abb e assim por diante, pois * permite repetir b zero ou mais vezes. Gramáticas usam regras de produção para descrever estruturas."
+          ]
+        },
+        {
+          "exemplo": "Uma catraca como máquina de estados",
+          "paragrafos": [
+            "A catraca começa travada. Ao validar o cartão, passa a liberada. A passagem pela catraca é o evento que a trava de novo. O estado atual registra se a autorização está disponível e muda o efeito de uma nova passagem."
+          ]
+        },
+        {
+          "subtitulo": "Transições da catraca",
+          "paragrafos": [],
+          "lista": [
+            "Travada + cartão válido: libera e muda para liberada. Travada + tentativa de passagem: bloqueia e permanece travada.",
+            "Liberada + cartão válido: permanece liberada. Liberada + tentativa de passagem: permite e volta a travada."
+          ]
+        },
+        {
+          "subtitulo": "O papel da memória",
+          "paragrafos": [
+            "Um autômato finito pode controlar estados como travada ou liberada. Para verificar parênteses com profundidade arbitrária, uma pilha permite guardar cada abertura e retirar uma quando o fechamento correspondente chega."
+          ]
+        },
+        {
+          "subtitulo": "Da expressão ao código",
+          "paragrafos": [
+            "Em total = 2 + 3 × 4, a análise léxica identifica tokens como nome, número e operador. A sintática organiza a expressão e aplica precedência, agrupando 3 × 4 antes da soma. A semântica checa regras como o tipo de total e seu escopo. A geração de código traduz a representação resultante para o alvo."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "G",
+        "pergunta": "O código tem estrutura válida, mas tenta atribuir texto a uma variável inteira. Em qual etapa o erro é detectado?"
+      }
+    },
+    {
+      "id": "cap-18",
+      "numero": 18,
+      "titulo": "POO, software e interfaces",
+      "intro": "Use um app de cadastro de obras para seguir o caminho entre a ideia, as regras do sistema e o teste com o usuário.",
+      "blocos": [
+        {
+          "subtitulo": "Classes, objetos e responsabilidades",
+          "paragrafos": [
+            "Uma classe define dados e operações. Um objeto é uma instância com valores próprios. A classe Obra pode guardar título e gênero e oferecer um método para atualizar o título. Se o método rejeita texto vazio, ele protege a regra do objeto. Isso é encapsulamento. Na composição, um objeto usa outro como parte da solução. No polimorfismo, implementações diferentes podem oferecer a mesma operação, como salvar localmente ou em um serviço."
+          ]
+        },
+        {
+          "subtitulo": "Requisitos e modelos",
+          "paragrafos": [
+            "“Cadastrar obra” descreve uma função. “Salvar em até 2 s sob a carga prevista” descreve uma exigência de desempenho. Um diagrama de classes mostra a estrutura e os relacionamentos. Um diagrama de sequência mostra a ordem das mensagens. Em projetos iterativos, implemente um fluxo pequeno, teste e use o retorno para ajustar a próxima entrega."
+          ]
+        },
+        {
+          "subtitulo": "Como testar o cadastro",
+          "paragrafos": [],
+          "lista": [
+            "Unitário: a função que valida o título rejeita uma entrada vazia.",
+            "Integração: a camada de persistência grava e recupera a obra usando o esquema real do SQLite.",
+            "Ponta a ponta: o usuário abre o app, cadastra uma obra e confere o item na lista.",
+            "Aceitação: o responsável pelo uso verifica se o fluxo atende aos critérios acordados."
+          ]
+        },
+        {
+          "subtitulo": "Interface, rede e sincronização",
+          "paragrafos": [
+            "A interface coleta dados, valida campos visíveis e sinaliza o resultado. Um serviço remoto recebe pedidos e aplica suas regras. HTTP transporta requisições e respostas. Com armazenamento local, a tela pode mostrar “Salvo no aparelho. Sincronização pendente”. Combine cor com rótulo e ícone e observe se usuários conseguem identificar cada estado e concluir a tarefa."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "H",
+        "pergunta": "Você precisa descobrir se o código de gravação é compatível com o esquema real do banco. Qual nível de teste é o mais direto?"
+      }
+    },
+    {
+      "id": "cap-19",
+      "numero": 19,
+      "titulo": "Bancos de dados do zero",
+      "intro": "Uma tabela reúne registros do mesmo tipo. Uma consulta usa relacionamentos para juntar fatos que foram guardados em tabelas diferentes.",
+      "blocos": [
+        {
+          "subtitulo": "IDs, chaves e normalização",
+          "paragrafos": [
+            "Em Genero(id, nome), id é a chave primária. Cada gênero é identificado por um único valor. Em Obra(id, titulo, genero_id), genero_id é uma chave estrangeira que aponta para Genero.id. Assim, é possível corrigir o nome de um gênero em um lugar só. A normalização ajuda a reduzir repetições e inconsistências."
+          ]
+        },
+        {
+          "exemplo": "Contar obras por gênero",
+          "paragrafos": [
+            "Imagine dois gêneros, Aventura e Drama. Só Aventura tem obras, em número de 2. A consulta abaixo precisa retornar também Drama, com valor 0.",
+            "```sql\nSELECT g.nome, COUNT(o.id) AS total\nFROM Genero g LEFT JOIN Obra o ON o.genero_id = g.id\nGROUP BY g.id, g.nome\n```"
+          ]
+        },
+        {
+          "subtitulo": "Siga a consulta na ordem do raciocínio",
+          "paragrafos": [
+            "1. LEFT JOIN mantém os gêneros mesmo quando não há obra correspondente. Nesse caso, as colunas de Obra ficam NULL. 2. GROUP BY agrupa as linhas pelo gênero. 3. COUNT(o.id) conta IDs de obras não nulos. COUNT(*) contaria inclusive a linha com os campos de Obra nulos. WHERE filtra linhas antes do agrupamento."
+          ]
+        },
+        {
+          "subtitulo": "Consultar e alterar dados",
+          "paragrafos": [
+            "SELECT consulta. INSERT insere novas linhas. UPDATE muda valores. DELETE remove registros. Um índice cria uma estrutura auxiliar que pode acelerar filtros e buscas, com custo de armazenamento e manutenção a cada escrita."
+          ]
+        },
+        {
+          "subtitulo": "Por que usar uma transação",
+          "paragrafos": [
+            "Na transferência entre duas contas, debitar e creditar são partes da mesma operação. A atomicidade confirma as duas mudanças juntas ou reverte ambas. A consistência preserva as regras de integridade. O isolamento controla a interferência entre operações concorrentes. A durabilidade preserva as mudanças confirmadas conforme as garantias do banco."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "I",
+        "pergunta": "No exemplo, por que COUNT(o.id) retorna 0 para Drama?"
+      }
+    },
+    {
+      "id": "cap-20",
+      "numero": 20,
+      "titulo": "Eletricidade e circuitos",
+      "intro": "Tensão é uma diferença de potencial entre dois pontos. Corrente é a taxa de passagem de carga. Resistência relaciona essas duas grandezas em um resistor ôhmico.",
+      "blocos": [
+        {
+          "subtitulo": "Lei de Ohm, série e paralelo",
+          "paragrafos": [
+            "Use V = R × I com volts, ohms e ampères. Em série, a corrente é a mesma e as resistências somam. Em paralelo, os componentes compartilham a tensão e a corrente se divide. Dois resistores iguais em paralelo equivalem à metade de um deles. Pelas leis de Kirchhoff, o total de corrente que entra num nó iguala o que sai, e a soma algébrica das tensões numa malha fechada vale zero."
+          ]
+        },
+        {
+          "subtitulo": "Divisor de tensão sem carga no ponto médio",
+          "paragrafos": [
+            "No divisor, a fonte de 5 V alimenta R1 (1 kΩ) e R2 (1 kΩ) em série. O nó de saída fica entre os dois resistores, e a tensão é medida em relação a 0 V."
+          ]
+        },
+        {
+          "exemplo": "Calcular a tensão no nó do divisor",
+          "paragrafos": [
+            "1. Os dois resistores em série somam 2 kΩ. 2. A corrente é 5 V/2.000 Ω = 2,5 mA. 3. A tensão do nó em relação a 0 V é a queda no resistor de baixo, 0,0025 A × 1.000 Ω = 2,5 V. Uma carga ligada ao nó fica em paralelo com esse resistor e pode mudar o resultado."
+          ]
+        },
+        {
+          "subtitulo": "Capacitor e constante de tempo",
+          "paragrafos": [
+            "Em um circuito RC, um capacitor acumula carga e sua tensão muda gradualmente. Ao ligar uma fonte constante com o capacitor inicialmente descarregado, após τ = R × C ele chega a cerca de 63% da tensão final. Com 10 kΩ e 10 μF, τ = 0,10 s. Quando a tensão no capacitor se aproxima da tensão da fonte, a corrente e a taxa de carga diminuem."
+          ]
+        },
+        {
+          "subtitulo": "Corrente alternada",
+          "paragrafos": [
+            "O valor eficaz de uma senoide é o valor de pico dividido por √2. Um fasor representa amplitude e fase em regime senoidal. A impedância relaciona tensão e corrente nesse regime. Aumentar a frequência reduz o módulo da impedância de um capacitor ideal, por exemplo."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "J",
+        "pergunta": "Dois resistores de 1 kΩ em paralelo estão ligados à mesma fonte de 5 V. Qual é a resistência equivalente e quanto vale a corrente total?"
+      }
+    },
+    {
+      "id": "cap-21",
+      "numero": 21,
+      "titulo": "Eletrônica analógica e amplificadores",
+      "intro": "A eletrônica condiciona e transforma sinais. Pense no caminho de um sensor cuja tensão é pequena demais para usar toda a faixa de um conversor analógico-digital.",
+      "blocos": [
+        {
+          "subtitulo": "Diodos e transistores",
+          "paragrafos": [
+            "O diodo conduz com mais facilidade no sentido direto. Um retificador aproveita essa propriedade para produzir uma saída de polaridade definida a partir de corrente alternada. Um transistor com polarização adequada pode amplificar no entorno de um ponto de operação. Ao funcionar como chave, ele alterna entre estados de condução e interrupção da corrente."
+          ]
+        },
+        {
+          "subtitulo": "O que a realimentação faz",
+          "paragrafos": [
+            "Um amplificador operacional (amp op) responde à diferença de tensão entre suas entradas. Ao devolver parte da saída à entrada inversora, a realimentação negativa faz a saída ajustar-se para deixar as tensões de entrada próximas, enquanto o componente estiver na região linear. Se a saída requerida passar do limite da alimentação ou do próprio amp op, ocorre saturação."
+          ]
+        },
+        {
+          "subtitulo": "Configurações usuais",
+          "paragrafos": [],
+          "lista": [
+            "Inversor: Vout/Vin = −Rf/Rin. Uma entrada positiva gera uma saída negativa dentro da faixa permitida.",
+            "Não inversor: Vout/Vin = 1 + Rf/Rg. Amplifica mantendo a polaridade.",
+            "Seguidor: ganho unitário. A entrada exige pouca corrente e a saída aciona a carga.",
+            "Comparador: compara as duas tensões de entrada e comuta a saída entre níveis."
+          ]
+        },
+        {
+          "exemplo": "Aproveitar a faixa do ADC",
+          "paragrafos": [
+            "Um sensor fornece até 0,8 V. Com um não inversor de Rf = 20 kΩ e Rg = 10 kΩ, o ganho é 1 + 20/10 = 3. A maior saída ideal é 3 × 0,8 = 2,4 V. Isso ocupa mais da faixa de um ADC de 0 a 3,3 V, desde que o amp op consiga entregar a tensão e a corrente exigidas."
+          ]
+        },
+        {
+          "subtitulo": "Outros circuitos com amp op",
+          "paragrafos": [
+            "Somador combina entradas. Subtrator mede uma diferença. Integrador responde ao acumulado e diferenciador à taxa de mudança. Em um filtro ativo, capacitores e resistores ajudam a determinar quais frequências a saída atenua."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "K",
+        "pergunta": "Um inversor ideal opera na região linear, com Rf = 30 kΩ, Rin = 10 kΩ e Vin = 1 V. Qual é a saída?"
+      }
+    },
+    {
+      "id": "cap-22",
+      "numero": 22,
+      "titulo": "Sistemas digitais e microcontroladores",
+      "intro": "Um circuito digital usa níveis discretos. Um microcontrolador combina lógica, memória, processador e periféricos para ler entradas e comandar saídas.",
+      "blocos": [
+        {
+          "subtitulo": "Representação e estado",
+          "paragrafos": [
+            "No binário, da direita para a esquerda, os pesos são 1, 2, 4 e 8. Assim 1011 vale 8 + 0 + 2 + 1 = 11 sem sinal. Circuitos combinacionais calculam a saída pelas entradas atuais. Circuitos sequenciais guardam estado. Um flip-flop pode manter um alarme disparado depois de o sensor voltar ao normal, até chegar um reset."
+          ]
+        },
+        {
+          "subtitulo": "Portas e relógio",
+          "paragrafos": [
+            "Uma porta E pode exigir duas permissões ao mesmo tempo. Um multiplexador escolhe qual entrada repassar. Um flip-flop D copia a entrada D para a saída Q na borda ativa do relógio e guarda o valor entre bordas. Vários flip-flops formam registradores. Com lógica que incrementa o valor, também é possível montar um contador."
+          ]
+        },
+        {
+          "subtitulo": "Como o firmware interage com o circuito",
+          "paragrafos": [
+            "GPIO lê um botão e comanda um LED. Um timer conta pulsos de um relógio e permite disparar eventos periódicos. Na consulta periódica, o código lê o periférico em instantes escolhidos. Em uma interrupção, o periférico solicita a execução de uma rotina. No PIC16F690, você pode usar UART para o terminal, I²C para o relógio de tempo real e SPI para um display, conforme a montagem. I²C endereça dispositivos. SPI costuma selecioná-los por um sinal dedicado."
+          ]
+        },
+        {
+          "exemplo": "Da tensão medida ao número",
+          "paragrafos": [
+            "O sensor gera tensão. O condicionamento adapta o nível para a entrada do ADC. Em um ADC ideal de 10 bits e faixa de 0 a 5 V, há 2¹⁰ = 1.024 códigos. O passo nominal é 5/1.024 V, cerca de 4,88 mV. A resolução indica o espaçamento nominal entre níveis. A exatidão também depende de referência, ruído e calibração."
+          ]
+        },
+        {
+          "exemplo": "Regular a largura do pulso",
+          "paragrafos": [
+            "Em PWM, o período é T e o pulso permanece em nível alto durante t_alto. O ciclo ativo é a razão entre esses tempos. Com T = 2 ms e ciclo ativo de 75%, t_alto = 0,75 × 2 ms = 1,5 ms. Um driver recebe os pulsos e comanda a potência fornecida ao motor."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "L",
+        "pergunta": "Em um mesmo intervalo de tensão, o que ocorre com o passo nominal do ADC ao passar de 10 para 11 bits?"
+      }
+    },
+    {
+      "id": "cap-23",
+      "numero": 23,
+      "titulo": "Arquitetura, sistemas operacionais e RTOS",
+      "intro": "A CPU executa instruções. O sistema operacional distribui a execução e os recursos. Um RTOS se preocupa também com o prazo para responder.",
+      "blocos": [
+        {
+          "subtitulo": "Onde ficam os dados e instruções",
+          "paragrafos": [
+            "Registradores guardam valores imediatos da CPU. O contador de programa indica a instrução a buscar. A cache reduz a espera por dados usados há pouco ou próximos. A RAM recebe dados do programa em execução. Em um microcontrolador típico, a Flash guarda o firmware, a SRAM guarda variáveis e pilha, e a pilha armazena informações como endereços de retorno."
+          ]
+        },
+        {
+          "exemplo": "Transformar ciclos em tempo de CPU",
+          "paragrafos": [
+            "Um programa executa 2 milhões de instruções com CPI médio igual a 2 ciclos por instrução. 1. Multiplique para obter 4 milhões de ciclos. 2. Divida pelo clock de 16 milhões de ciclos/s. O tempo de CPU é 0,25 s. Pipeline sobrepõe estágios de instruções e pode aumentar a vazão. Atrasos de acesso à memória podem aumentar o CPI."
+          ]
+        },
+        {
+          "subtitulo": "Processo, thread e acesso concorrente",
+          "paragrafos": [
+            "Um processo tem seu espaço de endereçamento. Threads do mesmo processo compartilham esse espaço e têm pilhas próprias. Se duas threads leem o mesmo contador 10 e ambas escrevem 11, perde-se um incremento. Um mutex protege a região de leitura, soma e escrita. Um semáforo pode sinalizar eventos ou contar recursos disponíveis. Um ciclo de espera por recursos pode provocar deadlock."
+          ]
+        },
+        {
+          "subtitulo": "Escalonamento e troca de contexto",
+          "paragrafos": [
+            "O escalonador escolhe entre tarefas prontas. Com preempção por prioridade, uma tarefa mais prioritária pode interromper outra segundo as regras do kernel. A troca de contexto salva o estado da tarefa anterior e restaura o da próxima. No seu MKRTOS, a tarefa de leitura pode receber atenção rápida e a telemetria utilizar o tempo disponível. Para avaliar a latência, some esperas pela leitura, bloqueios, execução e acionamento. Compare o pior caso ao prazo."
+          ]
+        },
+        {
+          "exemplo": "Por que ler rápido ainda pode dar uma resposta lenta",
+          "paragrafos": [
+            "Um sensor é lido a cada 20 ms. Se o sinal mudar logo após uma leitura, ele pode esperar quase 20 ms até a próxima. Some 3 ms para o processamento e o acionamento e reserve até 23 ms para esse cenário, sem contar outros bloqueios. Ao comparar com um prazo, interessa a resposta mais lenta prevista."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "M",
+        "pergunta": "Por que proteger só a escrita do contador com um mutex ainda permite perder um incremento?"
+      }
+    },
+    {
+      "id": "cap-24",
+      "numero": 24,
+      "titulo": "Redes, endereçamento e telecomunicações",
+      "intro": "Acompanhe uma requisição do app ao servidor. O nome localiza o serviço, os endereços orientam o encaminhamento e o transporte define como os dados são entregues.",
+      "blocos": [
+        {
+          "subtitulo": "Do nome ao pacote",
+          "paragrafos": [
+            "O DNS resolve um nome para um endereço IP. Na rede local, um switch Ethernet encaminha quadros usando endereços MAC. Entre redes, o roteador encaminha pacotes IP pelo próximo salto. TCP oferece um fluxo ordenado de bytes com confirmação e retransmissão. UDP envia datagramas com menos garantias. Pode ser usado em telemetria que aceita perdas e em aplicações que implementam suas próprias confirmações."
+          ]
+        },
+        {
+          "exemplo": "Descobrir a sub-rede e o próximo salto",
+          "paragrafos": [
+            "Para 192.168.4.78/27, o prefixo ocupa 27 dos 32 bits do IPv4. Sobram 5 bits, ou 2⁵ = 32 endereços por bloco. Os blocos começam em 0, 32, 64 e 96 no último octeto. O .78 está no bloco 64 a 95. A rede é .64, o broadcast é .95 e os hosts comuns vão de .65 a .94. O .100 começa outro bloco. Sem rota mais específica, o envio segue pelo gateway padrão."
+          ]
+        },
+        {
+          "subtitulo": "Transmissão e telefonia celular",
+          "paragrafos": [
+            "Modular é variar uma característica da portadora para levar informação, como amplitude, frequência ou fase. O meio pode usar sinais elétricos, rádio ou luz. Na telefonia, a ERB faz o acesso por rádio e a divisão em células permite reusar frequências com planejamento de interferência."
+          ]
+        },
+        {
+          "subtitulo": "Handoff, roaming e acesso ao canal",
+          "paragrafos": [
+            "Handoff transfere o atendimento de uma conexão ativa, como quando o telefone se desloca entre células. Roaming permite atendimento por uma rede visitada. TDMA separa acessos no tempo, CDMA usa códigos e GSM é um padrão 2G que usa canais de frequência divididos em intervalos de tempo."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "N",
+        "pergunta": "O telefone muda de estação durante a chamada e continua na mesma rede. Qual processo ocorreu?"
+      }
+    },
+    {
+      "id": "cap-25",
+      "numero": 25,
+      "titulo": "Segurança, paralelismo e distribuição",
+      "intro": "Um serviço pode precisar responder mais rápido, continuar disponível e manter dados corretos. Cada exigência pede um mecanismo próprio.",
+      "blocos": [
+        {
+          "subtitulo": "Três objetivos da segurança",
+          "paragrafos": [],
+          "lista": [
+            "Confidencialidade: controle de leitura e cifragem para reduzir exposição de dados.",
+            "Integridade: permissão de escrita por função e registro de mudanças para preservar os dados.",
+            "Disponibilidade: redundância e restauração testada para recuperar o acesso ao serviço."
+          ]
+        },
+        {
+          "subtitulo": "Acesso e recuperação",
+          "paragrafos": [
+            "Autenticação verifica a identidade. Autorização decide quais ações essa identidade pode executar. Privilégio mínimo limita permissões ao necessário. Réplicas podem manter o serviço após a falha de uma máquina. Backups versionados ajudam a recuperar um estado anterior, inclusive depois de uma exclusão propagada entre réplicas."
+          ]
+        },
+        {
+          "exemplo": "Por que três núcleos nem sempre triplicam o ganho",
+          "paragrafos": [
+            "Um trabalho de 100 s leva 40 s na etapa serial e 60 s na etapa divisível. Em três unidades iguais, sem sobrecarga, a etapa divisível cai para 20 s. O total vira 40 + 20 = 60 s. O ganho é 100/60 ≈ 1,67×. Comunicação, divisão desigual e sincronização podem reduzir o ganho real."
+          ]
+        },
+        {
+          "subtitulo": "Falhas parciais e repetição",
+          "paragrafos": [
+            "No paralelismo com memória compartilhada, unidades de execução acessam os mesmos dados e sincronizam atualizações, como em uma aplicação com OpenMP. Máquinas distintas trocam mensagens, por exemplo com MPI em um processamento distribuído, e podem falhar separadamente. Se uma confirmação se perder, o emissor pode repetir o evento. Manter a chave e gravar com unicidade torna o registro idempotente."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "O",
+        "pergunta": "Em um sistema de coleta, por que o emissor deve manter o identificador original quando reenvia um evento?"
+      }
+    },
+    {
+      "id": "cap-26",
+      "numero": 26,
+      "titulo": "Ciência de dados e inteligência artificial",
+      "intro": "Dados medidos passam por preparação, treino e avaliação. Para interpretar o resultado, comece dizendo o que o modelo tenta prever.",
+      "blocos": [
+        {
+          "subtitulo": "Entenda o significado de cada coluna",
+          "paragrafos": [
+            "Cidade é categórica nominal. Uma escala baixa, média, alta é ordinal. Quantidade de falhas é uma contagem discreta. Temperatura é uma medida contínua. Um ID distingue registros. Antes de calcular ou treinar, examine valores ausentes, duplicatas, formatos e unidades. Uma temperatura numa unidade diferente pode parecer um valor extremo sem ser uma falha real."
+          ]
+        },
+        {
+          "subtitulo": "Classificar, estimar ou agrupar",
+          "paragrafos": [
+            "Classificação prevê uma categoria, como avaliação positiva ou negativa. Regressão estima um valor, como o consumo de energia. As duas podem usar exemplos rotulados. Agrupamento organiza dados por semelhança sem rótulos prévios. Uma árvore de decisão usa testes em sequência. Uma rede neural ajusta pesos a partir dos exemplos. Em busca de rotas, uma heurística pode estimar o custo que resta até o destino."
+          ]
+        },
+        {
+          "subtitulo": "Separar treino de teste",
+          "paragrafos": [
+            "Treino ajusta o modelo. Validação ajuda a escolher configurações. Teste estima o desempenho com dados fora do ajuste. Se a meta é prever o futuro, treine no passado e teste em um período posterior. Calcule médias e escalas de transformação usando o treino e reaplique-as aos outros conjuntos. Se o modelo se ajusta demais a detalhes do treino, pode ter desempenho ruim no teste."
+          ]
+        },
+        {
+          "exemplo": "Entender o erro de um alarme",
+          "paragrafos": [
+            "O modelo detectou 12 falhas, deixou 3 passar e deu 8 alarmes falsos. Houve 20 alertas, dos quais 12 corretos. A precisão é 12/20 = 60%. Houve 15 falhas reais, das quais 12 detectadas. O recall é 12/15 = 80%. Se deixar falhas passar é caro, acompanhe especialmente o recall. A acurácia pode ficar alta quando a classe normal domina."
+          ]
+        },
+        {
+          "subtitulo": "Regras graduais e busca de soluções",
+          "paragrafos": [
+            "Na lógica fuzzy, uma temperatura pode pertencer parcialmente ao conjunto “quente”. Esse grau permite acionar um ventilador de forma gradual. Um algoritmo genético trabalha com várias soluções, testa seu desempenho e cria novas candidatas por seleção e variação. Pode, por exemplo, buscar uma escala de produção de menor custo."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "P",
+        "pergunta": "Um sistema encontrou 9 de 10 falhas reais e emitiu 3 alarmes falsos. Qual é o recall e qual é a precisão?"
+      }
+    },
+    {
+      "id": "cap-27",
+      "numero": 27,
+      "titulo": "Sinais, imagens e computação gráfica",
+      "intro": "O domínio do tempo mostra como o sinal varia. O domínio da frequência mostra em quais ritmos ele varia. Uma imagem também pode ser tratada como amostras no espaço.",
+      "blocos": [
+        {
+          "subtitulo": "Amostragem, quantização e filtragem",
+          "paragrafos": [
+            "Amostragem escolhe quando medir. Quantização associa a amplitude medida a um nível representável. Para preservar um sinal limitado a fmáx, escolha fs > 2fmáx. Um filtro analógico anti-aliasing antes do ADC limita a banda. A DFT representa as frequências da sequência e a FFT calcula essa representação com eficiência."
+          ]
+        },
+        {
+          "exemplo": "Quando um sinal parece ter outra frequência",
+          "paragrafos": [
+            "Ao medir uma senoide de 750 Hz a 1.000 amostras/s, o limite da faixa de frequências observável é 500 Hz. No espectro de 0 a 500 Hz, a senoide aparece em |1.000 − 750| = 250 Hz. Isso é aliasing. Para preservar o sinal de 750 Hz, é preciso amostrar acima de 1.500 amostras/s e limitar outras componentes da entrada."
+          ]
+        },
+        {
+          "subtitulo": "Filtrar no tempo",
+          "paragrafos": [
+            "Uma média móvel combina a leitura atual e as anteriores para reduzir variações rápidas. Para as três leituras 9, 10 e 14, a saída de uma média de três pontos é 11. Um passa-baixas atenua frequências altas. Um passa-altas atenua baixas. O filtro escolhido precisa preservar a informação que interessa."
+          ]
+        },
+        {
+          "subtitulo": "Imagem capturada e cena gerada",
+          "paragrafos": [
+            "Em uma vizinhança de pixels [19, 20, 250], a mediana é 20. Ela reduz impulsos esparsos sem dar tanto peso a valores extremos. Sobel aproxima o gradiente e destaca bordas. O histograma conta ocorrências dos níveis de intensidade e ajuda a avaliar contraste. Na computação gráfica, você pode girar e projetar uma dupla hélice a partir das coordenadas 3D. Na realidade aumentada, o rastreamento mantém o conteúdo digital alinhado à cena real."
+          ]
+        },
+        {
+          "subtitulo": "Escolha o filtro pelo defeito observado",
+          "paragrafos": [
+            "Um filtro gaussiano suaviza variações rápidas e pode borrar contornos. O bilateral dá mais peso a vizinhos parecidos em intensidade e pode preservar bordas. A equalização redistribui níveis para alterar o contraste. Em uma imagem de inspeção, compare o efeito sobre o defeito que você precisa continuar enxergando."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "Q",
+        "pergunta": "Para reduzir pixels isolados muito claros e depois evidenciar bordas, quais filtros você usaria e em qual ordem?"
+      }
+    },
+    {
+      "id": "cap-28",
+      "numero": 28,
+      "titulo": "Controle, automação e robótica",
+      "intro": "Uma malha fechada mede a saída, compara com a referência e corrige o comando. Um temporizador que atua por um tempo fixo, sem medir a saída, opera em malha aberta.",
+      "blocos": [
+        {
+          "subtitulo": "Malha fechada de um controle de nível",
+          "paragrafos": [
+            "A referência entra no somador, que calcula erro = referência − nível medido. O controlador usa o erro para comandar a bomba e o tanque. O sensor mede o nível e realimenta o somador, fechando a malha."
+          ]
+        },
+        {
+          "exemplo": "Como uma bomba chega ao nível desejado",
+          "paragrafos": [
+            "A referência é 50 cm e o sensor mede 42 cm. O erro é 50 − 42 = 8 cm. O controlador usa esse erro para aumentar o comando da bomba. A água sobe e o sensor atualiza a medida. Perto da referência, um controle ajustado reduz a ação corretiva. Observe tempo de acomodação, sobressinal e erro em regime."
+          ]
+        },
+        {
+          "subtitulo": "Contribuições de um PID",
+          "paragrafos": [],
+          "lista": [
+            "Proporcional (P): responde ao erro atual. Ganho muito alto pode provocar sobressinal.",
+            "Integral (I): soma o erro ao longo do tempo. Pode reduzir o erro permanente.",
+            "Derivativo (D): responde à tendência do erro. Costuma exigir atenção ao ruído."
+          ]
+        },
+        {
+          "subtitulo": "Do modelo às saídas",
+          "paragrafos": [
+            "Uma função de transferência relaciona saída e entrada de um modelo linear com condições iniciais nulas. Para um modelo racional próprio em tempo contínuo, polos no semiplano esquerdo aberto dão estabilidade entrada-saída. Um CLP costuma ler entradas, executar a lógica e atualizar saídas em ciclos de varredura. Dois contatos em série no ladder podem representar uma condição E."
+          ]
+        },
+        {
+          "subtitulo": "Motores e movimento do robô",
+          "paragrafos": [
+            "Com passos completos de 0,9°, uma volta exige 360/0,9 = 400 passos e 90° exigem 100 passos. Um encoder pode confirmar a posição. A cinemática direta obtém a posição da ferramenta a partir dos ângulos das juntas. A inversa procura os ângulos para atingir uma posição."
+          ]
+        }
+      ],
+      "memoria": {
+        "letra": "R",
+        "pergunta": "Qual termo do PID acumula um erro persistente?"
+      }
+    }
+  ],
+  "formulas": [
+    {
+      "assunto": "Unidades e tempo",
+      "relacao": "Período T = 1/f",
+      "conferencia": "Use hertz para f e segundos para T."
+    },
+    {
+      "assunto": "Mecânica",
+      "relacao": "F_resultante = m × a",
+      "conferencia": "Some forças com direção e sentido."
+    },
+    {
+      "assunto": "Calor",
+      "relacao": "T = Tamb + P × Rθ",
+      "conferencia": "Vale no regime do modelo térmico simples."
+    },
+    {
+      "assunto": "Energia",
+      "relacao": "E = P × Δt, com P constante",
+      "conferencia": "Watts × segundos resultam em joules."
+    },
+    {
+      "assunto": "Estatística",
+      "relacao": "Amplitude = máximo − mínimo",
+      "conferencia": "Ordene a lista para encontrar a mediana."
+    },
+    {
+      "assunto": "Eletricidade",
+      "relacao": "V = R × I · P = V × I · τ = R × C",
+      "conferencia": "Converta mA para A e μF para F."
+    },
+    {
+      "assunto": "Conversão e sinais",
+      "relacao": "Passo ADC ≈ faixa/2^N · fs > 2·fmáx",
+      "conferencia": "O passo mede amplitude. A taxa mede amostras por segundo."
+    },
+    {
+      "assunto": "PWM e motores",
+      "relacao": "Ciclo ativo = t_alto/T · passos = ângulo/ângulo por passo",
+      "conferencia": "Converta porcentagem para fração antes de multiplicar."
+    },
+    {
+      "assunto": "Processador",
+      "relacao": "Tempo de CPU = instruções × CPI/frequência",
+      "conferencia": "CPI é o número médio de ciclos por instrução."
+    },
+    {
+      "assunto": "Paralelismo",
+      "relacao": "Ganho ideal = 1/[(1 − p) + p/n]",
+      "conferencia": "p é a fração paralelizável e n o número de unidades."
+    },
+    {
+      "assunto": "Classificação",
+      "relacao": "Precisão = VP/(VP + FP) · recall = VP/(VP + FN)",
+      "conferencia": "Comece pelos alertas para precisão e pelas falhas reais para recall."
+    },
+    {
+      "assunto": "Controle",
+      "relacao": "Erro = referência − medida",
+      "conferencia": "Confira o sinal e use a mesma unidade."
+    }
+  ],
+  "respostasMemoria": {
+    "A": "100 leituras por segundo. 10 ms = 0,010 s, então 1/0,010 = 100.",
+    "B": "Energia acumulada no intervalo, em joules. Um watt equivale a um joule por segundo.",
+    "C": "49 °C. A elevação é 8 × 3 = 24 °C e soma-se aos 25 °C do ambiente.",
+    "D": "O limite x + y ≤ 4. A combinação teria 5 lotes.",
+    "E": "A sai primeiro da fila. C sai primeiro da pilha.",
+    "F": "Dijkstra, pois o objetivo é minimizar o peso total e os pesos são não negativos.",
+    "G": "Na análise semântica, que verifica a compatibilidade de tipos.",
+    "H": "Integração, pois exerce a camada de persistência junto ao banco real de teste.",
+    "I": "O LEFT JOIN inclui Drama e deixa o ID da obra nulo. O COUNT dessa coluna ignora o NULL.",
+    "J": "500 Ω e 10 mA. A corrente total é 5/500 A, igual a 0,010 A.",
+    "K": "−3 V. O ganho é −30/10 = −3 e a entrada vale 1 V.",
+    "L": "Cai à metade. Cada bit a mais dobra a quantidade de níveis.",
+    "M": "As threads ainda podem ler o mesmo valor antes de qualquer escrita e gravar o mesmo próximo valor.",
+    "N": "Handoff, porque o atendimento à conexão ativa passou para outra estação.",
+    "O": "A chave original permite reconhecer a repetição e impedir que o evento seja contado duas vezes.",
+    "P": "Recall = 9/10 = 90%. Precisão = 9/(9 + 3) = 75%.",
+    "Q": "Mediana para rejeitar os impulsos e Sobel para evidenciar as bordas.",
+    "R": "Integral, que soma o erro ao longo do tempo."
+  },
+  "questoes": [
+    {
+      "id": "GUIA-Q01",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "01",
+      "tema": "Mediana e amplitude",
+      "materia": "matematica",
+      "enunciado": "Em um ensaio, um sensor respondeu em 12, 14, 14, 15 e 45 ms. Para registrar o valor central e a distância entre os extremos, a equipe escolheu a mediana e a amplitude total. Quais valores deve registrar, respectivamente?",
+      "alternativas": {
+        "A": "14 ms e 31 ms.",
+        "B": "20 ms e 33 ms.",
+        "C": "14 ms e 33 ms.",
+        "D": "15 ms e 45 ms.",
+        "E": "20 ms e 45 ms."
+      },
+      "gabarito": "C",
+      "assunto": "Estatística",
+      "comentario": "O terceiro valor dos cinco ordenados é 14 ms. A amplitude é 45 − 12 = 33 ms. Os 20 ms são a média.",
+      "revisarPagina": "14"
+    },
+    {
+      "id": "GUIA-Q02",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "02",
+      "tema": "Resistência térmica",
+      "materia": "fisica",
+      "enunciado": "Uma placa dissipa 12 W a uma temperatura ambiente de 30 °C. A solução X tem resistência térmica efetiva de 5 °C/W. A Y tem 2 °C/W. Em regime, use T = Tamb + P × Rθ. Qual análise é compatível com o limite de 70 °C para a placa?",
+      "alternativas": {
+        "A": "X chega a 60 °C e Y a 24 °C. As duas atendem.",
+        "B": "X chega a 90 °C e Y a 54 °C. As duas atendem.",
+        "C": "X chega a 54 °C e Y a 90 °C. Apenas X atende.",
+        "D": "X chega a 78 °C e Y a 72 °C. Nenhuma atende.",
+        "E": "X chega a 90 °C e Y a 54 °C. Apenas Y atende."
+      },
+      "gabarito": "E",
+      "assunto": "Física e materiais",
+      "comentario": "Some a temperatura ambiente à elevação calculada. Para X, 30 + 12 × 5 = 90 °C. Para Y, 30 + 12 × 2 = 54 °C, abaixo do limite.",
+      "revisarPagina": "13"
+    },
+    {
+      "id": "GUIA-Q03",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "03",
+      "tema": "Menor custo em grafos",
+      "materia": "discreta",
+      "enunciado": "Um serviço precisa achar a rota de menor custo de S a F. As únicas ligações são S→A (2), A→F (7), S→B (4), B→C (1) e C→F (1). Qual escolha atende ao objetivo?",
+      "alternativas": {
+        "A": "Usar busca em largura e selecionar S→A→F, de custo 9.",
+        "B": "Usar Dijkstra e selecionar S→B→C→F, de custo 6.",
+        "C": "Usar Dijkstra e selecionar S→A→F, de custo 9.",
+        "D": "Usar busca em profundidade e aceitar o primeiro caminho encontrado.",
+        "E": "Usar a menor aresta de saída a cada passo e selecionar a rota de custo 9."
+      },
+      "gabarito": "B",
+      "assunto": "Grafos",
+      "comentario": "As rotas custam 2 + 7 = 9 e 4 + 1 + 1 = 6. Como todos os pesos são não negativos, Dijkstra encontra o menor custo. Menos saltos levariam à primeira rota.",
+      "revisarPagina": "16"
+    },
+    {
+      "id": "GUIA-Q04",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "04",
+      "tema": "Otimização com restrições",
+      "materia": "otimizacao",
+      "enunciado": "Uma bancada fabrica x módulos A e y módulos B, em quantidades inteiras não negativas. O retorno por unidade é 5 para A e 3 para B. Os limites são x ≤ 3, y ≤ 4 e 2x + y ≤ 8. Qual plano viável maximiza o retorno?",
+      "alternativas": {
+        "A": "x = 2, y = 4.",
+        "B": "x = 3, y = 2.",
+        "C": "x = 0, y = 4.",
+        "D": "x = 3, y = 4.",
+        "E": "x = 2, y = 3."
+      },
+      "gabarito": "A",
+      "assunto": "Otimização",
+      "comentario": "Para x = 0, 1, 2 e 3, os maiores y viáveis são 4, 4, 4 e 2. Os respectivos retornos são 12, 17, 22 e 21. O plano (3, 4) excede a capacidade, pois 2 × 3 + 4 = 10.",
+      "revisarPagina": "14"
+    },
+    {
+      "id": "GUIA-Q05",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "05",
+      "tema": "Complexidade de algoritmos",
+      "materia": "algoritmos",
+      "enunciado": "Para n igual a uma potência de 2, um algoritmo começa com k = 1. Enquanto k < n, ele percorre n registros com trabalho constante por registro e então dobra k. Como cresce o tempo de execução?",
+      "alternativas": {
+        "A": "Θ(log n).",
+        "B": "Θ(n).",
+        "C": "Θ(n²).",
+        "D": "Θ(n log n).",
+        "E": "Θ(2^n)."
+      },
+      "gabarito": "D",
+      "assunto": "Complexidade",
+      "comentario": "O laço externo faz log2 n iterações. Cada iteração executa n operações de custo constante. O trabalho total é proporcional a n log2 n.",
+      "revisarPagina": "16"
+    },
+    {
+      "id": "GUIA-Q06",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "06",
+      "tema": "Autômato de paridade",
+      "materia": "linguagens-formais",
+      "enunciado": "Um validador aceita uma cadeia binária quando ela possui uma quantidade par de bits 1. A cadeia vazia também deve ser aceita. Qual regra produz um autômato finito correto?",
+      "alternativas": {
+        "A": "Começar em par, aceitar par, trocar de estado com 1 e manter o estado com 0.",
+        "B": "Começar em ímpar, aceitar par, trocar de estado com 1 e manter o estado com 0.",
+        "C": "Começar em par, aceitar par, trocar de estado com 0 e manter o estado com 1.",
+        "D": "Começar em par, aceitar ímpar, trocar de estado com 1 e manter o estado com 0.",
+        "E": "Começar em par, aceitar par e trocar de estado tanto com 0 quanto com 1."
+      },
+      "gabarito": "A",
+      "assunto": "Autômatos",
+      "comentario": "O estado inicial é par porque há zero bits 1. Outro 1 muda a paridade e um 0 a preserva. Uma cadeia como 0101 tem dois bits 1 e termina no estado par.",
+      "revisarPagina": "17"
+    },
+    {
+      "id": "GUIA-Q07",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "07",
+      "tema": "Teste de integração",
+      "materia": "eng-software",
+      "enunciado": "Um app registra obras em um banco local. Já existem testes da validação de título e do cálculo de campos. A equipe quer detectar divergências entre o código que grava a obra e a versão real do esquema do banco. Qual teste é o mais direto?",
+      "alternativas": {
+        "A": "Executar o validador de título com entradas de tamanhos diferentes.",
+        "B": "Substituir o banco por um objeto simulado e testar apenas o formulário.",
+        "C": "Gravar e recuperar uma obra no banco real de testes usando a camada de persistência.",
+        "D": "Medir o tempo em que usuários localizam o botão de cadastro.",
+        "E": "Avaliar somente a aparência do formulário em várias telas."
+      },
+      "gabarito": "C",
+      "assunto": "Engenharia de software",
+      "comentario": "O teste de integração exerce o ponto de contato em que a divergência pode ocorrer. O banco de testes deve usar o esquema a verificar. Um substituto simulado não valida essa interface real.",
+      "revisarPagina": "18"
+    },
+    {
+      "id": "GUIA-Q08",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "08",
+      "tema": "Acessibilidade sem depender de cor",
+      "materia": "ihc",
+      "enunciado": "Um app usado por técnicos exibe sensores em estado normal ou crítico somente com pontos verdes ou vermelhos. Parte dos usuários tem dificuldade em distinguir essas cores. Que mudança resolve o problema e permite verificar o resultado?",
+      "alternativas": {
+        "A": "Aumentar a saturação das duas cores e medir o tempo de resposta da API.",
+        "B": "Aumentar o tamanho dos pontos e preservar a identificação exclusiva pela cor.",
+        "C": "Trocar verde e vermelho por duas outras cores e verificar o uso de memória.",
+        "D": "Exibir somente os códigos dos sensores e testar a conexão com o servidor.",
+        "E": "Combinar rótulos e ícones com cores e testar o reconhecimento dos estados com usuários."
+      },
+      "gabarito": "E",
+      "assunto": "Interação humano-computador",
+      "comentario": "O rótulo e o ícone dão pistas adicionais ao usuário. Observar o reconhecimento dos estados testa diretamente se a interface passou a comunicar a informação.",
+      "revisarPagina": "18"
+    },
+    {
+      "id": "GUIA-Q09",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "09",
+      "tema": "LEFT JOIN e COUNT",
+      "materia": "banco-dados",
+      "enunciado": "Na tabela Sensor existem os códigos 1 e 2. Na tabela Leitura, há duas linhas do sensor 1 e nenhuma do sensor 2. O relatório usa Sensor à esquerda em um LEFT JOIN com Leitura e, por sensor, calcula COUNT(Leitura.id). Leitura.id é a chave primária de Leitura. Qual resultado sai para os sensores 1 e 2?",
+      "alternativas": {
+        "A": "2 e 1.",
+        "B": "2 e 0.",
+        "C": "2, com o sensor 2 excluído.",
+        "D": "1 e 0.",
+        "E": "0 e 2."
+      },
+      "gabarito": "B",
+      "assunto": "Bancos de dados",
+      "comentario": "A junção preserva os dois sensores. Para o sensor 2, o lado de Leitura aparece com NULL. COUNT(Leitura.id) ignora esse NULL e retorna 0. COUNT(*) nessa consulta retornaria 1 para ele.",
+      "revisarPagina": "19"
+    },
+    {
+      "id": "GUIA-Q10",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "10",
+      "tema": "Amplificador inversor",
+      "materia": "circuitos",
+      "enunciado": "Um amplificador operacional ideal está na configuração inversora, com alimentação de ±12 V, Rin = 10 kΩ, Rf = 40 kΩ e entrada de 0,50 V. Qual é a saída esperada?",
+      "alternativas": {
+        "A": "+2,0 V.",
+        "B": "+2,5 V.",
+        "C": "−0,125 V.",
+        "D": "−2,0 V.",
+        "E": "−12,0 V."
+      },
+      "gabarito": "D",
+      "assunto": "Eletrônica analógica",
+      "comentario": "O ganho é −Rf/Rin = −4. Assim, Vout = −4 × 0,50 = −2,0 V. O valor está dentro dos limites de alimentação do modelo ideal.",
+      "revisarPagina": "21"
+    },
+    {
+      "id": "GUIA-Q11",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "11",
+      "tema": "Alarme com memória",
+      "materia": "sistemas-digitais",
+      "enunciado": "Um alarme deve disparar quando o sistema estiver habilitado e pelo menos um dos dois sensores indicar falha. Depois do disparo, deve permanecer ativo mesmo se os sinais voltarem ao normal. O reset tem prioridade. Qual estrutura atende à especificação?",
+      "alternativas": {
+        "A": "Usar habilitação E (falha 1 OU falha 2) para comandar diretamente a saída.",
+        "B": "Usar habilitação OU (falha 1 E falha 2) para comandar diretamente a saída.",
+        "C": "Usar um multiplexador que alterna entre as leituras dos dois sensores.",
+        "D": "Guardar o alarme em um flip-flop que seta apenas quando os dois sensores falham.",
+        "E": "Combinar habilitação E (falha 1 OU falha 2) e armazenar o alarme com reset prioritário."
+      },
+      "gabarito": "E",
+      "assunto": "Sistemas digitais",
+      "comentario": "A condição de disparo usa OU entre os sensores e E com a habilitação. O estado persistente exige memória. Com o reset prioritário, o circuito limpa o alarme mesmo se houver pedido de disparo no mesmo instante.",
+      "revisarPagina": "22"
+    },
+    {
+      "id": "GUIA-Q12",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "12",
+      "tema": "Tempo médio com cache",
+      "materia": "arquitetura",
+      "enunciado": "Um acesso à memória leva 4 ns em 80% dos casos, quando ocorre acerto na cache. Em 20% dos casos o dado não está na cache e o tempo total do acesso é 40 ns, já incluindo a consulta à cache. Qual é o tempo médio?",
+      "alternativas": {
+        "A": "4,0 ns.",
+        "B": "8,0 ns.",
+        "C": "11,2 ns.",
+        "D": "12,0 ns.",
+        "E": "22,0 ns."
+      },
+      "gabarito": "C",
+      "assunto": "Arquitetura de computadores",
+      "comentario": "Pondere cada tempo pela probabilidade correspondente. A média é 0,80 × 4 + 0,20 × 40 = 3,2 + 8 = 11,2 ns. Os 40 ns já incluem a consulta inicial.",
+      "revisarPagina": "23"
+    },
+    {
+      "id": "GUIA-Q13",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "13",
+      "tema": "Mutex e condição de corrida",
+      "materia": "sistemas-operacionais",
+      "enunciado": "Duas threads do mesmo processo incrementam um contador compartilhado. Cada incremento envolve ler, somar e escrever. Em alguns ensaios, o total final fica abaixo do esperado. Qual medida preserva o incremento como uma única operação lógica?",
+      "alternativas": {
+        "A": "Aumentar a prioridade das duas threads.",
+        "B": "Proteger toda a sequência de ler, somar e escrever com o mesmo mutex.",
+        "C": "Proteger apenas a leitura e liberar o mutex antes da soma e da escrita.",
+        "D": "Declarar o contador volátil e manter o acesso simultâneo.",
+        "E": "Proteger cada thread com um mutex diferente."
+      },
+      "gabarito": "B",
+      "assunto": "Sistemas operacionais",
+      "comentario": "Com o mesmo mutex na sequência inteira, a segunda thread lê o valor já atualizado depois que a primeira libera o acesso. Proteger só um passo ainda permite que ambas usem a mesma leitura.",
+      "revisarPagina": "23"
+    },
+    {
+      "id": "GUIA-Q14",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "14",
+      "tema": "Treino e teste no tempo",
+      "materia": "ciencia-dados",
+      "enunciado": "Um modelo deve prever falhas futuras com dados de sensores coletados em sequência. As entradas serão padronizadas. Qual procedimento simula o uso esperado e separa a avaliação do treinamento?",
+      "alternativas": {
+        "A": "Separar cronologicamente, ajustar a padronização no treino e aplicar a mesma transformação ao teste futuro.",
+        "B": "Ajustar a padronização na base inteira e só então separar treino e teste no tempo.",
+        "C": "Treinar no período mais recente e usar o período anterior como teste da previsão futura.",
+        "D": "Embaralhar janelas sobrepostas antes da separação, mesmo quando compartilham leituras.",
+        "E": "Reajustar o modelo com os rótulos do teste antes de medir o resultado final."
+      },
+      "gabarito": "A",
+      "assunto": "Ciência de dados",
+      "comentario": "O recorte cronológico reproduz a previsão de um período futuro. Ajustar a transformação só no treino mantém as estatísticas do teste fora do ajuste. Janelas sobrepostas também podem compartilhar informações.",
+      "revisarPagina": "26"
+    },
+    {
+      "id": "GUIA-Q15",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "15",
+      "tema": "Precisão e recall",
+      "materia": "ia",
+      "enunciado": "Num teste de classificação, houve 40 alarmes verdadeiros, 20 alarmes falsos, 10 falhas omitidas e 930 casos normais classificados corretamente. A equipe quer saber qual fração dos alertas indica falha real e qual fração das falhas reais foi detectada. Qual par apresenta esses valores?",
+      "alternativas": {
+        "A": "80% de precisão e aproximadamente 66,7% de recall.",
+        "B": "97% de precisão e 80% de recall.",
+        "C": "80% de precisão e 97% de recall.",
+        "D": "Aproximadamente 66,7% de precisão e 80% de recall.",
+        "E": "Aproximadamente 66,7% de precisão e 97% de recall."
+      },
+      "gabarito": "D",
+      "assunto": "Inteligência artificial",
+      "comentario": "Precisão = 40/(40 + 20) ≈ 66,7%. Recall = 40/(40 + 10) = 80%. A acurácia global é (40 + 930)/1.000 = 97%.",
+      "revisarPagina": "26"
+    },
+    {
+      "id": "GUIA-Q16",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "16",
+      "tema": "Aliasing na amostragem",
+      "materia": "sinais",
+      "enunciado": "Uma bancada amostra uma senoide de 800 Hz a 1.000 amostras/s sem filtragem. O espectro do sinal amostrado é visualizado entre 0 e 500 Hz. Qual é o efeito esperado e qual condição garante a amostragem de toda a faixa até 800 Hz?",
+      "alternativas": {
+        "A": "Componente aparente de 800 Hz. Qualquer taxa acima de 800 amostras/s atende.",
+        "B": "Componente aparente de 200 Hz. Uma taxa acima de 1.600 amostras/s atende.",
+        "C": "Componente aparente de 500 Hz. Uma taxa de 1.200 amostras/s atende.",
+        "D": "Componente aparente de 200 Hz. Aumentar só os bits do ADC corrige o problema.",
+        "E": "Componente aparente de 100 Hz. Diminuir a taxa para 800 amostras/s corrige o problema."
+      },
+      "gabarito": "B",
+      "assunto": "Processamento de sinais",
+      "comentario": "A senoide aparece em |1.000 − 800| = 200 Hz na faixa observada. Para preservar 800 Hz, adote fs > 2 × 800 = 1.600 amostras/s. Mais bits refinam a amplitude.",
+      "revisarPagina": "27"
+    },
+    {
+      "id": "GUIA-Q17",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "17",
+      "tema": "Ação integral do PID",
+      "materia": "controle",
+      "enunciado": "Uma esteira mantém uma velocidade um pouco abaixo da referência quando recebe uma carga constante. Ela já mede a velocidade e usa controle proporcional. Qual alteração atua diretamente sobre esse erro persistente, considerando ajuste da estabilidade e dos limites do atuador?",
+      "alternativas": {
+        "A": "Aumentar apenas a ação derivativa sobre o erro constante.",
+        "B": "Desativar a medição e fixar o comando no valor anterior.",
+        "C": "Adicionar ação integral para acumular o erro ao longo do tempo.",
+        "D": "Mudar a referência até igualá-la à velocidade incorreta medida.",
+        "E": "Introduzir atraso fixo antes de aplicar o comando."
+      },
+      "gabarito": "C",
+      "assunto": "Controle",
+      "comentario": "Enquanto o erro se mantém positivo, o termo integral pode aumentar o comando até reduzir o erro em regime. A derivada de um erro constante é zero. O ajuste precisa considerar estabilidade e saturação.",
+      "revisarPagina": "28"
+    },
+    {
+      "id": "GUIA-Q18",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "18",
+      "tema": "Sub-rede e gateway",
+      "materia": "redes",
+      "enunciado": "Uma estação tem IPv4 192.168.1.70/26 e só dispõe das rotas da rede local e do gateway padrão. Ela precisa enviar um pacote a 192.168.1.145. Qual é sua rede e como deve encaminhar o pacote?",
+      "alternativas": {
+        "A": "Rede 192.168.1.0/26. Envio local direto ao destino.",
+        "B": "Rede 192.168.1.64/26. Envio local direto ao destino.",
+        "C": "Rede 192.168.1.128/26. Envio pelo gateway padrão.",
+        "D": "Rede 192.168.1.0/26. Envio pelo gateway padrão.",
+        "E": "Rede 192.168.1.64/26. Envio pelo gateway padrão."
+      },
+      "gabarito": "E",
+      "assunto": "Redes de computadores",
+      "comentario": "Um /26 tem blocos de 64 endereços. O .70 está no bloco de .64 a .127. O .145 pertence ao bloco de .128 a .191. O próximo salto é o gateway padrão.",
+      "revisarPagina": "24"
+    },
+    {
+      "id": "GUIA-Q19",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "19",
+      "tema": "Permissões e backup",
+      "materia": "seguranca",
+      "enunciado": "Um laboratório quer reduzir o risco de alterações indevidas e conseguir restaurar versões anteriores dos registros após falha ou exclusão. Qual conjunto atende diretamente aos dois objetivos?",
+      "alternativas": {
+        "A": "Liberar escrita a toda a equipe e centralizar os arquivos numa unidade.",
+        "B": "Cifrar o tráfego e manter os dados em apenas um dispositivo.",
+        "C": "Permitir escrita por qualquer conta autenticada e manter só uma réplica síncrona.",
+        "D": "Restringir escrita a funções autorizadas e manter backups versionados com testes de restauração.",
+        "E": "Trocar as senhas dos usuários e compactar os dados no mesmo diretório."
+      },
+      "gabarito": "D",
+      "assunto": "Segurança e disponibilidade",
+      "comentario": "O controle de escrita reduz a superfície de alteração indevida. Backups versionados permitem retornar a estados anteriores. O ensaio de restauração verifica que as cópias são utilizáveis.",
+      "revisarPagina": "25"
+    },
+    {
+      "id": "GUIA-Q20",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "20",
+      "tema": "Lei de Amdahl",
+      "materia": "distribuidos",
+      "enunciado": "Um processamento leva 120 s em uma unidade. É possível dividir 75% do tempo igualmente entre três unidades. O restante é serial e a sobrecarga é desprezível. Qual é o novo tempo e o ganho de velocidade?",
+      "alternativas": {
+        "A": "60 s e 2×.",
+        "B": "40 s e 3×.",
+        "C": "30 s e 4×.",
+        "D": "90 s e aproximadamente 1,33×.",
+        "E": "50 s e 2,4×."
+      },
+      "gabarito": "A",
+      "assunto": "Computação paralela",
+      "comentario": "A parte serial leva 30 s. A parte paralelizável leva 90/3 = 30 s. O novo total é 60 s e o ganho é 120/60 = 2×.",
+      "revisarPagina": "25"
+    },
+    {
+      "id": "GUIA-Q21",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "21",
+      "tema": "ADC e PWM",
+      "materia": "sistemas-digitais",
+      "enunciado": "Um dispositivo tem ADC ideal de 10 bits, com faixa de entrada de 0 a 5,12 V. Ele também gera um PWM com período de 2 ms e ciclo ativo de 25%. Qual é o passo nominal do ADC e a duração da parte alta do PWM?",
+      "alternativas": {
+        "A": "50 mV e 0,5 ms.",
+        "B": "5 mV e 1,5 ms.",
+        "C": "0,5 mV e 0,25 ms.",
+        "D": "10 mV e 0,25 ms.",
+        "E": "5 mV e 0,5 ms."
+      },
+      "gabarito": "E",
+      "assunto": "Embarcados e aquisição",
+      "comentario": "O ADC tem 2¹⁰ = 1.024 códigos. A faixa dividida por 1.024 resulta em 0,005 V. O pulso alto dura 0,25 × 2 ms = 0,5 ms, ou 500 μs.",
+      "revisarPagina": "22"
+    },
+    {
+      "id": "GUIA-Q22",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "22",
+      "tema": "Handoff e roaming",
+      "materia": "redes",
+      "enunciado": "Um telefone em chamada é atendido por outra estação rádio base da mesma rede enquanto se desloca. Em outra situação, fora da cobertura da operadora de origem, o aparelho utiliza a rede de uma operadora parceira. Quais fenômenos ocorrem, respectivamente?",
+      "alternativas": {
+        "A": "Roaming e handoff.",
+        "B": "Handoff e TDMA.",
+        "C": "Handoff e roaming.",
+        "D": "Roaming e CDMA.",
+        "E": "Reuso de frequência e handoff."
+      },
+      "gabarito": "C",
+      "assunto": "Telecomunicações",
+      "comentario": "Handoff transfere o atendimento da conexão ativa. Roaming trata do acesso por uma rede visitada. TDMA e CDMA são formas de acesso ao meio.",
+      "revisarPagina": "24"
+    },
+    {
+      "id": "GUIA-Q23",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "23",
+      "tema": "Mediana e Sobel",
+      "materia": "sinais",
+      "enunciado": "Uma câmera de inspeção produz imagens com poucos pixels muito claros ou muito escuros, espalhados ao acaso. A equipe quer reduzir esse ruído impulsivo e depois destacar as bordas da peça. Qual sequência é a mais adequada?",
+      "alternativas": {
+        "A": "Sobel para reduzir impulsos, depois equalização para localizar bordas.",
+        "B": "Ampliação da imagem, depois conversão de RGB para cinza para localizar bordas.",
+        "C": "Equalização para eliminar impulsos, depois média para realçar bordas.",
+        "D": "Mediana local para reduzir impulsos, depois Sobel para estimar bordas.",
+        "E": "Soma de brilho para reduzir impulsos, depois limiar global como medida do gradiente."
+      },
+      "gabarito": "D",
+      "assunto": "Processamento de imagens",
+      "comentario": "A mediana usa a posição central dos valores e resiste a poucos pixels extremos. Sobel estima variações locais de intensidade associadas às bordas.",
+      "revisarPagina": "27"
+    },
+    {
+      "id": "GUIA-Q24",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "objetiva",
+      "numero": "24",
+      "tema": "Idempotência de eventos",
+      "materia": "distribuidos",
+      "enunciado": "Um aplicativo envia eventos de produção a um serviço. Se a confirmação se perder, o aplicativo reenvia o mesmo evento. O relatório deve contar cada evento lógico uma única vez. Que desenho atende a esse requisito?",
+      "alternativas": {
+        "A": "Gerar um identificador diferente a cada tentativa e somar todos os registros.",
+        "B": "Manter a mesma chave por evento e usar gravação atômica com unicidade por chave.",
+        "C": "Deduplicar apenas pelo valor medido, descartando leituras idênticas em instantes diferentes.",
+        "D": "Remover o reenvio e assumir que toda falta de confirmação representa entrega.",
+        "E": "Adicionar uma fila com mais consumidores e somar uma unidade para cada mensagem recebida."
+      },
+      "gabarito": "B",
+      "assunto": "Sistemas distribuídos",
+      "comentario": "A chave estável identifica o evento, enquanto a unicidade e a operação atômica evitam duplicação inclusive sob concorrência. Leituras iguais podem ser eventos legítimos distintos.",
+      "revisarPagina": "25"
+    }
+  ],
+  "discursivas": [
+    {
+      "id": "GUIA-D1",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "discursiva",
+      "numero": "D1",
+      "tema": "Tempo real em uma bancada",
+      "materia": "sistemas-operacionais",
+      "enunciado": "Uma bancada de teste precisa acender um LED em até 30 ms após uma entrada analógica ultrapassar um limiar e permanecer acima dele. No pior caso, espere até 20 ms pela próxima amostragem, 1 ms pela aquisição, 2 ms por um bloqueio do controle e 3 ms pela decisão e acionamento. Esses tempos são aditivos neste modelo. Uma tarefa de telemetria usa a UART e pode ser preemptada fora de seus trechos críticos.\n\na) Descreva o percurso da entrada até o LED. Indique como a prioridade do controle se relaciona com a telemetria.\nb) Calcule o pior tempo previsto e diga se o requisito é atendido. Refaça a conta se o bloqueio aumentar de 2 ms para 8 ms.\nc) Proponha um ensaio para medir a latência de ponta a ponta, indicando o que observar e qual é o critério de aprovação.",
+      "padrao": "a) O ADC digitaliza a entrada na leitura periódica. A tarefa de controle compara o valor ao limiar e escreve no GPIO do LED. Ela tem prioridade maior que a telemetria, que pode usar o último estado publicado e ceder a CPU fora dos trechos críticos.\n\nb) 20 + 1 + 2 + 3 = 26 ms, com 4 ms de folga. Com bloqueio de 8 ms, 20 + 1 + 8 + 3 = 32 ms, acima do prazo por 2 ms.\n\nc) Aplique um degrau de teste e use um osciloscópio para medir o intervalo entre a passagem da entrada pelo limiar e a mudança do pino do LED. Varie o instante de aplicação dentro do período e ative a telemetria durante o ensaio. Compare o maior tempo medido com 30 ms.\n\nA medição cobre os cenários ensaiados. Para justificar um limite de pior caso, explique também as hipóteses do cálculo e as fontes de bloqueio."
+    },
+    {
+      "id": "GUIA-D2",
+      "fonte": "guia",
+      "parte": "CE",
+      "tipo": "discursiva",
+      "numero": "D2",
+      "tema": "Do sensor ao painel de alertas",
+      "materia": "ia",
+      "enunciado": "Um sistema recebe dados de vibração de várias máquinas e aprende a identificar falhas. Durante quedas de conexão, alguns eventos são reenviados. O painel atual usa somente cores para distinguir normal, alerta e dados desatualizados. O objetivo é manter o histórico confiável e avisar operadores quando houver sinais de falha.\n\na) Proponha uma forma de identificar e gravar eventos que tolere reenvio e preserve eventos realmente diferentes.\nb) Descreva a separação de treino e teste e escolha uma métrica quando deixar uma falha passar for o erro mais grave.\nc) Indique uma mudança na interface e um teste com usuários para verificar se os três estados são reconhecidos.",
+      "padrao": "a) Gere uma chave única para cada evento no emissor, como identificador da origem com número de sequência persistente. Reenvie sempre com essa chave. Persista o evento com restrição de unicidade e operação atômica para que repetição e concorrência não dupliquem o histórico.\n\nb) Separe o passado para treino e um período posterior para teste, sem compartilhar leituras entre janelas dos dois conjuntos. Ajuste a preparação dos dados no treino. Use recall para medir a fração das falhas reais detectadas e acompanhe a precisão para observar alarmes falsos.\n\nc) Use rótulos e ícones junto com cor e exiba a idade ou o horário da última leitura. Peça a operadores que apontem o estado de máquinas em três cenários simulados e registre a taxa de acerto e o tempo de identificação.\n\nUma solução diferente pode receber a mesma pontuação quando mantém a unicidade, mede falhas omitidas e verifica a compreensão dos estados."
+    }
+  ]
+}

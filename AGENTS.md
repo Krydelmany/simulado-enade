@@ -324,6 +324,25 @@ tela `/poo/` é um teste diário com correção no fim e resultado local.
   quiser ver quem fez, é outra decisão (novo modo/tabela), não reaproveite o
   `respostas` do ENADE sem pensar nas métricas.
 
+### Guia do Matheus (`routes/guia/` + `static/guia/`)
+
+Guia de 41 páginas que o Matheus compartilhou na turma em 25/11/2026
+(original em `fontes/guia-matheus-2026.pdf`). Virou a seção `/guia/`, com duas
+abas: resumos/fórmulas e questões.
+
+- **Dados:** `app/static/guia/matheus.json` (18 capítulos, fórmulas,
+  respostas de memória, 24 objetivas e 2 discursivas) e `matheus.pdf` (o
+  original para abrir/baixar). **Fora** de `ARQUIVOS_BANCO`: não entra no
+  treino/estudo/simulado, no `stats`, no ranking nem no painel.
+- **Marcador:** os itens têm `fonte: 'guia'`. `rotuloQuestao` usa isso para
+  não chamar a questão de "ENADE 2026", e `Questao.svelte` troca "padrão
+  oficial do INEP" por "modelo do guia". O comentário do gabarito vem do
+  campo `comentario` e aparece sob a questão depois da resposta.
+- **Sem histórico:** as respostas ficam só na página (`respostas` local);
+  o placar é da sessão aberta. Não ligar ao `stats.js` sem decidir métricas.
+- **Home:** cartão "Novo · Do Matheus · 25/11", antes dos modos; também
+  entra na nav (aba "Guia") e no rodapé.
+
 ### Simulado (`src/lib/simulado.js` + `routes/simulado/+page.svelte`)
 
 - **Sorteio:**

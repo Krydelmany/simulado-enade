@@ -518,13 +518,13 @@
 					onclick={() => (mostrouPadrao = true)}
 					class="btn3d duo-accent w-full rounded-2xl p-3.5 font-bold"
 				>
-					Escrevi minha resposta — ver padrão oficial
+					{q.fonte === 'guia' ? 'Escrevi minha resposta — ver modelo do guia' : 'Escrevi minha resposta — ver padrão oficial'}
 				</button>
 			{:else}
 				<div in:fly={{ y: 8, duration: DUR }} class="rounded-2xl border border-line bg-panel p-4">
 					<p class="flex items-center gap-1.5 text-label font-bold text-ink-soft">
 						<SealCheck size={15} weight="bold" aria-hidden="true" />
-						Padrão de resposta do INEP
+						{q.fonte === 'guia' ? 'Modelo de resposta do guia' : 'Padrão de resposta do INEP'}
 					</p>
 					<p class="enunciado mt-2 max-w-[56ch] text-sm leading-relaxed"><TextoRico texto={q.padrao} /></p>
 				</div>
