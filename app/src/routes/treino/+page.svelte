@@ -667,6 +667,7 @@
 			: discursivas
 				? `Discursiva ${i + 1} de ${fila.length || '…'}`
 				: `${i + 1}ª questão`}
+		tituloCurto={revisao ? 'Revisão' : discursivas ? `${i + 1} de ${fila.length || '…'}` : `${i + 1}ª`}
 		detalhe={revisao
 			? `${certas}/${feitas}`
 			: discursivas

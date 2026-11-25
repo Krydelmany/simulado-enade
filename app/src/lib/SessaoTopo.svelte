@@ -1,7 +1,8 @@
 <script>
 	import { Lightning, X } from 'phosphor-svelte';
 
-	// `tituloCurto`: no celular o título divide a linha com o detalhe e virava "Quest…"
+	// No celular só cabem `tituloCurto` e a porcentagem: com o detalhe na mesma
+	// linha, o título das Discursivas sumia e o texto invadia o XP em 360 px.
 	let { titulo, tituloCurto = titulo, detalhe = '', progresso = 0, concluida = false, xp = 0, sequencia = 0, aoFechar } = $props();
 
 	// posição real da sessão em % (por questões respondidas/concluídas) —
@@ -28,7 +29,7 @@
 					<span class="sm:hidden">{tituloCurto}</span><span class="hidden sm:inline">{titulo}</span>
 				</p>
 				<p class="nums shrink-0 text-xs font-semibold text-ink-soft">
-					{#if detalhe}{detalhe} · {/if}{pct}%
+					{#if detalhe}<span class="hidden sm:inline">{detalhe} ·{' '}</span>{/if}{pct}%
 				</p>
 			</div>
 			<div class="relative mt-2">
