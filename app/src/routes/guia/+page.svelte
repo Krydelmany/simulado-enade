@@ -203,7 +203,7 @@
 			<div class="mt-4 space-y-4">
 				{#each objetivas as q (q.id)}
 					<div>
-						<Questao {q} onResponder={(r) => aoResponder(q, r)} />
+						<Questao {q} atalhos="foco" onResponder={(r) => aoResponder(q, r)} />
 						{#if respostas[q.id] && q.comentario}
 							<div class="mx-1 rounded-b-2xl border border-t-0 border-line bg-panel p-4">
 								<p class="text-label font-bold text-ink-soft">
@@ -227,7 +227,7 @@
 			</p>
 			<div class="mt-4 space-y-4">
 				{#each dados.discursivas as q (q.id)}
-					<Questao {q} onResponder={(r) => aoResponder(q, r)} />
+					<Questao {q} atalhos="foco" onResponder={(r) => aoResponder(q, r)} />
 				{/each}
 			</div>
 		{/if}

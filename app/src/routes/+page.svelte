@@ -1,7 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
 	import { carregarBanco, contagens, ehGerada } from '$lib/banco.js';
-	import { getXP, getParaRevisar } from '$lib/stats.js';
+	import { carregarSessao, getXP, getParaRevisar, historico } from '$lib/stats.js';
+	import { lerProva, lerUltimo } from '$lib/simulado.js';
 	import { resumoProgresso } from '$lib/resumo.js';
 	import { DATA_ENADE, diasAteEnade } from '$lib/enade.js';
 	import { nomeMateria } from '$lib/materias.js';
@@ -29,19 +30,38 @@
 	let fg = $state(0);
 	let ce = $state(0);
 	let disc = $state(0);
+	// Apenas as discursivas do Componente Específico (as 10 que abrem em /treino/?modo=discursivas)
+	let discCE = $state(0);
 	let geradas = $state(0);
 	let edicoes = $state([]);
 	let xp = $state(0);
 	let pronto = $state(false);
+	// progresso real do aluno — antes a home só mostrava XP, e XP não diz
+	// nada sobre quanto a pessoa estudou
 	let prog = $state(null);
 	let paraRevisar = $state([]);
+	// null até montar: no prerender a contagem ficaria congelada no dia do build
 	let dias = $state(null);
+	// Quem chega pelo link da home (e não pelo convite) estudava sem conta e
+	// nunca aparecia no painel do professor. Só depois de montar: no prerender
+	// não há localStorage para saber se a pessoa já entrou.
 	let convidarTurma = $state(false);
+
+	// Progresso REAL por modo (lido das sessões, histórico de ids e simulado salvo) —
+	// evita dar check verde a um modo por causa de respostas feitas em outro.
+	let estudoSessoes = $state(0);
+	let estudoPausadoFeitas = $state(0);
+	let treinoSessoes = $state(0);
+	let treinoPausadoFeitas = $state(0);
+	let discCEFeitas = $state(0);
+	let ultimoSimulado = $state(null);
+	let simuladoEmAndamento = $state(false);
 
 	let temProgresso = $derived(Boolean(prog?.temDados));
 	let pctAcerto = $derived(Math.round((prog?.precisaoNumero ?? 0) * 100));
 
-	// As 3 matérias de menor acerto, só com 3+ respostas
+	// As 3 matérias de menor acerto, só com 3+ respostas: com 1 ou 2 o
+	// percentual é sorte, e a lista mandaria o aluno estudar a coisa errada.
 	let reforcar = $derived(
 		(prog?.porMateria ?? [])
 			.filter((m) => m.nome && m.acertosNumero + m.errosNumero >= 3)
@@ -69,10 +89,32 @@
 		return `${d} de ${MESES[m - 1]}`;
 	})();
 
-	// Trilha viva de estudo mapeada sobre os modos e o progresso real do banco
-	// (sempre exatamente um nó ativo por vez, conforme o avanço real do aluno)
+	function lerSessaoEstudoFeitas() {
+		try {
+			const bruto = localStorage.getItem('enade-sessao-estudo');
+			if (!bruto) return 0;
+			const s = JSON.parse(bruto);
+			return Array.isArray(s?.log) ? s.log.filter((r) => !r.pulada).length : 0;
+		} catch {
+			return 0;
+		}
+	}
+
+	// Trilha viva mapeada nos dados reais de cada modo:
+	//  - `feito` só quando o próprio modo teve conclusão real;
+	//  - exatamente um nó `atual` (o primeiro ainda não concluído).
 	let etapasTrilha = $derived.by(() => {
-		const respondidas = prog?.respondidasNumero ?? 0;
+		const estudoFeito = estudoSessoes > 0;
+		const treinoFeito = treinoSessoes > 0;
+		const discFeito = discCE > 0 && discCEFeitas >= discCE;
+		const simuladoFeito = Boolean(ultimoSimulado);
+
+		const feitos = [estudoFeito, treinoFeito, discFeito, simuladoFeito];
+		const ativoIdx = feitos.findIndex((f) => !f);
+
+		const estadoDe = (idx, feito, padrao = 'aberto') =>
+			feito ? 'feito' : idx === ativoIdx ? 'atual' : padrao;
+
 		return [
 			{
 				passo: '01',
@@ -80,9 +122,16 @@
 				icone: Stairs,
 				titulo: 'Estudo por níveis',
 				desc: 'Sessões curtas de 10 questões por matéria — comece no Fácil, avance ao Difícil ou vá direto nas oficiais.',
-				selo: geradas ? `${geradas} guiadas · ${total} oficiais` : 'Sessões de 10',
-				cta: 'Escolher nível',
-				estado: !temProgresso ? 'atual' : 'feito'
+				selo: estudoFeito
+					? `${estudoSessoes} ${estudoSessoes === 1 ? 'sessão concluída' : 'sessões concluídas'}`
+					: estudoPausadoFeitas > 0
+						? `${estudoPausadoFeitas} ${estudoPausadoFeitas === 1 ? 'respondida' : 'respondidas'} em andamento`
+						: geradas
+							? `${geradas} guiadas · ${total} oficiais`
+							: 'Sessões de 10',
+				cta: estudoPausadoFeitas > 0 ? 'Retomar sessão' : 'Escolher nível',
+				estado: estadoDe(0, estudoFeito),
+				emAndamento: !estudoFeito && estudoPausadoFeitas > 0
 			},
 			{
 				passo: '02',
@@ -90,9 +139,14 @@
 				icone: InfinityIcon,
 				titulo: 'Treino livre contínuo',
 				desc: 'Fila embaralhada com o banco inteiro, filtro por matéria e correção imediata com passo a passo.',
-				selo: temProgresso ? `${respondidas} respondidas · ${prog.precisao}` : 'Correção na hora',
-				cta: temProgresso ? 'Continuar treino' : 'Começar treino',
-				estado: !temProgresso ? 'aberto' : respondidas < 45 ? 'atual' : 'feito'
+				selo: treinoFeito
+					? `${treinoSessoes} ${treinoSessoes === 1 ? 'sessão concluída' : 'sessões concluídas'}`
+					: treinoPausadoFeitas > 0
+						? `${treinoPausadoFeitas} ${treinoPausadoFeitas === 1 ? 'respondida' : 'respondidas'} em andamento`
+						: 'Correção na hora',
+				cta: treinoPausadoFeitas > 0 ? 'Continuar treino' : 'Começar treino',
+				estado: estadoDe(1, treinoFeito),
+				emAndamento: !treinoFeito && treinoPausadoFeitas > 0
 			},
 			{
 				passo: '03',
@@ -100,9 +154,15 @@
 				icone: NotePencil,
 				titulo: 'Discursivas do Componente Específico',
 				desc: 'Pratique no papel e compare cada ponto com o padrão oficial de resposta do INEP.',
-				selo: disc ? `${disc} questões oficiais` : 'Padrão INEP',
-				cta: 'Praticar escrita',
-				estado: respondidas >= 45 ? 'atual' : 'aberto'
+				selo:
+					discCEFeitas > 0 && discCE > 0
+						? `${discCEFeitas} de ${discCE} praticadas`
+						: discCE
+							? `${discCE} questões oficiais`
+							: 'Padrão INEP',
+				cta: discCEFeitas > 0 ? 'Continuar escrita' : 'Praticar escrita',
+				estado: estadoDe(2, discFeito),
+				emAndamento: !discFeito && discCEFeitas > 0
 			},
 			{
 				passo: '04',
@@ -110,9 +170,14 @@
 				icone: Timer,
 				titulo: 'Simulado ENADE 2026',
 				desc: 'A prova completa no formato da Portaria INEP nº 161: 15 FG, 30 CE e 1 discursiva em 4 horas.',
-				selo: 'Meta · 46 questões · 4 h',
-				cta: 'Abrir simulado',
-				estado: 'marco'
+				selo: ultimoSimulado
+					? `Último: ${ultimoSimulado.certas}/${ultimoSimulado.total} (${Math.round((ultimoSimulado.certas / ultimoSimulado.total) * 100)}%)`
+					: simuladoEmAndamento
+						? 'Prova em andamento'
+						: 'Meta · 46 questões · 4 h',
+				cta: simuladoEmAndamento ? 'Continuar prova' : ultimoSimulado ? 'Novo simulado' : 'Abrir simulado',
+				estado: estadoDe(3, simuladoFeito, 'marco'),
+				emAndamento: !simuladoFeito && simuladoEmAndamento
 			}
 		];
 	});
@@ -122,22 +187,48 @@
 		convidarTurma = nuvemLigada && !contaLocal();
 		try {
 			const b = await carregarBanco();
+			// `contagens` é a mesma função que o resto do app usa, então a home
+			// não pode mais divergir do que o treino está mostrando
 			const c = contagens(b);
 			total = c.total;
 			fg = c.fg;
 			ce = c.ce;
 			disc = c.discursivas;
+			const idsDiscCE = new Set(
+				b.filter((q) => !ehGerada(q) && q.parte === 'CE' && q.tipo === 'discursiva').map((q) => q.id)
+			);
+			discCE = idsDiscCE.size;
 			geradas = c.geradas;
 			edicoes = [...new Set(b.filter((q) => !ehGerada(q)).map((q) => q.edicao))].sort();
 			xp = getXP();
 			prog = resumoProgresso();
+
+			const hist = historico();
+			estudoSessoes = hist.sessoes.filter((s) => s.modo === 'estudo' && s.respondidas > 0).length;
+			treinoSessoes = hist.sessoes.filter((s) => s.modo === 'treino' && s.respondidas > 0).length;
+			estudoPausadoFeitas = lerSessaoEstudoFeitas();
+			const sTreino = carregarSessao();
+			treinoPausadoFeitas =
+				sTreino && (sTreino.modo ?? 'treino') === 'treino' && Array.isArray(sTreino.log)
+					? sTreino.log.filter((r) => !r.pulada).length
+					: 0;
+			discCEFeitas = hist.questoes.filter((q) => idsDiscCE.has(q.id) && q.respostas > 0).length;
+			ultimoSimulado = lerUltimo();
+			const provaSalva = lerProva();
+			simuladoEmAndamento = Boolean(provaSalva && !provaSalva.entregue);
+
+			// só o que ainda está no banco: uma questão que saiu (as anuladas)
+			// continuava contada aqui, e a revisão abria com menos do que o botão
+			// prometia
 			const ids = new Set(b.map((q) => q.id));
 			paraRevisar = getParaRevisar().filter((id) => ids.has(id));
 		} finally {
+			// sempre fecha o esqueleto — sem "loading eterno" nem tela em branco
 			pronto = true;
 		}
 	});
 
+	/** "2014, 2017, 2019 e 2023" */
 	function listar(xs) {
 		return xs.length > 1 ? `${xs.slice(0, -1).join(', ')} e ${xs.at(-1)}` : xs.join('');
 	}
@@ -195,15 +286,14 @@
 		</div>
 	</section>
 
+	<!-- Ao lado do hero: o progresso de quem já estudou; para quem chega agora, o que tem no banco. -->
 	<aside class="space-y-4" aria-label={temProgresso ? 'Seu progresso' : 'O que tem no banco'}>
 		{#if convidarTurma}
 			<a
 				href="/conta/"
 				class="superficie rise group flex items-center gap-3.5 rounded-3xl border-accent-border p-4 transition-colors hover:bg-accent-soft/60"
 			>
-				<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent-ink" aria-hidden="true">
-					<UsersThree size={20} weight="bold" />
-				</span>
+				<UsersThree size={24} weight="bold" class="shrink-0 text-accent-ink" aria-hidden="true" />
 				<span class="min-w-0 flex-1">
 					<span class="block font-display text-[15px] font-bold text-ink">Tem turma? Entre com o código</span>
 					<span class="block text-xs leading-snug text-ink-soft">Seu professor acompanha seu avanço e você participa do ranking.</span>
@@ -269,7 +359,7 @@
 						<ul class="mt-2.5 space-y-2.5">
 							{#each reforcar as m (m.nome)}
 								<li>
-									<a href="/treino/?materia={m.nome}" class="group block rounded-xl p-1.5 -mx-1.5 transition-colors hover:bg-panel">
+									<a href="/treino/?materia={m.nome}" class="group -mx-1.5 block rounded-xl p-1.5 transition-colors hover:bg-panel">
 										<div class="flex items-baseline justify-between gap-3 text-sm">
 											<span class="min-w-0 truncate font-semibold text-ink group-hover:text-accent-ink">{nomeMateria(m.nome)}</span>
 											<span class="nums shrink-0 text-xs font-bold text-ink-soft">{m.precisao}</span>
@@ -328,7 +418,7 @@
 	</aside>
 </div>
 
-<!-- 2. Trilha viva de estudo (caminho visual intuitivo mapeado nos modos reais) -->
+<!-- 2. Trilha viva de estudo (caminho visual intuitivo mapeado nos modos e dados reais) -->
 <section class="mt-10 lg:mt-12" aria-labelledby="titulo-trilha">
 	<div class="flex flex-wrap items-end justify-between gap-2">
 		<div>
@@ -338,7 +428,6 @@
 	</div>
 
 	<nav class="relative mt-5" aria-label="Trilha de estudo">
-		<!-- Linha vertebral contínua conectando os nós da trilha -->
 		<div
 			class="pointer-events-none absolute top-7 bottom-7 left-5 w-0.5 bg-line sm:left-6"
 			aria-hidden="true"
@@ -347,7 +436,7 @@
 		<ol class="space-y-3">
 			{#each etapasTrilha as etapa, k (etapa.href)}
 				<li class="rise relative pl-14 sm:pl-16" style="animation-delay: {k * 45}ms">
-					<!-- Nó circular da trilha -->
+					<!-- Nó funcional da trilha (círculo marca posição/estado na espinha vertical) -->
 					<span
 						aria-hidden="true"
 						class="absolute top-5 left-0 flex h-10 w-10 items-center justify-center rounded-full border-2 transition-transform sm:left-1 {etapa.estado === 'feito'
@@ -375,13 +464,17 @@
 					>
 						<div class="flex flex-wrap items-center gap-2">
 							<span class="nums text-xs font-bold text-ink-soft">Etapa {etapa.passo}</span>
-							{#if etapa.estado === 'atual'}
+							{#if etapa.estado === 'feito'}
+								<span class="rounded-full bg-ok-bg px-2.5 py-0.5 text-xs font-bold text-ok-fg">
+									Concluído
+								</span>
+							{:else if etapa.emAndamento}
+								<span class="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-bold text-accent-ink">
+									Em andamento
+								</span>
+							{:else if etapa.estado === 'atual'}
 								<span class="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-bold text-accent-ink">
 									Próximo passo
-								</span>
-							{:else if etapa.estado === 'feito'}
-								<span class="rounded-full bg-ok-bg px-2.5 py-0.5 text-xs font-bold text-ok-fg">
-									Em ritmo
 								</span>
 							{:else if etapa.estado === 'marco'}
 								<span class="rounded-full bg-milestone-soft px-2.5 py-0.5 text-xs font-bold text-milestone-ink">

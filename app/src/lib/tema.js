@@ -9,6 +9,8 @@
 
 const CHAVE = 'enade-tema';
 const CONSULTA_ESCURO = '(prefers-color-scheme: dark)';
+const COR_BARRA_CLARO = '#F5F7FC';
+const COR_BARRA_ESCURO = '#0F131E';
 
 function temDom() {
 	return typeof window !== 'undefined' && typeof document !== 'undefined';
@@ -57,7 +59,11 @@ function temaPreferido() {
 
 function definirClasse(modo) {
 	if (!temDom()) return;
-	document.documentElement.classList.toggle('dark', modo === 'dark');
+	const escuro = modo === 'dark';
+	document.documentElement.classList.toggle('dark', escuro);
+	// Mantém a barra do navegador mobile coerente com o tema escolhido, não só com o SO
+	const meta = document.querySelector('meta[name="theme-color"]');
+	if (meta) meta.setAttribute('content', escuro ? COR_BARRA_ESCURO : COR_BARRA_CLARO);
 }
 
 function persistir(modo) {
@@ -146,7 +152,9 @@ export function aoMudarTema(cb) {
 export function scriptAntiFlash() {
 	return (
 		`(function(){try{var t=localStorage.getItem('${CHAVE}');` +
-		`if(t==='dark'||(t!=='light'&&matchMedia('${CONSULTA_ESCURO}').matches)){` +
-		`document.documentElement.classList.add('dark')}}catch(e){}})();`
+		`var d=t==='dark'||(t!=='light'&&matchMedia('${CONSULTA_ESCURO}').matches);` +
+		`if(d){document.documentElement.classList.add('dark');` +
+		`var m=document.querySelector('meta[name="theme-color"]');` +
+		`if(m)m.setAttribute('content','${COR_BARRA_ESCURO}')}}catch(e){}})();`
 	);
 }

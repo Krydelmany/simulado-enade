@@ -108,7 +108,7 @@
 	<div
 		aria-hidden="true"
 		class="pointer-events-none fixed z-60 flex h-11 w-11 items-center justify-center rounded-full border shadow-md {armado
-			? 'border-accent bg-accent text-white'
+			? 'border-accent bg-accent text-accent-on'
 			: 'border-line bg-card text-ink'} {lado === 'esq' ? 'left-0' : 'right-0'}"
 		style="top: {Math.min(Math.max(y - 22, 8), altura - 52)}px; transform: translateX({sentido *
 			(Math.min(puxado, 88) * 0.75 - 44)}px); opacity: {Math.min(1, puxado / 32)};"

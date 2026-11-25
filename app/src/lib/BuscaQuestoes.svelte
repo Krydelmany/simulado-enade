@@ -100,7 +100,7 @@
 
 	{#if query.trim()}
 		<div
-			class="absolute inset-x-0 top-full z-30 mt-2 max-h-[62vh] overflow-y-auto rounded-3xl border border-line bg-card p-2 shadow-[0_18px_50px_-16px_rgba(20,33,61,0.45)]"
+			class="folha absolute inset-x-0 top-full z-30 mt-2 max-h-[62vh] overflow-y-auto rounded-3xl p-2 shadow-xl"
 			role="listbox"
 			aria-label="Resultados da busca"
 		>

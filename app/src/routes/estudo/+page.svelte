@@ -3,7 +3,6 @@
 	import { fly } from 'svelte/transition';
 	import Questao from '$lib/Questao.svelte';
 	import SessaoTopo from '$lib/SessaoTopo.svelte';
-	import BarraAcao from '$lib/BarraAcao.svelte';
 	import Contador from '$lib/Contador.svelte';
 	import DicaGestos from '$lib/DicaGestos.svelte';
 	import { DUR } from '$lib/motion.js';
@@ -65,6 +64,9 @@
 	let salvaE = $state(null);
 	let confirmaSaida = $state(false);
 	let zoomAberto = $state(false);
+	// true quando o aluno marcou uma alternativa mas ainda não clicou em Verificar
+	// (bloqueia avançar em questão pulada para não perder a seleção)
+	let selecaoPendente = $state(false);
 	// o banco chegou inteiro? (decide se a sessão pausada pode ser remontada)
 	let bancoInteiro = $state(false);
 	// sentido da última troca de questão: a nova entra deslizando por ele
@@ -99,8 +101,12 @@
 	let feitas = $derived(log.filter((r) => !r.pulada).length);
 	let certas = $derived(log.filter((r) => r.certa).length);
 	let parciais = $derived(log.filter((r) => r.parcial).length);
+	let respondidasSessao = $derived(respostas.filter(Boolean).length);
 	let ultima = $derived(i + 1 >= sessao.length);
-	let podeAvancar = $derived(!!respostas[i]);
+	let podeAvancar = $derived(!!respostas[i] && !selecaoPendente);
+	let atalhosQuestao = $derived(
+		nivel !== null && !confirmaSaida && !escolhaE && !fim && !zoomAberto
+	);
 	// quantas questões cada nível tem de verdade, já com o filtro de matéria
 	// (para não prometer 10 e entregar 3)
 	let contagens = $derived.by(() => {
@@ -401,8 +407,12 @@
 			return;
 		}
 		if (e.key === 'ArrowRight' || e.key === 'Enter') {
-			// com foco num botão/link, deixa a ativação nativa cuidar (evita avançar 2x)
-			if (e.key === 'Enter' && e.target instanceof HTMLElement && ['BUTTON', 'A'].includes(e.target.tagName))
+			// com foco num elemento interativo, deixa a ativação nativa cuidar (evita sequestrar links ou avançar 2x)
+			if (
+				e.key === 'Enter' &&
+				e.target instanceof Element &&
+				e.target.closest('a, button, summary, [role="button"]')
+			)
 				return;
 			if (!podeAvancar) return;
 			e.preventDefault();
@@ -447,6 +457,7 @@
 		</button>
 	</div>
 {:else if sessaoGuardada}
+	<!-- sem a escolha de nível: começar uma sessão nova apagaria a guardada -->
 	<div class="superficie rounded-3xl p-6 text-center" role="alert">
 		<p class="font-display text-lg font-bold text-ink">Parte das questões não carregou</p>
 		<p class="mt-1 text-sm text-ink-soft">
@@ -540,9 +551,7 @@
 		class="superficie rise flex w-full items-center gap-4 rounded-3xl border-milestone-border/70 p-4 text-left transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-accent active:scale-[0.99] sm:p-5"
 		style="animation-delay: 140ms"
 	>
-		<span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-milestone-soft text-milestone-ink" aria-hidden="true">
-			<SealCheck size={24} weight="bold" />
-		</span>
+		<SealCheck size={28} weight="bold" class="shrink-0 text-milestone" aria-hidden="true" />
 		<span class="min-w-0 flex-1">
 			<span class="block font-display text-[17px] font-bold tracking-tight text-ink">{NIVEIS[NIVEL_ENADE].nome}</span>
 			<span class="block text-sm text-ink-soft">{NIVEIS[NIVEL_ENADE].desc}</span>
@@ -553,10 +562,8 @@
 	<div class="folha curso-halo rounded-3xl px-5 pt-7 pb-8 text-center sm:p-8">
 		<p class="text-label font-bold text-accent-ink">Estudo · {NIVEIS[nivel].nome}{materiaFiltro !== 'todas' ? ` · ${nomeMateria(materiaFiltro)}` : ''}</p>
 		<h2 class="mt-1 font-display text-3xl font-extrabold tracking-tight text-ink">Sessão concluída</h2>
-		<p class="springin mx-auto mt-4 flex h-20 w-20 items-center justify-center rounded-full border border-milestone-border bg-milestone-soft">
-			<Trophy size={38} weight="fill" class="text-milestone" aria-hidden="true" />
-		</p>
-		<p class="nums mt-4 font-display text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
+		<Trophy size={44} weight="fill" class="springin mx-auto mt-4 text-milestone" aria-hidden="true" />
+		<p class="nums mt-3 font-display text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
 			<Contador valor={certas} /><span class="text-2xl font-bold text-ink-soft">/{sessao.length}</span>
 		</p>
 		<p class="mt-1 text-sm text-ink-soft">acertos nesta sessão</p>
@@ -610,7 +617,8 @@
 	<SessaoTopo
 		titulo={`Questão ${i + 1} de ${sessao.length}`}
 		detalhe={NIVEIS[nivel].nome}
-		progresso={sessao.length ? (i + 1) / sessao.length : 0}
+		progresso={sessao.length ? respondidasSessao / sessao.length : 0}
+		concluida={sessao.length > 0 && respondidasSessao >= sessao.length}
 		{xp}
 		aoFechar={sair}
 	/>
@@ -626,6 +634,8 @@
 				id="questoes"
 				texto="Deslize a questão para os lados para passar ou voltar. Da borda da tela para o meio, você volta à tela anterior."
 			/>
+			<!-- na última questão o gesto NÃO encerra (registrarSessao é
+			     irreversível): só cede, e o caminho é o "Ver resultado" -->
 			<div
 				{@attach deslizarQuestoes(() => ({
 					anterior: i > 0,
@@ -643,21 +653,20 @@
 							onRevisar={aoRevisar}
 							revisarInicial={getRevisar().includes(sessao[i].id)}
 							inicial={respostas[i]?.pulada ? null : (respostas[i] ?? null)}
+							atalhos={atalhosQuestao}
+							onContinuar={avancar}
+							rotuloContinuar={ultima ? 'Ver resultado' : 'Continuar'}
+							podeContinuarSemResponder={!!respostas[i]?.pulada}
+							onAnterior={voltar}
+							anteriorDesabilitado={i === 0}
+							mostrarXP={xpPing > 0}
+							{xpValor}
+							bind:selecaoPendente
 							bind:zoomAberto
 						/>
 					</div>
 				{/key}
 			</div>
-			<BarraAcao
-				rotulo={ultima ? 'Ver resultado' : 'Continuar'}
-				mostrarXP={xpPing > 0}
-				xpValor={xpValor}
-				desabilitado={!podeAvancar}
-				aviso="Selecione e verifique sua resposta (ou pule) para continuar."
-				onClick={avancar}
-				onAnterior={voltar}
-				anteriorDesabilitado={i === 0}
-			/>
 		{/if}
 	</div>
 {/if}

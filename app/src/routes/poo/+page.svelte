@@ -203,7 +203,7 @@
 	</p>
 {:else if !comecou}
 	<section class="folha curso-halo rounded-3xl px-5 pt-6 pb-8 sm:p-8">
-		<a href="/" class="inline-flex min-h-10 items-center gap-1.5 text-sm font-bold text-ink-soft hover:text-ink">
+		<a href="/" class="inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-ink-soft hover:text-ink">
 			<ArrowLeft size={16} weight="bold" aria-hidden="true" /> Início
 		</a>
 		<div class="mt-3 flex flex-wrap items-center gap-2">

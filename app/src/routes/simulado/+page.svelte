@@ -505,7 +505,7 @@
 	function corCorrigida(it) {
 		if (it.status === 'certa') return 'border-ok-solid bg-ok-solid text-white';
 		if (it.status === 'errada') return 'border-bad-solid bg-bad-solid text-white';
-		if (it.status === 'parcial') return 'border-milestone-border bg-milestone-soft text-milestone-ink';
+		if (it.status === 'parcial') return 'border-warn-line bg-warn-bg text-warn-fg';
 		if (it.status === 'pendente') return 'border-dashed border-ink-soft bg-card text-ink';
 		return 'border-line bg-track text-ink-soft';
 	}
@@ -552,6 +552,7 @@
 		</button>
 	</div>
 {:else if provaGuardada}
+	<!-- sem o início: "Começar simulado" aqui gravaria por cima da prova guardada -->
 	<div class="superficie rounded-3xl p-6 text-center" role="alert">
 		<p class="font-display text-lg font-bold text-ink">Parte das questões não carregou</p>
 		<p class="mt-1 text-sm text-ink-soft">
@@ -569,7 +570,7 @@
 				type="button"
 				onclick={pausar}
 				aria-label="Pausar a prova"
-				class="btn-suave flex h-10 items-center justify-center gap-1.5 rounded-full px-3.5 text-sm font-bold"
+				class="btn-suave flex min-h-11 items-center justify-center gap-1.5 rounded-full px-4 text-sm font-bold"
 			>
 				<Pause size={16} weight="fill" aria-hidden="true" /> Pausar
 			</button>
@@ -617,6 +618,7 @@
 			id="simulado"
 			texto="Deslize a questão para os lados para passar ou voltar. Da borda da tela para o meio, você volta à tela anterior. Puxe a barra de baixo para cima para abrir o cartão-resposta."
 		/>
+		<!-- na última questão, deslizar abre o cartão-resposta, como o CTA -->
 		<div
 			{@attach deslizarQuestoes(() => ({
 				anterior: i > 0,
@@ -630,6 +632,7 @@
 					<Questao
 						q={questoes[i]}
 						prova
+						atalhos={!cartaoAberto && !confirmaEntrega && !confirmaNova && !zoomAberto}
 						onMarcar={marcar}
 						onRascunho={escrever}
 						rascunhoInicial={prova.rascunho}
@@ -693,6 +696,7 @@
 			{NOME_BLOCO[blocoDe(i)]} · {i + 1} de {questoes.length}
 		</p>
 	</div>
+	<!-- na última questão o gesto só cede: não troca de tela -->
 	<div
 		{@attach deslizarQuestoes(() => ({
 			anterior: i > 0,
@@ -705,6 +709,7 @@
 			<div in:fly={{ x: 24 * direcao, duration: direcao ? DUR : 0 }}>
 				<Questao
 					q={questoes[i]}
+					atalhos={false}
 					onResponder={avaliarDiscursiva}
 					onRevisar={alternarRevisar}
 					revisarInicial={getRevisar().includes(questoes[i].id)}
@@ -751,10 +756,8 @@
 		<h1 class="mt-1 font-display text-3xl font-extrabold tracking-tight text-ink">
 			{prova.tempoEsgotado ? 'Tempo esgotado' : 'Prova entregue'}
 		</h1>
-		<p class="springin mx-auto mt-4 flex h-20 w-20 items-center justify-center rounded-full border border-milestone-border bg-milestone-soft">
-			<Trophy size={38} weight="fill" class="text-milestone" aria-hidden="true" />
-		</p>
-		<p class="nums mt-4 font-display text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
+		<Trophy size={44} weight="fill" class="springin mx-auto mt-4 text-milestone" aria-hidden="true" />
+		<p class="nums mt-3 font-display text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
 			<Contador valor={res.objetivas.certas} /><span class="text-2xl font-bold text-ink-soft">/{res.objetivas.total}</span>
 		</p>
 		<p class="nums mt-1 text-sm text-ink-soft">acertos nas objetivas · {pct}%</p>
@@ -788,6 +791,7 @@
 		</p>
 	{/if}
 
+	<!-- discursiva: o site não corrige texto; o aluno compara com o padrão do INEP -->
 	<div class="superficie mt-4 rounded-3xl p-5">
 		<p class="font-display text-lg font-bold text-ink">Discursiva</p>
 		{#if res.disc === 'pendente'}
@@ -1029,9 +1033,7 @@
 				href="/treino/"
 				class="superficie rise group flex items-center gap-4 rounded-3xl p-4 transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-accent active:scale-[0.99]"
 			>
-				<span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent-ink" aria-hidden="true">
-					<InfinityIcon size={22} weight="bold" aria-hidden="true" />
-				</span>
+				<InfinityIcon size={24} weight="bold" class="shrink-0 text-accent-ink" aria-hidden="true" />
 				<span class="min-w-0 flex-1">
 					<span class="block font-display text-base font-bold text-ink">Treino livre</span>
 					<span class="block text-sm text-ink-soft">Questões em sequência, com correção na hora.</span>
@@ -1042,9 +1044,7 @@
 				href="/estudo/"
 				class="superficie rise group flex items-center gap-4 rounded-3xl p-4 transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-accent active:scale-[0.99]"
 			>
-				<span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent-ink" aria-hidden="true">
-					<Stairs size={22} weight="bold" aria-hidden="true" />
-				</span>
+				<Stairs size={24} weight="bold" class="shrink-0 text-accent-ink" aria-hidden="true" />
 				<span class="min-w-0 flex-1">
 					<span class="block font-display text-base font-bold text-ink">Estudo por níveis</span>
 					<span class="block text-sm text-ink-soft">Sessões de 10 por matéria.</span>
@@ -1072,7 +1072,7 @@
 				<div class="flex items-center gap-2">
 					<h2 id="cartao-titulo" class="font-display text-xl font-extrabold tracking-tight text-ink">Cartão-resposta</h2>
 					<span class="flex-1"></span>
-					<button type="button" onclick={() => (cartaoAberto = false)} aria-label="Fechar" class="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-paper text-ink-soft hover:text-ink">
+					<button type="button" onclick={() => (cartaoAberto = false)} aria-label="Fechar" class="flex h-11 w-11 items-center justify-center rounded-full border border-line bg-paper text-ink-soft hover:text-ink">
 						<X size={18} weight="bold" aria-hidden="true" />
 					</button>
 				</div>
@@ -1122,6 +1122,7 @@
 					<button type="button" onclick={() => entregar(false)} class="btn-primario min-h-12 w-full rounded-full px-5 font-display text-base font-bold">
 						Entregar
 					</button>
+					<!-- o foco abre aqui: entregar não tem volta, e um Enter distraído não pode decidir isso -->
 					<button type="button" bind:this={refEntrega} onclick={() => (confirmaEntrega = false)} class="btn-suave min-h-12 w-full rounded-full px-5 font-display text-base font-bold">
 						Voltar à prova
 					</button>

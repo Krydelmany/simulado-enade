@@ -835,46 +835,44 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
 
 - **Mobile-first, com referência de 390 px.** No desktop, a nav fica no topo
   e a home tem 2 colunas; o quiz continua em uma coluna de leitura.
-- **Navegação:** header `sticky`; no desktop, abas com ícone + rótulo; no
-  celular, **menu hambúrguer** (fecha no toque fora, Escape e navegação) e
-  **sem tab bar inferior**. A ação do quiz é a `BarraAcao` **inline** no fim
-  da questão (Anterior + CTA), não uma barra fixa. O menu é um disclosure
-  global: não entra no `ligarCamadas`; fecha no `afterNavigate`.
+- **Navegação:** header `sticky` claro/escuro (`bg-card/90` com borda `border-line`), sem seletor de curso no topo; no desktop, abas em pílula com ícone + rótulo; no celular, **menu hambúrguer** (fecha no toque fora, Escape e navegação) e **sem tab bar inferior**. No Treino e no Estudo, o botão principal único (Verificar → gaveta de feedback → Continuar) fica **inline** no `<Questao>`, logo acima de "Como resolver"; no Simulado, a `BarraAcao` continua **inline** no fim da questão (com o gesto de puxar para o cartão-resposta). O menu é um disclosure global: não entra no `ligarCamadas`; fecha no `afterNavigate`.
 - **Só design tokens de `app.css`:**
-  - Os principais: `bg-paper`, `bg-card`, `bg-tile`, `bg-panel`,
-    `border-line`, `bg-bar`, `text-ink`, `text-ink-soft`, `accent*`, `ok-*`,
-    `bad-*`, `warn-*`. Para botões, `btn3d` + `duo-accent`/`duo-btn`.
+  - Os principais: `bg-paper`, `bg-card`, `bg-tile`, `bg-panel`, `border-line`, `border-line-strong`, `text-ink`, `text-ink-soft`, `accent*`, `milestone*`, `ok-*`, `bad-*`, `warn-*`, `tooltip*`. Para superfícies e botões: `.superficie`, `.folha`, `.curso-halo`, `.btn-primario`, `.btn-suave` e `.btn-escuro`.
   - **Nunca use `dark:` nas telas:** o `.dark` troca os tokens sozinho.
-  - Exceções que já estão em uso: `text-white` e `bg-white/N` sobre as faixas
-    `bg-bar` e o botão azul, `bg-black/50` no backdrop de modal e âmbar
-    no estado "parcial".
-  - Faixa navy do topo (hero, topo da sessão, resultado): classe `faixa` +
-    `blueprint`. No celular ela continua o header; a partir de 640 px vira
-    cartão solto. Não volte a usar `-mx-4 -mt-6` + `border-radius` inline.
+  - Exceções que já estão em uso: `text-white` sobre fundos semânticos sólidos (`ok-solid`, `bad-solid`) e `bg-black/50` no backdrop de modal. Sobre `bg-accent`, use sempre `text-accent-on` (no escuro o azul luminoso pede texto escuro para manter AA/AAA).
+  - Telas de abertura, topo de sessão e resumo usam `.folha` / `.superficie` (com `.curso-halo` nos destaques), sem faixa escura nem grade blueprint.
 - **Token novo entra em três lugares de `app.css`:** `--color-<nome>:
   var(--<nome>)` em `@theme inline`, o valor claro em `:root` e o escuro em
   `.dark`.
   - Não há script de contraste no repo: calcule a razão AA (≥ 4,5:1 para
     texto) nos dois temas.
-  - Uma troca de paleta também precisa alcançar o que está fora dos tokens:
-    o `theme-color` do `app.html`, as sombras `rgba(20,33,61,…)` (estão nas
-    rotas e no `Questao.svelte`: procure em todo o `src/`) e as texturas
-    `.dotgrid`/`.pauta`/`.blueprint`.
-- **Direção visual:** "folha de prova": papel, **caneta azul** de quem
-  responde e **caneta vermelha** de quem corrige. Cada cor tem um significado
-  só, e não se mistura:
-  - `accent` (azul): ação e "isto é seu" (botão principal, marcação na
-    prova, seleção, aba ativa, progresso, a sua linha no ranking);
-  - `bad-*` (vermelho): errou, alerta, tempo acabando, ação destrutiva;
-  - `ok-*` (verde): acertou; `warn-*` (âmbar): atenção, parcial.
+  - Uma troca de paleta também precisa alcançar `meta[name="theme-color"]`
+    em `app.html` e `tema.js`, além das sombras derivadas de `--accent` em
+    `app.css`.
+- **Direção visual e pacote por curso (`lib/curso.js` + `[data-curso]` em `app.css`):**
+  base calma de baixa fadiga (`#F5F7FC` / `#0F131E`) com pacote orgânico por
+  curso (fonte única de cores, sombras e tipografia de destaque em `app.css`).
+  O curso ativo é **Engenharia de Computação** (`Cobalto` + `Âmbar`); pacotes
+  de Direito e Enfermagem ficam prontos em `[data-curso]` para quando houver
+  banco real. Cada cor semântica tem um significado só e não muda entre cursos:
+  - `accent` (cor do curso — Cobalto em Eng. de Computação): ação, seleção,
+    marcação na prova, aba ativa, progresso e linha do aluno no ranking;
+  - `milestone` (Âmbar em Eng. de Computação): contagem regressiva, XP e
+    marcos de estudo;
+  - `ok-*` (verde): acertou / concluído;
+  - `bad-*` (terracota): errou, alerta, tempo acabando, ação destrutiva;
+  - `warn-*` (âmbar semântico): atenção e resposta parcial.
   Até out/2026 o acento era vermelho, e o aluno lia a própria linha do
-  ranking e a contagem de dias como erro. Não use `accent` para alerta.
+  ranking e a contagem de dias como erro. Não use `accent` nem `milestone`
+  para alerta ou estado parcial.
   - A marca (`lib/Marca.svelte`) e o `static/favicon.svg` são o mesmo
-    desenho, uma linha de cartão-resposta com a bolha marcada em azul.
-    Mudou um, mude o outro.
-  - Fontes: Archivo (`font-display`, títulos e números), Plus Jakarta Sans
-    (padrão do `body`) e JetBrains Mono (`font-code`). Outfit continua
-    importada como fallback do display: não a remova sem tirar o fallback.
+    desenho livre (sem caixa, quadrado ou círculo ao redor): um "E"
+    arquitetônico em degraus com marco âmbar flutuante. Mudou um, mude o
+    outro. Fora dos nós da trilha e das bolhas A–E, evite molduras/círculos
+    decorativos em volta de ícones.
+  - Fontes: Sora (`--font-curso-display` padrão em Eng. de Computação,
+    títulos e números), Inter (padrão do `body`) e JetBrains Mono
+    (`font-code`, restrita a blocos de código e relógio).
   - Títulos usam `text-hero/title/heading`, e etiquetas usam `text-label`
     (sans, caixa normal, sem espaçamento). **Nada de etiqueta em CAIXA ALTA,
     mono ou com `tracking-[…]`**: é a forma mais difícil de ler para quem

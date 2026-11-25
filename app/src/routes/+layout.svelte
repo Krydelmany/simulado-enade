@@ -39,8 +39,10 @@
 	];
 
 	// "Discursivas" é um modo dentro de /treino/ — a aba precisa saber qual
-	// dos dois está ativo.
+	// dos dois está ativo (antes, as duas ficariam apagadas ou acesas juntas).
 	let rotaAtual = $derived($page.url.pathname);
+	// A query lança no prerender (o build não conhece a busca); no servidor a
+	// aba fica sem destaque e o navegador corrige ao hidratar.
 	let modoTreino = $derived(
 		browser && rotaAtual === '/treino/'
 			? (new URLSearchParams($page.url.search).get('modo') ?? '')
@@ -52,17 +54,22 @@
 		return rotaAtual === t.href;
 	}
 
+	// No quiz, o rodapé e a borda de voltar são a tela; a ação é inline, então
+	// não existe barra fixa nem pb-32 reservado para ela.
 	let emQuiz = $derived(
 		$page.url.pathname.startsWith('/treino/') ||
 			$page.url.pathname.startsWith('/estudo/') ||
 			foco.quiz
 	);
 
+	// menu mobile; `cabecalho` serve para fechar ao toque fora.
 	let menuAberto = $state(false);
 	let cabecalho = $state(null);
 
 	let { children } = $props();
 
+	// no quiz, puxar a página para baixo no topo recarregava (pull-to-refresh
+	// do Chrome Android) e tirava o aluno da questão — ver `.sem-recarregar`
 	$effect(() => {
 		document.documentElement.classList.toggle('sem-recarregar', emQuiz);
 		return () => document.documentElement.classList.remove('sem-recarregar');
@@ -76,6 +83,7 @@
 		const pararTema = aoMudarTema((modo) => {
 			escuro = modo === 'dark';
 		});
+		// sem Supabase configurado no build, não faz nada (site 100% local)
 		const pararNuvem = iniciarNuvem();
 		return () => {
 			pararTema?.();
@@ -127,7 +135,7 @@
 				<span class="block font-display text-[15px] font-bold tracking-tight text-ink">
 					Simulado ENADE
 				</span>
-				<span class="block text-[11px] font-medium text-ink-soft">{curso.nomeCurto}</span>
+				<span class="block text-xs font-medium text-ink-soft">{curso.nomeCurto}</span>
 			</span>
 		</a>
 		<span class="flex-1"></span>
@@ -291,7 +299,8 @@
 	</footer>
 {/if}
 
-<!-- Aviso de DevTools aberto. Fica fora do fluxo e depois do rodapé. -->
+<!-- Aviso de DevTools aberto. Fica fora do fluxo e depois do rodapé: é a
+     última coisa da página, e só aparece quando o sinal dispara. -->
 <VigiaDevTools />
 <!-- Voltar puxando da borda, para aparelho sem esse gesto no sistema. -->
 <BordaVoltar ativo={emQuiz} />

@@ -3,7 +3,14 @@
 	import { puxarParaCima } from './gestos.js';
 
 	/**
-	 * Barra de ação INLINE, no fim da questão.
+	 * Barra de ação INLINE, no fim da questão (usada no Simulado).
+	 *
+	 * Antes era `position: fixed` no rodapé: no celular ela cobria a última
+	 * alternativa e obrigava o layout a reservar `pb-32`; no desktop ficava
+	 * longe do conteúdo. Agora é um cartão no fluxo.
+	 *
+	 * `onAnterior` é opcional: sem ele, o CTA ocupa a linha inteira (o
+	 * simulado usa os próprios controles no bloco de children).
 	 * Com `onPuxar`, puxar o cartão para cima (toque) chama a função — no
 	 * simulado, abre o cartão-resposta. Passe uma função ESTÁVEL.
 	 */
@@ -20,6 +27,7 @@
 		children
 	} = $props();
 
+	// id estável por instância para ligar o botão ao texto de orientação (a11y)
 	const idAviso = $props.id();
 </script>
 

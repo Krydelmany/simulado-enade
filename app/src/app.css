@@ -44,12 +44,13 @@
 	--color-warn-fg: var(--warn-fg);
 	--color-warn-line: var(--warn-line);
 
-	--font-display: 'Sora Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+	/* Tipografia de destaque controlada pelo token do curso (--font-curso-display) */
+	--font-display: var(--font-curso-display);
 	--font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
 	/* Mono restrito a blocos reais de código (.codeblock) e cronômetro de prova */
 	--font-code: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, monospace;
 
-	/* Escala tipográfica clara, escaneável e confortável em 360 px até desktop */
+	/* Escala tipográfica clara, escaneável e confortável de 360 px ao desktop */
 	--text-hero: clamp(1.95rem, 1.35rem + 2.4vw, 2.75rem);
 	--text-hero--line-height: 1.08;
 	--text-hero--letter-spacing: -0.025em;
@@ -65,39 +66,42 @@
 	--text-label--letter-spacing: 0;
 }
 
-/* Base visual calma de baixa fadiga + pacote orgânico de Engenharia da Computação:
+/* Base visual calma de baixa fadiga + pacote orgânico de Engenharia de Computação:
      accent     = Cobalto profundo (ação, seleção, trilha ativa, identidade do curso)
-     milestone  = Âmbar quente (ofensiva, XP, contagem regressiva e conquistas)
+     milestone  = Âmbar quente (XP, contagem regressiva e conquistas)
      ok         = Verde semântico universal (acerto e conclusão)
      bad        = Terracota controlado universal (erro educativo e alerta)
-     warn       = Âmbar de atenção (aviso, resposta parcial)
-   Contraste AA/AAA verificado nos dois temas (texto >= 4,5:1; controles >= 3:1). */
+     warn       = Âmbar semântico universal (aviso, resposta parcial)
+   Contraste AA/AAA conferido para os pares de texto (>= 4,5:1 nos dois temas);
+   `--line` faz divisões sutis de superfície e `--line-strong` reforça bordas
+   de botões e campos interativos. */
 :root {
 	--paper: #f5f7fc;
 	--card: #ffffff;
 	--panel: #eef2fa;
 	--tile: #e8eef9;
-	--line: #dce3f2;
-	--line-strong: #c2cde5;
+	--line: #d6dfef;
+	--line-strong: #8794b2;
 	--track: #dde4f4;
 	--skel: #e3e8f5;
 	--chip: #e6ecf8;
 	--ink: #11182b;
 	--ink-soft: #4b5773;
 
-	/* Engenharia da Computação (ativo por padrão) */
+	/* Engenharia de Computação (ativo por padrão) */
+	--font-curso-display: 'Sora Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
 	--accent: #2347b8;
 	--accent-hover: #1b3a9c;
 	--accent-on: #ffffff;
 	--accent-ink: #1d3da1;
 	--accent-soft: #e9effd;
-	--accent-border: #b4c7f7;
+	--accent-border: #8eabef;
 	--accent-bar: #2b53cf;
 
 	--milestone: #d97706;
 	--milestone-soft: #fef4e4;
 	--milestone-ink: #8c4a04;
-	--milestone-border: #f5cfa0;
+	--milestone-border: #e7b574;
 
 	--btn: #161f36;
 	--btn-fg: #ffffff;
@@ -108,20 +112,25 @@
 	--ok-bg: #e7f7ee;
 	--ok-fg: #0d663f;
 	--ok-solid: #15804d;
-	--ok-border: #9ee0be;
+	--ok-border: #7fd4aa;
 
 	--bad-bg: #fdf0ee;
 	--bad-fg: #a12b22;
 	--bad-solid: #c2362b;
-	--bad-border: #f2b8b3;
+	--bad-border: #eba39c;
 
 	--warn-bg: #fef6e6;
 	--warn-fg: #874705;
 	--warn-line: #d97706;
 
+	/* Sombras derivadas do acento do curso ativo (sem azul fixo) */
 	--shadow-card: 0 1px 2px rgba(17, 24, 43, 0.04), 0 8px 24px -16px rgba(17, 24, 43, 0.14);
-	--shadow-sheet: 0 2px 4px rgba(17, 24, 43, 0.04), 0 14px 36px -20px rgba(35, 71, 184, 0.16);
-	--shadow-btn: 0 1px 2px rgba(17, 24, 43, 0.08), 0 6px 16px -8px rgba(35, 71, 184, 0.42);
+	--shadow-sheet:
+		0 2px 4px rgba(17, 24, 43, 0.04),
+		0 14px 36px -20px color-mix(in srgb, var(--accent) 22%, rgba(17, 24, 43, 0.16));
+	--shadow-btn:
+		0 1px 2px rgba(17, 24, 43, 0.08),
+		0 6px 16px -8px color-mix(in srgb, var(--accent) 48%, transparent);
 }
 
 .dark {
@@ -129,27 +138,27 @@
 	--card: #171d2c;
 	--panel: #131926;
 	--tile: #1e263a;
-	--line: rgba(210, 224, 255, 0.11);
-	--line-strong: rgba(210, 224, 255, 0.22);
+	--line: rgba(210, 224, 255, 0.14);
+	--line-strong: rgba(210, 224, 255, 0.34);
 	--track: #263047;
 	--skel: #1d2538;
 	--chip: #222c42;
 	--ink: #eff3fc;
 	--ink-soft: #9ba7c2;
 
-	/* Engenharia da Computação (escuro: cobalto luminoso com texto escuro AA/AAA no botão) */
+	/* Engenharia de Computação (escuro: cobalto luminoso com texto escuro AA/AAA no botão) */
 	--accent: #6d93ff;
 	--accent-hover: #83a4ff;
 	--accent-on: #0b1226;
 	--accent-ink: #97b4ff;
 	--accent-soft: rgba(109, 147, 255, 0.16);
-	--accent-border: rgba(109, 147, 255, 0.42);
+	--accent-border: rgba(109, 147, 255, 0.45);
 	--accent-bar: #6d93ff;
 
 	--milestone: #f5a623;
 	--milestone-soft: rgba(245, 166, 35, 0.16);
 	--milestone-ink: #ffca6b;
-	--milestone-border: rgba(245, 166, 35, 0.36);
+	--milestone-border: rgba(245, 166, 35, 0.4);
 
 	--btn: #eff3fc;
 	--btn-fg: #0f131e;
@@ -160,36 +169,41 @@
 	--ok-bg: rgba(34, 197, 123, 0.15);
 	--ok-fg: #6ce5ac;
 	--ok-solid: #117a49;
-	--ok-border: rgba(74, 222, 152, 0.38);
+	--ok-border: rgba(74, 222, 152, 0.42);
 
 	--bad-bg: rgba(235, 87, 74, 0.16);
 	--bad-fg: #fca8a1;
 	--bad-solid: #c2362b;
-	--bad-border: rgba(248, 128, 118, 0.4);
+	--bad-border: rgba(248, 128, 118, 0.44);
 
 	--warn-bg: rgba(245, 166, 35, 0.15);
 	--warn-fg: #ffd178;
 	--warn-line: #f5a623;
 
 	--shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 10px 28px -18px rgba(0, 0, 0, 0.65);
-	--shadow-sheet: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 16px 40px -22px rgba(0, 0, 0, 0.78);
-	--shadow-btn: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 20px -10px rgba(109, 147, 255, 0.35);
+	--shadow-sheet:
+		0 1px 0 rgba(255, 255, 255, 0.05) inset,
+		0 16px 40px -22px color-mix(in srgb, var(--accent) 18%, rgba(0, 0, 0, 0.8));
+	--shadow-btn:
+		0 1px 2px rgba(0, 0, 0, 0.35),
+		0 8px 20px -10px color-mix(in srgb, var(--accent) 38%, transparent);
 }
 
-/* Pacotes prontos para futuros cursos (ativados quando houver banco real via data-curso).
-   As cores semânticas (--ok-*, --bad-*, --warn-*) permanecem inalteradas. */
+/* Pacotes prontos para futuros cursos (ativados via data-curso quando houver banco real).
+   Cores semânticas (--ok-*, --bad-*, --warn-*) permanecem inalteradas. */
 :root[data-curso='direito'] {
+	--font-curso-display: 'Lora Variable', Georgia, 'Times New Roman', serif;
 	--accent: #7e1d34;
 	--accent-hover: #651629;
 	--accent-on: #ffffff;
 	--accent-ink: #72192e;
 	--accent-soft: #faeaee;
-	--accent-border: #e5b7c2;
+	--accent-border: #d99aa9;
 	--accent-bar: #8c233c;
 	--milestone: #b7791f;
 	--milestone-soft: #fdf5e6;
 	--milestone-ink: #7c4e0b;
-	--milestone-border: #ecd09e;
+	--milestone-border: #e1ba78;
 }
 
 .dark[data-curso='direito'] {
@@ -198,26 +212,27 @@
 	--accent-on: #1e080e;
 	--accent-ink: #f3a6b8;
 	--accent-soft: rgba(229, 131, 154, 0.16);
-	--accent-border: rgba(229, 131, 154, 0.4);
+	--accent-border: rgba(229, 131, 154, 0.44);
 	--accent-bar: #e5839a;
 	--milestone: #e8b85c;
 	--milestone-soft: rgba(232, 184, 92, 0.16);
 	--milestone-ink: #f7d68d;
-	--milestone-border: rgba(232, 184, 92, 0.36);
+	--milestone-border: rgba(232, 184, 92, 0.4);
 }
 
 :root[data-curso='enfermagem'] {
+	--font-curso-display: 'DM Sans Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
 	--accent: #0f6b6e;
 	--accent-hover: #0b5659;
 	--accent-on: #ffffff;
 	--accent-ink: #0d5e61;
 	--accent-soft: #e6f5f5;
-	--accent-border: #a6dbdd;
+	--accent-border: #87cccf;
 	--accent-bar: #137c80;
 	--milestone: #c75b40;
 	--milestone-soft: #fdf0ec;
 	--milestone-ink: #8d3722;
-	--milestone-border: #f3c1b3;
+	--milestone-border: #e9a693;
 }
 
 .dark[data-curso='enfermagem'] {
@@ -226,12 +241,12 @@
 	--accent-on: #061c1d;
 	--accent-ink: #84dfe1;
 	--accent-soft: rgba(86, 201, 204, 0.16);
-	--accent-border: rgba(86, 201, 204, 0.4);
+	--accent-border: rgba(86, 201, 204, 0.44);
 	--accent-bar: #56c9cc;
 	--milestone: #f3947a;
 	--milestone-soft: rgba(243, 148, 122, 0.16);
 	--milestone-ink: #fdb7a3;
-	--milestone-border: rgba(243, 148, 122, 0.36);
+	--milestone-border: rgba(243, 148, 122, 0.4);
 }
 
 body {
@@ -243,8 +258,10 @@ body {
 	overflow-wrap: anywhere;
 }
 
-/* Trecho de código do enunciado: mono, com quebra em vez de rolagem própria.
-   `display:block` porque o elemento é <code> (phrasing) para caber no <p>. */
+/* Trecho de código do enunciado: mono, com quebra em vez de rolagem própria —
+   o overflow horizontal em 390 px vem justamente de linha de código comprida.
+   `display:block` porque o elemento é <code> (phrasing) para caber no <p> da
+   questão sem o parser fechar o parágrafo. */
 .codeblock {
 	display: block;
 	margin: 0.65rem 0;
@@ -297,7 +314,7 @@ html.dark {
 	color-scheme: dark;
 }
 
-/* Superfícies e botões táteis (intuitividade Brilliant, sem peso 3D Duolingo) */
+/* Superfícies e botões táteis */
 @layer components {
 	.superficie {
 		background: var(--card);
@@ -361,7 +378,7 @@ html.dark {
 		transform: translateY(0) scale(0.985);
 	}
 
-	/* Motivo sutil do curso no canto de cartões de destaque (não é grade blueprint) */
+	/* Halo atmosférico sutil derivado do acento e marco do curso ativo */
 	.curso-halo {
 		background-image:
 			radial-gradient(260px 180px at 100% 0%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 72%),

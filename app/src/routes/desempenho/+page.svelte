@@ -149,7 +149,7 @@
 	</section>
 {:else}
 	<section class="folha curso-halo rounded-3xl px-5 pt-6 pb-8 sm:p-8">
-		<a href="/conta/" class="inline-flex min-h-10 items-center gap-1.5 text-sm font-bold text-ink-soft hover:text-ink">
+		<a href="/conta/" class="inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-ink-soft hover:text-ink">
 			<ArrowLeft size={16} weight="bold" aria-hidden="true" /> Conta e turma
 		</a>
 		<p class="mt-2 text-label font-bold text-accent-ink">{atual.rotulo} · simulado em papel</p>

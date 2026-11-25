@@ -4,6 +4,7 @@
 	import { nomeMateria } from './materias.js';
 	import { DUR, REDUCED } from './motion.js';
 	import {
+		ArrowRight,
 		Atom,
 		BookmarkSimple,
 		CaretDown,
@@ -37,9 +38,17 @@
 	 *
 	 * `prova` é o cartão-resposta do simulado: marcar não corrige — a letra
 	 * fica marcada, pode ser trocada ou desmarcada (`onMarcar(id, letra|null)`),
-	 * e a discursiva vira um campo de texto (`onRascunho`).
-	 * Fora do modo `prova`, objetivas seguem o fluxo guiado:
-	 *   Selecionar alternativa → Verificar resposta → Veredito + Como resolver → Continuar.
+	 * e a discursiva vira um campo de texto (`onRascunho`). A correção só
+	 * aparece depois da entrega, com esta mesma questão fora do modo prova e
+	 * `respostaAluno` mostrando o que o aluno escreveu.
+	 *
+	 * Fora do modo `prova`, objetivas seguem um botão principal único:
+	 *   Selecionar alternativa → Verificar resposta → Veredito + Continuar (acima de "Como resolver").
+	 *
+	 * `atalhos`: `true` (padrão na questão única), `false` (quando há modal/camada
+	 * aberta na rota — impede marcar/verificar por trás do overlay) ou `'foco'`
+	 * (em listas com várias questões simultâneas, como o Guia — só reage quando o
+	 * foco do teclado está dentro deste cartão).
 	 */
 	let {
 		q,
@@ -53,16 +62,31 @@
 		rascunhoInicial = '',
 		onRascunho = null,
 		respostaAluno = '',
+		// a resolução abre sozinha depois da resposta no treino e no estudo;
+		// na correção do simulado ela vem fechada, a um toque
 		resolucaoAberta = true,
+		atalhos = true,
+		// ação única de avanço/volta no Treino e no Estudo (perto do feedback,
+		// acima de "Como resolver" — evita dois botões grandes na mesma tela)
+		onContinuar = null,
+		rotuloContinuar = 'Continuar',
+		podeContinuarSemResponder = false,
+		onAnterior = null,
+		anteriorDesabilitado = false,
+		mostrarXP = false,
+		xpValor = 10,
+		selecaoPendente = $bindable(false),
 		zoomAberto = $bindable(false)
 	} = $props();
 
+	// lê o estado inicial DENTRO de uma função: é intencional capturar uma vez
+	// (o componente é remontado por questão via {#key}) e evita o aviso do compilador
 	function estadoInicial() {
 		return {
 			escolha: inicial?.escolha ?? null,
 			respondida: !!inicial?.respondida,
 			mostrouPadrao: !!inicial?.mostrouPadrao,
-			auto: inicial?.auto ?? null,
+			auto: inicial?.auto ?? null, // discursiva: 'certa' | 'parcial' | 'errada'
 			revisar: !!revisarInicial,
 			rascunho: rascunhoInicial || ''
 		};
@@ -76,11 +100,25 @@
 	let mostrouPadrao = $state(ini.mostrouPadrao);
 	let auto = $state(ini.auto);
 	let revisar = $state(ini.revisar);
+	// só rola/foca o veredito quando o aluno ACABOU de responder — nunca ao restaurar
 	let avaliadaAgora = $state(false);
 	let veredito = $state(null);
+	let artigo = $state(null);
 
+	// expõe seleção ainda não verificada para a rota bloquear Enter, Continuar
+	// e deslize quando o aluno volta numa questão pulada e marca uma alternativa
+	$effect(() => {
+		selecaoPendente = !prova && q.tipo === 'objetiva' && !respondida && selecionada !== null;
+		return () => {
+			selecaoPendente = false;
+		};
+	});
+
+	// "Como resolver": só depois da resposta (ou, na discursiva, depois de ver
+	// o padrão) e nunca na prova do simulado
 	const podeResolver = $derived(!prova && (respondida || mostrouPadrao));
-	let resolucao = $state(null);
+	let resolucao = $state(null); // null = ainda não carregou, ou a questão não tem
+	// lido uma vez, como `inicial`: a questão é remontada a cada troca ({#key})
 	// svelte-ignore state_referenced_locally
 	let resolucaoVisivel = $state(resolucaoAberta);
 	$effect(() => {
@@ -106,6 +144,7 @@
 	const anulada = $derived(q.gabarito === 'ANULADA');
 	const acertou = $derived(respondida && !anulada && escolha === q.gabarito);
 
+	// categoria do veredito — dirige cor e ícone num só lugar
 	const categoria = $derived(
 		!respondida
 			? null
@@ -116,7 +155,7 @@
 					: acertou
 						? 'certa'
 						: q.tipo === 'objetiva' && !escolha
-							? 'branco'
+							? 'branco' // correção do simulado: questão sem marcação
 							: 'errada'
 	);
 
@@ -136,6 +175,7 @@
 		escolha = selecionada;
 		respondida = true;
 		avaliadaAgora = true;
+		// questão anulada = ponto para todos: qualquer alternativa conta como acerto
 		const certa = anulada || escolha === q.gabarito;
 		onResponder?.({ id: q.id, certa, anulada, escolha });
 	}
@@ -161,6 +201,7 @@
 		onPular?.(q.id);
 	}
 
+	// 'ok' | 'erro' por 2 s depois de copiar; o ícone e o aviso mudam juntos
 	let copia = $state(null);
 	let timerCopia;
 	async function copiar() {
@@ -176,6 +217,7 @@
 		onRevisar?.(q.id, revisar);
 	}
 
+	// teclado nunca deve sequestrar quem está digitando num campo
 	function ehCampo(t) {
 		return (
 			t instanceof HTMLElement &&
@@ -184,23 +226,32 @@
 	}
 
 	function aoTecla(e) {
+		// com a imagem ampliada, o Esc só fecha o zoom (a página ignora via `zoomAberto`)
 		if (zoomAberto) {
 			if (e.key === 'Escape') zoomAberto = false;
 			return;
 		}
+		// com camada/modal aberta na rota (ou atalho desligado), ignora o teclado
+		if (!atalhos) return;
+		if (atalhos === 'foco' && (!artigo || !artigo.contains(document.activeElement))) return;
 		if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
 		if (ehCampo(e.target)) return;
 		if (q.tipo !== 'objetiva' || respondida) return;
 
-		// Atalho silencioso: Enter verifica a alternativa selecionada (fora do modo prova)
+		// Atalho silencioso: Enter verifica a alternativa selecionada (fora do modo prova).
+		// Se o foco estiver na própria alternativa já selecionada (caso clique + Enter),
+		// verifica imediatamente; em links, resumos ou outros botões, deixa o nativo agir.
 		if (e.key === 'Enter' && !prova && selecionada) {
-			if (e.target instanceof HTMLElement && e.target.tagName === 'BUTTON') return;
+			const alvo = e.target instanceof Element ? e.target : null;
+			const altFocada = alvo?.closest('button[data-alt-letra]');
+			const naSelecionada = altFocada?.getAttribute('data-alt-letra') === selecionada;
+			if (!naSelecionada && alvo?.closest('a, button, summary, [role="button"]')) return;
 			e.preventDefault();
 			verificar();
 			return;
 		}
 
-		// Atalhos silenciosos de teclado: A–E ou 1–5
+		// atalhos de cartão-resposta: A–E ou 1–5
 		const mapa = {
 			a: 'A',
 			b: 'B',
@@ -214,12 +265,17 @@
 			'5': 'E'
 		};
 		const letra = mapa[String(e.key).toLowerCase()];
+		// `alternativas_visuais` entra junto: as letras existem, só não têm
+		// texto — sem isso o teclado não responderia essas questões.
 		if (letra && (q.alternativas[letra] || q.alternativas_visuais)) {
 			e.preventDefault();
 			escolher(letra);
 		}
 	}
 
+	// `zoomAberto` é a FONTE do zoom (não um espelho): a página precisa
+	// fechá-lo pelo voltar do sistema (ver `camadas.svelte.js`), e lê o mesmo
+	// valor para o Esc não encerrar a sessão junto. Ao desmontar, fecha.
 	$effect(() => () => {
 		zoomAberto = false;
 	});
@@ -231,17 +287,25 @@
 		};
 	});
 
+	// ao responder, garante que o veredito E o botão Continuar logo abaixo fiquem visíveis na tela
 	$effect(() => {
 		if (!avaliadaAgora || !veredito) return;
 		const r = veredito.getBoundingClientRect();
+		const barra = artigo?.querySelector('[data-barra-acao]') ?? document.querySelector('[data-barra-acao]');
+		const rb = barra?.getBoundingClientRect();
 		const h = window.innerHeight || 0;
-		const barra = document.querySelector('[data-barra-acao]');
-		const folga = (barra?.getBoundingClientRect().height || 0) + 12;
-		const fora = r.top < 8 || r.bottom > h - folga;
+		const baixo = Math.max(r.bottom, rb?.bottom ?? r.bottom);
+		const fora = r.top < 8 || baixo > h - 12;
 		veredito.focus({ preventScroll: true });
-		if (fora) veredito.scrollIntoView({ block: 'center', behavior: REDUCED ? 'auto' : 'smooth' });
+		if (fora) {
+			(rb && rb.bottom > h - 12 ? barra : veredito).scrollIntoView({
+				block: 'center',
+				behavior: REDUCED ? 'auto' : 'smooth'
+			});
+		}
 	});
 
+	// leitor de tela: a alternativa sem as marcas de bloco de código
 	const MARCA_BLOCO = new RegExp('\x60{3}\\w*\\n?', 'g');
 	function rotuloAlt(letra) {
 		const texto = q.alternativas[letra];
@@ -249,11 +313,12 @@
 		return 'Alternativa ' + letra + ': ' + texto.replace(MARCA_BLOCO, '');
 	}
 
-	// Reportar erro (D13): abre no próprio cartão, sem modal
+	// Reportar erro (D13): abre no próprio cartão, sem modal — um modal seria
+	// mais uma camada para o voltar do sistema em três rotas.
 	let reporteAberto = $state(false);
 	let motivo = $state('');
 	let detalhe = $state('');
-	let reporte = $state('');
+	let reporte = $state(''); // '' | 'enviando' | 'ok'
 	let erroReporte = $state('');
 
 	async function enviarReporte(ev) {
@@ -274,6 +339,7 @@
 	function classeAlt(letra) {
 		const base =
 			'flex w-full items-start gap-3.5 rounded-2xl border-2 px-4 py-3.5 text-left text-[15px] leading-relaxed transition-[border-color,background-color,color,transform,opacity] duration-150 active:scale-[0.992] disabled:cursor-default ';
+		// marcação no acento do curso; verde/vermelho ficam só para a correção
 		if (prova) {
 			return (
 				base +
@@ -297,6 +363,7 @@
 	}
 
 	function classeBolha(letra) {
+		// bolha de cartão-resposta: preenche no acento ao marcar/selecionar
 		const base =
 			'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 font-display text-sm font-bold transition-colors duration-150 ';
 		if (prova) {
@@ -328,7 +395,7 @@
 
 <svelte:window onkeydown={aoTecla} />
 
-<article class="folha rounded-3xl p-5 sm:p-7">
+<article bind:this={artigo} class="folha rounded-3xl p-4 sm:p-6">
 	<div class="flex flex-wrap items-center gap-2">
 		<p class="text-label font-bold text-ink-soft">
 			{rotuloQuestao(q)}
@@ -340,6 +407,7 @@
 			</p>
 		{/if}
 		{#if ehGerada(q)}
+			<!-- gerada não é prova: o que importa ao aluno é o nível, não a parte -->
 			<p class="rounded-full border border-line bg-panel px-2.5 py-0.5 text-xs font-semibold text-ink-soft">
 				Nível {q.dificuldade === 'Média' ? 'médio' : (q.dificuldade ?? '').toLowerCase()}
 			</p>
@@ -348,14 +416,20 @@
 				{q.parte === 'FG' ? 'Formação Geral' : q.parte}
 			</p>
 		{/if}
+		<!-- os dois botões andam juntos: soltos, quando as etiquetas enchiam a
+		     linha o de revisar caía sozinho para a esquerda da linha de baixo -->
 		<div class="ml-auto flex items-center gap-1.5">
+			<!-- copia enunciado, figura e alternativas (sem gabarito) para colar fora
+			     do site. Fica fora da PROVA do simulado: lá ele facilitaria colar a
+			     questão em outro lugar no meio do teste; na correção, depois da
+			     entrega (a mesma questão sem `prova`), ele volta -->
 			{#if !prova}
 				<button
 					type="button"
 					onclick={copiar}
 					aria-label="Copiar questão"
 					title={copia === 'erro' ? 'O navegador não deixou copiar' : 'Copiar questão'}
-					class="flex h-10 w-10 items-center justify-center rounded-full border border-line transition-colors active:scale-95 {copia ===
+					class="flex h-11 w-11 items-center justify-center rounded-full border border-line transition-colors active:scale-95 {copia ===
 					'ok'
 						? 'border-ok-border bg-ok-bg text-ok-fg'
 						: copia === 'erro'
@@ -380,7 +454,7 @@
 				aria-pressed={revisar}
 				aria-label={revisar ? 'Remover marcação de revisar' : 'Marcar para revisar depois'}
 				title={revisar ? 'Remover marcação de revisar' : 'Marcar para revisar depois'}
-				class="flex h-10 w-10 items-center justify-center rounded-full border transition-colors active:scale-95 {revisar
+				class="flex h-11 w-11 items-center justify-center rounded-full border transition-colors active:scale-95 {revisar
 					? 'border-milestone-border bg-milestone-soft text-milestone-ink'
 					: 'border-line bg-paper text-ink-soft hover:border-line-strong hover:text-ink'}"
 			>
@@ -460,6 +534,14 @@
 		{/if}
 		<div class="mt-5 space-y-2.5" role="group" aria-label="Alternativas">
 			{#if q.alternativas_visuais}
+				<!--
+					Estas questões têm as opções A–E desenhadas dentro da figura
+					(trecho de código, fórmula, diagrama): não há texto para cada
+					alternativa. Sem um cartão por letra a questão ficava sem
+					nenhum botão — o aluno via a imagem e não tinha como
+					responder, e a sessão travava. Aqui cada letra vira um
+					cartão-resposta sozinho, que é o que a prova pede.
+				-->
 				<p class="flex items-start gap-2 rounded-2xl border border-dashed border-line bg-panel p-3 text-sm text-ink-soft">
 					<Info size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 					<span>As alternativas estão na imagem. Marque a letra correspondente abaixo.</span>
@@ -470,6 +552,7 @@
 					<div class="rise" style="animation-delay: {k * 30}ms">
 						<button
 							type="button"
+							data-alt-letra={letra}
 							onclick={() => escolher(letra)}
 							disabled={respondida}
 							aria-pressed={prova ? letra === escolha : !respondida ? letra === selecionada : undefined}
@@ -486,6 +569,7 @@
 								{/if}
 							</span>
 							{#if q.alternativas[letra]?.includes('```')}
+								<!-- alternativa que é código (2023-CE-Q15, Q30): bloco mono, como no enunciado -->
 								<span class="min-w-0 flex-1"><TextoRico texto={q.alternativas[letra]} /></span>
 							{:else if q.alternativas[letra]}
 								<span class="enunciado min-w-0 flex-1">{q.alternativas[letra]}</span>
@@ -498,20 +582,46 @@
 			{/each}
 		</div>
 
-		<!-- Etapa de verificação guiada (Selecionar → Verificar → Continuar), fora do modo prova -->
+		<!-- Ação única antes da verificação (fora do modo prova): evita dois botões grandes na tela -->
 		{#if !prova && !respondida}
-			<div class="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center">
-				<button
-					type="button"
-					onclick={verificar}
-					disabled={!selecionada}
-					class="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold {selecionada
-						? 'btn-primario'
-						: 'cursor-not-allowed border border-line bg-panel text-ink-soft'}"
-				>
-					{selecionada ? `Verificar resposta (${selecionada})` : 'Selecione uma alternativa'}
-				</button>
-				{#if onPular}
+			<div data-barra-acao class="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+				{#if onAnterior}
+					<button
+						type="button"
+						onclick={onAnterior}
+						disabled={anteriorDesabilitado}
+						class="btn-suave min-h-12 rounded-full px-5 font-display text-sm font-bold disabled:pointer-events-none disabled:opacity-40"
+					>
+						Anterior
+					</button>
+				{/if}
+				{#if selecionada}
+					<button
+						type="button"
+						onclick={verificar}
+						class="btn-primario flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
+					>
+						Verificar resposta ({selecionada})
+					</button>
+				{:else if podeContinuarSemResponder && onContinuar}
+					<button
+						type="button"
+						onclick={onContinuar}
+						class="btn-primario flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
+					>
+						<span>{rotuloContinuar}</span>
+						<ArrowRight size={17} weight="bold" aria-hidden="true" />
+					</button>
+				{:else}
+					<button
+						type="button"
+						disabled
+						class="flex min-h-12 flex-1 cursor-not-allowed items-center justify-center rounded-full border border-line bg-panel px-6 font-display text-base font-bold text-ink-soft"
+					>
+						Selecione uma alternativa
+					</button>
+				{/if}
+				{#if onPular && !podeContinuarSemResponder}
 					<button
 						type="button"
 						onclick={pular}
@@ -525,6 +635,7 @@
 	{:else}
 		<div class="mt-5">
 			{#if prova}
+				<!-- na prova o padrão não aparece: o aluno escreve, e a comparação vem na correção -->
 				<label class="block">
 					<span class="text-sm font-bold text-ink">Sua resposta</span>
 					<span class="mt-0.5 block text-xs text-ink-soft">Fica só neste aparelho. Na correção, você compara com o padrão do INEP.</span>
@@ -543,6 +654,13 @@
 					</div>
 				{/if}
 				{#if q.padrao_placeholder}
+					<!--
+						O gabarito desta discursiva é um desenho que o INEP publica
+						como figura. Sem a figura, mostrar "padrão oficial" seria
+						mostrar uma frase vazia — e pior, mandar o aluno se
+						autoavaliar contra o vazio e dar nota de comparação com
+						nada. Melhor dizer a verdade e deixar a autoavaliação de fora.
+					-->
 					<p class="flex items-start gap-2 rounded-2xl border border-dashed border-line bg-panel p-3.5 text-sm text-ink-soft">
 						<Info size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 						<span>
@@ -578,7 +696,7 @@
 							<button
 								type="button"
 								onclick={() => autoavaliar(0.5)}
-								class="flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-milestone-border bg-milestone-soft px-3 py-2.5 text-sm font-bold text-milestone-ink transition-transform active:scale-[0.98]"
+								class="flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-warn-line/50 bg-warn-bg px-3 py-2.5 text-sm font-bold text-warn-fg transition-transform active:scale-[0.98]"
 							>
 								<MinusCircle size={17} weight="bold" aria-hidden="true" /> Meio
 							</button>
@@ -592,77 +710,136 @@
 						</div>
 					{/if}
 				{/if}
+
+				{#if !respondida && (onAnterior || onPular || (podeContinuarSemResponder && onContinuar))}
+					<div data-barra-acao class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+						{#if onAnterior}
+							<button
+								type="button"
+								onclick={onAnterior}
+								disabled={anteriorDesabilitado}
+								class="btn-suave min-h-12 rounded-full px-5 font-display text-sm font-bold disabled:pointer-events-none disabled:opacity-40"
+							>
+								Anterior
+							</button>
+						{/if}
+						{#if podeContinuarSemResponder && onContinuar}
+							<button
+								type="button"
+								onclick={onContinuar}
+								class="btn-primario flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
+							>
+								<span>{rotuloContinuar}</span>
+								<ArrowRight size={17} weight="bold" aria-hidden="true" />
+							</button>
+						{:else if onPular}
+							<button
+								type="button"
+								onclick={pular}
+								class="btn-suave flex min-h-12 flex-1 items-center justify-center gap-1.5 rounded-full px-5 text-sm font-bold text-ink-soft hover:text-ink"
+							>
+								<SkipForward size={16} weight="bold" aria-hidden="true" /> Pular questão
+							</button>
+						{/if}
+					</div>
+				{/if}
 			{/if}
 		</div>
-
-		{#if onPular && !respondida}
-			<button
-				type="button"
-				onclick={pular}
-				class="btn-suave mt-3 flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full py-2.5 text-sm font-bold text-ink-soft hover:text-ink"
-			>
-				<SkipForward size={16} weight="bold" aria-hidden="true" /> Pular questão
-			</button>
-		{/if}
 	{/if}
 
-	<!-- Gaveta de feedback subindo com o veredito -->
+	<!-- Gaveta de feedback: `gaveta-subir` no contêiner e `shake` no cartão interno
+	     para que uma animação nunca sobrescreva a outra ao errar. O botão Continuar
+	     fica colado aqui, acima de "Como resolver", sempre visível após verificar. -->
 	{#if respondida}
-		<div
-			bind:this={veredito}
-			tabindex="-1"
-			class="gaveta-subir mt-5 rounded-2xl border p-4 {categoria === 'certa'
-				? 'border-ok-border bg-ok-bg text-ok-fg'
-				: categoria === 'errada'
-					? 'shake border-bad-border bg-bad-bg text-bad-fg'
-					: 'border-warn-line/40 bg-warn-bg text-warn-fg'}"
-			role="status"
-			aria-live="polite"
-		>
-			<div class="flex items-start gap-3">
-				<span class="relative mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center" aria-hidden="true">
-					{#if categoria === 'certa' && avaliadaAgora}
-						{#each FAISCAS as f, idx (idx)}
-							<span
-								class="faisca pointer-events-none absolute h-1.5 w-1.5 rounded-full {f.cor}"
-								style="--fx: {f.x}; --fy: {f.y}"
-							></span>
-						{/each}
-					{/if}
-					{#if categoria === 'anulada'}
-						<Info size={22} weight="fill" />
-					{:else if categoria === 'certa'}
-						<CheckCircle size={22} weight="fill" />
-					{:else if categoria === 'parcial' || (q.tipo === 'objetiva' && !escolha)}
-						<MinusCircle size={22} weight="fill" />
-					{:else}
-						<XCircle size={22} weight="fill" />
-					{/if}
-				</span>
-				<div class="min-w-0 flex-1 text-sm leading-relaxed">
-					{#if categoria === 'anulada'}
-						<p class="font-display font-bold">Questão anulada pelo INEP</p>
-						<p class="mt-0.5 opacity-90">Ponto garantido para todas as alternativas.</p>
-					{:else if categoria === 'certa'}
-						<p class="font-display font-bold">Resposta certa!</p>
-						<p class="mt-0.5 opacity-90">
-							{#if q.tipo === 'objetiva'}Gabarito: <strong>{q.gabarito}</strong>.{:else}Você marcou como certa na autoavaliação.{/if}
-						</p>
-					{:else if categoria === 'parcial'}
-						<p class="font-display font-bold">Quase lá</p>
-						<p class="mt-0.5 opacity-90">Você avaliou como parcial — vale conferir os detalhes do padrão.</p>
-					{:else if q.tipo === 'objetiva' && !escolha}
-						<p class="font-display font-bold">Em branco</p>
-						<p class="mt-0.5 opacity-90">Gabarito oficial: <strong>{q.gabarito}</strong>.</p>
-					{:else if q.tipo === 'objetiva'}
-						<p class="font-display font-bold">Não foi dessa vez</p>
-						<p class="mt-0.5 opacity-90">Gabarito: <strong>{q.gabarito}</strong> · você marcou <strong>{escolha}</strong>.</p>
-					{:else}
-						<p class="font-display font-bold">Vale revisar o padrão</p>
-						<p class="mt-0.5 opacity-90">Você avaliou como errada — releia o modelo oficial acima.</p>
-					{/if}
+		<div class="gaveta-subir mt-4">
+			<div
+				bind:this={veredito}
+				tabindex="-1"
+				class="rounded-2xl border p-4 {categoria === 'certa'
+					? 'border-ok-border bg-ok-bg text-ok-fg'
+					: categoria === 'errada'
+						? (avaliadaAgora ? 'shake ' : '') + 'border-bad-border bg-bad-bg text-bad-fg'
+						: 'border-warn-line/40 bg-warn-bg text-warn-fg'}"
+				role="status"
+				aria-live="polite"
+			>
+				<div class="flex items-start gap-3">
+					<span class="relative mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center" aria-hidden="true">
+						{#if categoria === 'certa' && avaliadaAgora}
+							{#each FAISCAS as f, idx (idx)}
+								<span
+									class="faisca pointer-events-none absolute h-1.5 w-1.5 rounded-full {f.cor}"
+									style="--fx: {f.x}; --fy: {f.y}"
+								></span>
+							{/each}
+						{/if}
+						{#if categoria === 'anulada'}
+							<Info size={22} weight="fill" />
+						{:else if categoria === 'certa'}
+							<CheckCircle size={22} weight="fill" />
+						{:else if categoria === 'parcial' || (q.tipo === 'objetiva' && !escolha)}
+							<MinusCircle size={22} weight="fill" />
+						{:else}
+							<XCircle size={22} weight="fill" />
+						{/if}
+					</span>
+					<div class="min-w-0 flex-1 text-sm leading-relaxed">
+						{#if categoria === 'anulada'}
+							<p class="font-display font-bold">Questão anulada pelo INEP</p>
+							<p class="mt-0.5 opacity-90">Ponto garantido para todas as alternativas.</p>
+						{:else if categoria === 'certa'}
+							<p class="font-display font-bold">Resposta certa!</p>
+							<p class="mt-0.5 opacity-90">
+								{#if q.tipo === 'objetiva'}Gabarito: <strong>{q.gabarito}</strong>.{:else}Você marcou como certa na autoavaliação.{/if}
+							</p>
+						{:else if categoria === 'parcial'}
+							<p class="font-display font-bold">Quase lá</p>
+							<p class="mt-0.5 opacity-90">Você avaliou como parcial — vale conferir os detalhes do padrão.</p>
+						{:else if q.tipo === 'objetiva' && !escolha}
+							<!-- só acontece na correção do simulado: a questão ficou sem marcação -->
+							<p class="font-display font-bold">Em branco</p>
+							<p class="mt-0.5 opacity-90">Gabarito oficial: <strong>{q.gabarito}</strong>.</p>
+						{:else if q.tipo === 'objetiva'}
+							<p class="font-display font-bold">Não foi dessa vez</p>
+							<p class="mt-0.5 opacity-90">Gabarito: <strong>{q.gabarito}</strong> · você marcou <strong>{escolha}</strong>.</p>
+						{:else}
+							<p class="font-display font-bold">Vale revisar o padrão</p>
+							<p class="mt-0.5 opacity-90">Você avaliou como errada — releia o modelo oficial acima.</p>
+						{/if}
+					</div>
 				</div>
 			</div>
+
+			{#if onContinuar}
+				<div data-barra-acao class="relative mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
+					{#if mostrarXP}
+						<span
+							class="xp-float nums pointer-events-none absolute -top-10 right-2 rounded-full border border-milestone-border bg-milestone-soft px-3 py-1 text-xs font-extrabold text-milestone-ink shadow-sm"
+							role="status"
+						>
+							+{xpValor} XP
+						</span>
+					{/if}
+					{#if onAnterior}
+						<button
+							type="button"
+							onclick={onAnterior}
+							disabled={anteriorDesabilitado}
+							class="btn-suave min-h-12 rounded-full px-5 font-display text-sm font-bold disabled:pointer-events-none disabled:opacity-40"
+						>
+							Anterior
+						</button>
+					{/if}
+					<button
+						type="button"
+						onclick={onContinuar}
+						class="btn-primario flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
+					>
+						<span>{rotuloContinuar}</span>
+						<ArrowRight size={17} weight="bold" aria-hidden="true" />
+					</button>
+				</div>
+			{/if}
 		</div>
 	{/if}
 
@@ -674,6 +851,7 @@
 				aria-expanded={resolucaoVisivel}
 				class="flex min-h-11 w-full flex-wrap items-center gap-2 px-4 py-3 text-left"
 			>
+				<!-- autoria no topo esquerdo: quem escreveu e se alguém conferiu -->
 				<span
 					class="flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold {resolucao.auditado
 						? 'bg-ok-bg text-ok-fg'

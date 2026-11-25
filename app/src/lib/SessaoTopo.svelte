@@ -1,9 +1,13 @@
 <script>
 	import { Lightning, X } from 'phosphor-svelte';
 
-	let { titulo, detalhe = '', progresso = 0, xp = 0, aoFechar } = $props();
+	let { titulo, detalhe = '', progresso = 0, concluida = false, xp = 0, aoFechar } = $props();
 
+	// posição real da sessão em % (por questões respondidas/concluídas) —
+	// substitui a etiqueta decorativa fixa antiga e evita pintar 100% verde
+	// antes de o aluno responder a última questão.
 	let pct = $derived(Math.min(100, Math.max(0, Math.round(progresso * 100))));
+	let verde = $derived(concluida && pct >= 100);
 </script>
 
 <div class="superficie rounded-3xl px-4 py-3.5 sm:px-5 sm:py-4">
@@ -12,7 +16,7 @@
 			type="button"
 			onclick={aoFechar}
 			aria-label="Encerrar sessão"
-			class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line bg-paper text-ink-soft transition-colors hover:border-line-strong hover:text-ink active:scale-95"
+			class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line bg-paper text-ink-soft transition-colors hover:border-line-strong hover:text-ink active:scale-95"
 		>
 			<X size={19} weight="bold" aria-hidden="true" />
 		</button>
@@ -33,7 +37,7 @@
 				aria-valuenow={pct}
 			>
 				<div
-					class="h-full rounded-full transition-[width,background-color] duration-300 ease-out {pct >= 100
+					class="h-full rounded-full transition-[width,background-color] duration-300 ease-out {verde
 						? 'bg-ok-solid'
 						: 'bg-accent-bar'}"
 					style="width: {pct}%"

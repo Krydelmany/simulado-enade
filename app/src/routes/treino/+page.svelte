@@ -4,7 +4,6 @@
 	import { page } from '$app/stores';
 	import Questao from '$lib/Questao.svelte';
 	import SessaoTopo from '$lib/SessaoTopo.svelte';
-	import BarraAcao from '$lib/BarraAcao.svelte';
 	import BuscaQuestoes from '$lib/BuscaQuestoes.svelte';
 	import Contador from '$lib/Contador.svelte';
 	import DicaGestos from '$lib/DicaGestos.svelte';
@@ -62,6 +61,9 @@
 	let confirmaFiltro = $state(null);
 	let confirmaSaida = $state(false);
 	let zoomAberto = $state(false);
+	// true quando o aluno marcou uma alternativa mas ainda não clicou em Verificar
+	// (bloqueia avançar em questão pulada para não perder a seleção)
+	let selecaoPendente = $state(false);
 	// sentido da última troca de questão: a nova entra deslizando por ele
 	// (1 = veio da direita, -1 = da esquerda, 0 = sem animação)
 	let direcao = $state(0);
@@ -144,8 +146,12 @@
 	// contadores derivados do log — assim navegar para frente/voltar nunca conta duas vezes
 	let feitas = $derived(log.filter((r) => !r.pulada).length);
 	let certas = $derived(log.filter((r) => r.certa).length);
+	let respondidasVolta = $derived(respostas.filter(Boolean).length);
 	let ultima = $derived(i + 1 >= fila.length);
-	let podeAvancar = $derived(!!respostas[i]);
+	let podeAvancar = $derived(!!respostas[i] && !selecaoPendente);
+	let atalhosQuestao = $derived(
+		!confirmaSaida && !confirmaFiltro && !fimVolta && !escolha && !encerrada && !zoomAberto
+	);
 	// estatísticas só da volta atual, para o aviso de fim de volta
 	let resumoVolta = $derived.by(() => {
 		const l = log.filter((r) => (r.volta ?? 0) === volta);
@@ -450,7 +456,7 @@
 		// pessoa estudou, mesmo tendo respondido 40 questões
 		if (feitas > 0) {
 			registrarSessao({
-				modo: revisao ? 'revisao' : 'treino',
+				modo: modoAtual,
 				nivel: null,
 				respondidas: feitas,
 				certas,
@@ -513,8 +519,12 @@
 			return;
 		}
 		if (e.key === 'ArrowRight' || e.key === 'Enter') {
-			// com foco num botão/link, deixa a ativação nativa cuidar (evita avançar 2x)
-			if (e.key === 'Enter' && e.target instanceof HTMLElement && ['BUTTON', 'A'].includes(e.target.tagName))
+			// com foco num elemento interativo, deixa a ativação nativa cuidar (evita sequestrar links ou avançar 2x)
+			if (
+				e.key === 'Enter' &&
+				e.target instanceof Element &&
+				e.target.closest('a, button, summary, [role="button"]')
+			)
 				return;
 			if (!podeAvancar) return;
 			e.preventDefault();
@@ -592,10 +602,8 @@
 			{revisao ? 'Revisão de erros' : discursivas ? 'Discursivas · Componente Específico' : 'Treino livre'}
 		</p>
 		<h2 class="mt-1 font-display text-3xl font-extrabold tracking-tight text-ink">Sessão concluída</h2>
-		<p class="springin mx-auto mt-4 flex h-20 w-20 items-center justify-center rounded-full border border-milestone-border bg-milestone-soft">
-			<Trophy size={38} weight="fill" class="text-milestone" aria-hidden="true" />
-		</p>
-		<p class="nums mt-4 font-display text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
+		<Trophy size={44} weight="fill" class="springin mx-auto mt-4 text-milestone" aria-hidden="true" />
+		<p class="nums mt-3 font-display text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
 			<Contador valor={certas} /><span class="text-2xl font-bold text-ink-soft">/{feitas}</span>
 		</p>
 		<p class="mt-1 text-sm text-ink-soft">acertos nesta sessão</p>
@@ -654,7 +662,8 @@
 			: discursivas
 				? 'Componente Específico'
 				: `${certas}/${feitas} certas${volta > 0 ? ` · volta ${volta + 1}` : ''}`}
-		progresso={fila.length ? (i + 1) / fila.length : 0}
+		progresso={fila.length ? respondidasVolta / fila.length : 0}
+		concluida={fila.length > 0 && respondidasVolta >= fila.length}
 		{xp}
 		aoFechar={sair}
 	/>
@@ -692,6 +701,9 @@
 			</div>
 		</div>
 	{:else}
+		<!-- Busca: campo fixo no topo, acima do filtro de matéria. Some quando a
+		     sessão acabou ou está pausada — nesses estados não há fila para pular.
+		     Nas discursivas também: são 10, e a lista misturava objetivas. -->
 		{#if !discursivas}
 			<div class="relative mt-4 mb-3">
 				<BuscaQuestoes {banco} aoPular={pularPara} />
@@ -779,23 +791,20 @@
 							onRevisar={aoRevisar}
 							revisarInicial={getRevisar().includes(fila[i].id)}
 							inicial={respostas[i]?.pulada ? null : (respostas[i] ?? null)}
+							atalhos={atalhosQuestao}
+							onContinuar={avancar}
+							rotuloContinuar={ultima ? 'Concluir volta' : 'Continuar'}
+							podeContinuarSemResponder={!!respostas[i]?.pulada}
+							onAnterior={voltar}
+							anteriorDesabilitado={i === 0}
+							mostrarXP={xpPing > 0}
+							{xpValor}
+							bind:selecaoPendente
 							bind:zoomAberto
 						/>
 					</div>
 				{/key}
 			</div>
-			<BarraAcao
-				rotulo={ultima ? 'Concluir volta' : 'Continuar'}
-				mostrarXP={xpPing > 0}
-				xpValor={xpValor}
-				desabilitado={!podeAvancar}
-				aviso={discursivas
-					? 'Escreva sua resposta e compare com o padrão para continuar — ou use Pular.'
-					: 'Selecione e verifique sua resposta para continuar — ou use Pular.'}
-				onClick={avancar}
-				onAnterior={voltar}
-				anteriorDesabilitado={i === 0}
-			/>
 		{/if}
 	{/if}
 {/if}
