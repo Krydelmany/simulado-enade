@@ -62,6 +62,8 @@
 	let prontoModo = $state(null);
 	let confirmaFiltro = $state(null);
 	let zoomAberto = $state(false);
+	let reporteAberto = $state(false);
+	let buscaAberta = $state(false);
 	// true quando o aluno marcou uma alternativa mas ainda não clicou em Verificar
 	// (bloqueia avançar em questão pulada para não perder a seleção)
 	let selecaoPendente = $state(false);
@@ -150,7 +152,7 @@
 	let ultima = $derived(i + 1 >= fila.length);
 	let podeAvancar = $derived(!!respostas[i] && !selecaoPendente);
 	let atalhosQuestao = $derived(
-		!confirmaFiltro && !fimVolta && !escolha && !encerrada && !zoomAberto
+		!confirmaFiltro && !fimVolta && !escolha && !encerrada && !zoomAberto && !reporteAberto && !buscaAberta
 	);
 	// estatísticas só da volta atual, para o aviso de fim de volta
 	let resumoVolta = $derived.by(() => {
@@ -491,6 +493,7 @@
 	}
 
 	function aoTecla(e) {
+		if (e.defaultPrevented) return;
 		if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
 		if (ehCampo(e.target)) return;
 		if (e.key === 'Escape') {
@@ -502,12 +505,12 @@
 				fimVolta = false;
 				return;
 			}
-			if (zoomAberto) return; // deixa o Esc fechar o zoom da figura
+			if (zoomAberto || reporteAberto || buscaAberta) return; // deixa o Esc fechar zoom, reporte ou busca antes de sair
 			if (escolha || encerrada) return; // fora da sessão não há o que encerrar
 			sair();
 			return;
 		}
-		if (confirmaFiltro || fimVolta || escolha || encerrada || zoomAberto) return;
+		if (confirmaFiltro || fimVolta || escolha || encerrada || zoomAberto || reporteAberto || buscaAberta) return;
 		if (e.key === 'ArrowLeft') {
 			e.preventDefault();
 			voltar();
@@ -700,7 +703,7 @@
 		     Nas discursivas também: são 10, e a lista misturava objetivas. -->
 		{#if !discursivas}
 			<div class="relative mt-4 mb-3">
-				<BuscaQuestoes {banco} aoPular={pularPara} />
+				<BuscaQuestoes {banco} aoPular={pularPara} bind:aberta={buscaAberta} />
 			</div>
 		{/if}
 		<div class="mt-4 mb-3 flex items-center gap-2">
@@ -799,6 +802,7 @@
 							{sequencia}
 							bind:selecaoPendente
 							bind:zoomAberto
+							bind:reporteAberto
 						/>
 					</div>
 				{/key}

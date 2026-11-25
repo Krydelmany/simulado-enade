@@ -62,7 +62,7 @@ app/                       o site: SvelteKit 2 + Svelte 5 + Tailwind 4 + Vite 6
                            prova), csv.js (planilha do painel) e os
                            componentes (Questao, TextoRico, SessaoTopo,
                            BarraAcao, Contador, VigiaDevTools, BordaVoltar,
-                           DicaGestos, Marca, CodigoTurma; resumo:
+                           DicaGestos, Marca, CenaHero, CodigoTurma; resumo:
                            PalcoResumo, EscadaMarco, BarrasArea;
                            SeloSequencia)
   static/banco/            O BANCO que o site carrega: enadeAAAA-{fg,ce}.json,
@@ -840,9 +840,9 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
 
 - **Mobile-first, com referência de 390 px.** No desktop, a nav fica no topo
   e a home tem 2 colunas; o quiz continua em uma coluna de leitura.
-- **Navegação:** header `sticky` claro/escuro (`bg-card/90` com borda `border-line`), sem seletor de curso no topo; no desktop, abas em pílula com ícone + rótulo; no celular, **menu hambúrguer** (fecha no toque fora, Escape e navegação) e **sem tab bar inferior**. No Treino e no Estudo, o botão principal único (Verificar → gaveta de feedback → Continuar) fica **inline** no `<Questao>`, logo acima de "Como resolver"; no Simulado, a `BarraAcao` continua **inline** no fim da questão (com o gesto de puxar para o cartão-resposta). O menu é um disclosure global: não entra no `ligarCamadas`; fecha no `afterNavigate`.
+- **Navegação:** header `sticky` claro/escuro (`bg-paper/88` com borda `border-line/80`), sem seletor de curso no topo; em `lg+`, dock em pílula tátil com ícone + rótulo; abaixo de `lg`, **menu hambúrguer** em folha flutuante (fecha no toque fora, Escape — consumindo o evento antes da rota — e navegação) e **sem tab bar inferior**. No Treino e no Estudo, o botão principal único (Verificar → gaveta de feedback → Continuar) fica **inline** no `<Questao>`, logo acima de "Como resolver"; no Simulado, a `BarraAcao` continua **inline** no fim da questão (com o gesto de puxar para o cartão-resposta). O menu é um disclosure global: não entra no `ligarCamadas`; fecha no `afterNavigate`.
 - **Só design tokens de `app.css`:**
-  - Os principais: `bg-paper`, `bg-card`, `bg-tile`, `bg-panel`, `border-line`, `border-line-strong`, `text-ink`, `text-ink-soft`, `accent*`, `milestone*`, `ok-*`, `bad-*`, `warn-*`, `tooltip*`. Para superfícies e botões: `.superficie`, `.folha`, `.curso-halo`, `.btn-primario`, `.btn-suave` e `.btn-escuro`.
+  - Os principais: `bg-paper`, `bg-card`, `bg-tile`, `bg-panel`, `border-line`, `border-line-strong`, `text-ink`, `text-ink-soft`, `accent*`, `milestone*`, `ok-*`, `bad-*`, `warn-*`, `tooltip*`. Para superfícies e botões: `.superficie`, `.folha`, `.palco-vivo`, `.cartao-tatil`, `.curso-halo`, `.btn-primario`, `.btn-suave`, `.btn-escuro` e `.btn-icone`.
   - **Nunca use `dark:` nas telas:** o `.dark` troca os tokens sozinho.
   - Exceções que já estão em uso: `text-white` sobre fundos semânticos sólidos (`ok-solid`, `bad-solid`) e `bg-black/50` no backdrop de modal. Sobre `bg-accent`, use sempre `text-accent-on` (no escuro o azul luminoso pede texto escuro para manter AA/AAA).
   - Telas de abertura, topo de sessão e resumo usam `.folha` / `.superficie` (com `.curso-halo` nos destaques), sem faixa escura nem grade blueprint.
@@ -871,9 +871,10 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
   ranking e a contagem de dias como erro. Não use `accent` nem `milestone`
   para alerta ou estado parcial.
   - A marca (`lib/Marca.svelte`) e o `static/favicon.svg` são o mesmo
-    desenho livre (sem caixa, quadrado ou círculo ao redor): um "E"
-    arquitetônico em degraus com marco âmbar flutuante. Mudou um, mude o
-    outro. Fora dos nós da trilha e das bolhas A–E, evite molduras/círculos
+    desenho livre (sem caixa, quadrado ou círculo ao redor): um prisma âmbar
+    facetado flutuando sobre base isométrica na cor do curso (com a mesma
+    família geométrica em `lib/CenaHero.svelte`). Mudou um, mude o outro.
+    Fora dos nós da trilha e das bolhas A–E, evite molduras/círculos
     decorativos em volta de ícones.
   - Fontes: Sora (`--font-curso-display` padrão em Eng. de Computação,
     títulos e números), Inter (padrão do `body`) e JetBrains Mono

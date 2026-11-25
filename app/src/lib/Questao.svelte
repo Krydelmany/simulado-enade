@@ -79,7 +79,8 @@
 		// acertos seguidos na sessão (Treino e Estudo); a partir de 3 vira selo
 		sequencia = 0,
 		selecaoPendente = $bindable(false),
-		zoomAberto = $bindable(false)
+		zoomAberto = $bindable(false),
+		reporteAberto = $bindable(false)
 	} = $props();
 
 	// lê o estado inicial DENTRO de uma função: é intencional capturar uma vez
@@ -229,9 +230,22 @@
 	}
 
 	function aoTecla(e) {
+		if (e.defaultPrevented) return;
 		// com a imagem ampliada, o Esc só fecha o zoom (a página ignora via `zoomAberto`)
 		if (zoomAberto) {
-			if (e.key === 'Escape') zoomAberto = false;
+			if (e.key === 'Escape') {
+				e.preventDefault();
+				zoomAberto = false;
+			}
+			return;
+		}
+		// com o formulário de reporte aberto, o primeiro Esc fora de campo fecha
+		// só o painel (sem apagar o texto digitado nem encerrar a sessão)
+		if (reporteAberto) {
+			if (e.key === 'Escape' && !ehCampo(e.target)) {
+				e.preventDefault();
+				reporteAberto = false;
+			}
 			return;
 		}
 		// com camada/modal aberta na rota (ou atalho desligado), ignora o teclado
@@ -278,9 +292,10 @@
 
 	// `zoomAberto` é a FONTE do zoom (não um espelho): a página precisa
 	// fechá-lo pelo voltar do sistema (ver `camadas.svelte.js`), e lê o mesmo
-	// valor para o Esc não encerrar a sessão junto. Ao desmontar, fecha.
+	// valor para o Esc não encerrar a sessão junto. Ao desmontar, fecha ambos.
 	$effect(() => () => {
 		zoomAberto = false;
+		reporteAberto = false;
 	});
 
 	$effect(() => {
@@ -317,8 +332,8 @@
 	}
 
 	// Reportar erro (D13): abre no próprio cartão, sem modal — um modal seria
-	// mais uma camada para o voltar do sistema em três rotas.
-	let reporteAberto = $state(false);
+	// mais uma camada para o voltar do sistema em três rotas. `reporteAberto`
+	// é `$bindable` para o Esc da rota não sair da sessão enquanto está aberto.
 	let motivo = $state('');
 	let detalhe = $state('');
 	let reporte = $state(''); // '' | 'enviando' | 'ok'

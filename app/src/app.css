@@ -393,7 +393,8 @@ html.dark {
 			0 22px 48px -26px color-mix(in srgb, var(--accent) 32%, rgba(16, 23, 41, 0.22));
 	}
 
-	/* Cartão/estação clicável: borda inferior física que levanta no hover e afunda no toque */
+	/* Cartão/estação clicável: usa `translate` (independente de `transform`) para
+	   não colidir com animações de entrada como `.rise` (`fill: both`). */
 	.cartao-tatil {
 		background: var(--card);
 		border: 1.5px solid var(--line);
@@ -402,21 +403,19 @@ html.dark {
 			0 3px 0 0 var(--surface-lip),
 			0 10px 22px -16px rgba(16, 23, 41, 0.16);
 		transition:
-			transform 210ms var(--mola-curva),
+			translate 210ms var(--mola-curva),
 			border-color 140ms ease,
 			box-shadow 180ms ease,
 			background-color 140ms ease;
 	}
 	.cartao-tatil:hover {
 		border-color: var(--accent-border);
-		transform: translateY(-2.5px);
 		box-shadow:
 			inset 0 1px 0 var(--card-top),
 			0 5.5px 0 0 color-mix(in srgb, var(--accent) 28%, var(--surface-lip)),
 			0 16px 30px -18px color-mix(in srgb, var(--accent) 28%, rgba(16, 23, 41, 0.22));
 	}
 	.cartao-tatil:active {
-		transform: translateY(2.5px);
 		box-shadow:
 			inset 0 1px 0 var(--card-top),
 			0 0.5px 0 0 var(--surface-lip),
@@ -450,7 +449,7 @@ html.dark {
 		color: var(--accent-on);
 		box-shadow: var(--shadow-btn);
 		transition:
-			transform 210ms var(--mola-curva),
+			translate 210ms var(--mola-curva),
 			background-color 140ms ease,
 			box-shadow 170ms ease,
 			filter 140ms ease,
@@ -476,14 +475,12 @@ html.dark {
 			color-mix(in oklab, var(--accent-hover) 86%, white) 0%,
 			var(--accent-hover) 100%
 		);
-		transform: translateY(-1.5px);
 		box-shadow: var(--shadow-btn-hover);
 	}
 	.btn-primario:hover:not(:disabled)::before {
 		transform: translateX(115%);
 	}
 	.btn-primario:active:not(:disabled) {
-		transform: translateY(3px);
 		box-shadow: var(--shadow-btn-press);
 		transition-duration: 70ms;
 	}
@@ -498,7 +495,7 @@ html.dark {
 			0 3px 0 0 var(--surface-lip),
 			0 6px 14px -10px rgba(16, 23, 41, 0.14);
 		transition:
-			transform 210ms var(--mola-curva),
+			translate 210ms var(--mola-curva),
 			border-color 140ms ease,
 			background-color 140ms ease,
 			box-shadow 170ms ease;
@@ -506,14 +503,12 @@ html.dark {
 	.btn-suave:hover:not(:disabled) {
 		border-color: var(--accent);
 		background: color-mix(in srgb, var(--accent-soft) 55%, var(--card));
-		transform: translateY(-1.5px);
 		box-shadow:
 			inset 0 1px 0 var(--card-top),
 			0 4.5px 0 0 color-mix(in srgb, var(--accent) 36%, var(--surface-lip)),
 			0 10px 18px -12px color-mix(in srgb, var(--accent) 30%, transparent);
 	}
 	.btn-suave:active:not(:disabled) {
-		transform: translateY(2.5px);
 		box-shadow:
 			inset 0 1px 0 var(--card-top),
 			0 0.5px 0 0 var(--surface-lip);
@@ -527,19 +522,17 @@ html.dark {
 			0 3.5px 0 0 var(--btn-lip),
 			0 8px 18px -12px rgba(16, 23, 41, 0.35);
 		transition:
-			transform 210ms var(--mola-curva),
+			translate 210ms var(--mola-curva),
 			box-shadow 170ms ease,
 			opacity 140ms ease;
 	}
 	.btn-escuro:hover:not(:disabled) {
 		opacity: 0.96;
-		transform: translateY(-1.5px);
 		box-shadow:
 			0 5px 0 0 var(--btn-lip),
 			0 12px 22px -12px rgba(16, 23, 41, 0.42);
 	}
 	.btn-escuro:active:not(:disabled) {
-		transform: translateY(2.5px);
 		box-shadow: 0 1px 0 0 var(--btn-lip);
 		transition-duration: 70ms;
 	}
@@ -553,7 +546,7 @@ html.dark {
 			inset 0 1px 0 var(--card-top),
 			0 2.5px 0 0 var(--surface-lip);
 		transition:
-			transform 200ms var(--mola-curva),
+			translate 200ms var(--mola-curva),
 			border-color 140ms ease,
 			background-color 140ms ease,
 			color 140ms ease,
@@ -563,15 +556,42 @@ html.dark {
 		border-color: var(--accent-border);
 		background: color-mix(in srgb, var(--accent-soft) 50%, var(--card));
 		color: var(--ink);
-		transform: translateY(-1px);
 		box-shadow:
 			inset 0 1px 0 var(--card-top),
 			0 3.5px 0 0 color-mix(in srgb, var(--accent) 26%, var(--surface-lip));
 	}
 	.btn-icone:active:not(:disabled) {
-		transform: translateY(2px);
 		box-shadow: 0 0.5px 0 0 var(--surface-lip);
 		transition-duration: 70ms;
+	}
+
+	/* Deslocamento físico de hover/clique só sem redução de movimento: garante
+	   zero movimento em `prefers-reduced-motion` mesmo após minificação CSS. */
+	@media (prefers-reduced-motion: no-preference) {
+		.cartao-tatil:hover {
+			translate: 0 -2.5px;
+		}
+		.cartao-tatil:active {
+			translate: 0 2.5px;
+		}
+		.btn-primario:hover:not(:disabled),
+		.btn-suave:hover:not(:disabled),
+		.btn-escuro:hover:not(:disabled) {
+			translate: 0 -1.5px;
+		}
+		.btn-primario:active:not(:disabled) {
+			translate: 0 3px;
+		}
+		.btn-suave:active:not(:disabled),
+		.btn-escuro:active:not(:disabled) {
+			translate: 0 2.5px;
+		}
+		.btn-icone:hover:not(:disabled) {
+			translate: 0 -1px;
+		}
+		.btn-icone:active:not(:disabled) {
+			translate: 0 2px;
+		}
 	}
 
 	/* Halo atmosférico sutil derivado do acento e marco do curso ativo */
@@ -750,17 +770,5 @@ html.dark {
 	}
 	.btn-primario::before {
 		display: none !important;
-	}
-	.btn-primario:hover:not(:disabled),
-	.btn-primario:active:not(:disabled),
-	.btn-suave:hover:not(:disabled),
-	.btn-suave:active:not(:disabled),
-	.btn-escuro:hover:not(:disabled),
-	.btn-escuro:active:not(:disabled),
-	.btn-icone:hover:not(:disabled),
-	.btn-icone:active:not(:disabled),
-	.cartao-tatil:hover,
-	.cartao-tatil:active {
-		transform: none !important;
 	}
 }

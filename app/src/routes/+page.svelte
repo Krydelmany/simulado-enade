@@ -29,16 +29,28 @@
 	} from 'phosphor-svelte';
 
 	const curso = cursoAtual();
+	// chave própria das discursivas (mesma de `treino/+page.svelte`)
+	const CHAVE_SESSAO_DISC = 'enade-sessao-discursivas';
 
 	let total = $state(0);
+	// Apenas as discursivas do Componente Específico (as 10 que abrem em /treino/?modo=discursivas)
 	let discCE = $state(0);
 	let geradas = $state(0);
 	let xp = $state(0);
+	// `localPronto` fecha no primeiro quadro do onMount (lendo só localStorage),
+	// para quem já tem sessão pausada não ver um flash de "Pronto para a primeira rodada?"
+	// nem clicar no destino errado enquanto o banco JSON ainda baixa.
+	let localPronto = $state(false);
 	let pronto = $state(false);
+	// progresso real do aluno — antes a home só mostrava XP, e XP não diz
+	// nada sobre quanto a pessoa estudou
 	let prog = $state(null);
 	let paraRevisar = $state([]);
 	// null até montar: no prerender a contagem ficaria congelada no dia do build
 	let dias = $state(null);
+	// Quem chega pelo link da home (e não pelo convite) estudava sem conta e
+	// nunca aparecia no painel do professor. Só depois de montar: no prerender
+	// não há localStorage para saber se a pessoa já entrou.
 	let convidarTurma = $state(false);
 
 	// Progresso REAL por modo (lido das sessões, histórico de ids e simulado salvo) —
@@ -47,6 +59,7 @@
 	let estudoPausadoFeitas = $state(0);
 	let treinoSessoes = $state(0);
 	let treinoPausadoFeitas = $state(0);
+	let discPausadoFeitas = $state(0);
 	let discCEFeitas = $state(0);
 	let ultimoSimulado = $state(null);
 	let simuladoEmAndamento = $state(false);
@@ -100,6 +113,12 @@
 		} catch {
 			return 0;
 		}
+	}
+
+	function contarFeitasSessao(s, modoEsperado) {
+		return s && (s.modo ?? 'treino') === modoEsperado && Array.isArray(s.log)
+			? s.log.filter((r) => !r.pulada).length
+			: 0;
 	}
 
 	// Trilha viva mapeada nos dados reais de cada modo:
@@ -160,14 +179,16 @@
 				tituloCurto: 'discursivas',
 				desc: 'Treine a escrita com o padrão oficial do INEP.',
 				selo:
-					discCEFeitas > 0 && discCE > 0
-						? `${discCEFeitas}/${discCE} feitas`
-						: discCE
-							? `${discCE} oficiais`
-							: 'Padrão INEP',
-				cta: discCEFeitas > 0 ? 'Continuar' : 'Escrever',
+					discPausadoFeitas > 0 && !discFeito
+						? `${discPausadoFeitas} em aberto`
+						: discCEFeitas > 0 && discCE > 0
+							? `${discCEFeitas}/${discCE} ${discCEFeitas === 1 ? 'feita' : 'feitas'}`
+							: discCE
+								? `${discCE} oficiais`
+								: 'Padrão INEP',
+				cta: discPausadoFeitas > 0 ? 'Retomar' : discCEFeitas > 0 ? 'Continuar' : 'Escrever',
 				estado: estadoDe(2, discFeito),
-				emAndamento: !discFeito && discCEFeitas > 0
+				emAndamento: !discFeito && (discPausadoFeitas > 0 || discCEFeitas > 0)
 			},
 			{
 				passo: '04',
@@ -220,20 +241,31 @@
 				play: true
 			};
 		}
+		if (discPausadoFeitas > 0) {
+			return {
+				href: '/treino/?modo=discursivas',
+				titulo: 'Volte para suas discursivas.',
+				sub: `${discPausadoFeitas} ${discPausadoFeitas === 1 ? 'discursiva praticada' : 'discursivas praticadas'} na sessão em aberto.`,
+				botao: 'Retomar discursivas',
+				play: true
+			};
+		}
 		if (temProgresso && proximaEtapa) {
+			const nResp = prog.respondidasNumero;
 			return {
 				href: proximaEtapa.href,
 				titulo: `Hora de avançar em ${proximaEtapa.tituloCurto}.`,
-				sub: `${prog.respondidasNumero} respondidas · ${pctAcerto}% de acerto${prog.ultimoTreinoRelativo ? ` · último estudo ${prog.ultimoTreinoRelativo}` : ''}.`,
+				sub: `${nResp} ${nResp === 1 ? 'respondida' : 'respondidas'} · ${pctAcerto}% de acerto${prog.ultimoTreinoRelativo ? ` · último estudo ${prog.ultimoTreinoRelativo}` : ''}.`,
 				botao: `${proximaEtapa.cta} agora`,
 				play: false
 			};
 		}
 		if (temProgresso) {
+			const nResp = prog.respondidasNumero;
 			return {
 				href: '/treino/',
 				titulo: 'Trilha completa. Mantenha o ritmo.',
-				sub: `${prog.respondidasNumero} respondidas · ${pctAcerto}% de acerto geral.`,
+				sub: `${nResp} ${nResp === 1 ? 'respondida' : 'respondidas'} · ${pctAcerto}% de acerto geral.`,
 				botao: 'Treinar agora',
 				play: true
 			};
@@ -274,10 +306,28 @@
 	}
 
 	onMount(async () => {
+		// Lê tudo que já mora no aparelho ANTES de esperar a rede do banco,
+		// evitando flash do texto de primeira visita para quem tem sessão pausada.
 		dias = diasAteEnade();
 		convidarTurma = nuvemLigada && !contaLocal();
+		xp = getXP();
+		prog = resumoProgresso();
+
+		const hist = historico();
+		estudoSessoes = hist.sessoes.filter((s) => s.modo === 'estudo' && s.respondidas > 0).length;
+		treinoSessoes = hist.sessoes.filter((s) => s.modo === 'treino' && s.respondidas > 0).length;
+		estudoPausadoFeitas = lerSessaoEstudoFeitas();
+		treinoPausadoFeitas = contarFeitasSessao(carregarSessao(), 'treino');
+		discPausadoFeitas = contarFeitasSessao(carregarSessao(CHAVE_SESSAO_DISC), 'discursivas');
+		ultimoSimulado = lerUltimo();
+		const provaSalva = lerProva();
+		simuladoEmAndamento = Boolean(provaSalva && !provaSalva.entregue);
+		localPronto = true;
+
 		try {
 			const b = await carregarBanco();
+			// `contagens` é a mesma função que o resto do app usa, então a home
+			// não pode mais divergir do que o treino está mostrando
 			const c = contagens(b);
 			total = c.total;
 			const idsDiscCE = new Set(
@@ -285,26 +335,15 @@
 			);
 			discCE = idsDiscCE.size;
 			geradas = c.geradas;
-			xp = getXP();
-			prog = resumoProgresso();
-
-			const hist = historico();
-			estudoSessoes = hist.sessoes.filter((s) => s.modo === 'estudo' && s.respondidas > 0).length;
-			treinoSessoes = hist.sessoes.filter((s) => s.modo === 'treino' && s.respondidas > 0).length;
-			estudoPausadoFeitas = lerSessaoEstudoFeitas();
-			const sTreino = carregarSessao();
-			treinoPausadoFeitas =
-				sTreino && (sTreino.modo ?? 'treino') === 'treino' && Array.isArray(sTreino.log)
-					? sTreino.log.filter((r) => !r.pulada).length
-					: 0;
 			discCEFeitas = hist.questoes.filter((q) => idsDiscCE.has(q.id) && q.respostas > 0).length;
-			ultimoSimulado = lerUltimo();
-			const provaSalva = lerProva();
-			simuladoEmAndamento = Boolean(provaSalva && !provaSalva.entregue);
 
+			// só o que ainda está no banco: uma questão que saiu (as anuladas)
+			// continuava contada aqui, e a revisão abria com menos do que o botão
+			// prometia
 			const ids = new Set(b.map((q) => q.id));
 			paraRevisar = getParaRevisar().filter((id) => ids.has(id));
 		} finally {
+			// sempre fecha o esqueleto — sem "loading eterno" nem tela em branco
 			pronto = true;
 		}
 		// quem já saiu da home enquanto o banco carregava não gasta o bilhete
@@ -324,6 +363,8 @@
 		if (!feito) return;
 		const r = feito.getBoundingClientRect();
 		const fora = r.top < 72 || r.bottom > window.innerHeight - 16;
+		// a trilha fica abaixo da dobra no celular: sem levar até ela, o efeito
+		// acontecia onde ninguém via. Uma vez por sessão concluída.
 		if (fora) {
 			feito.scrollIntoView({ block: 'center', behavior: reduzirMovimento() ? 'auto' : 'smooth' });
 		}
@@ -397,39 +438,51 @@
 				{/if}
 			</div>
 
-			<h1 class="mt-4 font-display text-hero font-extrabold text-balance text-ink">
-				{acaoPrincipal.titulo}
-			</h1>
+			{#if !localPronto}
+				<h1 class="sr-only">Simulado ENADE — {curso.nome}</h1>
+				<div class="mt-4 space-y-3" role="status" aria-label="Carregando seu próximo passo">
+					<div class="h-11 w-4/5 animate-pulse rounded-2xl bg-skel"></div>
+					<div class="h-5 w-3/5 animate-pulse rounded-xl bg-skel"></div>
+					<div class="mt-6 flex flex-col gap-3 sm:flex-row">
+						<div class="h-13 w-full animate-pulse rounded-2xl bg-skel sm:w-48"></div>
+						<div class="h-13 w-full animate-pulse rounded-2xl bg-skel sm:w-40"></div>
+					</div>
+				</div>
+			{:else}
+				<h1 class="mt-4 font-display text-hero font-extrabold text-balance text-ink">
+					{acaoPrincipal.titulo}
+				</h1>
 
-			<p class="mt-2.5 max-w-[42ch] text-[15px] leading-relaxed text-pretty text-ink-soft sm:text-base">
-				{acaoPrincipal.sub}
-			</p>
+				<p class="mt-2.5 max-w-[42ch] text-[15px] leading-relaxed text-pretty text-ink-soft sm:text-base">
+					{acaoPrincipal.sub}
+				</p>
 
-			<div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-				<a
-					href={acaoPrincipal.href}
-					class="btn-primario group/cta inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl px-7 font-display text-base font-extrabold"
-				>
-					{#if acaoPrincipal.play}
-						<Play size={18} weight="fill" aria-hidden="true" />
-					{/if}
-					{acaoPrincipal.botao}
-					{#if !acaoPrincipal.play}
-						<ArrowRight
-							size={18}
-							weight="bold"
-							class="transition-transform duration-150 group-hover/cta:translate-x-0.5"
-							aria-hidden="true"
-						/>
-					{/if}
-				</a>
-				<a
-					href={acaoSecundaria.href}
-					class="btn-suave inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl px-6 font-display text-[15px] font-bold"
-				>
-					{acaoSecundaria.rotulo}
-				</a>
-			</div>
+				<div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+					<a
+						href={acaoPrincipal.href}
+						class="btn-primario group/cta inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl px-7 font-display text-base font-extrabold"
+					>
+						{#if acaoPrincipal.play}
+							<Play size={18} weight="fill" aria-hidden="true" />
+						{/if}
+						{acaoPrincipal.botao}
+						{#if !acaoPrincipal.play}
+							<ArrowRight
+								size={18}
+								weight="bold"
+								class="transition-transform duration-150 group-hover/cta:translate-x-0.5"
+								aria-hidden="true"
+							/>
+						{/if}
+					</a>
+					<a
+						href={acaoSecundaria.href}
+						class="btn-suave inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl px-6 font-display text-[15px] font-bold"
+					>
+						{acaoSecundaria.rotulo}
+					</a>
+				</div>
+			{/if}
 
 			<!-- Faixa viva de progresso dentro do palco (sem caixa institucional separada) -->
 			<div class="mt-6 border-t border-line/80 pt-4">
@@ -466,8 +519,13 @@
 						</div>
 
 						<div class="flex flex-wrap items-center gap-3 text-xs font-bold text-ink-soft">
-							<span class="nums"><strong class="text-ink">{prog.respondidasNumero}</strong> feitas</span>
-							<span class="nums text-ok-fg"><strong>{pctAcerto}%</strong> acerto</span>
+							<span class="nums">
+								<strong class="text-ink">{prog.respondidasNumero}</strong>
+								{prog.respondidasNumero === 1 ? 'feita' : 'feitas'}
+							</span>
+							<span class="nums {pctAcerto >= 50 ? 'text-ok-fg' : 'text-ink-soft'}">
+								<strong class={pctAcerto >= 50 ? '' : 'text-ink'}>{pctAcerto}%</strong> acerto
+							</span>
 							{#if paraRevisar.length}
 								<a
 									href="/treino/?modo=revisao"
@@ -535,7 +593,7 @@
 		<div class="flex items-center justify-between gap-3">
 			<h2 id="titulo-trilha" class="font-display text-title font-extrabold text-ink">Sua trilha</h2>
 			<span class="nums rounded-full bg-panel px-3 py-1 text-xs font-extrabold text-ink-soft">
-				{etapasFeitas} de 4 concluídas
+				{etapasFeitas} de 4 {etapasFeitas === 1 ? 'concluída' : 'concluídas'}
 			</span>
 		</div>
 
@@ -616,6 +674,7 @@
 								<div class="min-w-0 flex-1">
 									<div class="flex flex-wrap items-center gap-2">
 										{#if agora}
+											<!-- discursivas: a etapa só fecha com as 10, então uma sessão dela é prática -->
 											<span
 												data-aviso
 												class="nums rounded-full bg-ok-solid px-2.5 py-0.5 text-xs font-extrabold text-white"
@@ -644,7 +703,9 @@
 												Prova completa
 											</span>
 										{/if}
-										<span class="nums text-xs font-bold text-ink-soft">{etapa.selo}</span>
+										{#if !agora}
+											<span class="nums text-xs font-bold text-ink-soft">{etapa.selo}</span>
+										{/if}
 									</div>
 
 									<h3 class="mt-2 font-display text-heading font-extrabold text-ink group-hover:text-accent-ink">

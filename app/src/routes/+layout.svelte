@@ -105,7 +105,12 @@
 	}
 
 	function aoTecla(e) {
-		if (e.key === 'Escape' && menuAberto) menuAberto = false;
+		if (e.key === 'Escape' && menuAberto) {
+			// consome o Esc antes das rotas de quiz: primeiro fecha o menu, nunca a sessão
+			e.preventDefault();
+			e.stopImmediatePropagation();
+			menuAberto = false;
+		}
 	}
 </script>
 
@@ -123,16 +128,16 @@
 	class="sticky top-0 z-40 border-b border-line/80 bg-paper/88 text-ink backdrop-blur-lg"
 >
 	<nav
-		class="mx-auto flex h-16 w-full max-w-3xl items-center gap-2 px-4 md:h-[4.5rem] lg:max-w-5xl"
+		class="mx-auto flex h-16 w-full max-w-3xl items-center gap-2 px-4 lg:h-[4.5rem] lg:max-w-5xl"
 		aria-label="Principal"
 	>
 		<a
 			href="/"
 			aria-current={rotaAtual === '/' ? 'page' : undefined}
-			class="group flex min-h-11 items-center gap-2.5 rounded-2xl py-1 pr-2 transition-transform duration-150 active:scale-[0.98]"
+			class="group flex min-h-11 shrink-0 items-center gap-2.5 rounded-2xl py-1 pr-2 transition-transform duration-150 active:scale-[0.98]"
 		>
 			<Marca tamanho={32} />
-			<span class="leading-tight">
+			<span class="leading-tight whitespace-nowrap">
 				<span class="block font-display text-[15px] font-extrabold tracking-tight text-ink">
 					Simulado ENADE
 				</span>
@@ -142,16 +147,16 @@
 
 		<span class="flex-1"></span>
 
-		<!-- Barra de navegação tátil no desktop -->
+		<!-- Barra de navegação tátil no desktop (só em lg+ para não espremer a marca em 768 px) -->
 		<div
-			class="hidden items-center gap-1 rounded-full border border-line bg-card/95 p-1 shadow-[inset_0_1px_0_var(--card-top),0_2.5px_0_0_var(--surface-lip)] md:flex"
+			class="hidden items-center gap-1 rounded-full border border-line bg-card/95 p-1 shadow-[inset_0_1px_0_var(--card-top),0_2.5px_0_0_var(--surface-lip)] lg:flex"
 		>
 			{#each tabs as t (t.href)}
 				{@const ativa = abaAtiva(t)}
 				<a
 					href={t.href}
 					aria-current={ativa ? 'page' : undefined}
-					class="inline-flex min-h-11 items-center gap-1.5 rounded-full px-2.5 py-2 text-[13px] font-bold transition-[transform,background-color,color,box-shadow] duration-150 active:translate-y-px lg:px-3.5 lg:text-sm {ativa
+					class="inline-flex min-h-11 items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-bold whitespace-nowrap transition-[transform,background-color,color,box-shadow] duration-150 active:translate-y-px {ativa
 						? 'bg-accent text-accent-on shadow-[0_2px_0_0_var(--accent-lip)]'
 						: 'text-ink-soft hover:bg-tile/80 hover:text-ink'}"
 				>
@@ -163,7 +168,7 @@
 
 		<span class="hidden flex-1 lg:block"></span>
 
-		<div class="flex items-center gap-2">
+		<div class="flex shrink-0 items-center gap-2">
 			{#if nuvemLigada}
 				<a
 					href="/conta/"
@@ -206,7 +211,7 @@
 				aria-expanded={menuAberto}
 				aria-controls="menu-mobile"
 				aria-label={menuAberto ? 'Fechar menu' : 'Abrir menu'}
-				class="btn-icone flex h-11 w-11 items-center justify-center rounded-full md:hidden {menuAberto
+				class="btn-icone flex h-11 w-11 items-center justify-center rounded-full lg:hidden {menuAberto
 					? 'border-accent-border bg-accent-soft text-accent-ink'
 					: ''}"
 			>
@@ -222,7 +227,7 @@
 	{#if menuAberto}
 		<div
 			id="menu-mobile"
-			class="absolute inset-x-0 top-full z-50 px-3 pt-2 md:hidden"
+			class="absolute inset-x-0 top-full z-50 px-3 pt-2 lg:hidden"
 			in:fly={{ y: -8, duration: DUR }}
 			out:fade={{ duration: DUR }}
 		>

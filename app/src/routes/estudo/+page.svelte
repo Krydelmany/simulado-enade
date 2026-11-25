@@ -65,6 +65,7 @@
 	let escolhaE = $state(false);
 	let salvaE = $state(null);
 	let zoomAberto = $state(false);
+	let reporteAberto = $state(false);
 	// true quando o aluno marcou uma alternativa mas ainda não clicou em Verificar
 	// (bloqueia avançar em questão pulada para não perder a seleção)
 	let selecaoPendente = $state(false);
@@ -105,7 +106,7 @@
 	let ultima = $derived(i + 1 >= sessao.length);
 	let podeAvancar = $derived(!!respostas[i] && !selecaoPendente);
 	let atalhosQuestao = $derived(
-		nivel !== null && !escolhaE && !fim && !zoomAberto
+		nivel !== null && !escolhaE && !fim && !zoomAberto && !reporteAberto
 	);
 	// quantas questões cada nível tem de verdade, já com o filtro de matéria
 	// (para não prometer 10 e entregar 3)
@@ -299,7 +300,8 @@
 	}
 
 	function sair() {
-		// o progresso já é salvo a cada resposta; sai direto sem modal de confirmação
+		// o progresso já é salvo a cada resposta (inclusive quando só pulou);
+		// sai direto sem modal bloqueante e preserva a retomada no seletor
 		persistir();
 		nivel = null;
 		oferecerContinuar();
@@ -376,14 +378,15 @@
 	}
 
 	function aoTecla(e) {
+		if (e.defaultPrevented) return;
 		if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
 		if (ehCampo(e.target)) return;
 		if (e.key === 'Escape') {
-			if (zoomAberto) return; // deixa o Esc fechar o zoom da figura
+			if (zoomAberto || reporteAberto) return; // deixa o Esc fechar o zoom ou o reporte antes de sair
 			if (nivel !== null && !fim) sair();
 			return;
 		}
-		if (nivel === null || fim || escolhaE || zoomAberto) return;
+		if (nivel === null || fim || escolhaE || zoomAberto || reporteAberto) return;
 		if (e.key === 'ArrowLeft') {
 			e.preventDefault();
 			voltar();
@@ -650,6 +653,7 @@
 							{sequencia}
 							bind:selecaoPendente
 							bind:zoomAberto
+							bind:reporteAberto
 						/>
 					</div>
 				{/key}
