@@ -9,6 +9,7 @@
 	import { ArrowLeft, ArrowRight, ArrowSquareOut, CheckCircle, XCircle } from 'phosphor-svelte';
 	import { foco } from '$lib/foco.svelte.js';
 	import { DUR } from '$lib/motion.js';
+	import PalcoResumo from '$lib/PalcoResumo.svelte';
 	import TextoRico from '$lib/TextoRico.svelte';
 
 	const LETRAS = ['A', 'B', 'C', 'D', 'E'];
@@ -151,18 +152,45 @@
 		</a>
 	</section>
 {:else if fim}
-	<section class="folha curso-halo rounded-3xl px-5 pt-7 pb-8 sm:p-8">
-		<p class="text-label font-bold text-accent-ink">POO · questionário do professor</p>
-		<h1 class="mt-1 font-display text-3xl font-extrabold tracking-tight text-ink">Resultado</h1>
-		<p class="springin nums mt-4 font-display text-5xl leading-none font-black tracking-tight text-ink sm:text-6xl">
-			{certas}<span class="text-2xl font-bold text-ink-soft">/{questoes.length}</span>
-		</p>
-		<p class="mt-2 text-sm font-semibold text-ink-soft">
-			{questoes.length ? Math.round((certas / questoes.length) * 100) : 0}% de acerto
-			{#if emBranco > 0}· {emBranco} em branco{/if}
-		</p>
-		<p class="mt-3 text-xs text-ink-soft">{dados?.nota}</p>
-	</section>
+	<PalcoResumo
+		etiqueta="POO · questionário do professor"
+		titulo="Resultado"
+		nivelTitulo="h1"
+		{certas}
+		total={questoes.length}
+		rotulo="acertos no questionário"
+		blocos={[
+			{
+				itens: questoes.map((q, k) => ({
+					status: !marcadas[k] ? 'branco' : marcadas[k] === q.gabarito ? 'certa' : 'errada'
+				}))
+			}
+		]}
+		metricas={[
+			{ rotulo: 'Acerto', valor: questoes.length ? Math.round((certas / questoes.length) * 100) : 0, sufixo: '%' },
+			{ rotulo: 'Em branco', valor: emBranco }
+		]}
+		completa={emBranco === 0}
+	>
+		{#snippet extra()}
+			<p class="text-xs leading-relaxed text-pretty text-ink-soft">{dados?.nota}</p>
+		{/snippet}
+		{#snippet acoes()}
+			<button
+				type="button"
+				onclick={refazer}
+				class="btn-primario flex min-h-12 w-full items-center justify-center rounded-full px-6 font-display text-base font-bold"
+			>
+				Refazer o questionário
+			</button>
+			<a
+				href="/"
+				class="btn-suave flex min-h-12 w-full items-center justify-center rounded-full px-6 font-display text-base font-bold"
+			>
+				Voltar ao início
+			</a>
+		{/snippet}
+	</PalcoResumo>
 
 	<section class="mt-4 space-y-2" aria-label="Correção das questões">
 		{#each questoes as q, k (q.id)}
@@ -183,21 +211,6 @@
 		{/each}
 	</section>
 
-	<div class="mt-4 flex flex-col gap-2.5 sm:flex-row">
-		<button
-			type="button"
-			onclick={refazer}
-			class="btn-primario flex min-h-12 flex-1 items-center justify-center rounded-full px-6 font-display text-base font-bold"
-		>
-			Refazer o questionário
-		</button>
-		<a
-			href="/"
-			class="btn-suave flex min-h-12 flex-1 items-center justify-center rounded-full px-6 font-display text-base font-bold"
-		>
-			Voltar ao início
-		</a>
-	</div>
 	<p class="mt-3 text-xs leading-relaxed text-pretty text-ink-soft">
 		{dados?.fonte} {dados?.nota}
 	</p>

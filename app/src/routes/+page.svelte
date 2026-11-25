@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { carregarBanco, contagens, ehGerada } from '$lib/banco.js';
 	import { carregarSessao, getXP, getParaRevisar, historico } from '$lib/stats.js';
 	import { lerProva, lerUltimo } from '$lib/simulado.js';
@@ -8,6 +8,8 @@
 	import { nomeMateria } from '$lib/materias.js';
 	import { cursoAtual } from '$lib/curso.js';
 	import { nuvemLigada, contaLocal } from '$lib/nuvem.js';
+	import { consumirConquista } from '$lib/conquista.js';
+	import { animar, mola, reduzirMovimento } from '$lib/motion.js';
 	import {
 		ArrowRight,
 		BookOpen,
@@ -56,6 +58,10 @@
 	let discCEFeitas = $state(0);
 	let ultimoSimulado = $state(null);
 	let simuladoEmAndamento = $state(false);
+
+	// sessão que acabou de terminar (bilhete do resumo): a trilha mostra o efeito
+	let conquista = $state(null);
+	let trilha = $state(null);
 
 	let temProgresso = $derived(Boolean(prog?.temDados));
 	let pctAcerto = $derived(Math.round((prog?.precisaoNumero ?? 0) * 100));
@@ -226,7 +232,62 @@
 			// sempre fecha o esqueleto — sem "loading eterno" nem tela em branco
 			pronto = true;
 		}
+		// quem já saiu da home enquanto o banco carregava não gasta o bilhete
+		if (!trilha) return;
+		conquista = consumirConquista();
+		if (!conquista) return;
+		await tick();
+		celebrarNaTrilha();
 	});
+
+	let proximaEtapa = $derived(etapasTrilha.find((e) => e.estado === 'atual') ?? null);
+
+	/**
+	 * Causa e efeito na trilha: o nó concluído acende, a linha desce dele até o
+	 * próximo passo, e o próximo passo acorda.
+	 */
+	function celebrarNaTrilha() {
+		const feito = trilha?.querySelector('[data-agora]');
+		if (!feito) return;
+		const r = feito.getBoundingClientRect();
+		const fora = r.top < 72 || r.bottom > window.innerHeight - 16;
+		// a trilha fica abaixo da dobra no celular: sem levar até ela, o efeito
+		// acontecia onde ninguém via. Uma vez por sessão concluída.
+		if (fora) {
+			feito.scrollIntoView({ block: 'center', behavior: reduzirMovimento() ? 'auto' : 'smooth' });
+		}
+		const t0 = fora ? 520 : 160;
+		const um = (li, sel) => li?.querySelector(sel);
+		const acender = (li, atraso) => {
+			animar(um(li, '[data-no]'), { transform: ['scale(0.45)', 'scale(1)'] }, { ...mola(260, 13), atraso });
+			animar(
+				um(li, '[data-onda]'),
+				{ opacity: [0.9, 0], transform: ['scale(1)', 'scale(2.1)'] },
+				{ duracao: 620, atraso: atraso + 60 }
+			);
+			animar(
+				um(li, '[data-aviso]'),
+				{ opacity: [0, 1], transform: ['translateX(-8px) scale(0.85)', 'translateX(0px) scale(1)'] },
+				{ ...mola(300, 16), atraso: atraso + 120 }
+			);
+		};
+		acender(feito, t0);
+		animar(um(feito, '[data-trecho]'), { transform: ['scaleY(0)', 'scaleY(1)'] }, { duracao: 420, atraso: t0 + 320 });
+
+		animar(
+			um(feito, '[data-atalho]'),
+			{ opacity: [0, 1], transform: ['translateY(8px)', 'translateY(0px)'] },
+			{ duracao: 260, atraso: t0 + 620 }
+		);
+		const proximo = trilha.querySelector('[data-proximo]');
+		if (!proximo || proximo === feito) return;
+		acender(proximo, t0 + 700);
+		animar(
+			um(proximo, '[data-brilho]'),
+			[{ opacity: 0 }, { opacity: 1, offset: 0.25 }, { opacity: 0 }],
+			{ duracao: 900, atraso: t0 + 760 }
+		);
+	}
 
 	/** "2014, 2017, 2019 e 2023" */
 	function listar(xs) {
@@ -419,13 +480,19 @@
 </div>
 
 <!-- 2. Trilha viva de estudo (caminho visual intuitivo mapeado nos modos e dados reais) -->
-<section class="mt-10 lg:mt-12" aria-labelledby="titulo-trilha">
+<section id="trilha" bind:this={trilha} class="mt-10 scroll-mt-20 lg:mt-12" aria-labelledby="titulo-trilha">
 	<div class="flex flex-wrap items-end justify-between gap-2">
 		<div>
 			<h2 id="titulo-trilha" class="font-display text-title font-extrabold text-ink">Sua trilha de estudo</h2>
 			<p class="mt-1 text-sm text-ink-soft">Siga na ordem ou entre direto no modo que faz sentido hoje.</p>
 		</div>
 	</div>
+	<p class="sr-only" role="status">
+		{#if conquista}
+			Sessão registrada na trilha: {conquista.certas} de {conquista.total} acertos.
+			{#if proximaEtapa}Próximo passo: {proximaEtapa.titulo}.{/if}
+		{/if}
+	</p>
 
 	<nav class="relative mt-5" aria-label="Trilha de estudo">
 		<div
@@ -435,9 +502,24 @@
 
 		<ol class="space-y-3">
 			{#each etapasTrilha as etapa, k (etapa.href)}
-				<li class="rise relative pl-14 sm:pl-16" style="animation-delay: {k * 45}ms">
+				{@const agora = conquista?.etapa === etapa.href}
+				<li
+					class="rise relative pl-14 sm:pl-16"
+					style="animation-delay: {k * 45}ms"
+					data-agora={agora ? '' : undefined}
+					data-proximo={etapa.estado === 'atual' ? '' : undefined}
+				>
+					{#if etapa.estado === 'feito' && k < etapasTrilha.length - 1}
+						<!-- trecho já percorrido, do nó concluído ao seguinte -->
+						<span
+							data-trecho
+							aria-hidden="true"
+							class="pointer-events-none absolute top-[3.75rem] -bottom-8 left-5 w-0.5 origin-top bg-ok-solid sm:left-6"
+						></span>
+					{/if}
 					<!-- Nó funcional da trilha (círculo marca posição/estado na espinha vertical) -->
 					<span
+						data-no
 						aria-hidden="true"
 						class="absolute top-5 left-0 flex h-10 w-10 items-center justify-center rounded-full border-2 transition-transform sm:left-1 {etapa.estado === 'feito'
 							? 'border-ok-solid bg-ok-solid text-white'
@@ -454,17 +536,33 @@
 						{:else}
 							<etapa.icone size={18} weight="bold" />
 						{/if}
+						<span
+							data-onda
+							class="absolute -inset-0.5 rounded-full border-2 opacity-0 {etapa.estado === 'feito'
+								? 'border-ok-solid'
+								: 'border-accent'}"
+						></span>
 					</span>
 
 					<a
 						href={etapa.href}
-						class="superficie group block rounded-3xl p-4 transition-[transform,border-color,box-shadow] duration-150 hover:-translate-y-0.5 hover:border-accent active:scale-[0.995] sm:p-5 {etapa.estado === 'atual'
+						class="superficie group relative block rounded-3xl p-4 transition-[transform,border-color,box-shadow] duration-150 hover:-translate-y-0.5 hover:border-accent active:scale-[0.995] sm:p-5 {etapa.estado === 'atual'
 							? 'border-accent-border'
 							: ''}"
 					>
+						<span
+							data-brilho
+							aria-hidden="true"
+							class="pointer-events-none absolute -inset-px rounded-3xl border-2 border-accent opacity-0"
+						></span>
 						<div class="flex flex-wrap items-center gap-2">
 							<span class="nums text-xs font-bold text-ink-soft">Etapa {etapa.passo}</span>
-							{#if etapa.estado === 'feito'}
+							{#if agora}
+								<!-- discursivas: a etapa só fecha com as 10, então uma sessão dela é prática -->
+								<span data-aviso class="nums rounded-full bg-ok-solid px-2.5 py-0.5 text-xs font-bold text-white">
+									{etapa.estado === 'feito' ? 'Concluído' : 'Praticado'} agora · {conquista.certas} de {conquista.total}
+								</span>
+							{:else if etapa.estado === 'feito'}
 								<span class="rounded-full bg-ok-bg px-2.5 py-0.5 text-xs font-bold text-ok-fg">
 									Concluído
 								</span>
@@ -473,7 +571,7 @@
 									Em andamento
 								</span>
 							{:else if etapa.estado === 'atual'}
-								<span class="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-bold text-accent-ink">
+								<span data-aviso class="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-bold text-accent-ink">
 									Próximo passo
 								</span>
 							{:else if etapa.estado === 'marco'}
@@ -507,6 +605,17 @@
 							/>
 						</div>
 					</a>
+					{#if agora && proximaEtapa && proximaEtapa !== etapa && proximaEtapa !== etapasTrilha[k + 1]}
+						<!-- quem foi direto ao simulado tem o próximo passo lá em cima, fora da tela -->
+						<a
+							data-atalho
+							href={proximaEtapa.href}
+							class="mt-1 inline-flex min-h-11 items-center gap-1.5 px-1 text-sm font-bold text-accent-ink"
+						>
+							Próximo passo: {proximaEtapa.titulo}
+							<ArrowRight size={15} weight="bold" aria-hidden="true" />
+						</a>
+					{/if}
 				</li>
 			{/each}
 		</ol>

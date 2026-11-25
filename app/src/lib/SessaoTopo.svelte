@@ -1,7 +1,7 @@
 <script>
 	import { Lightning, X } from 'phosphor-svelte';
 
-	let { titulo, detalhe = '', progresso = 0, concluida = false, xp = 0, aoFechar } = $props();
+	let { titulo, detalhe = '', progresso = 0, concluida = false, xp = 0, sequencia = 0, aoFechar } = $props();
 
 	// posição real da sessão em % (por questões respondidas/concluídas) —
 	// substitui a etiqueta decorativa fixa antiga e evita pintar 100% verde
@@ -28,20 +28,35 @@
 					{#if detalhe}{detalhe} · {/if}{pct}%
 				</p>
 			</div>
-			<div
-				class="mt-2 h-2.5 overflow-hidden rounded-full bg-track"
-				role="progressbar"
-				aria-label="Progresso da sessão"
-				aria-valuemin="0"
-				aria-valuemax="100"
-				aria-valuenow={pct}
-			>
+			<div class="relative mt-2">
 				<div
-					class="h-full rounded-full transition-[width,background-color] duration-300 ease-out {verde
-						? 'bg-ok-solid'
-						: 'bg-accent-bar'}"
-					style="width: {pct}%"
-				></div>
+					class="h-2.5 overflow-hidden rounded-full bg-track"
+					role="progressbar"
+					aria-label="Progresso da sessão"
+					aria-valuemin="0"
+					aria-valuemax="100"
+					aria-valuenow={pct}
+				>
+					<div
+						class="h-full rounded-full transition-[width,background-color] duration-300 ease-out {verde
+							? 'bg-ok-solid'
+							: 'bg-accent-bar'}"
+						style="width: {pct}%"
+					></div>
+				</div>
+				{#if sequencia >= 3}
+					<!-- marco na ponta da barra enquanto a sequência de acertos está viva -->
+					<svg
+						width="14"
+						height="16"
+						viewBox="-7 -8 14 16"
+						class="absolute top-1/2 -mt-2 -ml-[7px] transition-[left] duration-300 ease-out"
+						style="left: {Math.min(98, Math.max(2, pct))}%"
+						aria-hidden="true"
+					>
+						<path d="M0 -7 L6 0 L0 7 L-6 0 Z" fill="var(--milestone)" stroke="var(--card)" stroke-width="1.5" />
+					</svg>
+				{/if}
 			</div>
 		</div>
 

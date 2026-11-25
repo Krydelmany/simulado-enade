@@ -3,13 +3,15 @@
 	import { fly } from 'svelte/transition';
 	import Questao from '$lib/Questao.svelte';
 	import SessaoTopo from '$lib/SessaoTopo.svelte';
-	import Contador from '$lib/Contador.svelte';
+	import BarrasArea from '$lib/BarrasArea.svelte';
+	import PalcoResumo from '$lib/PalcoResumo.svelte';
 	import DicaGestos from '$lib/DicaGestos.svelte';
 	import { DUR } from '$lib/motion.js';
 	import { deslizarQuestoes } from '$lib/gestos.js';
-	import { ligarCamadas } from '$lib/camadas.svelte.js';
+	import { ligarCamadas, sairDaRota } from '$lib/camadas.svelte.js';
 	import { carregarBancoDetalhado, embaralhar, doNivel, NIVEL_ENADE } from '$lib/banco.js';
-	import { remontarSessao } from '$lib/sessao.js';
+	import { itensDoLog, remontarSessao, sequenciaAtual } from '$lib/sessao.js';
+	import { anotarConquista } from '$lib/conquista.js';
 	import { GRUPOS_MATERIA, materiaExiste, nomeMateria } from '$lib/materias.js';
 	import {
 	somarXP,
@@ -24,7 +26,7 @@
 	registrarResposta,
 	registrarSessao
 } from '$lib/stats.js';
-	import { ArrowsClockwise, Info, Lightning, Play, SealCheck, Tag, Target, Timer, Trophy } from 'phosphor-svelte';
+	import { ArrowsClockwise, Info, Play, SealCheck, Tag } from 'phosphor-svelte';
 
 	const TOTAL = 10;
 	// 1–3: questões geradas para revisão, em escada de dificuldade.
@@ -101,6 +103,7 @@
 	let feitas = $derived(log.filter((r) => !r.pulada).length);
 	let certas = $derived(log.filter((r) => r.certa).length);
 	let parciais = $derived(log.filter((r) => r.parcial).length);
+	let sequencia = $derived(sequenciaAtual(log));
 	let respondidasSessao = $derived(respostas.filter((r) => r && !r.pulada).length);
 	let ultima = $derived(i + 1 >= sessao.length);
 	let podeAvancar = $derived(!!respostas[i] && !selecaoPendente);
@@ -285,6 +288,8 @@
 				certas,
 				duracaoMs: Date.now() - inicio
 			});
+			// só pular não conclui a etapa na trilha (ver `estudoSessoes` na home)
+			if (feitas > 0) anotarConquista({ etapa: '/estudo/', certas, total: sessao.length });
 			return;
 		}
 		i++;
@@ -559,60 +564,61 @@
 		</span>
 	</button>
 {:else if fim}
-	<div class="folha curso-halo rounded-3xl px-5 pt-7 pb-8 text-center sm:p-8">
-		<p class="text-label font-bold text-accent-ink">Estudo · {NIVEIS[nivel].nome}{materiaFiltro !== 'todas' ? ` · ${nomeMateria(materiaFiltro)}` : ''}</p>
-		<h2 class="mt-1 font-display text-3xl font-extrabold tracking-tight text-ink">Sessão concluída</h2>
-		<Trophy size={44} weight="fill" class="springin mx-auto mt-4 text-milestone" aria-hidden="true" />
-		<p class="nums mt-3 font-display text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
-			<Contador valor={certas} /><span class="text-2xl font-bold text-ink-soft">/{sessao.length}</span>
-		</p>
-		<p class="mt-1 text-sm text-ink-soft">acertos nesta sessão</p>
-		{#if parciais > 0}
-			<p class="nums mt-1 text-xs font-semibold text-ink-soft">{parciais} {parciais === 1 ? 'parcial' : 'parciais'} · meio ponto</p>
-		{/if}
-	</div>
-	<div class="mx-auto grid max-w-md grid-cols-3 gap-2.5 pt-4 text-center">
-		<div class="superficie rounded-2xl p-3">
-			<p class="nums flex items-center justify-center gap-1 font-display text-xl font-extrabold text-ink"><Target size={17} weight="bold" class="text-accent-ink" aria-hidden="true" />{feitas ? Math.round((certas / feitas) * 100) : 0}%</p>
-			<p class="mt-0.5 text-xs font-medium text-ink-soft">Precisão</p>
-		</div>
-		<div class="superficie rounded-2xl p-3">
-			<p class="nums flex items-center justify-center gap-1 font-display text-xl font-extrabold text-ink"><Timer size={17} weight="bold" class="text-accent-ink" aria-hidden="true" />{mmss()}</p>
-			<p class="mt-0.5 text-xs font-medium text-ink-soft">Tempo</p>
-		</div>
-		<div class="superficie rounded-2xl p-3">
-			<p class="nums flex items-center justify-center gap-1 font-display text-xl font-extrabold text-milestone-ink"><Lightning size={17} weight="fill" class="text-milestone" aria-hidden="true" />+{xpGanho}</p>
-			<p class="mt-0.5 text-xs font-medium text-ink-soft">XP ganho</p>
-		</div>
-	</div>
+	<PalcoResumo
+		etiqueta="Estudo · {NIVEIS[nivel].nome}{materiaFiltro !== 'todas' ? ` · ${nomeMateria(materiaFiltro)}` : ''}"
+		titulo="Sessão concluída"
+		{certas}
+		total={sessao.length}
+		rotulo="acertos nesta sessão"
+		blocos={[{ itens: itensDoLog(log) }]}
+		sequencias
+		metricas={[
+			{ rotulo: 'Precisão', valor: feitas ? Math.round((certas / feitas) * 100) : 0, sufixo: '%' },
+			{ rotulo: 'Tempo', valor: mmss() },
+			{ rotulo: 'XP ganho', valor: xpGanho, prefixo: '+', xp: true }
+		]}
+		completa={respondidasSessao >= sessao.length}
+	>
+		{#snippet detalhe()}
+			{#if parciais > 0}
+				<p class="nums mt-1 text-xs font-semibold text-ink-soft">{parciais} {parciais === 1 ? 'parcial' : 'parciais'} · meio ponto</p>
+			{/if}
+		{/snippet}
+		{#snippet acoes(faixa)}
+			{@const nRevisar = contarParaRevisar(banco)}
+			{@const revisarAntes = nRevisar > 0 && faixa !== 'excelente'}
+			<!-- o passo óbvio vem primeiro: com erros a revisar, revisar -->
+			{#if revisarAntes}
+				<a href="/treino/?modo=revisao" class="btn-primario flex min-h-12 w-full items-center justify-center rounded-full px-4 text-center font-display text-base font-bold">
+					Revisar erros e marcadas ({nRevisar})
+				</a>
+			{/if}
+			<button
+				type="button"
+				onclick={() => (nivel = null)}
+				class="{revisarAntes ? 'btn-suave' : 'btn-primario'} flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
+			>
+				<ArrowsClockwise size={19} weight="bold" aria-hidden="true" /> Outra sessão
+			</button>
+			{#if nRevisar && !revisarAntes}
+				<a href="/treino/?modo=revisao" class="btn-suave flex min-h-12 w-full items-center justify-center rounded-full px-4 text-center font-display text-base font-bold">
+					Revisar erros e marcadas ({nRevisar})
+				</a>
+			{/if}
+			<button type="button" onclick={() => sairDaRota('/#trilha')} class="min-h-11 w-full rounded-full px-6 text-sm font-bold text-ink-soft hover:text-ink">
+				Voltar à trilha
+			</button>
+		{/snippet}
+	</PalcoResumo>
 	{#if porMateria().length}
 		<div class="superficie mt-3 rounded-3xl p-5">
-			<p class="font-display text-lg font-bold text-ink">Desempenho por matéria</p>
-			<div class="mt-3 space-y-3">
-				{#each porMateria() as [m, d] (m)}
-					<div>
-						<div class="flex items-baseline justify-between gap-3 text-sm">
-							<p class="truncate font-semibold text-ink">{nomeMateria(m)}</p>
-							<p class="nums shrink-0 font-bold text-ink">{d.ok}/{d.n}</p>
-						</div>
-						<div class="mt-1.5 h-2 overflow-hidden rounded-full bg-track">
-							<div class="h-full rounded-full bg-accent-bar" style="width: {(d.ok / d.n) * 100}%"></div>
-						</div>
-					</div>
-				{/each}
-			</div>
+			<p class="mb-3 font-display text-lg font-bold text-ink">Desempenho por matéria</p>
+			<BarrasArea
+				linhas={porMateria().map(([m, d]) => ({ id: m, nome: nomeMateria(m), certas: d.ok, total: d.n }))}
+				atraso={460}
+			/>
 		</div>
 	{/if}
-	<div class="mt-4 space-y-2.5">
-		<button type="button" onclick={() => (nivel = null)} class="btn-primario flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold">
-			<ArrowsClockwise size={19} weight="bold" aria-hidden="true" /> Outra sessão
-		</button>
-		{#if contarParaRevisar(banco)}
-			<a href="/treino/?modo=revisao" class="btn-suave flex min-h-12 w-full items-center justify-center rounded-full px-6 font-display text-base font-bold">
-				Revisar erros e marcadas ({contarParaRevisar(banco)})
-			</a>
-		{/if}
-	</div>
 {:else}
 	<SessaoTopo
 		titulo={`Questão ${i + 1} de ${sessao.length}`}
@@ -620,6 +626,7 @@
 		progresso={sessao.length ? respondidasSessao / sessao.length : 0}
 		concluida={sessao.length > 0 && respondidasSessao >= sessao.length}
 		{xp}
+		{sequencia}
 		aoFechar={sair}
 	/>
 	{#if sessao.length < TOTAL}
@@ -661,6 +668,7 @@
 							anteriorDesabilitado={i === 0}
 							mostrarXP={xpPing > 0}
 							{xpValor}
+							{sequencia}
 							bind:selecaoPendente
 							bind:zoomAberto
 						/>

@@ -25,6 +25,7 @@
 		XCircle
 	} from 'phosphor-svelte';
 	import { nuvemLigada, reportarQuestao, MOTIVOS_REPORTE } from './nuvem.js';
+	import SeloSequencia from './SeloSequencia.svelte';
 	import TextoRico from './TextoRico.svelte';
 	import { copiarQuestao } from './copiar.js';
 	import { carregarResolucoes, rotuloAutoria } from './resolucoes.js';
@@ -75,6 +76,8 @@
 		anteriorDesabilitado = false,
 		mostrarXP = false,
 		xpValor = 10,
+		// acertos seguidos na sessão (Treino e Estudo); a partir de 3 vira selo
+		sequencia = 0,
 		selecaoPendente = $bindable(false),
 		zoomAberto = $bindable(false)
 	} = $props();
@@ -755,7 +758,7 @@
 			<div
 				bind:this={veredito}
 				tabindex="-1"
-				class="rounded-2xl border p-4 {categoria === 'certa'
+				class="relative rounded-2xl border p-4 {categoria === 'certa'
 					? 'border-ok-border bg-ok-bg text-ok-fg'
 					: categoria === 'errada'
 						? (avaliadaAgora ? 'shake ' : '') + 'border-bad-border bg-bad-bg text-bad-fg'
@@ -763,6 +766,9 @@
 				role="status"
 				aria-live="polite"
 			>
+				{#if avaliadaAgora && categoria === 'certa' && sequencia >= 3}
+					<SeloSequencia n={sequencia} />
+				{/if}
 				<div class="flex items-start gap-3">
 					<span class="relative mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center" aria-hidden="true">
 						{#if categoria === 'certa' && avaliadaAgora}

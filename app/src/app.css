@@ -515,4 +515,11 @@ html.dark {
 		transition-duration: 0.01ms !important;
 		transition-delay: 0ms !important;
 	}
+	/* Entradas que começam em opacidade 0: sem animação nenhuma, para o conteúdo
+	   não depender nem de um quadro para aparecer. */
+	.rise,
+	.springin,
+	.gaveta-subir {
+		animation: none !important;
+	}
 }

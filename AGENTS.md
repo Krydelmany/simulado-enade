@@ -55,13 +55,16 @@ app/                       o site: SvelteKit 2 + Svelte 5 + Tailwind 4 + Vite 6
                            simulado/, conta/, professor/, desempenho/, poo/, privacidade/
   src/lib/                 banco.js, stats.js, simulado.js, materias.js(.json),
                            resumo.js, tema.js, motion.js, foco.svelte.js,
-                           sessao.js, gestos.js, camadas.svelte.js,
+                           sessao.js, conquista.js (bilhete resumo → trilha),
+                           gestos.js, camadas.svelte.js,
                            copiar.js (botão de copiar a questão),
                            resolucoes.js ("como resolver"), enade.js (data da
                            prova), csv.js (planilha do painel) e os
                            componentes (Questao, TextoRico, SessaoTopo,
                            BarraAcao, Contador, VigiaDevTools, BordaVoltar,
-                           DicaGestos, Marca, CodigoTurma)
+                           DicaGestos, Marca, CodigoTurma; resumo:
+                           PalcoResumo, EscadaMarco, BarrasArea;
+                           SeloSequencia)
   static/banco/            O BANCO que o site carrega: enadeAAAA-{fg,ce}.json,
                            geradas.json, resolucoes.json e img/   ← SAÍDA de scripts
                            + poo-2026-10-28.json (questionário do professor,
@@ -146,6 +149,7 @@ Todas as chaves têm o prefixo `enade-`:
 | localStorage | `enade-convite` | `{codigo, em}` do link `?turma=`, guardado até entrar na turma (vale 24 h; `nuvem.js`) |
 | localStorage | `enade-aparelho` | uuid sorteado no navegador, só para contar visitas (D14); sem ligação com a conta |
 | sessionStorage | `enade-banco` | cache do banco |
+| sessionStorage | `enade-conquista` | `{etapa, certas, total, em}` da sessão recém-concluída; a home lê, apaga e anima a trilha (`conquista.js`). Não é progresso |
 
 Não existe servidor para migrar dados. **Qualquer mudança no formato gravado
 precisa continuar lendo o formato antigo, ou descartá-lo sem quebrar.** Como
@@ -881,13 +885,34 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
     corrido usa as classes do Tailwind; o menor tamanho é `text-xs` (12 px),
     e evite criar `text-[NNpx]` novo.
   - Ícones `phosphor-svelte` com `weight="bold"` e `aria-hidden="true"`. O
-    `weight="fill"` fica para Play/Pause, troféu, raio do XP e estados ligados.
+    `weight="fill"` fica para Play/Pause, raio do XP e estados ligados.
     Zero emoji.
 - **Motion respeita `prefers-reduced-motion`:**
   - O CSS é zerado por uma media query global em `app.css`.
   - Transições Svelte e scroll suave **não** passam por ela. Use as
     constantes de `motion.js`: `DUR` (duração de `in:fly` etc.), `REDUCED`
     (`scrollIntoView`) e `reduzirMovimento()` (lê a preferência ao vivo).
+  - Animação por JS passa por `animar()` (com `mola()` quando pede física): o
+    **estado final mora no markup** e a animação só descreve a chegada
+    (`fill: 'backwards'`, nunca `forwards` nem estilo inicial escondido). É o
+    que garante que nada fica preso em `opacity: 0`, barra vazia ou traço
+    invisível. Sem biblioteca de animação: a Web Animations API com a mola em
+    `linear()` faz o mesmo sem os ~6 kB.
+- **Resumo (`PalcoResumo`), igual nos quatro modos:** a escada da marca é
+  desenhada e o marco âmbar sobe até o desempenho da sessão; o placar conta
+  enquanto a linha da sessão acende questão a questão (a ALTURA repete a cor,
+  para quem não distingue verde de vermelho); o marco pulsa e os botões entram.
+  - O palco só desenha: placar, métricas e o que entra na nota vêm da rota. A
+    discursiva do simulado entra na linha como bloco `foraDaNota`.
+  - Parcial vale meio degrau. As três faixas (`faixaDesempenho`) falam de obra,
+    nunca de reprovação. Sem confete, troféu, caixa ou círculo em volta.
+  - `animado={false}` ao reabrir (voltar da revisão do simulado): a cena não se
+    repete. Tocar no palco pula para o fim.
+  - Botão que descarta o resultado não fica onde o duplo toque do "Entregar"
+    cairia: por isso "Novo simulado" mora no fim da página.
+- **Sequência (3+ acertos seguidos, Treino e Estudo):** `sequenciaAtual(log)`;
+  pulada e anulada não contam nem quebram. O selo fica pendurado na gaveta de
+  feedback, fora do fluxo, e nunca perto do enunciado. Não grava nada.
 - **Acessibilidade:**
   - Alvos de toque com no mínimo 44 px (`min-h-11`, ou `h-11 w-11` em botão
     só de ícone).

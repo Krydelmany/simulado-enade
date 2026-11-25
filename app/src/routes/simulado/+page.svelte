@@ -3,14 +3,16 @@
 	import { fly } from 'svelte/transition';
 	import Questao from '$lib/Questao.svelte';
 	import BarraAcao from '$lib/BarraAcao.svelte';
-	import Contador from '$lib/Contador.svelte';
+	import BarrasArea from '$lib/BarrasArea.svelte';
+	import PalcoResumo from '$lib/PalcoResumo.svelte';
 	import DicaGestos from '$lib/DicaGestos.svelte';
 	import { DUR } from '$lib/motion.js';
 	import { arrastarParaFechar, deslizarQuestoes } from '$lib/gestos.js';
-	import { ligarCamadas } from '$lib/camadas.svelte.js';
+	import { ligarCamadas, sairDaRota } from '$lib/camadas.svelte.js';
 	import { carregarBancoDetalhado } from '$lib/banco.js';
 	import { nomeMateria } from '$lib/materias.js';
 	import { foco } from '$lib/foco.svelte.js';
+	import { anotarConquista } from '$lib/conquista.js';
 	import {
 		FORMATO,
 		TOTAL_QUESTOES,
@@ -47,7 +49,6 @@
 		ArrowRight,
 		ArrowsClockwise,
 		CheckCircle,
-		Hourglass,
 		Infinity as InfinityIcon,
 		Info,
 		ListChecks,
@@ -58,7 +59,6 @@
 		SquaresFour,
 		Stairs,
 		Timer,
-		Trophy,
 		UsersThree,
 		X,
 		XCircle
@@ -93,6 +93,9 @@
 	let confirmaEntrega = $state(false);
 	let confirmaNova = $state(false);
 	let zoomAberto = $state(false);
+	// resultado recém-entregue: só nessa hora o palco encena. Voltando da revisão
+	// ou reabrindo a correção, ele já vem pronto.
+	let estreia = $state(false);
 	// sentido da última troca de questão: a nova entra deslizando por ele
 	let direcao = $state(0);
 	// simulados agendados pelo professor (só com conta e turma)
@@ -125,6 +128,7 @@
 			else if (n === 'entrega') confirmaEntrega = false;
 			else if (n === 'nova') confirmaNova = false;
 			else if (n === 'resultado') {
+				estreia = false;
 				tela = 'inicio';
 				topo();
 			} else if (n === 'revisao') tela = 'resultado';
@@ -422,8 +426,10 @@
 			feitos = lerFeitosDaTurma(contaLocal());
 		}
 		gravarProva($state.snapshot(prova));
+		anotarConquista({ etapa: '/simulado/', certas: ultimo.certas, total: ultimo.total });
 		confirmaEntrega = false;
 		cartaoAberto = false;
+		estreia = true;
 		tela = 'resultado';
 		topo();
 	}
@@ -431,6 +437,7 @@
 	function revisar(k) {
 		direcao = 0;
 		i = k;
+		estreia = false;
 		tela = 'revisao';
 		topo();
 	}
@@ -749,98 +756,98 @@
 	</BarraAcao>
 {:else if tela === 'resultado' && prova && res}
 	<!-- ===================== RESULTADO ===================== -->
-	<div class="folha curso-halo rounded-3xl px-5 pt-7 pb-8 text-center sm:p-8">
-		<p class="text-label font-bold text-accent-ink">
-			{prova.simulado ? prova.simulado.titulo : 'Simulado'}, {dataCurta(prova.entregueEm)}
-		</p>
-		<h1 class="mt-1 font-display text-3xl font-extrabold tracking-tight text-ink">
-			{prova.tempoEsgotado ? 'Tempo esgotado' : 'Prova entregue'}
-		</h1>
-		<Trophy size={44} weight="fill" class="springin mx-auto mt-4 text-milestone" aria-hidden="true" />
-		<p class="nums mt-3 font-display text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
-			<Contador valor={res.objetivas.certas} /><span class="text-2xl font-bold text-ink-soft">/{res.objetivas.total}</span>
-		</p>
-		<p class="nums mt-1 text-sm text-ink-soft">acertos nas objetivas · {pct}%</p>
-	</div>
-
-	<div class="mx-auto grid max-w-md grid-cols-3 gap-2.5 pt-4 text-center">
-		<div class="superficie rounded-2xl p-3">
-			<p class="nums font-display text-xl font-extrabold text-ink">{res.fg.certas}/{res.fg.total}</p>
-			<p class="mt-0.5 text-xs font-medium text-ink-soft">Formação Geral</p>
-		</div>
-		<div class="superficie rounded-2xl p-3">
-			<p class="nums font-display text-xl font-extrabold text-ink">{res.ce.certas}/{res.ce.total}</p>
-			<p class="mt-0.5 text-xs font-medium text-ink-soft">Específico</p>
-		</div>
-		<div class="superficie rounded-2xl p-3">
-			<p class="nums flex items-center justify-center gap-1 font-display text-xl font-extrabold text-ink">
-				<Hourglass size={16} weight="bold" class="text-accent-ink" aria-hidden="true" />{relogio(prova.gastoMs)}
-			</p>
-			<p class="mt-0.5 text-xs font-medium text-ink-soft">Tempo</p>
-		</div>
-	</div>
-	{#if prova.simulado}
-		<p class="mx-auto mt-3 flex max-w-md items-start gap-2 rounded-2xl border border-accent-border bg-accent-soft p-3 text-sm text-accent-ink" role="status">
-			<UsersThree size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
-			<span>O resultado vai para o professor da turma. Sem internet agora, ele sobe sozinho quando ela voltar.</span>
-		</p>
-	{/if}
-	{#if res.objetivas.brancos}
-		<p class="nums mt-2 text-center text-xs font-semibold text-ink-soft">
-			{res.objetivas.brancos} {res.objetivas.brancos === 1 ? 'objetiva ficou' : 'objetivas ficaram'} em branco
-		</p>
-	{/if}
-
-	<!-- discursiva: o site não corrige texto; o aluno compara com o padrão do INEP -->
-	<div class="superficie mt-4 rounded-3xl p-5">
-		<p class="font-display text-lg font-bold text-ink">Discursiva</p>
-		{#if res.disc === 'pendente'}
-			<p class="mt-1 text-sm text-ink-soft">
-				A discursiva não entra na contagem acima: compare sua resposta com o padrão do INEP e avalie.
-			</p>
-			<button
-				type="button"
-				onclick={() => revisar(questoes.length - 1)}
-				class="btn-primario mt-3 min-h-12 w-full rounded-full px-6 font-display text-base font-bold"
-			>
-				Ver padrão e me avaliar
-			</button>
-		{:else}
-			<p class="mt-1 flex items-center gap-2 text-sm font-semibold text-ink">
-				{#if res.disc === 'certa'}
-					<CheckCircle size={18} weight="bold" class="text-ok-fg" aria-hidden="true" /> Você avaliou como certa.
-				{:else if res.disc === 'parcial'}
-					<MinusCircle size={18} weight="bold" class="text-warn-fg" aria-hidden="true" /> Você avaliou como parcial.
+	<PalcoResumo
+		etiqueta="{prova.simulado ? prova.simulado.titulo : 'Simulado'}, {dataCurta(prova.entregueEm)}"
+		titulo={prova.tempoEsgotado ? 'Tempo esgotado' : 'Prova entregue'}
+		nivelTitulo="h1"
+		certas={res.objetivas.certas}
+		total={res.objetivas.total}
+		rotulo="acertos nas objetivas"
+		blocos={[
+			{ itens: res.itens.filter((it) => it.bloco === 'FG') },
+			{ itens: res.itens.filter((it) => it.bloco === 'CE') },
+			{ itens: res.itens.filter((it) => it.bloco === 'DISC'), foraDaNota: true }
+		]}
+		metricas={[
+			{ rotulo: 'Objetivas', valor: pct, sufixo: '%' },
+			{ rotulo: 'Tempo', valor: relogio(prova.gastoMs) },
+			{ rotulo: 'XP ganho', valor: prova.xp ?? 0, prefixo: '+', xp: true }
+		]}
+		grupos={[
+			{ id: 'FG', nome: NOME_BLOCO.FG, certas: res.fg.certas, total: res.fg.total },
+			{ id: 'CE', nome: NOME_BLOCO.CE, certas: res.ce.certas, total: res.ce.total }
+		]}
+		completa={res.objetivas.brancos === 0}
+		animado={estreia}
+	>
+		{#snippet extra()}
+			{#if prova.simulado}
+				<p class="flex items-start gap-2 rounded-2xl border border-accent-border bg-accent-soft p-3 text-sm text-accent-ink" role="status">
+					<UsersThree size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
+					<span>O resultado vai para o professor da turma. Sem internet agora, ele sobe sozinho quando ela voltar.</span>
+				</p>
+			{/if}
+			<!-- discursiva: o site não corrige texto; o aluno compara com o padrão do INEP -->
+			<div class="pb-1">
+				<p class="font-display text-heading font-bold text-ink">Discursiva</p>
+				{#if res.disc === 'pendente'}
+					<p class="mt-1 text-sm text-pretty text-ink-soft">
+						A discursiva não entra na contagem acima: compare sua resposta com o padrão do INEP e avalie.
+					</p>
 				{:else}
-					<XCircle size={18} weight="bold" class="text-bad-fg" aria-hidden="true" /> Você avaliou como errada.
+					<p class="mt-1 flex items-center gap-2 text-sm font-semibold text-ink">
+						{#if res.disc === 'certa'}
+							<CheckCircle size={18} weight="bold" class="text-ok-fg" aria-hidden="true" /> Você avaliou como certa.
+						{:else if res.disc === 'parcial'}
+							<MinusCircle size={18} weight="bold" class="text-warn-fg" aria-hidden="true" /> Você avaliou como parcial.
+						{:else}
+							<XCircle size={18} weight="bold" class="text-bad-fg" aria-hidden="true" /> Você avaliou como errada.
+						{/if}
+					</p>
+					<button
+						type="button"
+						onclick={() => revisar(questoes.length - 1)}
+						class="min-h-11 text-sm font-bold text-accent-ink underline"
+					>
+						Rever a discursiva
+					</button>
 				{/if}
-			</p>
-			<button
-				type="button"
-				onclick={() => revisar(questoes.length - 1)}
-				class="mt-2 text-sm font-bold text-accent-ink underline"
-			>
-				Rever a discursiva
+			</div>
+		{/snippet}
+		{#snippet acoes()}
+			{@const nRevisar = contarParaRevisar(banco)}
+			{#if res.disc === 'pendente'}
+				<button
+					type="button"
+					onclick={() => revisar(questoes.length - 1)}
+					class="btn-primario min-h-12 w-full rounded-full px-6 font-display text-base font-bold"
+				>
+					Ver padrão e me avaliar
+				</button>
+			{/if}
+			{#if nRevisar}
+				<a
+					href="/treino/?modo=revisao"
+					class="{res.disc === 'pendente' ? 'btn-suave' : 'btn-primario'} flex min-h-12 w-full items-center justify-center rounded-full px-4 text-center font-display text-base font-bold"
+				>
+					Revisar erros e marcadas ({nRevisar})
+				</a>
+			{/if}
+			<button type="button" onclick={() => sairDaRota('/#trilha')} class="min-h-11 w-full rounded-full px-6 text-sm font-bold text-ink-soft hover:text-ink">
+				Voltar à trilha
 			</button>
-		{/if}
-	</div>
+		{/snippet}
+	</PalcoResumo>
 
 	{#if res.porMateria.length}
 		<div class="superficie mt-3 rounded-3xl p-5">
 			<p class="font-display text-lg font-bold text-ink">Por matéria</p>
 			<p class="mt-0.5 text-xs text-ink-soft">Do pior para o melhor desempenho — comece o estudo pelo topo.</p>
-			<div class="mt-3 space-y-3">
-				{#each res.porMateria as m (m.materia)}
-					<div>
-						<div class="flex items-baseline justify-between gap-3 text-sm">
-							<p class="truncate font-semibold text-ink">{nomeMateria(m.materia)}</p>
-							<p class="nums shrink-0 font-bold text-ink">{m.certas}/{m.total}</p>
-						</div>
-						<div class="mt-1.5 h-2 overflow-hidden rounded-full bg-track">
-							<div class="h-full rounded-full bg-accent-bar" style="width: {(m.certas / m.total) * 100}%"></div>
-						</div>
-					</div>
-				{/each}
+			<div class="mt-3">
+				<BarrasArea
+					linhas={res.porMateria.map((m) => ({ id: m.materia, nome: nomeMateria(m.materia), certas: m.certas, total: m.total }))}
+					animado={estreia}
+				/>
 			</div>
 		</div>
 	{/if}
@@ -879,14 +886,11 @@
 	</p>
 
 	<div class="mt-4 space-y-2.5">
-		<button type="button" onclick={comecar} class="btn-primario flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold">
+		<!-- sozinho no fim da página: começa na hora e troca a prova entregue, então
+		     não fica no palco, onde o segundo toque do "Entregar" poderia cair -->
+		<button type="button" onclick={comecar} class="btn-suave flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold">
 			<ArrowsClockwise size={19} weight="bold" aria-hidden="true" /> Novo simulado
 		</button>
-		{#if contarParaRevisar(banco)}
-			<a href="/treino/?modo=revisao" class="btn-suave flex min-h-12 w-full items-center justify-center rounded-full px-6 font-display text-base font-bold">
-				Revisar erros e marcadas ({contarParaRevisar(banco)})
-			</a>
-		{/if}
 	</div>
 {:else}
 	<!-- ===================== INÍCIO ===================== -->
