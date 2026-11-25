@@ -291,7 +291,7 @@
 	$effect(() => {
 		if (!avaliadaAgora || !veredito) return;
 		const r = veredito.getBoundingClientRect();
-		const barra = artigo?.querySelector('[data-barra-acao]') ?? document.querySelector('[data-barra-acao]');
+		const barra = artigo?.querySelector('[data-barra-acao]');
 		const rb = barra?.getBoundingClientRect();
 		const h = window.innerHeight || 0;
 		const baixo = Math.max(r.bottom, rb?.bottom ?? r.bottom);

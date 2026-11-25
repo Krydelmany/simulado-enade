@@ -101,7 +101,7 @@
 	let feitas = $derived(log.filter((r) => !r.pulada).length);
 	let certas = $derived(log.filter((r) => r.certa).length);
 	let parciais = $derived(log.filter((r) => r.parcial).length);
-	let respondidasSessao = $derived(respostas.filter(Boolean).length);
+	let respondidasSessao = $derived(respostas.filter((r) => r && !r.pulada).length);
 	let ultima = $derived(i + 1 >= sessao.length);
 	let podeAvancar = $derived(!!respostas[i] && !selecaoPendente);
 	let atalhosQuestao = $derived(
@@ -389,7 +389,7 @@
 	}
 
 	function aoTecla(e) {
-		if (e.metaKey || e.ctrlKey || e.altKey) return;
+		if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
 		if (ehCampo(e.target)) return;
 		if (e.key === 'Escape') {
 			if (confirmaSaida) {

@@ -97,8 +97,8 @@ README.md · PLANO.md · ROADMAP.md · INVENTARIO.md   docs de produto e de font
   `onMount`.
 - Tela nova = `routes/<nome>/+page.svelte`. Para ela aparecer, inclua-a em
   três listas escritas à mão: o array `tabs` do `+layout.svelte` (alimenta a
-  nav do topo e a tab bar do celular), os links do rodapé (no mesmo arquivo)
-  e, se for um modo, o array `modos` da home.
+  nav do topo e o menu do celular), os links do rodapé (no mesmo arquivo)
+  e, se for um modo, a trilha (`etapasTrilha`) da home.
 - **Não use rota com parâmetro** (`[id]`): com tudo pré-renderizado, o build
   falha. Passe o parâmetro pela query, como em `?modo=revisao`.
 - Na Vercel, o Root Directory `app` é configurado **no painel**, não no
@@ -764,9 +764,10 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
 14. **Tela de quiz fora de `/treino/` e `/estudo/`** precisa ligar
     `foco.quiz` num `$effect` e desligar no cleanup (`foco` é estado de módulo
     e sobrevive à troca de rota). Sem isso, o rodapé fica visível no meio do
-    quiz e a `BordaVoltar` não é ativada. A `BarraAcao` agora é **INLINE**
-    (não fixa): não existe mais `pb-32` reservado nem tab bar inferior; o
-    `<main>` usa `pb-10`.
+    quiz e a `BordaVoltar` não é ativada. No Treino e no Estudo a ação
+    principal fica **inline** no `<Questao>` (a `BarraAcao`, também inline,
+    fica no Simulado): não existe mais barra fixa, `pb-32` reservado nem tab
+    bar inferior; o `<main>` usa `pb-10`.
 15. **Toda camada nova** (modal, overlay, tela montada dentro da página)
     entra no `abertas()` do `ligarCamadas` da rota, com o `fechar`
     correspondente. Sem isso, o voltar do sistema sai da rota com ela aberta.
@@ -967,8 +968,9 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
   O código recorta a 200 dpi e o banco só usa PNG (`img/2019-FG-Q05.jpg` está
   órfão).
 - **`PLANO.md` e `ROADMAP.md`:**
-  - Falam em Outfit, "navy + laranja" e streak. Hoje é Archivo + Plus
-    Jakarta, o acento é azul (veja "Direção visual") e o streak foi removido.
+  - Falam em Outfit, "navy + laranja" e streak. Hoje é Sora + Inter (com
+    JetBrains Mono só em código/relógio), o pacote do curso ativo é Cobalto
+    + Âmbar (veja "Direção visual") e o streak foi removido.
   - "Anulada = ponto para todos" não vale mais: as anuladas saíram do site
     (`banco/anuladas.json`).
   - O `ROADMAP.md` cita um "preview LAN :8123" que não existe e deixa o

@@ -146,7 +146,7 @@
 	// contadores derivados do log — assim navegar para frente/voltar nunca conta duas vezes
 	let feitas = $derived(log.filter((r) => !r.pulada).length);
 	let certas = $derived(log.filter((r) => r.certa).length);
-	let respondidasVolta = $derived(respostas.filter(Boolean).length);
+	let respondidasVolta = $derived(respostas.filter((r) => r && !r.pulada).length);
 	let ultima = $derived(i + 1 >= fila.length);
 	let podeAvancar = $derived(!!respostas[i] && !selecaoPendente);
 	let atalhosQuestao = $derived(
@@ -492,7 +492,7 @@
 	}
 
 	function aoTecla(e) {
-		if (e.metaKey || e.ctrlKey || e.altKey) return;
+		if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
 		if (ehCampo(e.target)) return;
 		if (e.key === 'Escape') {
 			if (confirmaFiltro) {
