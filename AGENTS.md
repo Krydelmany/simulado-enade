@@ -908,6 +908,10 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
     nunca de reprovação. Sem confete, troféu, caixa ou círculo em volta.
   - `animado={false}` ao reabrir (voltar da revisão do simulado): a cena não se
     repete. Tocar no palco pula para o fim.
+  - Botão só aceita toque com a cena terminada, ou 350 ms depois de pulada:
+    antes, ele aparecia embaixo do dedo que pulava. O foco abre no título.
+  - Acima de 46 questões a linha agrupa por coluna, e placar e métricas reduzem
+    a fonte com números longos: 117/156 invadia a escada em 360 px.
   - Botão que descarta o resultado não fica onde o duplo toque do "Entregar"
     cairia: por isso "Novo simulado" mora no fim da página.
 - **Sequência (3+ acertos seguidos, Treino e Estudo):** `sequenciaAtual(log)`;

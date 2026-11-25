@@ -622,6 +622,7 @@
 {:else}
 	<SessaoTopo
 		titulo={`Questão ${i + 1} de ${sessao.length}`}
+		tituloCurto={`${i + 1} de ${sessao.length}`}
 		detalhe={NIVEIS[nivel].nome}
 		progresso={sessao.length ? respondidasSessao / sessao.length : 0}
 		concluida={sessao.length > 0 && respondidasSessao >= sessao.length}

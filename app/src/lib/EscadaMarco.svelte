@@ -147,7 +147,7 @@
 		animar(
 			um('[data-gema]'),
 			{ transform: ['scale(0.72, 1.22)', 'scale(1, 1)'] },
-			{ ...mola(320, 13), atraso: fimSubida }
+			{ ...mola(320, 18), atraso: fimSubida }
 		);
 		animar(um('[data-luz]'), { opacity: [0, 1] }, { duracao: 200, atraso: fimSubida - 40 });
 		animar(um('[data-sombra]'), { opacity: [0, 0.22] }, { duracao: 160, atraso: fimSubida - 40 });

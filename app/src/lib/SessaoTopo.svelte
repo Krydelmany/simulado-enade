@@ -1,7 +1,8 @@
 <script>
 	import { Lightning, X } from 'phosphor-svelte';
 
-	let { titulo, detalhe = '', progresso = 0, concluida = false, xp = 0, sequencia = 0, aoFechar } = $props();
+	// `tituloCurto`: no celular o título divide a linha com o detalhe e virava "Quest…"
+	let { titulo, tituloCurto = titulo, detalhe = '', progresso = 0, concluida = false, xp = 0, sequencia = 0, aoFechar } = $props();
 
 	// posição real da sessão em % (por questões respondidas/concluídas) —
 	// substitui a etiqueta decorativa fixa antiga e evita pintar 100% verde
@@ -23,7 +24,9 @@
 
 		<div class="min-w-0 flex-1">
 			<div class="flex items-baseline justify-between gap-2">
-				<p class="truncate font-display text-sm font-bold text-ink sm:text-[15px]">{titulo}</p>
+				<p class="truncate font-display text-sm font-bold text-ink sm:text-[15px]">
+					<span class="sm:hidden">{tituloCurto}</span><span class="hidden sm:inline">{titulo}</span>
+				</p>
 				<p class="nums shrink-0 text-xs font-semibold text-ink-soft">
 					{#if detalhe}{detalhe} · {/if}{pct}%
 				</p>

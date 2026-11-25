@@ -766,7 +766,7 @@
 		blocos={[
 			{ itens: res.itens.filter((it) => it.bloco === 'FG') },
 			{ itens: res.itens.filter((it) => it.bloco === 'CE') },
-			{ itens: res.itens.filter((it) => it.bloco === 'DISC'), foraDaNota: true }
+			{ itens: res.itens.filter((it) => it.bloco === 'DISC'), foraDaNota: true, rotulo: 'discursiva' }
 		]}
 		metricas={[
 			{ rotulo: 'Objetivas', valor: pct, sufixo: '%' },

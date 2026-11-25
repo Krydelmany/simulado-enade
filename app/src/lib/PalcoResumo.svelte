@@ -6,6 +6,20 @@
 	const FRASE = 720;
 	const PULSO = 850;
 	const BOTOES = 900;
+	// folga contra duplo toque: logo que o palco abre e logo que a cena é pulada
+	const FOLGA = 350;
+
+	// acima disto a linha agrupa questões por coluna: 156 viravam 4 fileiras e
+	// empurravam os botões para fora da primeira tela do celular
+	const COLUNAS = 46;
+
+	// Placar e total por número de dígitos do total: com 3, "117/156" invadia a
+	// escada em 360 px.
+	const PLACAR = [
+		['text-6xl sm:text-8xl', 'text-2xl sm:text-4xl'],
+		['text-4xl sm:text-7xl', 'text-xl sm:text-3xl'],
+		['text-3xl sm:text-6xl', 'text-sm sm:text-2xl']
+	];
 
 	const FRASES = {
 		excelente: 'Alto da escada. Dá para subir a régua.',
@@ -49,6 +63,22 @@
 		}
 		return { itens: saida, maior };
 	}
+
+	/** Colunas de várias questões, cada uma com a fatia de cada resultado. */
+	function agrupar(itens) {
+		const porColuna = Math.ceil(itens.length / COLUNAS);
+		const colunas = [];
+		for (let k = 0; k < itens.length; k += porColuna) {
+			const fatia = itens.slice(k, k + porColuna);
+			colunas.push(
+				ORDEM.map((s) => ({
+					classe: STATUS[s].classe,
+					pct: (fatia.filter((it) => it.status === s).length / fatia.length) * 100
+				})).filter((parte) => parte.pct)
+			);
+		}
+		return { porColuna, colunas };
+	}
 </script>
 
 <script>
@@ -68,8 +98,8 @@
 	 *
 	 * Só desenha: placar, métricas e regras de nota vêm prontos da rota.
 	 *  - `blocos`: `[{ itens: [{ status }] }]`, a linha da sessão por parte da
-	 *    prova. Bloco com `foraDaNota` aparece na linha e não entra na escada
-	 *    (a discursiva do simulado).
+	 *    prova. Bloco com `foraDaNota` (e `rotulo`) aparece na linha e na legenda,
+	 *    e não entra na escada (a discursiva do simulado).
 	 *  - `metricas`: `[{ rotulo, valor, prefixo?, sufixo?, xp? }]`; número conta,
 	 *    texto (tempo) entra pronto.
 	 *  - `grupos`: barras que fazem parte do placar (FG e CE no simulado). As de
@@ -104,27 +134,78 @@
 	let pulso = $derived(total > 0 && (pct >= 70 || completa));
 
 	let linha = $derived(
-		blocos.map((b) => ({ ...b, ...(sequencias ? comSequencias(b.itens) : { maior: 0 }) }))
+		blocos.map((b) => ({
+			...b,
+			...(sequencias ? comSequencias(b.itens) : { maior: 0 }),
+			...(b.itens.length > COLUNAS ? agrupar(b.itens) : { porColuna: 1, colunas: null })
+		}))
 	);
-	let quantas = $derived(contados.length + blocos.filter((b) => b.foraDaNota).flatMap((b) => b.itens).length);
+	// fora da nota tem legenda própria, sem somar com as que valem: o número de
+	// certas tem de bater com o placar
+	let aparte = $derived(
+		blocos
+			.filter((b) => b.foraDaNota)
+			.flatMap((b) => b.itens.map((it) => ({ ...STATUS[it.status], rotulo: b.rotulo })))
+	);
+	let quantas = $derived(contados.length + aparte.length);
+	let porColuna = $derived(Math.max(1, ...linha.map((b) => b.porColuna)));
 	let maiorSequencia = $derived(Math.max(0, ...linha.map((b) => b.maior)));
 	let legenda = $derived(
 		ORDEM.map((s) => ({ ...STATUS[s], s, n: contados.filter((it) => it.status === s).length })).filter((l) => l.n)
 	);
 
+	let placar = $derived(PLACAR[Math.min(2, Math.max(0, String(total).length - 2))]);
+	// a métrica mais comprida manda na fonte da linha (o raio do XP ocupa ~2 dígitos)
+	let larguraMetrica = $derived(
+		Math.max(0, ...metricas.map((m) => `${m.prefixo ?? ''}${m.valor}${m.sufixo ?? ''}`.length + (m.xp ? 2 : 0)))
+	);
+	let fonteMetrica = $derived(
+		larguraMetrica >= 8 ? 'text-base sm:text-xl' : larguraMetrica === 7 ? 'text-lg sm:text-xl' : 'text-xl'
+	);
+
 	let raiz;
+	let refTitulo;
 	// lido uma vez: quem reabre o resultado vê o palco pronto, sem refazer a cena
 	// svelte-ignore state_referenced_locally
 	let pulado = $state(!animado);
 	// O resumo troca de lugar com o botão que o abriu: sem esta folga, o segundo
 	// toque de um duplo toque caía em "Nova sessão" e o resumo sumia.
 	let liberado = $state(false);
+	// Botões só aceitam toque com a cena terminada. Antes, tocar na área vazia
+	// para pular fazia o botão aparecer embaixo do dedo e receber o clique.
+	let botoesLivres = $state(false);
+	let esperaBotoes;
+
+	function soltarBotoes(ms) {
+		clearTimeout(esperaBotoes);
+		botoesLivres = false;
+		esperaBotoes = setTimeout(() => (botoesLivres = true), ms);
+	}
 
 	onMount(() => {
-		const t = setTimeout(() => (liberado = true), 350);
-		if (animado && raiz) encenar();
-		return () => clearTimeout(t);
+		const t = setTimeout(() => (liberado = true), FOLGA);
+		soltarBotoes(FOLGA);
+		// o botão que abriu o resumo sumiu: sem isto o teclado recomeçava do `body`
+		refTitulo?.focus({ preventScroll: true });
+		if (animado && raiz) {
+			encenar();
+			soltarBotoes(Math.max(FOLGA, fimDaCena()));
+		}
+		return () => {
+			clearTimeout(t);
+			clearTimeout(esperaBotoes);
+		};
 	});
+
+	function animacoes() {
+		return raiz?.getAnimations?.({ subtree: true }) ?? [];
+	}
+
+	/** Quando acaba a última animação do palco (as da escada já começaram). */
+	function fimDaCena() {
+		const fins = animacoes().map((a) => a.effect?.getComputedTiming().endTime);
+		return Math.max(0, ...fins.filter(Number.isFinite));
+	}
 
 	function encenar() {
 		const todos = (s) => [...raiz.querySelectorAll(s)];
@@ -162,11 +243,16 @@
 		);
 	}
 
-	// Pula a cena: termina o que estiver animando e fixa a contagem no valor.
-	function pular() {
-		if (pulado) return;
+	// Pula a cena: termina o que estiver animando e fixa a contagem no valor. No
+	// `click`, não no `pointerdown`: o toque inteiro já foi do palco, e o botão
+	// que aparece no lugar dele ainda espera a folga.
+	function pular(e) {
+		if (pulado || e.target.closest('a, button')) return;
 		pulado = true;
-		for (const a of raiz?.getAnimations?.({ subtree: true }) ?? []) {
+		const rodando = animacoes().filter((a) => a.playState === 'running');
+		if (!rodando.length) return;
+		soltarBotoes(FOLGA);
+		for (const a of rodando) {
 			try {
 				a.finish();
 			} catch {
@@ -176,9 +262,12 @@
 	}
 </script>
 
+<!-- pular é só um atalho de toque: sem ele a cena termina sozinha em ~1,5 s, e o
+     teclado não depende dela -->
+<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
 <section
 	bind:this={raiz}
-	onpointerdown={pular}
+	onclick={pular}
 	class="folha curso-halo relative overflow-clip rounded-3xl px-5 pt-6 pb-6 sm:p-8"
 	class:pointer-events-none={!liberado}
 	aria-label="Resumo: {certas} de {total}, {rotulo}"
@@ -187,15 +276,20 @@
 
 	<div class="mt-1 flex items-end gap-2 sm:gap-6">
 		<div class="min-w-0 flex-1 self-stretch">
-			<svelte:element this={nivelTitulo} class="font-display text-title font-extrabold tracking-tight text-ink">
+			<svelte:element
+				this={nivelTitulo}
+				bind:this={refTitulo}
+				tabindex="-1"
+				class="titulo font-display text-title font-extrabold tracking-tight text-ink"
+			>
 				{titulo}
 			</svelte:element>
 			<p
 				data-placar
-				class="nums mt-4 font-display text-6xl leading-none font-extrabold tracking-tight text-ink sm:mt-8 sm:text-8xl"
+				class="nums mt-4 font-display leading-none font-extrabold tracking-tight text-ink sm:mt-8 {placar[0]}"
 			>
 				<Contador valor={certas} atraso={CONTAGEM} duracao={620} pular={pulado} /><span
-					class="text-2xl font-bold text-ink-soft sm:text-4xl">/{total}</span
+					class="font-bold text-ink-soft {placar[1]}">/{total}</span
 				>
 			</p>
 			<p class="mt-2 text-sm text-pretty text-ink-soft">{rotulo}</p>
@@ -209,14 +303,22 @@
 	{/if}
 
 	{#if quantas}
-		<!-- linha viva da sessão: uma coluna por questão, na ordem em que aconteceu -->
+		<!-- linha viva da sessão: uma coluna por questão, na ordem em que aconteceu
+		     (sessão longa agrupa: cada coluna empilha as suas, com os acertos embaixo) -->
 		<div class="mt-5 flex items-end gap-2" aria-hidden="true">
 			{#each linha as b, j (j)}
 				<div
 					class="grid min-w-0 items-end gap-x-0.5 gap-y-2 sm:gap-x-1"
-					style="flex: {b.itens.length} 1 0; grid-template-columns: repeat({Math.min(46, b.itens.length)}, minmax(0, 3rem))"
+					style="flex: {b.itens.length} 1 0; grid-template-columns: repeat({b.colunas?.length ?? b.itens.length}, minmax(0, 3rem))"
 				>
-					{#each b.itens as it, k (k)}
+					{#each b.colunas ?? [] as partes, k (k)}
+						<div data-celula class="chanfro flex h-10 min-w-0 origin-bottom flex-col-reverse">
+							{#each partes as parte, n (n)}
+								<div class={parte.classe} style="height: {parte.pct}%"></div>
+							{/each}
+						</div>
+					{/each}
+					{#each b.colunas ? [] : b.itens as it, k (k)}
 						<div class="min-w-0">
 							<div class="flex h-10 items-end">
 								<div
@@ -244,6 +346,15 @@
 					{l.n} {l.n === 1 ? l.um : l.varios}
 				</li>
 			{/each}
+			{#each aparte as l, k (k)}
+				<li class="flex items-center gap-1.5">
+					<span class="chanfro h-3 w-2 {l.classe}" aria-hidden="true"></span>
+					{l.rotulo} {l.um}, fora da nota
+				</li>
+			{/each}
+			{#if porColuna > 1}
+				<li>cada coluna: até {porColuna} questões</li>
+			{/if}
 			{#if maiorSequencia >= 3}
 				<li class="flex items-center gap-1.5 text-milestone-ink">
 					<span class="h-1 w-3 bg-milestone" aria-hidden="true"></span>
@@ -256,10 +367,10 @@
 	{#if metricas.length}
 		<dl class="mt-5 grid auto-cols-fr grid-flow-col divide-x divide-line border-y border-line py-3.5" data-sobe>
 			{#each metricas as m (m.rotulo)}
-				<div class="px-3 first:pl-0 last:pr-0">
+				<div class="min-w-0 px-2 first:pl-0 last:pr-0 sm:px-3">
 					<dt class="text-xs font-medium text-ink-soft">{m.rotulo}</dt>
 					<dd
-						class="nums mt-0.5 flex items-center gap-1 font-display text-xl font-extrabold {m.xp
+						class="nums mt-0.5 flex items-center gap-1 font-display font-extrabold {fonteMetrica} {m.xp
 							? 'text-milestone-ink'
 							: 'text-ink'}"
 					>
@@ -284,13 +395,19 @@
 		</div>
 	{/if}
 
-	<div class="mt-6 space-y-2.5" data-ato3>
+	<div class="mt-6 space-y-2.5" class:pointer-events-none={!botoesLivres} data-ato3>
 		{@render extra?.()}
 		{@render acoes?.(faixa)}
 	</div>
 </section>
 
 <style>
+	/* recebe foco só para o teclado começar no resumo; não é clicável, e o anel
+	   global (fora das camadas do Tailwind) parecia um campo selecionado */
+	.titulo:focus-visible {
+		outline: none;
+	}
+
 	/* canto superior cortado, como as barras da marca */
 	.chanfro {
 		clip-path: polygon(0 min(5px, 40%), min(5px, 60%) 0, 100% 0, 100% 100%, 0 100%);

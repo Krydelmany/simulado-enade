@@ -68,6 +68,11 @@ export function animar(el, quadros, { duracao = 240, atraso = 0, curva = SAIDA }
 		return el.animate(quadros, opcoes);
 	} catch {
 		// `linear()` é de 2023: navegador mais velho recusa a mola
-		return el.animate(quadros, { ...opcoes, easing: 'cubic-bezier(0.34, 1.4, 0.64, 1)' });
+		try {
+			return el.animate(quadros, { ...opcoes, easing: 'cubic-bezier(0.34, 1.4, 0.64, 1)' });
+		} catch {
+			// nem assim: um erro aqui abortava a montagem e o resumo ficava sem toque
+			return null;
+		}
 	}
 }

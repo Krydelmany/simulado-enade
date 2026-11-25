@@ -8,24 +8,21 @@
 
 	// Sempre começa em 0 (igual ao SSR — evita mismatch de hidratação).
 	let atual = $state(0);
-	// Variável simples (não reativa): guarda o último alvo já aplicado para não
-	// reanimar/piscar quando o número é o mesmo de antes.
-	let alvoAnterior;
+	// Derivado: só muda quando o NÚMERO muda. Lendo a prop direto, a rota que
+	// recriasse a lista com o mesmo valor cancelava a contagem no meio.
+	let alvo = $derived(valor);
 
 	$effect(() => {
-		const alvo = valor; // leitura reativa: reanima quando o valor muda
+		const ate = alvo; // leitura reativa: reanima quando o valor muda
 		if (pular || reduzirMovimento()) {
-			alvoAnterior = alvo;
-			atual = alvo; // sem animação — salta direto para o valor final
+			atual = ate; // sem animação — salta direto para o valor final
 			return;
 		}
-		if (alvo === alvoAnterior) return;
 		const de = untrack(() => atual); // untrack: escrever `atual` não deve re-disparar
-		alvoAnterior = alvo;
 
 		let raf;
-		const delta = alvo - de;
-		const t0 = performance.now() + atraso;
+		const delta = ate - de;
+		const t0 = performance.now() + untrack(() => atraso);
 		const passo = (t) => {
 			const p = Math.min(1, Math.max(0, (t - t0) / duracao));
 			// easing para fora (cubic-out): rápido no começo, assenta no fim
