@@ -1,17 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
 	<style>
-		.m-principal { fill: #2347B8; }
-		.m-asa { fill: #355EE0; }
-		.m-marco { fill: #E0820A; }
+		.b-topo { fill: #4A74F5; }
+		.b-esq { fill: #2347B8; }
+		.b-dir { fill: #152E82; }
+		.b-sombra { fill: #0D1C52; opacity: 0.28; }
+		.c-topo { fill: #FFBE42; }
+		.c-esq { fill: #E0820A; }
+		.c-dir { fill: #B35B04; }
 		@media (prefers-color-scheme: dark) {
-			.m-principal { fill: #6D93FF; }
-			.m-asa { fill: #95B3FF; }
-			.m-marco { fill: #F5A623; }
+			.b-topo { fill: #9BB8FF; }
+			.b-esq { fill: #6D93FF; }
+			.b-dir { fill: #4469D9; }
+			.b-sombra { fill: #0B1226; opacity: 0.36; }
+			.c-topo { fill: #FFD97D; }
+			.c-esq { fill: #F5A623; }
+			.c-dir { fill: #C97706; }
 		}
 	</style>
-	<!-- Símbolo livre (sem caixa ou moldura): E arquitetônico em degraus + marco âmbar -->
-	<path class="m-principal" d="M3 7 L7 3 H9 V23 H26 L22 29 H3 Z" />
-	<path class="m-asa" d="M12 3 H29 L25 9 H12 Z" />
-	<path class="m-principal" d="M12 13 H21 L17.5 19 H12 Z" />
-	<path class="m-marco" d="M25.5 12.5 L29 16 L25.5 19.5 L22 16 Z" />
+	<!-- Símbolo livre (sem caixa ou moldura): prisma âmbar flutuando sobre base isométrica -->
+	<path class="b-topo" d="M16 11 L28.5 17.5 L16 24 L3.5 17.5 Z" />
+	<path class="b-esq" d="M3.5 17.5 L16 24 V30.5 L3.5 24 Z" />
+	<path class="b-dir" d="M28.5 17.5 L16 24 V30.5 L28.5 24 Z" />
+	<path class="b-sombra" d="M16 14.4 L21.4 17.2 L16 20 L10.6 17.2 Z" />
+	<path class="c-topo" d="M16 1.6 L23.2 5.4 L16 9.2 L8.8 5.4 Z" />
+	<path class="c-esq" d="M8.8 5.4 L16 9.2 V16.4 L8.8 12.6 Z" />
+	<path class="c-dir" d="M23.2 5.4 L16 9.2 V16.4 L23.2 12.6 Z" />
 </svg>

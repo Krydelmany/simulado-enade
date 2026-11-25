@@ -10,6 +10,7 @@
 	import { nuvemLigada, contaLocal } from '$lib/nuvem.js';
 	import { consumirConquista } from '$lib/conquista.js';
 	import { animar, mola, reduzirMovimento } from '$lib/motion.js';
+	import CenaHero from '$lib/CenaHero.svelte';
 	import {
 		ArrowRight,
 		BookOpen,
@@ -21,6 +22,7 @@
 		Infinity as InfinityIcon,
 		Lightning,
 		NotePencil,
+		Play,
 		Stairs,
 		Timer,
 		UsersThree
@@ -29,24 +31,14 @@
 	const curso = cursoAtual();
 
 	let total = $state(0);
-	let fg = $state(0);
-	let ce = $state(0);
-	let disc = $state(0);
-	// Apenas as discursivas do Componente Específico (as 10 que abrem em /treino/?modo=discursivas)
 	let discCE = $state(0);
 	let geradas = $state(0);
-	let edicoes = $state([]);
 	let xp = $state(0);
 	let pronto = $state(false);
-	// progresso real do aluno — antes a home só mostrava XP, e XP não diz
-	// nada sobre quanto a pessoa estudou
 	let prog = $state(null);
 	let paraRevisar = $state([]);
 	// null até montar: no prerender a contagem ficaria congelada no dia do build
 	let dias = $state(null);
-	// Quem chega pelo link da home (e não pelo convite) estudava sem conta e
-	// nunca aparecia no painel do professor. Só depois de montar: no prerender
-	// não há localStorage para saber se a pessoa já entrou.
 	let convidarTurma = $state(false);
 
 	// Progresso REAL por modo (lido das sessões, histórico de ids e simulado salvo) —
@@ -62,6 +54,10 @@
 	// sessão que acabou de terminar (bilhete do resumo): a trilha mostra o efeito
 	let conquista = $state(null);
 	let trilha = $state(null);
+
+	// paralaxe suave do palco com o ponteiro (só desktop fino e sem reduced-motion)
+	let px = $state(0);
+	let py = $state(0);
 
 	let temProgresso = $derived(Boolean(prog?.temDados));
 	let pctAcerto = $derived(Math.round((prog?.precisaoNumero ?? 0) * 100));
@@ -127,15 +123,14 @@
 				href: '/estudo/',
 				icone: Stairs,
 				titulo: 'Estudo por níveis',
-				desc: 'Sessões curtas de 10 questões por matéria — comece no Fácil, avance ao Difícil ou vá direto nas oficiais.',
+				tituloCurto: 'estudo por níveis',
+				desc: '10 questões rápidas por nível ou matéria.',
 				selo: estudoFeito
-					? `${estudoSessoes} ${estudoSessoes === 1 ? 'sessão concluída' : 'sessões concluídas'}`
+					? `${estudoSessoes} ${estudoSessoes === 1 ? 'sessão' : 'sessões'}`
 					: estudoPausadoFeitas > 0
-						? `${estudoPausadoFeitas} ${estudoPausadoFeitas === 1 ? 'respondida' : 'respondidas'} em andamento`
-						: geradas
-							? `${geradas} guiadas · ${total} oficiais`
-							: 'Sessões de 10',
-				cta: estudoPausadoFeitas > 0 ? 'Retomar sessão' : 'Escolher nível',
+						? `${estudoPausadoFeitas} em aberto`
+						: '10 por rodada',
+				cta: estudoPausadoFeitas > 0 ? 'Retomar' : 'Começar',
 				estado: estadoDe(0, estudoFeito),
 				emAndamento: !estudoFeito && estudoPausadoFeitas > 0
 			},
@@ -143,14 +138,17 @@
 				passo: '02',
 				href: '/treino/',
 				icone: InfinityIcon,
-				titulo: 'Treino livre contínuo',
-				desc: 'Fila embaralhada com o banco inteiro, filtro por matéria e correção imediata com passo a passo.',
+				titulo: 'Treino livre',
+				tituloCurto: 'treino livre',
+				desc: 'Fila contínua com correção e resolução na hora.',
 				selo: treinoFeito
-					? `${treinoSessoes} ${treinoSessoes === 1 ? 'sessão concluída' : 'sessões concluídas'}`
+					? `${treinoSessoes} ${treinoSessoes === 1 ? 'sessão' : 'sessões'}`
 					: treinoPausadoFeitas > 0
-						? `${treinoPausadoFeitas} ${treinoPausadoFeitas === 1 ? 'respondida' : 'respondidas'} em andamento`
-						: 'Correção na hora',
-				cta: treinoPausadoFeitas > 0 ? 'Continuar treino' : 'Começar treino',
+						? `${treinoPausadoFeitas} em aberto`
+						: total + geradas
+							? `${total + geradas} questões`
+							: 'Banco inteiro',
+				cta: treinoPausadoFeitas > 0 ? 'Continuar' : 'Praticar',
 				estado: estadoDe(1, treinoFeito),
 				emAndamento: !treinoFeito && treinoPausadoFeitas > 0
 			},
@@ -158,15 +156,16 @@
 				passo: '03',
 				href: '/treino/?modo=discursivas',
 				icone: NotePencil,
-				titulo: 'Discursivas do Componente Específico',
-				desc: 'Pratique no papel e compare cada ponto com o padrão oficial de resposta do INEP.',
+				titulo: 'Discursivas do CE',
+				tituloCurto: 'discursivas',
+				desc: 'Treine a escrita com o padrão oficial do INEP.',
 				selo:
 					discCEFeitas > 0 && discCE > 0
-						? `${discCEFeitas} de ${discCE} praticadas`
+						? `${discCEFeitas}/${discCE} feitas`
 						: discCE
-							? `${discCE} questões oficiais`
+							? `${discCE} oficiais`
 							: 'Padrão INEP',
-				cta: discCEFeitas > 0 ? 'Continuar escrita' : 'Praticar escrita',
+				cta: discCEFeitas > 0 ? 'Continuar' : 'Escrever',
 				estado: estadoDe(2, discFeito),
 				emAndamento: !discFeito && discCEFeitas > 0
 			},
@@ -175,37 +174,117 @@
 				href: '/simulado/',
 				icone: Timer,
 				titulo: 'Simulado ENADE 2026',
-				desc: 'A prova completa no formato da Portaria INEP nº 161: 15 FG, 30 CE e 1 discursiva em 4 horas.',
+				tituloCurto: 'simulado completo',
+				desc: '15 FG · 30 CE · 1 discursiva em 4 horas.',
 				selo: ultimoSimulado
-					? `Último: ${ultimoSimulado.certas}/${ultimoSimulado.total} (${Math.round((ultimoSimulado.certas / ultimoSimulado.total) * 100)}%)`
+					? `${ultimoSimulado.certas}/${ultimoSimulado.total} (${Math.round((ultimoSimulado.certas / ultimoSimulado.total) * 100)}%)`
 					: simuladoEmAndamento
-						? 'Prova em andamento'
-						: 'Meta · 46 questões · 4 h',
-				cta: simuladoEmAndamento ? 'Continuar prova' : ultimoSimulado ? 'Novo simulado' : 'Abrir simulado',
+						? 'Em andamento'
+						: '46 questões · 4 h',
+				cta: simuladoEmAndamento ? 'Continuar' : ultimoSimulado ? 'Refazer' : 'Abrir',
 				estado: estadoDe(3, simuladoFeito, 'marco'),
 				emAndamento: !simuladoFeito && simuladoEmAndamento
 			}
 		];
 	});
 
+	let etapasFeitas = $derived(etapasTrilha.filter((e) => e.estado === 'feito').length);
+	let proximaEtapa = $derived(etapasTrilha.find((e) => e.estado === 'atual') ?? null);
+
+	// O palco sempre abre apontando direto para o próximo passo real do aluno.
+	let acaoPrincipal = $derived.by(() => {
+		if (simuladoEmAndamento) {
+			return {
+				href: '/simulado/',
+				titulo: 'Seu simulado está esperando.',
+				sub: 'O cronômetro continua pausado até você voltar para a prova.',
+				botao: 'Continuar simulado',
+				play: true
+			};
+		}
+		if (estudoPausadoFeitas > 0) {
+			return {
+				href: '/estudo/',
+				titulo: 'Volte de onde você parou.',
+				sub: `${estudoPausadoFeitas} ${estudoPausadoFeitas === 1 ? 'questão respondida' : 'questões respondidas'} na sua sessão de estudo.`,
+				botao: 'Retomar estudo',
+				play: true
+			};
+		}
+		if (treinoPausadoFeitas > 0) {
+			return {
+				href: '/treino/',
+				titulo: 'Continue no seu ritmo.',
+				sub: `${treinoPausadoFeitas} ${treinoPausadoFeitas === 1 ? 'questão feita' : 'questões feitas'} na fila de treino atual.`,
+				botao: 'Retomar treino',
+				play: true
+			};
+		}
+		if (temProgresso && proximaEtapa) {
+			return {
+				href: proximaEtapa.href,
+				titulo: `Hora de avançar em ${proximaEtapa.tituloCurto}.`,
+				sub: `${prog.respondidasNumero} respondidas · ${pctAcerto}% de acerto${prog.ultimoTreinoRelativo ? ` · último estudo ${prog.ultimoTreinoRelativo}` : ''}.`,
+				botao: `${proximaEtapa.cta} agora`,
+				play: false
+			};
+		}
+		if (temProgresso) {
+			return {
+				href: '/treino/',
+				titulo: 'Trilha completa. Mantenha o ritmo.',
+				sub: `${prog.respondidasNumero} respondidas · ${pctAcerto}% de acerto geral.`,
+				botao: 'Treinar agora',
+				play: true
+			};
+		}
+		return {
+			href: '/estudo/',
+			titulo: 'Pronto para a primeira rodada?',
+			sub: '10 questões rápidas para aquecer, com resolução na hora.',
+			botao: 'Começar agora',
+			play: true
+		};
+	});
+
+	let acaoSecundaria = $derived(
+		acaoPrincipal.href === '/simulado/'
+			? { href: '/treino/', rotulo: 'Treino livre' }
+			: { href: '/simulado/', rotulo: 'Simulado real' }
+	);
+
+	function paralaxePalco(el) {
+		const aoMover = (e) => {
+			if (e.pointerType !== 'mouse' || reduzirMovimento()) return;
+			const r = el.getBoundingClientRect();
+			if (!r.width || !r.height) return;
+			px = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width) * 2 - 1));
+			py = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height) * 2 - 1));
+		};
+		const aoSair = () => {
+			px = 0;
+			py = 0;
+		};
+		el.addEventListener('pointermove', aoMover, { passive: true });
+		el.addEventListener('pointerleave', aoSair, { passive: true });
+		return () => {
+			el.removeEventListener('pointermove', aoMover);
+			el.removeEventListener('pointerleave', aoSair);
+		};
+	}
+
 	onMount(async () => {
 		dias = diasAteEnade();
 		convidarTurma = nuvemLigada && !contaLocal();
 		try {
 			const b = await carregarBanco();
-			// `contagens` é a mesma função que o resto do app usa, então a home
-			// não pode mais divergir do que o treino está mostrando
 			const c = contagens(b);
 			total = c.total;
-			fg = c.fg;
-			ce = c.ce;
-			disc = c.discursivas;
 			const idsDiscCE = new Set(
 				b.filter((q) => !ehGerada(q) && q.parte === 'CE' && q.tipo === 'discursiva').map((q) => q.id)
 			);
 			discCE = idsDiscCE.size;
 			geradas = c.geradas;
-			edicoes = [...new Set(b.filter((q) => !ehGerada(q)).map((q) => q.edicao))].sort();
 			xp = getXP();
 			prog = resumoProgresso();
 
@@ -223,13 +302,9 @@
 			const provaSalva = lerProva();
 			simuladoEmAndamento = Boolean(provaSalva && !provaSalva.entregue);
 
-			// só o que ainda está no banco: uma questão que saiu (as anuladas)
-			// continuava contada aqui, e a revisão abria com menos do que o botão
-			// prometia
 			const ids = new Set(b.map((q) => q.id));
 			paraRevisar = getParaRevisar().filter((id) => ids.has(id));
 		} finally {
-			// sempre fecha o esqueleto — sem "loading eterno" nem tela em branco
 			pronto = true;
 		}
 		// quem já saiu da home enquanto o banco carregava não gasta o bilhete
@@ -240,8 +315,6 @@
 		celebrarNaTrilha();
 	});
 
-	let proximaEtapa = $derived(etapasTrilha.find((e) => e.estado === 'atual') ?? null);
-
 	/**
 	 * Causa e efeito na trilha: o nó concluído acende, a linha desce dele até o
 	 * próximo passo, e o próximo passo acorda.
@@ -251,8 +324,6 @@
 		if (!feito) return;
 		const r = feito.getBoundingClientRect();
 		const fora = r.top < 72 || r.bottom > window.innerHeight - 16;
-		// a trilha fica abaixo da dobra no celular: sem levar até ela, o efeito
-		// acontecia onde ninguém via. Uma vez por sessão concluída.
 		if (fora) {
 			feito.scrollIntoView({ block: 'center', behavior: reduzirMovimento() ? 'auto' : 'smooth' });
 		}
@@ -288,403 +359,432 @@
 			{ duracao: 900, atraso: t0 + 760 }
 		);
 	}
-
-	/** "2014, 2017, 2019 e 2023" */
-	function listar(xs) {
-		return xs.length > 1 ? `${xs.slice(0, -1).join(', ')} e ${xs.at(-1)}` : xs.join('');
-	}
 </script>
 
-<!-- 1. Hero aberto e calmo + Cartão de ritmo/banco ao lado -->
-<div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
-	<section class="folha curso-halo rise rounded-3xl p-6 sm:p-8 lg:p-9">
-		<div class="flex flex-wrap items-center gap-2">
-			<p
-				class="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-milestone-border bg-milestone-soft px-3 py-1 text-xs font-bold text-milestone-ink"
-			>
-				<CalendarBlank size={14} weight="bold" aria-hidden="true" />
-				{#if dias !== null && dias > 1}
-					<span>Faltam <span class="nums font-extrabold">{dias} dias</span> para o ENADE</span>
-				{:else if dias === 1}
-					<span>O ENADE é <strong>amanhã</strong></span>
-				{:else if dias === 0}
-					<span>O ENADE é <strong>hoje</strong>. Boa prova!</span>
+<!-- 1. Palco vivo: próximo passo pronto para clicar + arte geométrica reativa + progresso real -->
+<section
+	class="palco-vivo rise overflow-clip rounded-[2rem] p-5 sm:p-7 lg:p-9"
+	{@attach paralaxePalco}
+>
+	<div class="grid gap-6 lg:grid-cols-[1.18fr_0.82fr] lg:items-center lg:gap-8">
+		<div>
+			<div class="flex flex-wrap items-center gap-2">
+				<p
+					class="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-milestone-border bg-milestone-soft px-3 py-1 text-xs font-extrabold text-milestone-ink"
+				>
+					<CalendarBlank size={14} weight="bold" aria-hidden="true" />
+					{#if dias !== null && dias > 1}
+						<span>Faltam <span class="nums">{dias} dias</span> · ENADE</span>
+					{:else if dias === 1}
+						<span>ENADE é amanhã</span>
+					{:else if dias === 0}
+						<span>ENADE é hoje. Boa prova!</span>
+					{:else}
+						<span>ENADE · {DATA_EXTENSO}</span>
+					{/if}
+				</p>
+				{#if xp > 0}
+					<span
+						class="nums inline-flex min-h-8 items-center gap-1 rounded-full border border-milestone-border/80 bg-card/90 px-3 py-1 text-xs font-extrabold text-milestone-ink"
+					>
+						<Lightning size={14} weight="fill" class="text-milestone" aria-hidden="true" />
+						{xp} XP
+					</span>
 				{:else}
-					<span>ENADE em {DATA_EXTENSO}</span>
+					<span class="rounded-full bg-panel px-3 py-1 text-xs font-bold text-ink-soft">
+						{curso.nome}
+					</span>
 				{/if}
+			</div>
+
+			<h1 class="mt-4 font-display text-hero font-extrabold text-balance text-ink">
+				{acaoPrincipal.titulo}
+			</h1>
+
+			<p class="mt-2.5 max-w-[42ch] text-[15px] leading-relaxed text-pretty text-ink-soft sm:text-base">
+				{acaoPrincipal.sub}
 			</p>
-			<span class="rounded-full bg-tile px-3 py-1 text-xs font-semibold text-ink-soft">
-				{curso.nome}
+
+			<div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+				<a
+					href={acaoPrincipal.href}
+					class="btn-primario group/cta inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl px-7 font-display text-base font-extrabold"
+				>
+					{#if acaoPrincipal.play}
+						<Play size={18} weight="fill" aria-hidden="true" />
+					{/if}
+					{acaoPrincipal.botao}
+					{#if !acaoPrincipal.play}
+						<ArrowRight
+							size={18}
+							weight="bold"
+							class="transition-transform duration-150 group-hover/cta:translate-x-0.5"
+							aria-hidden="true"
+						/>
+					{/if}
+				</a>
+				<a
+					href={acaoSecundaria.href}
+					class="btn-suave inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl px-6 font-display text-[15px] font-bold"
+				>
+					{acaoSecundaria.rotulo}
+				</a>
+			</div>
+
+			<!-- Faixa viva de progresso dentro do palco (sem caixa institucional separada) -->
+			<div class="mt-6 border-t border-line/80 pt-4">
+				{#if !pronto}
+					<div class="flex items-center gap-3" role="status" aria-label="Carregando progresso">
+						<div class="h-3 w-32 animate-pulse rounded-full bg-skel"></div>
+						<div class="h-3 w-20 animate-pulse rounded-full bg-skel"></div>
+					</div>
+				{:else if total === 0}
+					<p
+						class="rounded-2xl border border-dashed border-warn-line bg-warn-bg px-3.5 py-2.5 text-sm font-semibold text-warn-fg"
+						role="alert"
+					>
+						As questões não carregaram.
+						<button type="button" class="font-extrabold underline" onclick={() => location.reload()}>
+							Recarregar agora
+						</button>
+					</p>
+				{:else if temProgresso}
+					<div class="flex flex-wrap items-center gap-x-5 gap-y-2.5">
+						<div class="flex items-center gap-2">
+							<div class="flex gap-1" aria-hidden="true">
+								{#each etapasTrilha as e (e.href)}
+									<span
+										class="h-2.5 w-6 rounded-full transition-colors {e.estado === 'feito'
+											? 'bg-ok-solid'
+											: e.estado === 'atual'
+												? 'bg-accent'
+												: 'bg-track'}"
+									></span>
+								{/each}
+							</div>
+							<span class="nums text-xs font-extrabold text-ink">{etapasFeitas}/4 etapas</span>
+						</div>
+
+						<div class="flex flex-wrap items-center gap-3 text-xs font-bold text-ink-soft">
+							<span class="nums"><strong class="text-ink">{prog.respondidasNumero}</strong> feitas</span>
+							<span class="nums text-ok-fg"><strong>{pctAcerto}%</strong> acerto</span>
+							{#if paraRevisar.length}
+								<a
+									href="/treino/?modo=revisao"
+									class="nums inline-flex min-h-11 items-center gap-1.5 rounded-full bg-accent-soft px-4 py-2 font-extrabold text-accent-ink transition-colors hover:bg-accent hover:text-accent-on"
+								>
+									Revisar {paraRevisar.length}
+									<ArrowRight size={14} weight="bold" aria-hidden="true" />
+								</a>
+							{/if}
+						</div>
+					</div>
+				{:else}
+					<div class="flex flex-wrap items-center justify-between gap-2">
+						<div class="flex items-center gap-2">
+							<div class="flex gap-1" aria-hidden="true">
+								{#each etapasTrilha as e (e.href)}
+									<span
+										class="h-2.5 w-6 rounded-full {e.estado === 'atual' ? 'bg-accent' : 'bg-track'}"
+									></span>
+								{/each}
+							</div>
+							<span class="nums text-xs font-bold text-ink-soft">0 de 4 etapas</span>
+						</div>
+						<p class="nums text-xs font-semibold text-ink-soft">
+							{total} oficiais do INEP{#if geradas}{' · '}{geradas} guiadas{/if}
+						</p>
+					</div>
+				{/if}
+			</div>
+		</div>
+
+		<!-- Arte geométrica autoral (lado direito no desktop; compacta e leve no celular) -->
+		<div class="mx-auto w-full max-w-[270px] sm:max-w-[310px] lg:max-w-none">
+			<div class="lg:hidden">
+				<CenaHero etapas={etapasTrilha} {px} {py} compacta />
+			</div>
+			<div class="hidden lg:block">
+				<CenaHero etapas={etapasTrilha} {px} {py} />
+			</div>
+		</div>
+	</div>
+</section>
+
+{#if convidarTurma}
+	<a
+		href="/conta/"
+		class="cartao-tatil rise group mt-4 flex min-h-14 items-center gap-3 rounded-2xl border-accent-border/80 px-4 py-3"
+	>
+		<UsersThree size={22} weight="bold" class="shrink-0 text-accent-ink" aria-hidden="true" />
+		<span class="min-w-0 flex-1 text-sm font-bold text-ink">
+			Tem código da turma? <span class="font-medium text-ink-soft">Entre para sincronizar e ver o ranking.</span>
+		</span>
+		<CaretRight
+			size={18}
+			weight="bold"
+			class="shrink-0 text-accent-ink transition-transform group-hover:translate-x-0.5"
+			aria-hidden="true"
+		/>
+	</a>
+{/if}
+
+<!-- 2. Trilha em estações táteis + Reforçar & Da turma ao lado no desktop -->
+<div class="mt-9 grid gap-8 lg:mt-11 lg:grid-cols-[1.45fr_0.95fr] lg:items-start">
+	<section id="trilha" bind:this={trilha} class="scroll-mt-20" aria-labelledby="titulo-trilha">
+		<div class="flex items-center justify-between gap-3">
+			<h2 id="titulo-trilha" class="font-display text-title font-extrabold text-ink">Sua trilha</h2>
+			<span class="nums rounded-full bg-panel px-3 py-1 text-xs font-extrabold text-ink-soft">
+				{etapasFeitas} de 4 concluídas
 			</span>
 		</div>
 
-		<h1 class="mt-5 font-display text-hero font-extrabold text-balance text-ink">
-			{#if temProgresso}
-				Continue no seu ritmo.
-			{:else}
-				Estude no formato real da prova.
+		<p class="sr-only" role="status">
+			{#if conquista}
+				Sessão registrada na trilha: {conquista.certas} de {conquista.total} acertos.
+				{#if proximaEtapa}Próximo passo: {proximaEtapa.titulo}.{/if}
 			{/if}
-		</h1>
-
-		<p class="mt-3.5 max-w-[46ch] text-[15px] leading-relaxed text-pretty text-ink-soft sm:text-base">
-			Prática guiada com questões oficiais do INEP, verificação passo a passo e simulado cronometrado para o ENADE 2026.
 		</p>
 
-		<div class="mt-7 flex flex-col gap-2.5 sm:flex-row sm:items-center">
-			<a
-				href="/treino/"
-				class="btn-primario inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 font-display text-[15px] font-bold"
-			>
-				{temProgresso ? 'Continuar treinando' : 'Começar a praticar'}
-				<ArrowRight size={17} weight="bold" aria-hidden="true" />
-			</a>
-			<a
-				href="/simulado/"
-				class="btn-suave inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 font-display text-[15px] font-bold"
-			>
-				Fazer simulado real
-			</a>
-		</div>
+		<nav class="relative mt-4" aria-label="Trilha de estudo">
+			<!-- Trilho estrutural mais encorpado ligando as estações -->
+			<div
+				class="pointer-events-none absolute top-7 bottom-7 left-[21px] w-1 rounded-full bg-track"
+				aria-hidden="true"
+			></div>
+
+			<ol class="space-y-3.5">
+				{#each etapasTrilha as etapa, k (etapa.href)}
+					{@const agora = conquista?.etapa === etapa.href}
+					{@const atual = etapa.estado === 'atual'}
+					<li
+						class="rise relative pl-14 sm:pl-16"
+						style="animation-delay: {k * 45}ms"
+						data-agora={agora ? '' : undefined}
+						data-proximo={atual ? '' : undefined}
+					>
+						{#if etapa.estado === 'feito' && k < etapasTrilha.length - 1}
+							<!-- trecho já percorrido, do nó concluído ao seguinte -->
+							<span
+								data-trecho
+								aria-hidden="true"
+								class="pointer-events-none absolute top-14 -bottom-9 left-[21px] w-1 origin-top rounded-full bg-ok-solid"
+							></span>
+						{/if}
+
+						<!-- Nó tátil da estação -->
+						<span
+							data-no
+							aria-hidden="true"
+							class="absolute top-4 left-0 flex h-11 w-11 items-center justify-center rounded-2xl border-2 transition-transform {etapa.estado ===
+							'feito'
+								? 'border-ok-solid bg-ok-solid text-white shadow-[0_3px_0_0_color-mix(in_oklab,var(--ok-solid)_60%,#042416)]'
+								: atual
+									? 'border-accent bg-accent text-accent-on ring-4 ring-accent-soft shadow-[0_3px_0_0_var(--accent-lip)]'
+									: etapa.estado === 'marco'
+										? 'border-milestone-border bg-milestone-soft text-milestone-ink shadow-[0_3px_0_0_var(--milestone-border)]'
+										: 'border-line-strong/60 bg-card text-ink-soft shadow-[0_2.5px_0_0_var(--surface-lip)]'}"
+						>
+							{#if etapa.estado === 'feito'}
+								<Check size={20} weight="bold" />
+							{:else if etapa.estado === 'marco'}
+								<FlagCheckered size={20} weight="bold" />
+							{:else}
+								<etapa.icone size={20} weight="bold" />
+							{/if}
+							<span
+								data-onda
+								class="absolute -inset-1 rounded-2xl border-2 opacity-0 {etapa.estado === 'feito'
+									? 'border-ok-solid'
+									: 'border-accent'}"
+							></span>
+						</span>
+
+						<a
+							href={etapa.href}
+							class="cartao-tatil group relative block rounded-3xl p-4 sm:p-5 {atual
+								? 'cartao-tatil-ativo'
+								: ''}"
+						>
+							<span
+								data-brilho
+								aria-hidden="true"
+								class="pointer-events-none absolute -inset-px rounded-3xl border-2 border-accent opacity-0"
+							></span>
+
+							<div class="flex items-center justify-between gap-3">
+								<div class="min-w-0 flex-1">
+									<div class="flex flex-wrap items-center gap-2">
+										{#if agora}
+											<span
+												data-aviso
+												class="nums rounded-full bg-ok-solid px-2.5 py-0.5 text-xs font-extrabold text-white"
+											>
+												{etapa.estado === 'feito' ? 'Concluído' : 'Feito'} agora · {conquista.certas}/{conquista.total}
+											</span>
+										{:else if etapa.estado === 'feito'}
+											<span class="rounded-full bg-ok-bg px-2.5 py-0.5 text-xs font-extrabold text-ok-fg">
+												Concluído
+											</span>
+										{:else if etapa.emAndamento}
+											<span class="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-extrabold text-accent-ink">
+												Em andamento
+											</span>
+										{:else if atual}
+											<span
+												data-aviso
+												class="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-extrabold text-accent-ink"
+											>
+												Próximo passo
+											</span>
+										{:else if etapa.estado === 'marco'}
+											<span
+												class="rounded-full bg-milestone-soft px-2.5 py-0.5 text-xs font-extrabold text-milestone-ink"
+											>
+												Prova completa
+											</span>
+										{/if}
+										<span class="nums text-xs font-bold text-ink-soft">{etapa.selo}</span>
+									</div>
+
+									<h3 class="mt-2 font-display text-heading font-extrabold text-ink group-hover:text-accent-ink">
+										{etapa.titulo}
+									</h3>
+									<p class="mt-0.5 text-sm leading-snug text-pretty text-ink-soft">
+										{etapa.desc}
+									</p>
+								</div>
+
+								<span
+									class="hidden shrink-0 items-center gap-1 rounded-xl px-3.5 py-2 font-display text-xs font-extrabold transition-colors sm:inline-flex {atual
+										? 'bg-accent text-accent-on shadow-[0_2px_0_0_var(--accent-lip)]'
+										: 'bg-panel text-ink group-hover:bg-accent-soft group-hover:text-accent-ink'}"
+								>
+									{etapa.cta}
+									<CaretRight size={14} weight="bold" aria-hidden="true" />
+								</span>
+								<CaretRight
+									size={20}
+									weight="bold"
+									class="shrink-0 text-ink-soft transition-transform group-hover:translate-x-0.5 group-hover:text-accent-ink sm:hidden"
+									aria-hidden="true"
+								/>
+							</div>
+						</a>
+
+						{#if agora && proximaEtapa && proximaEtapa !== etapa && proximaEtapa !== etapasTrilha[k + 1]}
+							<!-- quem foi direto ao simulado tem o próximo passo lá em cima, fora da tela -->
+							<a
+								data-atalho
+								href={proximaEtapa.href}
+								class="mt-1 inline-flex min-h-11 items-center gap-1.5 px-1 text-sm font-bold text-accent-ink"
+							>
+								Próximo passo: {proximaEtapa.titulo}
+								<ArrowRight size={15} weight="bold" aria-hidden="true" />
+							</a>
+						{/if}
+					</li>
+				{/each}
+			</ol>
+		</nav>
 	</section>
 
-	<!-- Ao lado do hero: o progresso de quem já estudou; para quem chega agora, o que tem no banco. -->
-	<aside class="space-y-4" aria-label={temProgresso ? 'Seu progresso' : 'O que tem no banco'}>
-		{#if convidarTurma}
-			<a
-				href="/conta/"
-				class="superficie rise group flex items-center gap-3.5 rounded-3xl border-accent-border p-4 transition-colors hover:bg-accent-soft/60"
-			>
-				<UsersThree size={24} weight="bold" class="shrink-0 text-accent-ink" aria-hidden="true" />
-				<span class="min-w-0 flex-1">
-					<span class="block font-display text-[15px] font-bold text-ink">Tem turma? Entre com o código</span>
-					<span class="block text-xs leading-snug text-ink-soft">Seu professor acompanha seu avanço e você participa do ranking.</span>
-				</span>
-				<CaretRight size={18} weight="bold" class="shrink-0 text-accent-ink transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-			</a>
+	<!-- Coluna lateral (desktop) / bloco leve abaixo (celular): Reforçar + Da turma -->
+	<aside class="space-y-7">
+		{#if reforcar.length}
+			<section aria-labelledby="titulo-reforcar">
+				<h2 id="titulo-reforcar" class="font-display text-heading font-extrabold text-ink">
+					Onde reforçar
+				</h2>
+				<ul class="mt-3 space-y-2.5">
+					{#each reforcar as m (m.nome)}
+						<li>
+							<a
+								href="/treino/?materia={m.nome}"
+								class="cartao-tatil group block rounded-2xl px-4 py-3.5"
+							>
+								<div class="flex items-baseline justify-between gap-3 text-sm">
+									<span class="min-w-0 truncate font-bold text-ink group-hover:text-accent-ink">
+										{nomeMateria(m.nome)}
+									</span>
+									<span class="nums shrink-0 text-xs font-extrabold text-ink-soft">{m.precisao}</span>
+								</div>
+								<div class="mt-2 h-2 overflow-hidden rounded-full bg-track" aria-hidden="true">
+									<div
+										class="h-full rounded-full bg-accent-bar transition-[width] duration-300"
+										style="width: {Math.round(m.precisaoNumero * 100)}%"
+									></div>
+								</div>
+							</a>
+						</li>
+					{/each}
+				</ul>
+			</section>
 		{/if}
 
-		<div class="superficie rise rounded-3xl p-5 sm:p-6" style="animation-delay: 60ms">
-			{#if !pronto}
-				<div class="space-y-3" role="status" aria-label="Carregando">
-					<div class="h-5 w-36 animate-pulse rounded-lg bg-skel"></div>
-					<div class="grid grid-cols-3 gap-2">
-						<div class="h-[74px] animate-pulse rounded-2xl bg-skel"></div>
-						<div class="h-[74px] animate-pulse rounded-2xl bg-skel"></div>
-						<div class="h-[74px] animate-pulse rounded-2xl bg-skel"></div>
-					</div>
-				</div>
-			{:else if total === 0}
-				<p
-					class="rounded-2xl border border-dashed border-warn-line bg-warn-bg p-3.5 text-sm leading-relaxed text-warn-fg"
-					role="alert"
-				>
-					As questões não carregaram. Confira a internet e
-					<button type="button" class="font-bold underline" onclick={() => location.reload()}>recarregue a página</button>.
-				</p>
-			{:else if temProgresso}
-				<div class="flex items-center justify-between gap-3">
+		<section aria-labelledby="titulo-turma-materiais">
+			<div class="flex items-center justify-between gap-2">
+				<h2 id="titulo-turma-materiais" class="font-display text-heading font-extrabold text-ink">
+					Da turma
+				</h2>
+				<span class="rounded-full bg-milestone-soft px-2.5 py-0.5 text-xs font-extrabold text-milestone-ink">
+					Extras
+				</span>
+			</div>
+
+			<div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+				<a href="/poo/" class="cartao-tatil group flex flex-col justify-between rounded-3xl p-4 sm:p-5">
 					<div>
-						<h2 class="font-display text-heading font-bold text-ink">Seu progresso</h2>
-						{#if prog.ultimoTreinoRelativo}
-							<p class="mt-0.5 text-xs text-ink-soft">Último estudo: {prog.ultimoTreinoRelativo}</p>
-						{/if}
+						<div class="flex items-center justify-between gap-2">
+							<span class="inline-flex items-center gap-2 font-display text-base font-extrabold text-ink group-hover:text-accent-ink">
+								<Code size={20} weight="bold" class="shrink-0 text-accent-ink" aria-hidden="true" />
+								Questionário de POO
+							</span>
+							<span class="nums shrink-0 rounded-full bg-panel px-2.5 py-0.5 text-xs font-bold text-ink-soft">
+								28/10
+							</span>
+						</div>
+						<p class="mt-1.5 text-sm leading-snug text-ink-soft">
+							10 questões do professor com correção no fim.
+						</p>
 					</div>
-					{#if xp > 0}
-						<span
-							class="nums inline-flex shrink-0 items-center gap-1 rounded-full border border-milestone-border bg-milestone-soft px-3 py-1 text-xs font-extrabold text-milestone-ink"
-						>
-							<Lightning size={14} weight="fill" aria-hidden="true" />
-							{xp} XP
-						</span>
-					{/if}
-				</div>
+					<span class="mt-3.5 inline-flex items-center gap-1.5 text-xs font-extrabold text-accent-ink">
+						Abrir questionário
+						<ArrowRight
+							size={14}
+							weight="bold"
+							class="transition-transform group-hover:translate-x-0.5"
+							aria-hidden="true"
+						/>
+					</span>
+				</a>
 
-				<dl class="mt-4 grid grid-cols-3 gap-2 text-center">
-					<div class="rounded-2xl bg-panel px-2 py-3">
-						<dd class="nums font-display text-2xl font-extrabold text-ink">{prog.respondidasNumero}</dd>
-						<dt class="mt-0.5 text-xs font-medium text-ink-soft">Respondidas</dt>
+				<a href="/guia/" class="cartao-tatil group flex flex-col justify-between rounded-3xl p-4 sm:p-5">
+					<div>
+						<div class="flex items-center justify-between gap-2">
+							<span class="inline-flex items-center gap-2 font-display text-base font-extrabold text-ink group-hover:text-accent-ink">
+								<BookOpen size={20} weight="bold" class="shrink-0 text-accent-ink" aria-hidden="true" />
+								Guia do Matheus
+							</span>
+							<span class="nums shrink-0 rounded-full bg-panel px-2.5 py-0.5 text-xs font-bold text-ink-soft">
+								25/11
+							</span>
+						</div>
+						<p class="mt-1.5 text-sm leading-snug text-ink-soft">
+							Resumos, fórmulas e 26 questões comentadas.
+						</p>
 					</div>
-					<div class="rounded-2xl bg-panel px-2 py-3">
-						<dd class="nums font-display text-2xl font-extrabold text-ok-fg">{pctAcerto}%</dd>
-						<dt class="mt-0.5 text-xs font-medium text-ink-soft">Acerto</dt>
-					</div>
-					<div class="rounded-2xl bg-panel px-2 py-3">
-						<dd class="nums font-display text-2xl font-extrabold text-ink">{paraRevisar.length}</dd>
-						<dt class="mt-0.5 text-xs font-medium text-ink-soft">Para revisar</dt>
-					</div>
-				</dl>
-
-				{#if reforcar.length}
-					<div class="mt-5">
-						<h3 class="text-label font-bold text-ink-soft">Onde reforçar primeiro</h3>
-						<ul class="mt-2.5 space-y-2.5">
-							{#each reforcar as m (m.nome)}
-								<li>
-									<a href="/treino/?materia={m.nome}" class="group -mx-1.5 block rounded-xl p-1.5 transition-colors hover:bg-panel">
-										<div class="flex items-baseline justify-between gap-3 text-sm">
-											<span class="min-w-0 truncate font-semibold text-ink group-hover:text-accent-ink">{nomeMateria(m.nome)}</span>
-											<span class="nums shrink-0 text-xs font-bold text-ink-soft">{m.precisao}</span>
-										</div>
-										<div class="mt-1.5 h-1.5 overflow-hidden rounded-full bg-track" aria-hidden="true">
-											<div
-												class="h-full rounded-full bg-accent-bar transition-[width] duration-300"
-												style="width: {Math.round(m.precisaoNumero * 100)}%"
-											></div>
-										</div>
-									</a>
-								</li>
-							{/each}
-						</ul>
-					</div>
-				{/if}
-
-				{#if paraRevisar.length}
-					<a
-						href="/treino/?modo=revisao"
-						class="btn-suave mt-5 flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-4 text-sm font-bold text-accent-ink"
-					>
-						Revisar {paraRevisar.length} {paraRevisar.length > 1 ? 'questões' : 'questão'}
-						<ArrowRight size={15} weight="bold" aria-hidden="true" />
-					</a>
-				{/if}
-			{:else}
-				<div class="flex items-center justify-between gap-2">
-					<h2 class="font-display text-heading font-bold text-ink">Banco de questões</h2>
-					<span class="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-bold text-accent-ink">INEP oficial</span>
-				</div>
-				<p class="mt-1 text-sm text-ink-soft">
-					{total} questões das provas de {listar(edicoes)}.
-				</p>
-				<dl class="mt-4 grid grid-cols-3 gap-2 text-center">
-					<div class="rounded-2xl bg-panel px-2 py-3">
-						<dd class="nums font-display text-2xl font-extrabold text-ink">{fg}</dd>
-						<dt class="mt-0.5 text-xs font-medium text-ink-soft">Formação Geral</dt>
-					</div>
-					<div class="rounded-2xl bg-panel px-2 py-3">
-						<dd class="nums font-display text-2xl font-extrabold text-ink">{ce}</dd>
-						<dt class="mt-0.5 text-xs font-medium text-ink-soft">Específicas</dt>
-					</div>
-					<div class="rounded-2xl bg-panel px-2 py-3">
-						<dd class="nums font-display text-2xl font-extrabold text-ink">{disc}</dd>
-						<dt class="mt-0.5 text-xs font-medium text-ink-soft">Discursivas</dt>
-					</div>
-				</dl>
-				{#if geradas}
-					<p class="mt-4 text-xs leading-relaxed text-pretty text-ink-soft">
-						Mais <strong class="font-semibold text-ink">{geradas} questões guiadas</strong> por nível de dificuldade no modo Estudo.
-					</p>
-				{/if}
-			{/if}
-		</div>
+					<span class="mt-3.5 inline-flex items-center gap-1.5 text-xs font-extrabold text-accent-ink">
+						Explorar guia
+						<ArrowRight
+							size={14}
+							weight="bold"
+							class="transition-transform group-hover:translate-x-0.5"
+							aria-hidden="true"
+						/>
+					</span>
+				</a>
+			</div>
+		</section>
 	</aside>
 </div>
-
-<!-- 2. Trilha viva de estudo (caminho visual intuitivo mapeado nos modos e dados reais) -->
-<section id="trilha" bind:this={trilha} class="mt-10 scroll-mt-20 lg:mt-12" aria-labelledby="titulo-trilha">
-	<div class="flex flex-wrap items-end justify-between gap-2">
-		<div>
-			<h2 id="titulo-trilha" class="font-display text-title font-extrabold text-ink">Sua trilha de estudo</h2>
-			<p class="mt-1 text-sm text-ink-soft">Siga na ordem ou entre direto no modo que faz sentido hoje.</p>
-		</div>
-	</div>
-	<p class="sr-only" role="status">
-		{#if conquista}
-			Sessão registrada na trilha: {conquista.certas} de {conquista.total} acertos.
-			{#if proximaEtapa}Próximo passo: {proximaEtapa.titulo}.{/if}
-		{/if}
-	</p>
-
-	<nav class="relative mt-5" aria-label="Trilha de estudo">
-		<div
-			class="pointer-events-none absolute top-7 bottom-7 left-5 w-0.5 bg-line sm:left-6"
-			aria-hidden="true"
-		></div>
-
-		<ol class="space-y-3">
-			{#each etapasTrilha as etapa, k (etapa.href)}
-				{@const agora = conquista?.etapa === etapa.href}
-				<li
-					class="rise relative pl-14 sm:pl-16"
-					style="animation-delay: {k * 45}ms"
-					data-agora={agora ? '' : undefined}
-					data-proximo={etapa.estado === 'atual' ? '' : undefined}
-				>
-					{#if etapa.estado === 'feito' && k < etapasTrilha.length - 1}
-						<!-- trecho já percorrido, do nó concluído ao seguinte -->
-						<span
-							data-trecho
-							aria-hidden="true"
-							class="pointer-events-none absolute top-[3.75rem] -bottom-8 left-5 w-0.5 origin-top bg-ok-solid sm:left-6"
-						></span>
-					{/if}
-					<!-- Nó funcional da trilha (círculo marca posição/estado na espinha vertical) -->
-					<span
-						data-no
-						aria-hidden="true"
-						class="absolute top-5 left-0 flex h-10 w-10 items-center justify-center rounded-full border-2 transition-transform sm:left-1 {etapa.estado === 'feito'
-							? 'border-ok-solid bg-ok-solid text-white'
-							: etapa.estado === 'atual'
-								? 'border-accent bg-accent text-accent-on ring-4 ring-accent-soft'
-								: etapa.estado === 'marco'
-									? 'border-milestone bg-milestone-soft text-milestone-ink'
-									: 'border-line-strong bg-card text-ink-soft'}"
-					>
-						{#if etapa.estado === 'feito'}
-							<Check size={18} weight="bold" />
-						{:else if etapa.estado === 'marco'}
-							<FlagCheckered size={18} weight="bold" />
-						{:else}
-							<etapa.icone size={18} weight="bold" />
-						{/if}
-						<span
-							data-onda
-							class="absolute -inset-0.5 rounded-full border-2 opacity-0 {etapa.estado === 'feito'
-								? 'border-ok-solid'
-								: 'border-accent'}"
-						></span>
-					</span>
-
-					<a
-						href={etapa.href}
-						class="superficie group relative block rounded-3xl p-4 transition-[transform,border-color,box-shadow] duration-150 hover:-translate-y-0.5 hover:border-accent active:scale-[0.995] sm:p-5 {etapa.estado === 'atual'
-							? 'border-accent-border'
-							: ''}"
-					>
-						<span
-							data-brilho
-							aria-hidden="true"
-							class="pointer-events-none absolute -inset-px rounded-3xl border-2 border-accent opacity-0"
-						></span>
-						<div class="flex flex-wrap items-center gap-2">
-							<span class="nums text-xs font-bold text-ink-soft">Etapa {etapa.passo}</span>
-							{#if agora}
-								<!-- discursivas: a etapa só fecha com as 10, então uma sessão dela é prática -->
-								<span data-aviso class="nums rounded-full bg-ok-solid px-2.5 py-0.5 text-xs font-bold text-white">
-									{etapa.estado === 'feito' ? 'Concluído' : 'Praticado'} agora · {conquista.certas} de {conquista.total}
-								</span>
-							{:else if etapa.estado === 'feito'}
-								<span class="rounded-full bg-ok-bg px-2.5 py-0.5 text-xs font-bold text-ok-fg">
-									Concluído
-								</span>
-							{:else if etapa.emAndamento}
-								<span class="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-bold text-accent-ink">
-									Em andamento
-								</span>
-							{:else if etapa.estado === 'atual'}
-								<span data-aviso class="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-bold text-accent-ink">
-									Próximo passo
-								</span>
-							{:else if etapa.estado === 'marco'}
-								<span class="rounded-full bg-milestone-soft px-2.5 py-0.5 text-xs font-bold text-milestone-ink">
-									Prova completa
-								</span>
-							{/if}
-							<span class="ml-auto text-xs font-semibold text-ink-soft">{etapa.selo}</span>
-						</div>
-
-						<div class="mt-2 flex items-center justify-between gap-4">
-							<div class="min-w-0">
-								<h3 class="font-display text-heading font-bold text-ink group-hover:text-accent-ink">
-									{etapa.titulo}
-								</h3>
-								<p class="mt-1 text-sm leading-relaxed text-pretty text-ink-soft">
-									{etapa.desc}
-								</p>
-							</div>
-							<span
-								class="hidden shrink-0 items-center gap-1 rounded-full bg-panel px-3.5 py-2 text-xs font-bold text-ink transition-colors group-hover:bg-accent-soft group-hover:text-accent-ink sm:inline-flex"
-							>
-								{etapa.cta}
-								<CaretRight size={14} weight="bold" aria-hidden="true" />
-							</span>
-							<CaretRight
-								size={20}
-								weight="bold"
-								class="shrink-0 text-ink-soft transition-transform group-hover:translate-x-0.5 group-hover:text-accent-ink sm:hidden"
-								aria-hidden="true"
-							/>
-						</div>
-					</a>
-					{#if agora && proximaEtapa && proximaEtapa !== etapa && proximaEtapa !== etapasTrilha[k + 1]}
-						<!-- quem foi direto ao simulado tem o próximo passo lá em cima, fora da tela -->
-						<a
-							data-atalho
-							href={proximaEtapa.href}
-							class="mt-1 inline-flex min-h-11 items-center gap-1.5 px-1 text-sm font-bold text-accent-ink"
-						>
-							Próximo passo: {proximaEtapa.titulo}
-							<ArrowRight size={15} weight="bold" aria-hidden="true" />
-						</a>
-					{/if}
-				</li>
-			{/each}
-		</ol>
-	</nav>
-</section>
-
-<!-- 3. Materiais da turma (questionário do professor + guia do Matheus) -->
-<section class="mt-10" aria-labelledby="titulo-turma-materiais">
-	<h2 id="titulo-turma-materiais" class="font-display text-heading font-bold text-ink">Materiais da turma</h2>
-	<p class="mt-0.5 text-sm text-ink-soft">Conteúdos extras compartilhados em aula — fora das estatísticas do banco oficial.</p>
-
-	<div class="mt-3.5 grid gap-3 sm:grid-cols-2">
-		<a
-			href="/poo/"
-			class="superficie group flex flex-col justify-between rounded-3xl p-5 transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-accent active:scale-[0.995]"
-		>
-			<div>
-				<div class="flex flex-wrap items-center gap-2">
-					<span class="rounded-full bg-milestone-soft px-2.5 py-0.5 text-xs font-bold text-milestone-ink">Novo</span>
-					<span class="text-xs font-medium text-ink-soft">Questionário · 28/10</span>
-				</div>
-				<div class="mt-3 flex items-start gap-3">
-					<Code size={22} weight="bold" class="mt-0.5 shrink-0 text-accent-ink" aria-hidden="true" />
-					<div class="min-w-0">
-						<h3 class="font-display text-base font-bold text-ink group-hover:text-accent-ink">
-							Programação Orientada a Objetos
-						</h3>
-						<p class="mt-1 text-sm leading-relaxed text-ink-soft">
-							10 questões que o professor passou em aula, com correção no fim.
-						</p>
-					</div>
-				</div>
-			</div>
-			<span class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-accent-ink">
-				Fazer o questionário <ArrowRight size={15} weight="bold" aria-hidden="true" />
-			</span>
-		</a>
-
-		<a
-			href="/guia/"
-			class="superficie group flex flex-col justify-between rounded-3xl p-5 transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-accent active:scale-[0.995]"
-		>
-			<div>
-				<div class="flex flex-wrap items-center gap-2">
-					<span class="rounded-full bg-milestone-soft px-2.5 py-0.5 text-xs font-bold text-milestone-ink">Novo</span>
-					<span class="text-xs font-medium text-ink-soft">Do Matheus · 25/11</span>
-				</div>
-				<div class="mt-3 flex items-start gap-3">
-					<BookOpen size={22} weight="bold" class="mt-0.5 shrink-0 text-accent-ink" aria-hidden="true" />
-					<div class="min-w-0">
-						<h3 class="font-display text-base font-bold text-ink group-hover:text-accent-ink">
-							Guia de estudo do Matheus
-						</h3>
-						<p class="mt-1 text-sm leading-relaxed text-ink-soft">
-							Resumos, folha de fórmulas, perguntas de memória e 24 + 2 questões autorais comentadas.
-						</p>
-					</div>
-				</div>
-			</div>
-			<span class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-accent-ink">
-				Abrir o guia <ArrowRight size={15} weight="bold" aria-hidden="true" />
-			</span>
-		</a>
-	</div>
-
-	{#if pronto && total && temProgresso}
-		<p class="mt-5 text-xs leading-relaxed text-pretty text-ink-soft">
-			No banco oficial: {total} questões das provas de {listar(edicoes)} ({fg} de Formação Geral,
-			{ce} específicas e {disc} discursivas){#if geradas}, mais {geradas} de revisão no modo Estudo{/if}.
-		</p>
-	{/if}
-</section>

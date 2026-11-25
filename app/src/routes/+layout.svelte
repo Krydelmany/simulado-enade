@@ -120,103 +120,135 @@
 
 <header
 	bind:this={cabecalho}
-	class="sticky top-0 z-40 border-b border-line bg-card/90 text-ink backdrop-blur-md"
+	class="sticky top-0 z-40 border-b border-line/80 bg-paper/88 text-ink backdrop-blur-lg"
 >
 	<nav
-		class="mx-auto flex h-16 w-full max-w-3xl items-center gap-1 px-4 lg:max-w-5xl"
+		class="mx-auto flex h-16 w-full max-w-3xl items-center gap-2 px-4 md:h-[4.5rem] lg:max-w-5xl"
 		aria-label="Principal"
 	>
 		<a
 			href="/"
-			class="group mr-2 flex items-center gap-2.5 rounded-xl py-1 pr-2 transition-opacity hover:opacity-90"
+			aria-current={rotaAtual === '/' ? 'page' : undefined}
+			class="group flex min-h-11 items-center gap-2.5 rounded-2xl py-1 pr-2 transition-transform duration-150 active:scale-[0.98]"
 		>
-			<Marca tamanho={28} />
+			<Marca tamanho={32} />
 			<span class="leading-tight">
-				<span class="block font-display text-[15px] font-bold tracking-tight text-ink">
+				<span class="block font-display text-[15px] font-extrabold tracking-tight text-ink">
 					Simulado ENADE
 				</span>
-				<span class="block text-xs font-medium text-ink-soft">{curso.nomeCurto}</span>
+				<span class="block text-xs font-semibold text-ink-soft">{curso.nomeCurto}</span>
 			</span>
 		</a>
+
 		<span class="flex-1"></span>
-		{#each tabs as t (t.href)}
-			<a
-				href={t.href}
-				aria-current={abaAtiva(t) ? 'page' : undefined}
-				class="hidden items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold transition-colors active:scale-[0.98] md:flex {abaAtiva(
-					t
-				)
-					? 'bg-accent-soft text-accent-ink'
-					: 'text-ink-soft hover:bg-tile hover:text-ink'}"
-			>
-				<t.icone size={16} weight={abaAtiva(t) ? 'fill' : 'bold'} aria-hidden="true" />
-				{t.label}
-			</a>
-		{/each}
-		{#if nuvemLigada}
-			<a
-				href="/conta/"
-				aria-label="Conta e turma"
-				aria-current={$page.url.pathname === '/conta/' ? 'page' : undefined}
-				class="flex h-11 min-h-11 min-w-11 items-center justify-center rounded-full transition-colors active:scale-95 {$page.url.pathname === '/conta/'
-					? 'bg-accent-soft text-accent-ink'
-					: 'text-ink-soft hover:bg-tile hover:text-ink'}"
-			>
-				<UserCircle size={22} weight="bold" aria-hidden="true" />
-			</a>
-		{/if}
-		<button
-			type="button"
-			onclick={trocar}
-			aria-label={escuro ? 'Usar modo claro' : 'Usar modo escuro'}
-			aria-pressed={escuro}
-			class="flex h-11 min-h-11 min-w-11 items-center justify-center rounded-full text-ink-soft transition-colors hover:bg-tile hover:text-ink active:scale-95"
+
+		<!-- Barra de navegação tátil no desktop -->
+		<div
+			class="hidden items-center gap-1 rounded-full border border-line bg-card/95 p-1 shadow-[inset_0_1px_0_var(--card-top),0_2.5px_0_0_var(--surface-lip)] md:flex"
 		>
-			{#if escuro}
-				<Sun size={20} weight="bold" aria-hidden="true" />
-			{:else}
-				<Moon size={20} weight="bold" aria-hidden="true" />
+			{#each tabs as t (t.href)}
+				{@const ativa = abaAtiva(t)}
+				<a
+					href={t.href}
+					aria-current={ativa ? 'page' : undefined}
+					class="inline-flex min-h-11 items-center gap-1.5 rounded-full px-2.5 py-2 text-[13px] font-bold transition-[transform,background-color,color,box-shadow] duration-150 active:translate-y-px lg:px-3.5 lg:text-sm {ativa
+						? 'bg-accent text-accent-on shadow-[0_2px_0_0_var(--accent-lip)]'
+						: 'text-ink-soft hover:bg-tile/80 hover:text-ink'}"
+				>
+					<t.icone size={15} weight={ativa ? 'fill' : 'bold'} aria-hidden="true" />
+					{t.label}
+				</a>
+			{/each}
+		</div>
+
+		<span class="hidden flex-1 lg:block"></span>
+
+		<div class="flex items-center gap-2">
+			{#if nuvemLigada}
+				<a
+					href="/conta/"
+					aria-label="Conta e turma"
+					aria-current={$page.url.pathname === '/conta/' ? 'page' : undefined}
+					class="btn-icone flex h-11 w-11 items-center justify-center rounded-full {$page.url.pathname ===
+					'/conta/'
+						? 'border-accent-border bg-accent-soft text-accent-ink'
+						: ''}"
+				>
+					<UserCircle size={21} weight="bold" aria-hidden="true" />
+				</a>
 			{/if}
-		</button>
-		<button
-			type="button"
-			onclick={() => (menuAberto = !menuAberto)}
-			aria-expanded={menuAberto}
-			aria-controls="menu-mobile"
-			aria-label={menuAberto ? 'Fechar menu' : 'Abrir menu'}
-			class="flex h-11 min-h-11 min-w-11 items-center justify-center rounded-full text-ink-soft transition-colors hover:bg-tile hover:text-ink active:scale-95 md:hidden"
-		>
-			{#if menuAberto}
-				<X size={21} weight="bold" aria-hidden="true" />
-			{:else}
-				<List size={21} weight="bold" aria-hidden="true" />
-			{/if}
-		</button>
+			<button
+				type="button"
+				onclick={trocar}
+				aria-label={escuro ? 'Usar modo claro' : 'Usar modo escuro'}
+				aria-pressed={escuro}
+				class="btn-icone group/tema flex h-11 w-11 items-center justify-center rounded-full"
+			>
+				{#if escuro}
+					<Sun
+						size={20}
+						weight="bold"
+						class="transition-transform duration-200 group-hover/tema:rotate-45"
+						aria-hidden="true"
+					/>
+				{:else}
+					<Moon
+						size={19}
+						weight="bold"
+						class="transition-transform duration-200 group-hover/tema:-rotate-12"
+						aria-hidden="true"
+					/>
+				{/if}
+			</button>
+			<button
+				type="button"
+				onclick={() => (menuAberto = !menuAberto)}
+				aria-expanded={menuAberto}
+				aria-controls="menu-mobile"
+				aria-label={menuAberto ? 'Fechar menu' : 'Abrir menu'}
+				class="btn-icone flex h-11 w-11 items-center justify-center rounded-full md:hidden {menuAberto
+					? 'border-accent-border bg-accent-soft text-accent-ink'
+					: ''}"
+			>
+				{#if menuAberto}
+					<X size={20} weight="bold" aria-hidden="true" />
+				{:else}
+					<List size={20} weight="bold" aria-hidden="true" />
+				{/if}
+			</button>
+		</div>
 	</nav>
 
 	{#if menuAberto}
 		<div
 			id="menu-mobile"
-			class="absolute inset-x-0 top-full z-50 border-b border-line bg-card text-ink shadow-xl md:hidden"
+			class="absolute inset-x-0 top-full z-50 px-3 pt-2 md:hidden"
 			in:fly={{ y: -8, duration: DUR }}
 			out:fade={{ duration: DUR }}
 		>
-			<nav class="mx-auto flex w-full max-w-3xl flex-col gap-1 px-4 py-3" aria-label="Menu">
+			<nav
+				class="folha mx-auto flex w-full max-w-3xl flex-col gap-1 rounded-3xl p-2.5 text-ink"
+				aria-label="Menu"
+			>
 				{#each tabs as t (t.href)}
+					{@const ativa = abaAtiva(t)}
 					<a
 						href={t.href}
-						aria-current={abaAtiva(t) ? 'page' : undefined}
-						class="flex min-h-12 items-center gap-3 rounded-2xl px-3.5 text-base font-semibold transition-colors active:scale-[0.99] {abaAtiva(
-							t
-						)
-							? 'bg-accent-soft text-accent-ink'
-							: 'text-ink-soft hover:bg-tile hover:text-ink'}"
+						aria-current={ativa ? 'page' : undefined}
+						class="flex min-h-12 items-center gap-3 rounded-2xl px-3.5 text-base font-bold transition-[transform,background-color,color] duration-150 active:scale-[0.985] {ativa
+							? 'bg-accent text-accent-on shadow-[0_2.5px_0_0_var(--accent-lip)]'
+							: 'text-ink hover:bg-tile'}"
 					>
-						<t.icone size={20} weight={abaAtiva(t) ? 'fill' : 'bold'} aria-hidden="true" />
+						<t.icone
+							size={20}
+							weight={ativa ? 'fill' : 'bold'}
+							class={ativa ? '' : 'text-accent-ink'}
+							aria-hidden="true"
+						/>
 						{t.label}
 					</a>
 				{/each}
-				<div class="my-1.5 border-t border-line"></div>
+				<div class="my-1 border-t border-line"></div>
 				{#if nuvemLigada}
 					<a
 						href="/conta/"
@@ -257,25 +289,25 @@
 	{/if}
 </header>
 
-<main id="conteudo" class="mx-auto w-full max-w-3xl px-4 pt-6 pb-12 lg:max-w-5xl">
+<main id="conteudo" class="mx-auto w-full max-w-3xl px-4 pt-5 pb-12 lg:max-w-5xl lg:pt-7">
 	{@render children()}
 </main>
 
 {#if !emQuiz}
-	<footer class="border-t border-line bg-card/60">
-		<div class="mx-auto grid w-full max-w-3xl gap-8 px-4 py-10 sm:grid-cols-3 lg:max-w-5xl">
+	<footer class="border-t border-line/80 bg-card/70">
+		<div class="mx-auto grid w-full max-w-3xl gap-7 px-4 py-9 sm:grid-cols-3 lg:max-w-5xl">
 			<div>
-				<p class="flex items-center gap-2 font-display text-sm font-bold tracking-tight text-ink">
-					<Marca tamanho={22} /> Simulado ENADE
+				<p class="flex items-center gap-2 font-display text-sm font-extrabold tracking-tight text-ink">
+					<Marca tamanho={22} interativo={false} /> Simulado ENADE
 				</p>
 				<p class="mt-2 text-xs leading-relaxed text-pretty text-ink-soft">
-					Estudo guiado para a prova com questões oficiais do INEP.
-					{nuvemLigada ? 'Conta só se você quiser entrar numa turma.' : 'Sem conta, sem servidor.'}
+					Prática interativa com questões oficiais do INEP.
+					{nuvemLigada ? 'Conta opcional para entrar em turma.' : 'Tudo salvo direto no aparelho.'}
 				</p>
 			</div>
 			<nav aria-label="Modos">
-				<p class="text-label font-bold text-ink-soft">Estudo</p>
-				<ul class="mt-2.5 space-y-1.5 text-sm font-medium">
+				<p class="text-label font-bold text-ink-soft">Atalhos</p>
+				<ul class="mt-2.5 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm font-medium sm:grid-cols-1">
 					<li><a href="/treino/" class="text-ink hover:text-accent-ink">Treino livre</a></li>
 					<li><a href="/estudo/" class="text-ink hover:text-accent-ink">Estudo por níveis</a></li>
 					<li><a href="/treino/?modo=discursivas" class="text-ink hover:text-accent-ink">Discursivas do CE</a></li>
@@ -290,7 +322,7 @@
 				</ul>
 			</nav>
 			<div>
-				<p class="text-label font-bold text-ink-soft">Fonte oficial</p>
+				<p class="text-label font-bold text-ink-soft">Base oficial</p>
 				<p class="mt-2.5 text-xs leading-relaxed text-pretty text-ink-soft">
 					Provas de {curso.nome} do INEP de 2014, 2017, 2019 e 2023. Formato 2026: Portaria INEP nº 161.
 				</p>

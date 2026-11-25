@@ -48,6 +48,10 @@ export function mola(rigidez = 210, amortecimento = 17) {
 	return { curva: `linear(${pontos.join(', ')})`, duracao: Math.round(fim * 1000) };
 }
 
+/** Molas táteis prontas para respostas físicas rápidas (< 250 ms de sensação). */
+export const MOLA_TOQUE = mola(420, 22);
+export const MOLA_VIVA = mola(300, 16);
+
 /**
  * Anima um elemento ATÉ o estado em que ele já está no HTML/CSS.
  *
@@ -75,4 +79,13 @@ export function animar(el, quadros, { duracao = 240, atraso = 0, curva = SAIDA }
 			return null;
 		}
 	}
+}
+
+/**
+ * Pulso elástico curto de resposta tátil (escala com mola viva).
+ * @param {Element | null | undefined} el
+ * @param {number} [escalaInicial]
+ */
+export function pulsoTatil(el, escalaInicial = 0.92) {
+	return animar(el, { transform: [`scale(${escalaInicial})`, 'scale(1)'] }, MOLA_TOQUE);
 }

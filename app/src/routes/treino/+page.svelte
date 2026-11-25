@@ -61,7 +61,6 @@
 	let salva = $state(null);
 	let prontoModo = $state(null);
 	let confirmaFiltro = $state(null);
-	let confirmaSaida = $state(false);
 	let zoomAberto = $state(false);
 	// true quando o aluno marcou uma alternativa mas ainda não clicou em Verificar
 	// (bloqueia avançar em questão pulada para não perder a seleção)
@@ -75,13 +74,12 @@
 	// `persistir()` roda a cada resposta e navegação.
 	ligarCamadas(
 		() =>
-			[fimVolta && 'fim', confirmaFiltro && 'filtro', confirmaSaida && 'saida', zoomAberto && 'zoom'].filter(
+			[fimVolta && 'fim', confirmaFiltro && 'filtro', zoomAberto && 'zoom'].filter(
 				Boolean
 			),
 		(n) => {
 			if (n === 'fim') fimVolta = false;
 			else if (n === 'filtro') confirmaFiltro = null;
-			else if (n === 'saida') confirmaSaida = false;
 			else if (n === 'zoom') zoomAberto = false;
 		}
 	);
@@ -92,7 +90,6 @@
 	}
 	let ultimoToque = $state(0);
 	let refTema = $state(null);
-	let refSaida = $state(null);
 
 	$effect(() => {
 		if (!carregou || !banco.length) return;
@@ -153,7 +150,7 @@
 	let ultima = $derived(i + 1 >= fila.length);
 	let podeAvancar = $derived(!!respostas[i] && !selecaoPendente);
 	let atalhosQuestao = $derived(
-		!confirmaSaida && !confirmaFiltro && !fimVolta && !escolha && !encerrada && !zoomAberto
+		!confirmaFiltro && !fimVolta && !escolha && !encerrada && !zoomAberto
 	);
 	// estatísticas só da volta atual, para o aviso de fim de volta
 	let resumoVolta = $derived.by(() => {
@@ -222,9 +219,6 @@
 
 	$effect(() => {
 		if (confirmaFiltro && refTema) refTema.focus();
-	});
-	$effect(() => {
-		if (confirmaSaida && refSaida) refSaida.focus();
 	});
 
 	function materia(q) {
@@ -327,16 +321,8 @@
 	}
 
 	function sair() {
-		// em revisão nada é salvo; no treino normal, avisa antes de sair com progresso
-		if (revisao || feitas === 0) {
-			sairDaRota('/');
-			return;
-		}
-		confirmaSaida = true;
-	}
-
-	function sairAgora() {
-		persistir();
+		// o progresso já é salvo a cada resposta; sai direto sem modal e preserva a retomada
+		if (!revisao && log.length > 0) persistir();
 		sairDaRota('/');
 	}
 
@@ -512,10 +498,6 @@
 				confirmaFiltro = null;
 				return;
 			}
-			if (confirmaSaida) {
-				confirmaSaida = false;
-				return;
-			}
 			if (fimVolta) {
 				fimVolta = false;
 				return;
@@ -525,7 +507,7 @@
 			sair();
 			return;
 		}
-		if (confirmaSaida || confirmaFiltro || fimVolta || escolha || encerrada || zoomAberto) return;
+		if (confirmaFiltro || fimVolta || escolha || encerrada || zoomAberto) return;
 		if (e.key === 'ArrowLeft') {
 			e.preventDefault();
 			voltar();
@@ -858,45 +840,6 @@
 						class="btn-suave min-h-12 w-full rounded-full px-5 font-display text-base font-bold"
 					>
 						Manter o filtro atual
-					</button>
-				</div>
-			</div>
-		</div>
-	{/if}
-
-	{#if confirmaSaida}
-		<div class="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
-			<button
-				type="button"
-				onclick={() => (confirmaSaida = false)}
-				aria-label="Fechar e continuar treinando"
-				class="absolute inset-0 cursor-default bg-black/50 backdrop-blur-[2px]"
-			></button>
-			<div
-				role="dialog"
-				aria-modal="true"
-				aria-labelledby="confirma-saida-titulo"
-				class="folha relative w-full max-w-sm rounded-3xl p-6"
-			>
-				<h2 id="confirma-saida-titulo" class="font-display text-xl font-extrabold tracking-tight text-ink">Sair da sessão?</h2>
-				<p class="mt-1.5 text-sm text-ink-soft">
-					Seu progresso ({feitas} respondidas) fica salvo para continuar depois.
-				</p>
-				<div class="mt-5 space-y-2.5">
-					<button
-						type="button"
-						bind:this={refSaida}
-						onclick={sairAgora}
-						class="btn-primario min-h-12 w-full rounded-full px-5 font-display text-base font-bold"
-					>
-						Sair e salvar
-					</button>
-					<button
-						type="button"
-						onclick={() => (confirmaSaida = false)}
-						class="btn-suave min-h-12 w-full rounded-full px-5 font-display text-base font-bold"
-					>
-						Continuar treinando
 					</button>
 				</div>
 			</div>

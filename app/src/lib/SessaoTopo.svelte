@@ -17,8 +17,8 @@
 		<button
 			type="button"
 			onclick={aoFechar}
-			aria-label="Encerrar sessão"
-			class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line bg-paper text-ink-soft transition-colors hover:border-line-strong hover:text-ink active:scale-95"
+			aria-label="Sair da sessão"
+			class="btn-icone flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
 		>
 			<X size={19} weight="bold" aria-hidden="true" />
 		</button>

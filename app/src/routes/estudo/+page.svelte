@@ -64,7 +64,6 @@
 	let vazioNivel = $state(null);
 	let escolhaE = $state(false);
 	let salvaE = $state(null);
-	let confirmaSaida = $state(false);
 	let zoomAberto = $state(false);
 	// true quando o aluno marcou uma alternativa mas ainda não clicou em Verificar
 	// (bloqueia avançar em questão pulada para não perder a seleção)
@@ -84,11 +83,10 @@
 				? []
 				: fim
 					? ['fim']
-					: ['quiz', confirmaSaida && 'saida', zoomAberto && 'zoom'].filter(Boolean),
+					: ['quiz', zoomAberto && 'zoom'].filter(Boolean),
 		(n) => {
-			if (n === 'quiz') sairAgora();
+			if (n === 'quiz') sair();
 			else if (n === 'fim') nivel = null;
-			else if (n === 'saida') confirmaSaida = false;
 			else if (n === 'zoom') zoomAberto = false;
 		}
 	);
@@ -97,7 +95,6 @@
 	function topo() {
 		window.scrollTo({ top: 0 });
 	}
-	let refSaida = $state(null);
 
 	// contadores derivados do log — navegar para frente/voltar nunca conta duas vezes
 	let feitas = $derived(log.filter((r) => !r.pulada).length);
@@ -108,7 +105,7 @@
 	let ultima = $derived(i + 1 >= sessao.length);
 	let podeAvancar = $derived(!!respostas[i] && !selecaoPendente);
 	let atalhosQuestao = $derived(
-		nivel !== null && !confirmaSaida && !escolhaE && !fim && !zoomAberto
+		nivel !== null && !escolhaE && !fim && !zoomAberto
 	);
 	// quantas questões cada nível tem de verdade, já com o filtro de matéria
 	// (para não prometer 10 e entregar 3)
@@ -170,10 +167,6 @@
 			}
 		}
 	}
-
-	$effect(() => {
-		if (confirmaSaida && refSaida) refSaida.focus();
-	});
 
 	function doFiltro(n) {
 		return banco.filter(
@@ -306,19 +299,8 @@
 	}
 
 	function sair() {
-		// antes descartava 10 questões em silêncio; agora salva e avisa
-		if (feitas === 0) {
-			nivel = null;
-			// só pulou: a sessão pode ter sido gravada mesmo assim
-			oferecerContinuar();
-			return;
-		}
-		confirmaSaida = true;
-	}
-
-	function sairAgora() {
+		// o progresso já é salvo a cada resposta; sai direto sem modal de confirmação
 		persistir();
-		confirmaSaida = false;
 		nivel = null;
 		oferecerContinuar();
 	}
@@ -397,15 +379,11 @@
 		if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
 		if (ehCampo(e.target)) return;
 		if (e.key === 'Escape') {
-			if (confirmaSaida) {
-				confirmaSaida = false;
-				return;
-			}
 			if (zoomAberto) return; // deixa o Esc fechar o zoom da figura
 			if (nivel !== null && !fim) sair();
 			return;
 		}
-		if (confirmaSaida || nivel === null || fim || escolhaE || zoomAberto) return;
+		if (nivel === null || fim || escolhaE || zoomAberto) return;
 		if (e.key === 'ArrowLeft') {
 			e.preventDefault();
 			voltar();
@@ -494,7 +472,7 @@
 {:else if nivel === null}
 	<div class="mb-5">
 		<h1 class="font-display text-title font-extrabold tracking-tight text-ink">Sessão de estudo</h1>
-		<p class="mt-1 text-sm text-ink-soft">Até 10 questões por sessão. Escolha a matéria e o nível para praticar.</p>
+		<p class="mt-1 text-sm text-ink-soft">Até 10 questões por rodada. Escolha o nível e comece.</p>
 	</div>
 	<label class="superficie mb-5 flex items-center gap-2 rounded-2xl px-3.5">
 		<Tag size={17} weight="bold" class="shrink-0 text-ink-soft" aria-hidden="true" />
@@ -530,7 +508,7 @@
 			<button
 				type="button"
 				onclick={() => comecar(n)}
-				class="superficie rise flex w-full items-center gap-4 rounded-3xl p-4 text-left transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-accent active:scale-[0.99] sm:p-5"
+				class="cartao-tatil rise flex w-full items-center gap-4 rounded-3xl p-4 text-left sm:p-5"
 				style="animation-delay: {k * 45}ms"
 			>
 				<span class="nums flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-soft font-display text-lg font-extrabold text-accent-ink" aria-hidden="true">
@@ -553,7 +531,7 @@
 	<button
 		type="button"
 		onclick={() => comecar(NIVEL_ENADE)}
-		class="superficie rise flex w-full items-center gap-4 rounded-3xl border-milestone-border/70 p-4 text-left transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-accent active:scale-[0.99] sm:p-5"
+		class="cartao-tatil rise flex w-full items-center gap-4 rounded-3xl border-milestone-border/70 p-4 text-left sm:p-5"
 		style="animation-delay: 140ms"
 	>
 		<SealCheck size={28} weight="bold" class="shrink-0 text-milestone" aria-hidden="true" />
@@ -679,43 +657,4 @@
 		{/if}
 	</div>
 {/if}
-
-	{#if confirmaSaida}
-		<div class="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
-			<button
-				type="button"
-				onclick={() => (confirmaSaida = false)}
-				aria-label="Fechar e continuar estudando"
-				class="absolute inset-0 cursor-default bg-black/50 backdrop-blur-[2px]"
-			></button>
-			<div
-				role="dialog"
-				aria-modal="true"
-				aria-labelledby="estudo-saida-titulo"
-				class="folha relative w-full max-w-sm rounded-3xl p-6"
-			>
-				<h2 id="estudo-saida-titulo" class="font-display text-xl font-extrabold tracking-tight text-ink">Sair da sessão?</h2>
-				<p class="mt-1.5 text-sm text-ink-soft">
-					Seu progresso ({feitas} respondidas) fica salvo para continuar depois.
-				</p>
-				<div class="mt-5 space-y-2.5">
-					<button
-						type="button"
-						bind:this={refSaida}
-						onclick={sairAgora}
-						class="btn-primario min-h-12 w-full rounded-full px-5 font-display text-base font-bold"
-					>
-						Sair e salvar
-					</button>
-					<button
-						type="button"
-						onclick={() => (confirmaSaida = false)}
-						class="btn-suave min-h-12 w-full rounded-full px-5 font-display text-base font-bold"
-					>
-						Continuar estudando
-					</button>
-				</div>
-			</div>
-		</div>
-	{/if}
 </div>
