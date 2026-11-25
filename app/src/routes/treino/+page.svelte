@@ -550,27 +550,27 @@
 		<div class="h-14 animate-pulse rounded-2xl bg-skel"></div>
 	</div>
 {:else if falhou || !banco.length}
-	<div class="rounded-3xl bg-card p-6 text-center shadow-sm" role="alert">
-		<p class="font-display text-lg font-bold">Não deu para carregar as questões</p>
+	<div class="superficie rounded-3xl p-6 text-center" role="alert">
+		<p class="font-display text-lg font-bold text-ink">Não deu para carregar as questões</p>
 		<p class="mt-1 text-sm text-ink-soft">Verifique sua conexão e tente de novo.</p>
-		<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
+		<button type="button" onclick={() => location.reload()} class="btn-primario mt-4 min-h-12 w-full rounded-full px-6 font-display text-base font-bold">
 			Tentar de novo
 		</button>
 	</div>
 {:else if sessaoGuardada}
-	<div class="rounded-3xl bg-card p-6 text-center shadow-sm" role="alert">
-		<p class="font-display text-lg font-bold">Parte das questões não carregou</p>
+	<div class="superficie rounded-3xl p-6 text-center" role="alert">
+		<p class="font-display text-lg font-bold text-ink">Parte das questões não carregou</p>
 		<p class="mt-1 text-sm text-ink-soft">
 			Seu treino pausado continua guardado neste aparelho. Verifique a conexão e tente de novo para continuar.
 		</p>
-		<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
+		<button type="button" onclick={() => location.reload()} class="btn-primario mt-4 min-h-12 w-full rounded-full px-6 font-display text-base font-bold">
 			Tentar de novo
 		</button>
 	</div>
 {:else if escolha && salva}
-	<div class="rise rounded-3xl bg-card p-6 text-center shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]">
+	<div class="folha rise rounded-3xl p-6 text-center sm:p-7">
 		<p class="text-label font-bold text-ink-soft">Sessão pausada</p>
-		<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight">Continuar de onde parou?</h2>
+		<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink">Continuar de onde parou?</h2>
 		<p class="nums mt-2 text-sm text-ink-soft">
 			{discursivas ? 'Discursiva' : 'Questão'} {salva.i + 1} · {salva.certas}/{salva.feitas} certas{salva.filtro && salva.filtro !== 'todos' ? ` · ${nomeMateria(salva.filtro)}` : ''}
 		</p>
@@ -579,65 +579,65 @@
 				{salva.removidas} {salva.removidas === 1 ? 'questão saiu' : 'questões saíram'} do banco desde a pausa.
 			</p>
 		{/if}
-		<button type="button" onclick={() => montar(false)} class="btn3d duo-accent mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
-			<Play size={20} weight="fill" aria-hidden="true" /> Continuar sessão
+		<button type="button" onclick={() => montar(false)} class="btn-primario mt-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold">
+			<Play size={19} weight="fill" aria-hidden="true" /> Continuar sessão
 		</button>
-		<button type="button" onclick={() => montar()} class="mt-2 w-full rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
+		<button type="button" onclick={() => montar()} class="btn-suave mt-2.5 min-h-12 w-full rounded-full px-6 font-display text-base font-bold">
 			Nova sessão
 		</button>
 	</div>
 {:else if encerrada}
-	<div class="blueprint faixa px-4 pt-8 pb-10 text-center text-white">
-		<p class="text-sm font-medium text-bar-fg">
+	<div class="folha curso-halo rounded-3xl px-5 pt-7 pb-8 text-center sm:p-8">
+		<p class="text-label font-bold text-accent-ink">
 			{revisao ? 'Revisão de erros' : discursivas ? 'Discursivas · Componente Específico' : 'Treino livre'}
 		</p>
-		<h2 class="mt-1 font-display text-3xl font-extrabold tracking-tight">Sessão concluída</h2>
-		<p class="springin mx-auto mt-4 flex h-24 w-24 items-center justify-center rounded-full bg-accent-soft">
-			<Trophy size={44} weight="fill" class="text-accent" aria-hidden="true" />
+		<h2 class="mt-1 font-display text-3xl font-extrabold tracking-tight text-ink">Sessão concluída</h2>
+		<p class="springin mx-auto mt-4 flex h-20 w-20 items-center justify-center rounded-full border border-milestone-border bg-milestone-soft">
+			<Trophy size={38} weight="fill" class="text-milestone" aria-hidden="true" />
 		</p>
-		<p class="nums mt-3 font-display text-6xl font-extrabold tracking-tight">
-			<Contador valor={certas} />/{feitas}
+		<p class="nums mt-4 font-display text-5xl font-extrabold tracking-tight text-ink sm:text-6xl">
+			<Contador valor={certas} /><span class="text-2xl font-bold text-ink-soft">/{feitas}</span>
 		</p>
-		<p class="mt-1 text-sm text-bar-fg">acertos nesta sessão</p>
+		<p class="mt-1 text-sm text-ink-soft">acertos nesta sessão</p>
 	</div>
-	<div class="mx-auto -mt-0 grid max-w-xs grid-cols-3 gap-2 pt-4 text-center">
-		<div class="rounded-2xl bg-card p-3 shadow-sm">
-			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold"><Target size={17} weight="bold" class="text-accent" aria-hidden="true" />{feitas ? Math.round((certas / feitas) * 100) : 0}%</p>
-			<p class="text-xs font-semibold text-ink-soft">Precisão</p>
+	<div class="mx-auto grid max-w-md grid-cols-3 gap-2.5 pt-4 text-center">
+		<div class="superficie rounded-2xl p-3">
+			<p class="nums flex items-center justify-center gap-1 font-display text-xl font-extrabold text-ink"><Target size={17} weight="bold" class="text-accent-ink" aria-hidden="true" />{feitas ? Math.round((certas / feitas) * 100) : 0}%</p>
+			<p class="mt-0.5 text-xs font-medium text-ink-soft">Precisão</p>
 		</div>
-		<div class="rounded-2xl bg-card p-3 shadow-sm">
-			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold"><Timer size={17} weight="bold" class="text-accent" aria-hidden="true" />{mmss()}</p>
-			<p class="text-xs font-semibold text-ink-soft">Tempo</p>
+		<div class="superficie rounded-2xl p-3">
+			<p class="nums flex items-center justify-center gap-1 font-display text-xl font-extrabold text-ink"><Timer size={17} weight="bold" class="text-accent-ink" aria-hidden="true" />{mmss()}</p>
+			<p class="mt-0.5 text-xs font-medium text-ink-soft">Tempo</p>
 		</div>
-		<div class="rounded-2xl bg-card p-3 shadow-sm">
-			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold"><Lightning size={17} weight="fill" class="text-accent" aria-hidden="true" />+{xpGanho}</p>
-			<p class="text-xs font-semibold text-ink-soft">XP ganho</p>
+		<div class="superficie rounded-2xl p-3">
+			<p class="nums flex items-center justify-center gap-1 font-display text-xl font-extrabold text-milestone-ink"><Lightning size={17} weight="fill" class="text-milestone" aria-hidden="true" />+{xpGanho}</p>
+			<p class="mt-0.5 text-xs font-medium text-ink-soft">XP ganho</p>
 		</div>
 	</div>
 	{#if porMateria().length}
-		<div class="mt-3 rounded-3xl bg-card p-5 shadow-sm">
-			<p class="font-display text-lg font-bold">Desempenho por matéria</p>
+		<div class="superficie mt-3 rounded-3xl p-5">
+			<p class="font-display text-lg font-bold text-ink">Desempenho por matéria</p>
 			<div class="mt-3 space-y-3">
 				{#each porMateria() as [m, d] (m)}
 					<div>
 						<div class="flex items-baseline justify-between gap-3 text-sm">
-							<p class="truncate font-semibold">{nomeMateria(m)}</p>
-							<p class="nums shrink-0 font-bold">{d.ok}/{d.n}</p>
+							<p class="truncate font-semibold text-ink">{nomeMateria(m)}</p>
+							<p class="nums shrink-0 font-bold text-ink">{d.ok}/{d.n}</p>
 						</div>
-						<div class="mt-1 h-2 overflow-hidden rounded-full bg-track">
-							<div class="h-full rounded-full bg-accent" style="width: {(d.ok / d.n) * 100}%"></div>
+						<div class="mt-1.5 h-2 overflow-hidden rounded-full bg-track">
+							<div class="h-full rounded-full bg-accent-bar" style="width: {(d.ok / d.n) * 100}%"></div>
 						</div>
 					</div>
 				{/each}
 			</div>
 		</div>
 	{/if}
-	<div class="mt-4 space-y-2">
-		<button type="button" onclick={montar} class="btn3d duo-accent flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
-			<ArrowsClockwise size={20} weight="bold" aria-hidden="true" /> Nova sessão
+	<div class="mt-4 space-y-2.5">
+		<button type="button" onclick={montar} class="btn-primario flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold">
+			<ArrowsClockwise size={19} weight="bold" aria-hidden="true" /> Nova sessão
 		</button>
 		{#if getErros().length}
-			<a href="/treino/?modo=revisao" class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
+			<a href="/treino/?modo=revisao" class="btn-suave flex min-h-12 w-full items-center justify-center rounded-full px-6 font-display text-base font-bold">
 				Revisar erros e marcadas ({contarParaRevisar(banco)})
 			</a>
 		{/if}
@@ -659,8 +659,8 @@
 		aoFechar={sair}
 	/>
 	{#if !fila.length}
-		<div class="mt-6 rounded-3xl bg-card p-6 text-center shadow-sm">
-			<p class="font-display text-lg font-bold">Nada por aqui</p>
+		<div class="superficie mt-6 rounded-3xl p-6 text-center">
+			<p class="font-display text-lg font-bold text-ink">Nada por aqui</p>
 			<p class="mt-1 text-sm text-ink-soft">
 				{revisao
 					? 'Sem erros acumulados — quando errar, a questão aparece aqui.'
@@ -670,7 +670,7 @@
 			</p>
 			<div class="mt-4 flex w-full flex-col gap-2">
 				{#if revisao || discursivas}
-					<a href="/treino/" class="btn3d duo-accent flex w-full items-center justify-center rounded-[14px] p-3.5 font-display text-lg font-bold">
+					<a href="/treino/" class="btn-primario flex min-h-12 w-full items-center justify-center rounded-full px-6 font-display text-base font-bold">
 						Treinar tudo
 					</a>
 				{:else if filtro !== 'todos'}
@@ -681,20 +681,17 @@
 							filtro = 'todos';
 							montar();
 						}}
-						class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold"
+						class="btn-suave flex min-h-12 w-full items-center justify-center rounded-full px-6 font-display text-base font-bold"
 					>
 						Ver todas as matérias
 					</button>
 				{/if}
-				<a href="/estudo/" class="flex w-full items-center justify-center rounded-[14px] p-3 text-sm font-bold text-ink-soft">
+				<a href="/estudo/" class="flex w-full items-center justify-center rounded-full p-3 text-sm font-bold text-ink-soft hover:text-ink">
 					Estudo por níveis
 				</a>
 			</div>
 		</div>
 	{:else}
-		<!-- Busca: campo fixo no topo, acima do filtro de materia. Some quando a
-		     sessao acabou ou esta pausada — nesses estados nao ha fila para pular.
-		     Nas discursivas também: são 10, e a lista misturava objetivas. -->
 		{#if !discursivas}
 			<div class="relative mt-4 mb-3">
 				<BuscaQuestoes {banco} aoPular={pularPara} />
@@ -702,7 +699,7 @@
 		{/if}
 		<div class="mt-4 mb-3 flex items-center gap-2">
 			{#if !discursivas}
-				<label class="flex flex-1 items-center gap-2 rounded-2xl border border-line bg-card px-3">
+				<label class="superficie flex flex-1 items-center gap-2 rounded-2xl px-3.5">
 					<Tag size={17} weight="bold" class="shrink-0 text-ink-soft" aria-hidden="true" />
 					<span class="sr-only">Filtrar por matéria</span>
 					<select bind:value={filtro} onchange={aoTrocarFiltro} class="w-full bg-transparent py-3 text-sm font-semibold text-ink">
@@ -722,40 +719,40 @@
 				onclick={encerrar}
 				title="Encerrar sessão e ver o resumo"
 				aria-label="Encerrar sessão e ver o resumo"
-				class="nums flex min-h-11 items-center gap-1.5 rounded-2xl bg-card px-3 py-3 text-sm font-bold transition-transform active:scale-95 {discursivas
+				class="superficie nums flex min-h-11 items-center gap-1.5 rounded-2xl px-3.5 py-3 text-sm font-bold text-ink transition-colors hover:border-accent active:scale-95 {discursivas
 					? 'w-full justify-center'
 					: ''}"
 			>
-				<Flag size={16} weight="bold" class="text-accent" aria-hidden="true" />{certas}/{feitas}
+				<Flag size={16} weight="bold" class="text-accent-ink" aria-hidden="true" />{certas}/{feitas}
 			</button>
 		</div>
 		{#if fimVolta}
-			<div class="rise rounded-3xl bg-card p-5 shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]">
+			<div class="folha rise rounded-3xl p-5 sm:p-6">
 				<p class="text-label font-bold text-accent-ink">Volta {volta + 1} concluída</p>
-				<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight">Você deu a volta na fila</h2>
+				<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink">Você deu a volta na fila</h2>
 				<p class="nums mt-2 text-sm text-ink-soft">
 					Nesta volta: {resumoVolta.feitas} respondidas · {resumoVolta.certas} certas · {resumoVolta.puladas} puladas
 				</p>
 				{#if getErros().length}
 					<p class="mt-2 text-sm text-ink-soft">Vale revisar os erros antes de encarar a fila de novo.</p>
 				{/if}
-				<div class="mt-4 space-y-2">
+				<div class="mt-5 space-y-2.5">
 					<button
 						type="button"
 						onclick={continuarVolta}
-						class="btn3d duo-accent flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold"
+						class="btn-primario flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
 					>
-						<Play size={20} weight="fill" aria-hidden="true" /> Começar a volta {volta + 2}
+						<Play size={19} weight="fill" aria-hidden="true" /> Começar a volta {volta + 2}
 					</button>
 					{#if getErros().length}
-						<a href="/treino/?modo=revisao" class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
+						<a href="/treino/?modo=revisao" class="btn-suave flex min-h-12 w-full items-center justify-center rounded-full px-6 font-display text-base font-bold">
 							Revisar erros e marcadas ({contarParaRevisar(banco)})
 						</a>
 					{/if}
-					<button type="button" onclick={() => montar()} class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
+					<button type="button" onclick={() => montar()} class="btn-suave flex min-h-12 w-full items-center justify-center rounded-full px-6 font-display text-base font-bold">
 						Nova sessão embaralhada
 					</button>
-					<button type="button" onclick={() => (fimVolta = false)} class="w-full rounded-[14px] p-3 text-sm font-bold text-ink-soft">
+					<button type="button" onclick={() => (fimVolta = false)} class="w-full rounded-full p-3 text-sm font-bold text-ink-soft hover:text-ink">
 						Voltar à última questão
 					</button>
 				</div>
@@ -774,7 +771,7 @@
 				}))}
 			>
 				{#key fila[i].id + '-' + volta + '-' + i}
-					<div in:fly={{ x: 32 * direcao, duration: direcao ? DUR : 0 }}>
+					<div in:fly={{ x: 24 * direcao, duration: direcao ? DUR : 0 }}>
 						<Questao
 							q={fila[i]}
 							onResponder={aoResponder}
@@ -788,13 +785,13 @@
 				{/key}
 			</div>
 			<BarraAcao
-				rotulo={ultima ? 'Concluir volta' : 'Próxima'}
+				rotulo={ultima ? 'Concluir volta' : 'Continuar'}
 				mostrarXP={xpPing > 0}
 				xpValor={xpValor}
 				desabilitado={!podeAvancar}
 				aviso={discursivas
-					? 'Escreva sua resposta no papel e compare com o padrão para continuar — ou use Pular questão.'
-					: 'Escolha uma alternativa para continuar — ou use Pular questão.'}
+					? 'Escreva sua resposta e compare com o padrão para continuar — ou use Pular.'
+					: 'Selecione e verifique sua resposta para continuar — ou use Pular.'}
 				onClick={avancar}
 				onAnterior={voltar}
 				anteriorDesabilitado={i === 0}
@@ -809,31 +806,31 @@
 				type="button"
 				onclick={() => (confirmaFiltro = null)}
 				aria-label="Fechar e manter a matéria atual"
-				class="absolute inset-0 cursor-default bg-black/50"
+				class="absolute inset-0 cursor-default bg-black/50 backdrop-blur-[2px]"
 			></button>
 			<div
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="confirma-filtro-titulo"
-				class="relative w-full max-w-sm rounded-3xl bg-card p-5 shadow"
+				class="folha relative w-full max-w-sm rounded-3xl p-6"
 			>
-				<h2 id="confirma-filtro-titulo" class="font-display text-xl font-extrabold tracking-tight">Trocar de filtro?</h2>
-				<p class="mt-1 text-sm text-ink-soft">
+				<h2 id="confirma-filtro-titulo" class="font-display text-xl font-extrabold tracking-tight text-ink">Trocar de filtro?</h2>
+				<p class="mt-1.5 text-sm text-ink-soft">
 					Você já respondeu {feitas} {feitas === 1 ? 'questão' : 'questões'}. Trocar a matéria reinicia a fila e o placar.
 				</p>
-				<div class="mt-4 space-y-2">
+				<div class="mt-5 space-y-2.5">
 					<button
 						type="button"
 						bind:this={refTema}
 						onclick={aplicarTema}
-						class="btn3d duo-accent w-full rounded-[14px] p-3.5 font-display text-base font-bold"
+						class="btn-primario min-h-12 w-full rounded-full px-5 font-display text-base font-bold"
 					>
 						Trocar e reiniciar
 					</button>
 					<button
 						type="button"
 						onclick={() => (confirmaFiltro = null)}
-						class="w-full rounded-[14px] border-2 border-line bg-card p-3 font-display text-base font-bold"
+						class="btn-suave min-h-12 w-full rounded-full px-5 font-display text-base font-bold"
 					>
 						Manter o filtro atual
 					</button>
@@ -848,31 +845,31 @@
 				type="button"
 				onclick={() => (confirmaSaida = false)}
 				aria-label="Fechar e continuar treinando"
-				class="absolute inset-0 cursor-default bg-black/50"
+				class="absolute inset-0 cursor-default bg-black/50 backdrop-blur-[2px]"
 			></button>
 			<div
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="confirma-saida-titulo"
-				class="relative w-full max-w-sm rounded-3xl bg-card p-5 shadow"
+				class="folha relative w-full max-w-sm rounded-3xl p-6"
 			>
-				<h2 id="confirma-saida-titulo" class="font-display text-xl font-extrabold tracking-tight">Sair da sessão?</h2>
-				<p class="mt-1 text-sm text-ink-soft">
+				<h2 id="confirma-saida-titulo" class="font-display text-xl font-extrabold tracking-tight text-ink">Sair da sessão?</h2>
+				<p class="mt-1.5 text-sm text-ink-soft">
 					Seu progresso ({feitas} respondidas) fica salvo para continuar depois.
 				</p>
-				<div class="mt-4 space-y-2">
+				<div class="mt-5 space-y-2.5">
 					<button
 						type="button"
 						bind:this={refSaida}
 						onclick={sairAgora}
-						class="btn3d duo-accent w-full rounded-[14px] p-3.5 font-display text-base font-bold"
+						class="btn-primario min-h-12 w-full rounded-full px-5 font-display text-base font-bold"
 					>
 						Sair e salvar
 					</button>
 					<button
 						type="button"
 						onclick={() => (confirmaSaida = false)}
-						class="w-full rounded-[14px] border-2 border-line bg-card p-3 font-display text-base font-bold"
+						class="btn-suave min-h-12 w-full rounded-full px-5 font-display text-base font-bold"
 					>
 						Continuar treinando
 					</button>

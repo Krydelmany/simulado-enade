@@ -1,7 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-	<!-- linha de cartão-resposta, bolha do meio marcada a caneta azul (= src/lib/Marca.svelte) -->
-	<rect width="64" height="64" rx="16" fill="#1a2340" />
-	<circle cx="17" cy="32" r="8" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.4" />
-	<circle cx="47" cy="32" r="8" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.4" />
-	<circle cx="32" cy="32" r="10" fill="#5b7cff" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+	<style>
+		.m-principal { fill: #2347B8; }
+		.m-asa { fill: #355EE0; }
+		.m-marco { fill: #E0820A; }
+		@media (prefers-color-scheme: dark) {
+			.m-principal { fill: #6D93FF; }
+			.m-asa { fill: #95B3FF; }
+			.m-marco { fill: #F5A623; }
+		}
+	</style>
+	<!-- Símbolo livre (sem caixa ou moldura): E arquitetônico em degraus + marco âmbar -->
+	<path class="m-principal" d="M3 7 L7 3 H9 V23 H26 L22 29 H3 Z" />
+	<path class="m-asa" d="M12 3 H29 L25 9 H12 Z" />
+	<path class="m-principal" d="M12 13 H21 L17.5 19 H12 Z" />
+	<path class="m-marco" d="M25.5 12.5 L29 16 L25.5 19.5 L22 16 Z" />
 </svg>

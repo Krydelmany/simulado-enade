@@ -20,6 +20,7 @@
 		UserCircle,
 		Warning,
 		WarningCircle,
+		X,
 		XCircle
 	} from 'phosphor-svelte';
 	import { nuvemLigada, reportarQuestao, MOTIVOS_REPORTE } from './nuvem.js';
@@ -36,9 +37,9 @@
 	 *
 	 * `prova` é o cartão-resposta do simulado: marcar não corrige — a letra
 	 * fica marcada, pode ser trocada ou desmarcada (`onMarcar(id, letra|null)`),
-	 * e a discursiva vira um campo de texto (`onRascunho`). A correção só
-	 * aparece depois da entrega, com esta mesma questão fora do modo prova e
-	 * `respostaAluno` mostrando o que o aluno escreveu.
+	 * e a discursiva vira um campo de texto (`onRascunho`).
+	 * Fora do modo `prova`, objetivas seguem o fluxo guiado:
+	 *   Selecionar alternativa → Verificar resposta → Veredito + Como resolver → Continuar.
 	 */
 	let {
 		q,
@@ -52,20 +53,16 @@
 		rascunhoInicial = '',
 		onRascunho = null,
 		respostaAluno = '',
-		// a resolução abre sozinha depois da resposta no treino e no estudo;
-		// na correção do simulado ela vem fechada, a um toque
 		resolucaoAberta = true,
 		zoomAberto = $bindable(false)
 	} = $props();
 
-	// lê o estado inicial DENTRO de uma função: é intencional capturar uma vez
-	// (o componente é remontado por questão via {#key}) e evita o aviso do compilador
 	function estadoInicial() {
 		return {
 			escolha: inicial?.escolha ?? null,
 			respondida: !!inicial?.respondida,
 			mostrouPadrao: !!inicial?.mostrouPadrao,
-			auto: inicial?.auto ?? null, // discursiva: 'certa' | 'parcial' | 'errada'
+			auto: inicial?.auto ?? null,
 			revisar: !!revisarInicial,
 			rascunho: rascunhoInicial || ''
 		};
@@ -74,19 +71,16 @@
 	let rascunho = $state(ini.rascunho);
 
 	let escolha = $state(ini.escolha);
+	let selecionada = $state(ini.respondida ? ini.escolha : null);
 	let respondida = $state(ini.respondida);
 	let mostrouPadrao = $state(ini.mostrouPadrao);
 	let auto = $state(ini.auto);
 	let revisar = $state(ini.revisar);
-	// só rola/foca o veredito quando o aluno ACABOU de responder — nunca ao restaurar
 	let avaliadaAgora = $state(false);
 	let veredito = $state(null);
 
-	// "Como resolver": só depois da resposta (ou, na discursiva, depois de ver
-	// o padrão) e nunca na prova do simulado
 	const podeResolver = $derived(!prova && (respondida || mostrouPadrao));
-	let resolucao = $state(null); // null = ainda não carregou, ou a questão não tem
-	// lido uma vez, como `inicial`: a questão é remontada a cada troca ({#key})
+	let resolucao = $state(null);
 	// svelte-ignore state_referenced_locally
 	let resolucaoVisivel = $state(resolucaoAberta);
 	$effect(() => {
@@ -101,10 +95,17 @@
 	});
 
 	const LETRAS = ['A', 'B', 'C', 'D', 'E'];
+	const FAISCAS = [
+		{ x: '-16px', y: '-14px', cor: 'bg-ok-solid' },
+		{ x: '16px', y: '-14px', cor: 'bg-milestone' },
+		{ x: '-20px', y: '4px', cor: 'bg-accent' },
+		{ x: '20px', y: '4px', cor: 'bg-ok-solid' },
+		{ x: '0px', y: '-20px', cor: 'bg-milestone' }
+	];
+
 	const anulada = $derived(q.gabarito === 'ANULADA');
 	const acertou = $derived(respondida && !anulada && escolha === q.gabarito);
 
-	// categoria do veredito — dirige cor e ícone num só lugar
 	const categoria = $derived(
 		!respondida
 			? null
@@ -115,11 +116,11 @@
 					: acertou
 						? 'certa'
 						: q.tipo === 'objetiva' && !escolha
-							? 'branco' // correção do simulado: questão sem marcação
+							? 'branco'
 							: 'errada'
 	);
 
-	function responder(letra) {
+	function escolher(letra) {
 		if (respondida) return;
 		if (prova) {
 			// cartão-resposta: marca, troca ou desmarca — nada de veredito
@@ -127,12 +128,16 @@
 			onMarcar?.(q.id, escolha);
 			return;
 		}
-		escolha = letra;
+		selecionada = letra;
+	}
+
+	function verificar() {
+		if (prova || respondida || !selecionada) return;
+		escolha = selecionada;
 		respondida = true;
 		avaliadaAgora = true;
-		// questão anulada = ponto para todos: qualquer alternativa conta como acerto
-		const certa = anulada || letra === q.gabarito;
-		onResponder?.({ id: q.id, certa, anulada, escolha: letra });
+		const certa = anulada || escolha === q.gabarito;
+		onResponder?.({ id: q.id, certa, anulada, escolha });
 	}
 
 	function autoavaliar(nivel) {
@@ -156,7 +161,6 @@
 		onPular?.(q.id);
 	}
 
-	// 'ok' | 'erro' por 2 s depois de copiar; o ícone e o aviso mudam juntos
 	let copia = $state(null);
 	let timerCopia;
 	async function copiar() {
@@ -172,7 +176,6 @@
 		onRevisar?.(q.id, revisar);
 	}
 
-	// teclado nunca deve sequestrar quem está digitando num campo
 	function ehCampo(t) {
 		return (
 			t instanceof HTMLElement &&
@@ -181,15 +184,23 @@
 	}
 
 	function aoTecla(e) {
-		// com a imagem ampliada, o Esc só fecha o zoom (a página ignora via `zoomAberto`)
 		if (zoomAberto) {
 			if (e.key === 'Escape') zoomAberto = false;
 			return;
 		}
-		if (e.metaKey || e.ctrlKey || e.altKey) return;
+		if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
 		if (ehCampo(e.target)) return;
 		if (q.tipo !== 'objetiva' || respondida) return;
-		// atalhos de cartão-resposta: A–E ou 1–5
+
+		// Atalho silencioso: Enter verifica a alternativa selecionada (fora do modo prova)
+		if (e.key === 'Enter' && !prova && selecionada) {
+			if (e.target instanceof HTMLElement && e.target.tagName === 'BUTTON') return;
+			e.preventDefault();
+			verificar();
+			return;
+		}
+
+		// Atalhos silenciosos de teclado: A–E ou 1–5
 		const mapa = {
 			a: 'A',
 			b: 'B',
@@ -203,17 +214,12 @@
 			'5': 'E'
 		};
 		const letra = mapa[String(e.key).toLowerCase()];
-		// `alternativas_visuais` entra junto: as letras existem, só não têm
-		// texto — sem isso o teclado não responderia essas questões.
 		if (letra && (q.alternativas[letra] || q.alternativas_visuais)) {
 			e.preventDefault();
-			responder(letra);
+			escolher(letra);
 		}
 	}
 
-	// `zoomAberto` é a FONTE do zoom (não um espelho): a página precisa
-	// fechá-lo pelo voltar do sistema (ver `camadas.svelte.js`), e lê o mesmo
-	// valor para o Esc não encerrar a sessão junto. Ao desmontar, fecha.
 	$effect(() => () => {
 		zoomAberto = false;
 	});
@@ -225,15 +231,10 @@
 		};
 	});
 
-	// ao responder, leva o veredito para a tela (mobile) e move o foco para ele
 	$effect(() => {
 		if (!avaliadaAgora || !veredito) return;
 		const r = veredito.getBoundingClientRect();
 		const h = window.innerHeight || 0;
-		// A barra de ação é fixa no rodapé e a altura dela muda conforme a tela
-		// (botão voltar + posição + CTA). Medir no DOM é mais confiável do que
-		// chutar um valor: com o chute, o veredito "certa" ficava atrás da barra
-		// — ou seja, o aluno respondia e não via o resultado.
 		const barra = document.querySelector('[data-barra-acao]');
 		const folga = (barra?.getBoundingClientRect().height || 0) + 12;
 		const fora = r.top < 8 || r.bottom > h - folga;
@@ -241,7 +242,6 @@
 		if (fora) veredito.scrollIntoView({ block: 'center', behavior: REDUCED ? 'auto' : 'smooth' });
 	});
 
-	// leitor de tela: a alternativa sem as marcas de bloco de código
 	const MARCA_BLOCO = new RegExp('\x60{3}\\w*\\n?', 'g');
 	function rotuloAlt(letra) {
 		const texto = q.alternativas[letra];
@@ -249,12 +249,11 @@
 		return 'Alternativa ' + letra + ': ' + texto.replace(MARCA_BLOCO, '');
 	}
 
-	// Reportar erro (D13): abre no próprio cartão, sem modal — um modal seria
-	// mais uma camada para o voltar do sistema em três rotas.
+	// Reportar erro (D13): abre no próprio cartão, sem modal
 	let reporteAberto = $state(false);
 	let motivo = $state('');
 	let detalhe = $state('');
-	let reporte = $state(''); // '' | 'enviando' | 'ok'
+	let reporte = $state('');
 	let erroReporte = $state('');
 
 	async function enviarReporte(ev) {
@@ -274,32 +273,62 @@
 
 	function classeAlt(letra) {
 		const base =
-			'flex w-full items-start gap-3 rounded-2xl border-2 p-3.5 text-left text-[15px] leading-relaxed transition-[border-color,background-color,color,transform] duration-150 active:scale-[0.99] disabled:cursor-default ';
-		// caneta azul: a marcação é do aluno; verde/vermelho ficam só para a correção
-		if (prova) return base + (letra === escolha ? 'border-accent bg-accent-soft' : 'border-line bg-card hover:border-accent');
-		if (!respondida) return base + 'border-line bg-card hover:border-accent';
-		if (anulada) return base + 'border-line bg-tile';
-		if (letra === q.gabarito) return base + 'border-ok-solid bg-ok-solid text-white pop';
-		if (letra === escolha) return base + 'border-bad-solid bg-bad-solid text-white';
-		return base + 'border-line bg-card opacity-50';
+			'flex w-full items-start gap-3.5 rounded-2xl border-2 px-4 py-3.5 text-left text-[15px] leading-relaxed transition-[border-color,background-color,color,transform,opacity] duration-150 active:scale-[0.992] disabled:cursor-default ';
+		if (prova) {
+			return (
+				base +
+				(letra === escolha
+					? 'border-accent bg-accent-soft text-ink'
+					: 'border-line bg-card text-ink hover:border-line-strong hover:bg-panel/60')
+			);
+		}
+		if (!respondida) {
+			return (
+				base +
+				(letra === selecionada
+					? 'border-accent bg-accent-soft text-ink pop'
+					: 'border-line bg-card text-ink hover:border-line-strong hover:bg-panel/60')
+			);
+		}
+		if (anulada) return base + 'border-line bg-panel text-ink';
+		if (letra === q.gabarito) return base + 'border-ok-solid bg-ok-bg text-ink pop';
+		if (letra === escolha) return base + 'border-bad-solid bg-bad-bg text-ink';
+		return base + 'border-line bg-card text-ink opacity-50';
 	}
 
 	function classeBolha(letra) {
-		// bolha de cartão-resposta: preenche como caneta ao marcar
 		const base =
-			'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-[2.5px] text-sm font-extrabold transition-colors duration-150 ';
-		if (prova) return base + (letra === escolha ? 'border-accent bg-accent text-white' : 'border-ink/30 text-ink');
-		if (!respondida) return base + 'border-ink/30 text-ink';
-		if (anulada) return letra === escolha ? base + 'border-white bg-white/25 text-white' : base + 'border-line text-ink-soft';
-		if (letra === q.gabarito) return base + 'border-white bg-white/25 text-white';
-		if (letra === escolha) return base + 'border-white bg-white/25 text-white';
-		return base + 'border-line text-ink-soft';
+			'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 font-display text-sm font-bold transition-colors duration-150 ';
+		if (prova) {
+			return (
+				base +
+				(letra === escolha
+					? 'border-accent bg-accent text-accent-on'
+					: 'border-line-strong bg-panel text-ink-soft')
+			);
+		}
+		if (!respondida) {
+			return (
+				base +
+				(letra === selecionada
+					? 'border-accent bg-accent text-accent-on'
+					: 'border-line-strong bg-panel text-ink-soft')
+			);
+		}
+		if (anulada) {
+			return letra === escolha
+				? base + 'border-warn-line bg-warn-line text-white'
+				: base + 'border-line bg-tile text-ink-soft';
+		}
+		if (letra === q.gabarito) return base + 'border-ok-solid bg-ok-solid text-white';
+		if (letra === escolha) return base + 'border-bad-solid bg-bad-solid text-white';
+		return base + 'border-line bg-panel text-ink-soft';
 	}
 </script>
 
 <svelte:window onkeydown={aoTecla} />
 
-<article class="rounded-3xl bg-card p-4 shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)] sm:p-6">
+<article class="folha rounded-3xl p-5 sm:p-7">
 	<div class="flex flex-wrap items-center gap-2">
 		<p class="text-label font-bold text-ink-soft">
 			{rotuloQuestao(q)}
@@ -311,41 +340,34 @@
 			</p>
 		{/if}
 		{#if ehGerada(q)}
-			<!-- gerada não é prova: o que importa ao aluno é o nível, não a parte -->
-			<p class="rounded-full border border-line px-2.5 py-0.5 text-xs font-bold text-ink-soft">
+			<p class="rounded-full border border-line bg-panel px-2.5 py-0.5 text-xs font-semibold text-ink-soft">
 				Nível {q.dificuldade === 'Média' ? 'médio' : (q.dificuldade ?? '').toLowerCase()}
 			</p>
 		{:else if q.parte}
-			<p class="rounded-full border border-line px-2.5 py-0.5 text-xs font-bold text-ink-soft">
+			<p class="rounded-full border border-line bg-panel px-2.5 py-0.5 text-xs font-semibold text-ink-soft">
 				{q.parte === 'FG' ? 'Formação Geral' : q.parte}
 			</p>
 		{/if}
-		<!-- os dois botões andam juntos: soltos, quando as etiquetas enchiam a
-		     linha o de revisar caía sozinho para a esquerda da linha de baixo -->
-		<div class="ml-auto flex items-center gap-2">
-			<!-- copia enunciado, figura e alternativas (sem gabarito) para colar fora
-			     do site. Fica fora da PROVA do simulado: lá ele facilitaria colar a
-			     questão em outro lugar no meio do teste; na correção, depois da
-			     entrega (a mesma questão sem `prova`), ele volta -->
+		<div class="ml-auto flex items-center gap-1.5">
 			{#if !prova}
 				<button
 					type="button"
 					onclick={copiar}
 					aria-label="Copiar questão"
 					title={copia === 'erro' ? 'O navegador não deixou copiar' : 'Copiar questão'}
-					class="flex h-11 min-w-11 items-center justify-center rounded-full border border-line transition-transform active:scale-95 {copia ===
+					class="flex h-10 w-10 items-center justify-center rounded-full border border-line transition-colors active:scale-95 {copia ===
 					'ok'
-						? 'bg-ok-bg text-ok-fg'
+						? 'border-ok-border bg-ok-bg text-ok-fg'
 						: copia === 'erro'
-							? 'bg-bad-bg text-bad-fg'
-							: 'bg-card text-ink-soft'}"
+							? 'border-bad-border bg-bad-bg text-bad-fg'
+							: 'bg-paper text-ink-soft hover:border-line-strong hover:text-ink'}"
 				>
 					{#if copia === 'ok'}
-						<Check size={20} weight="bold" aria-hidden="true" />
+						<Check size={18} weight="bold" aria-hidden="true" />
 					{:else if copia === 'erro'}
-						<Warning size={20} weight="bold" aria-hidden="true" />
+						<Warning size={18} weight="bold" aria-hidden="true" />
 					{:else}
-						<Copy size={20} weight="bold" aria-hidden="true" />
+						<Copy size={18} weight="bold" aria-hidden="true" />
 					{/if}
 				</button>
 				<span class="sr-only" role="status">
@@ -358,23 +380,24 @@
 				aria-pressed={revisar}
 				aria-label={revisar ? 'Remover marcação de revisar' : 'Marcar para revisar depois'}
 				title={revisar ? 'Remover marcação de revisar' : 'Marcar para revisar depois'}
-				class="flex h-11 min-w-11 items-center justify-center rounded-full border transition-transform active:scale-95 {revisar
-					? 'border-line bg-accent-soft text-accent-ink'
-					: 'border-line bg-card text-ink-soft'}"
+				class="flex h-10 w-10 items-center justify-center rounded-full border transition-colors active:scale-95 {revisar
+					? 'border-milestone-border bg-milestone-soft text-milestone-ink'
+					: 'border-line bg-paper text-ink-soft hover:border-line-strong hover:text-ink'}"
 			>
-				<BookmarkSimple size={20} weight={revisar ? 'fill' : 'bold'} aria-hidden="true" />
+				<BookmarkSimple size={18} weight={revisar ? 'fill' : 'bold'} aria-hidden="true" />
 			</button>
 		</div>
 	</div>
-	<h2 class="mt-1 text-base font-bold tracking-tight">{q.tema}</h2>
+
+	<h2 class="mt-2.5 font-display text-lg font-bold tracking-tight text-pretty text-ink">{q.tema}</h2>
 
 	{#if q.imagem}
-		<figure class="mt-3 overflow-hidden rounded-2xl border border-line bg-white">
+		<figure class="mt-4 overflow-hidden rounded-2xl border border-line bg-white">
 			<button
 				type="button"
 				onclick={() => (zoomAberto = true)}
 				aria-label="Ampliar figura: {q.imagem.alt}"
-				class="block w-full cursor-zoom-in"
+				class="block w-full cursor-zoom-in p-2"
 			>
 				<img
 					src={q.imagem.src}
@@ -383,7 +406,7 @@
 					class="mx-auto h-auto max-h-[54vh] w-auto max-w-full"
 				/>
 			</button>
-			<figcaption class="flex items-start gap-2 px-3 py-2 text-xs text-ink-soft">
+			<figcaption class="flex items-start gap-2 border-t border-line bg-panel px-3.5 py-2 text-xs text-ink-soft">
 				<MagnifyingGlassPlus size={14} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 				<span>
 					Toque para ampliar
@@ -411,38 +434,32 @@
 					<img
 						src={q.imagem.src}
 						alt={q.imagem.alt}
-						class="m-auto max-h-full max-w-full rounded-lg object-contain"
+						class="m-auto max-h-full max-w-full rounded-xl object-contain"
 					/>
 					<p class="pt-3 text-center text-sm font-semibold text-white/80">Toque para fechar</p>
 				</div>
 			</div>
 		{/if}
 	{:else if q.figura}
-		<p class="mt-3 flex items-start gap-2 rounded-2xl border border-dashed border-warn-line bg-warn-bg p-3 text-sm text-warn-fg">
+		<p class="mt-4 flex items-start gap-2 rounded-2xl border border-dashed border-warn-line bg-warn-bg p-3 text-sm text-warn-fg">
 			<ImageIcon size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 			<span>Figura: {q.figura.desc} <span class="italic">(imagem entra aqui)</span></span>
 		</p>
 	{/if}
 
-	<div class="enunciado mt-3 max-w-[56ch] text-[15px] leading-relaxed"><TextoRico texto={q.enunciado} /></div>
+	<div class="enunciado mt-4 max-w-[62ch] text-[15.5px] leading-[1.7] text-ink">
+		<TextoRico texto={q.enunciado} />
+	</div>
 
 	{#if q.tipo === 'objetiva'}
 		{#if anulada && !respondida}
-			<p class="mt-4 flex items-start gap-2 rounded-2xl bg-warn-bg p-3 text-sm font-semibold text-warn-fg" role="note">
+			<p class="mt-4 flex items-start gap-2 rounded-2xl bg-warn-bg p-3.5 text-sm font-semibold text-warn-fg" role="note">
 				<Info size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 				<span>Questão anulada pelo INEP — qualquer alternativa marca o ponto.</span>
 			</p>
 		{/if}
-		<div class="mt-4 space-y-2" role="group" aria-label="Alternativas">
+		<div class="mt-5 space-y-2.5" role="group" aria-label="Alternativas">
 			{#if q.alternativas_visuais}
-				<!--
-					Estas questões têm as opções A–E desenhadas dentro da figura
-					(trecho de código, fórmula, diagrama): não há texto para cada
-					alternativa. Sem um cartão por letra a questão ficava sem
-					nenhum botão — o aluno via a imagem e não tinha como
-					responder, e a sessão travava. Aqui cada letra vira um
-					cartão-resposta sozinho, que é o que a prova pede.
-				-->
 				<p class="flex items-start gap-2 rounded-2xl border border-dashed border-line bg-panel p-3 text-sm text-ink-soft">
 					<Info size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 					<span>As alternativas estão na imagem. Marque a letra correspondente abaixo.</span>
@@ -450,23 +467,28 @@
 			{/if}
 			{#each LETRAS as letra, k (letra)}
 				{#if q.alternativas[letra] || q.alternativas_visuais}
-					<div class="rise" style="animation-delay: {k * 45}ms">
+					<div class="rise" style="animation-delay: {k * 30}ms">
 						<button
 							type="button"
-							onclick={() => responder(letra)}
+							onclick={() => escolher(letra)}
 							disabled={respondida}
-							aria-pressed={prova ? letra === escolha : undefined}
+							aria-pressed={prova ? letra === escolha : !respondida ? letra === selecionada : undefined}
 							aria-label={rotuloAlt(letra)}
 							class={classeAlt(letra)}
 						>
 							<span class={classeBolha(letra)}>
-								{letra}
+								{#if respondida && !anulada && letra === q.gabarito}
+									<Check size={16} weight="bold" aria-hidden="true" />
+								{:else if respondida && !anulada && letra === escolha}
+									<X size={16} weight="bold" aria-hidden="true" />
+								{:else}
+									{letra}
+								{/if}
 							</span>
 							{#if q.alternativas[letra]?.includes('```')}
-								<!-- alternativa que é código (2023-CE-Q15, Q30): bloco mono, como no enunciado -->
 								<span class="min-w-0 flex-1"><TextoRico texto={q.alternativas[letra]} /></span>
 							{:else if q.alternativas[letra]}
-								<span class="enunciado">{q.alternativas[letra]}</span>
+								<span class="enunciado min-w-0 flex-1">{q.alternativas[letra]}</span>
 							{:else}
 								<span class="text-sm font-semibold text-ink-soft">Alternativa {letra} da imagem</span>
 							{/if}
@@ -475,135 +497,173 @@
 				{/if}
 			{/each}
 		</div>
+
+		<!-- Etapa de verificação guiada (Selecionar → Verificar → Continuar), fora do modo prova -->
+		{#if !prova && !respondida}
+			<div class="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+				<button
+					type="button"
+					onclick={verificar}
+					disabled={!selecionada}
+					class="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold {selecionada
+						? 'btn-primario'
+						: 'cursor-not-allowed border border-line bg-panel text-ink-soft'}"
+				>
+					{selecionada ? `Verificar resposta (${selecionada})` : 'Selecione uma alternativa'}
+				</button>
+				{#if onPular}
+					<button
+						type="button"
+						onclick={pular}
+						class="btn-suave flex min-h-12 items-center justify-center gap-1.5 rounded-full px-5 text-sm font-bold text-ink-soft hover:text-ink"
+					>
+						<SkipForward size={16} weight="bold" aria-hidden="true" /> Pular
+					</button>
+				{/if}
+			</div>
+		{/if}
 	{:else}
-		<div class="mt-4">
+		<div class="mt-5">
 			{#if prova}
-				<!-- na prova o padrão não aparece: o aluno escreve, e a comparação vem na correção -->
 				<label class="block">
-					<span class="text-sm font-bold">Sua resposta</span>
+					<span class="text-sm font-bold text-ink">Sua resposta</span>
 					<span class="mt-0.5 block text-xs text-ink-soft">Fica só neste aparelho. Na correção, você compara com o padrão do INEP.</span>
 					<textarea
 						bind:value={rascunho}
 						oninput={() => onRascunho?.(rascunho)}
 						rows="12"
-						class="mt-2 w-full rounded-2xl border-2 border-line bg-card p-3.5 text-[15px] leading-relaxed text-ink focus:border-ink focus:outline-none"
+						class="mt-2 w-full rounded-2xl border-2 border-line bg-paper p-3.5 text-[15px] leading-relaxed text-ink focus:border-accent focus:outline-none"
 					></textarea>
 				</label>
 			{:else}
-			{#if respostaAluno}
-				<div class="mb-3 rounded-2xl border border-line bg-tile p-4">
-					<p class="text-label font-bold text-ink-soft">Sua resposta</p>
-					<p class="enunciado mt-2 max-w-[56ch] text-sm leading-relaxed">{respostaAluno}</p>
-				</div>
-			{/if}
-			{#if q.padrao_placeholder}
-				<!--
-					O gabarito desta discursiva é um desenho que o INEP publica
-					como figura. Sem a figura, mostrar "padrão oficial" seria
-					mostrar uma frase vazia — e pior, mandar o aluno se
-					autoavaliar contra o vazio e dar nota de comparação com
-					nada. Melhor dizer a verdade e deixar a autoavaliação de fora.
-				-->
-				<p class="flex items-start gap-2 rounded-2xl border border-dashed border-line bg-panel p-3.5 text-sm text-ink-soft">
-					<Info size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
-					<span>
-						O padrão oficial desta questão é um desenho que ainda não está
-						no site. Escreva sua resposta no papel e confira com a
-						apostila.
-					</span>
-				</p>
-			{:else if !mostrouPadrao}
-				<button
-					type="button"
-					onclick={() => (mostrouPadrao = true)}
-					class="btn3d duo-accent w-full rounded-2xl p-3.5 font-bold"
-				>
-					{q.fonte === 'guia' ? 'Escrevi minha resposta — ver modelo do guia' : 'Escrevi minha resposta — ver padrão oficial'}
-				</button>
-			{:else}
-				<div in:fly={{ y: 8, duration: DUR }} class="rounded-2xl border border-line bg-panel p-4">
-					<p class="flex items-center gap-1.5 text-label font-bold text-ink-soft">
-						<SealCheck size={15} weight="bold" aria-hidden="true" />
-						{q.fonte === 'guia' ? 'Modelo de resposta do guia' : 'Padrão de resposta do INEP'}
-					</p>
-					<p class="enunciado mt-2 max-w-[56ch] text-sm leading-relaxed"><TextoRico texto={q.padrao} /></p>
-				</div>
-				{#if !respondida}
-					<p class="mt-3 text-sm font-bold">Compare com a sua. Como foi?</p>
-					<div class="mt-2 grid grid-cols-3 gap-2">
-						<button
-							type="button"
-							onclick={() => autoavaliar(1)}
-							class="btn3d flex min-h-11 items-center justify-center gap-1.5 rounded-2xl border-ok-solid bg-ok-solid p-3 text-sm font-bold text-white"
-						>
-							<CheckCircle size={17} weight="bold" aria-hidden="true" /> Acertei
-						</button>
-						<button
-							type="button"
-							onclick={() => autoavaliar(0.5)}
-							class="btn3d flex min-h-11 items-center justify-center gap-1.5 rounded-2xl border-amber-600 bg-amber-500 p-3 text-sm font-bold text-white"
-						>
-							<MinusCircle size={17} weight="bold" aria-hidden="true" /> Meio
-						</button>
-						<button
-							type="button"
-							onclick={() => autoavaliar(0)}
-							class="btn3d flex min-h-11 items-center justify-center gap-1.5 rounded-2xl border-bad-solid bg-bad-solid p-3 text-sm font-bold text-white"
-						>
-							<XCircle size={17} weight="bold" aria-hidden="true" /> Errei
-						</button>
+				{#if respostaAluno}
+					<div class="mb-3 rounded-2xl border border-line bg-panel p-4">
+						<p class="text-label font-bold text-ink-soft">Sua resposta</p>
+						<p class="enunciado mt-2 max-w-[60ch] text-sm leading-relaxed text-ink">{respostaAluno}</p>
 					</div>
 				{/if}
-			{/if}
+				{#if q.padrao_placeholder}
+					<p class="flex items-start gap-2 rounded-2xl border border-dashed border-line bg-panel p-3.5 text-sm text-ink-soft">
+						<Info size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
+						<span>
+							O padrão oficial desta questão é um desenho que ainda não está no site. Escreva sua resposta no papel e confira com a apostila.
+						</span>
+					</p>
+				{:else if !mostrouPadrao}
+					<button
+						type="button"
+						onclick={() => (mostrouPadrao = true)}
+						class="btn-primario flex min-h-12 w-full items-center justify-center rounded-full px-6 font-display text-base font-bold"
+					>
+						{q.fonte === 'guia' ? 'Escrevi minha resposta — ver modelo do guia' : 'Escrevi minha resposta — ver padrão oficial'}
+					</button>
+				{:else}
+					<div in:fly={{ y: 8, duration: DUR }} class="rounded-2xl border border-line bg-panel p-4">
+						<p class="flex items-center gap-1.5 text-label font-bold text-ink-soft">
+							<SealCheck size={15} weight="bold" aria-hidden="true" />
+							{q.fonte === 'guia' ? 'Modelo de resposta do guia' : 'Padrão de resposta do INEP'}
+						</p>
+						<p class="enunciado mt-2 max-w-[60ch] text-sm leading-relaxed text-ink"><TextoRico texto={q.padrao} /></p>
+					</div>
+					{#if !respondida}
+						<p class="mt-4 text-sm font-bold text-ink">Compare com a sua. Como foi?</p>
+						<div class="mt-2.5 grid grid-cols-3 gap-2">
+							<button
+								type="button"
+								onclick={() => autoavaliar(1)}
+								class="flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-ok-solid px-3 py-2.5 text-sm font-bold text-white transition-transform active:scale-[0.98]"
+							>
+								<CheckCircle size={17} weight="bold" aria-hidden="true" /> Acertei
+							</button>
+							<button
+								type="button"
+								onclick={() => autoavaliar(0.5)}
+								class="flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-milestone-border bg-milestone-soft px-3 py-2.5 text-sm font-bold text-milestone-ink transition-transform active:scale-[0.98]"
+							>
+								<MinusCircle size={17} weight="bold" aria-hidden="true" /> Meio
+							</button>
+							<button
+								type="button"
+								onclick={() => autoavaliar(0)}
+								class="flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-bad-solid px-3 py-2.5 text-sm font-bold text-white transition-transform active:scale-[0.98]"
+							>
+								<XCircle size={17} weight="bold" aria-hidden="true" /> Errei
+							</button>
+						</div>
+					{/if}
+				{/if}
 			{/if}
 		</div>
+
+		{#if onPular && !respondida}
+			<button
+				type="button"
+				onclick={pular}
+				class="btn-suave mt-3 flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full py-2.5 text-sm font-bold text-ink-soft hover:text-ink"
+			>
+				<SkipForward size={16} weight="bold" aria-hidden="true" /> Pular questão
+			</button>
+		{/if}
 	{/if}
 
-	{#if onPular && !respondida}
-		<button
-			type="button"
-			onclick={pular}
-			class="mt-4 flex min-h-11 w-full items-center justify-center gap-1.5 rounded-2xl border border-line bg-card py-2.5 text-sm font-bold text-ink-soft transition-transform active:scale-[0.99]"
-		>
-			<SkipForward size={17} weight="bold" aria-hidden="true" /> Pular questão
-		</button>
-	{/if}
-
+	<!-- Gaveta de feedback subindo com o veredito -->
 	{#if respondida}
-		<p
+		<div
 			bind:this={veredito}
 			tabindex="-1"
-			in:fly={{ y: 8, duration: DUR }}
-			class="mt-3 flex items-start gap-2 rounded-2xl p-3.5 text-sm font-semibold {categoria ===
-			'certa'
-				? 'bg-ok-bg text-ok-fg'
+			class="gaveta-subir mt-5 rounded-2xl border p-4 {categoria === 'certa'
+				? 'border-ok-border bg-ok-bg text-ok-fg'
 				: categoria === 'errada'
-					? 'shake bg-bad-bg text-bad-fg'
-					: 'bg-warn-bg text-warn-fg'}"
+					? 'shake border-bad-border bg-bad-bg text-bad-fg'
+					: 'border-warn-line/40 bg-warn-bg text-warn-fg'}"
 			role="status"
 			aria-live="polite"
 		>
-			{#if categoria === 'anulada'}
-				<Info size={19} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
-				<span>Questão anulada pelo INEP — ponto para todos.</span>
-			{:else if categoria === 'certa'}
-				<CheckCircle size={19} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
-				<span>Certa. Gabarito: {q.gabarito}</span>
-			{:else if categoria === 'parcial'}
-				<MinusCircle size={19} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
-				<span>Quase. Você avaliou como parcial — vale conferir o padrão.</span>
-			{:else if q.tipo === 'objetiva' && !escolha}
-				<!-- só acontece na correção do simulado: a questão ficou sem marcação -->
-				<MinusCircle size={19} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
-				<span>Em branco. Gabarito: {q.gabarito}.</span>
-			{:else if q.tipo === 'objetiva'}
-				<XCircle size={19} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
-				<span>Não foi dessa vez. Gabarito: {q.gabarito} — você marcou {escolha}.</span>
-			{:else}
-				<XCircle size={19} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
-				<span>Você avaliou como errada. Vale reler o padrão acima.</span>
-			{/if}
-		</p>
+			<div class="flex items-start gap-3">
+				<span class="relative mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center" aria-hidden="true">
+					{#if categoria === 'certa' && avaliadaAgora}
+						{#each FAISCAS as f, idx (idx)}
+							<span
+								class="faisca pointer-events-none absolute h-1.5 w-1.5 rounded-full {f.cor}"
+								style="--fx: {f.x}; --fy: {f.y}"
+							></span>
+						{/each}
+					{/if}
+					{#if categoria === 'anulada'}
+						<Info size={22} weight="fill" />
+					{:else if categoria === 'certa'}
+						<CheckCircle size={22} weight="fill" />
+					{:else if categoria === 'parcial' || (q.tipo === 'objetiva' && !escolha)}
+						<MinusCircle size={22} weight="fill" />
+					{:else}
+						<XCircle size={22} weight="fill" />
+					{/if}
+				</span>
+				<div class="min-w-0 flex-1 text-sm leading-relaxed">
+					{#if categoria === 'anulada'}
+						<p class="font-display font-bold">Questão anulada pelo INEP</p>
+						<p class="mt-0.5 opacity-90">Ponto garantido para todas as alternativas.</p>
+					{:else if categoria === 'certa'}
+						<p class="font-display font-bold">Resposta certa!</p>
+						<p class="mt-0.5 opacity-90">
+							{#if q.tipo === 'objetiva'}Gabarito: <strong>{q.gabarito}</strong>.{:else}Você marcou como certa na autoavaliação.{/if}
+						</p>
+					{:else if categoria === 'parcial'}
+						<p class="font-display font-bold">Quase lá</p>
+						<p class="mt-0.5 opacity-90">Você avaliou como parcial — vale conferir os detalhes do padrão.</p>
+					{:else if q.tipo === 'objetiva' && !escolha}
+						<p class="font-display font-bold">Em branco</p>
+						<p class="mt-0.5 opacity-90">Gabarito oficial: <strong>{q.gabarito}</strong>.</p>
+					{:else if q.tipo === 'objetiva'}
+						<p class="font-display font-bold">Não foi dessa vez</p>
+						<p class="mt-0.5 opacity-90">Gabarito: <strong>{q.gabarito}</strong> · você marcou <strong>{escolha}</strong>.</p>
+					{:else}
+						<p class="font-display font-bold">Vale revisar o padrão</p>
+						<p class="mt-0.5 opacity-90">Você avaliou como errada — releia o modelo oficial acima.</p>
+					{/if}
+				</div>
+			</div>
+		</div>
 	{/if}
 
 	{#if podeResolver && resolucao}
@@ -612,9 +672,8 @@
 				type="button"
 				onclick={() => (resolucaoVisivel = !resolucaoVisivel)}
 				aria-expanded={resolucaoVisivel}
-				class="flex min-h-11 w-full flex-wrap items-center gap-2 p-3 text-left"
+				class="flex min-h-11 w-full flex-wrap items-center gap-2 px-4 py-3 text-left"
 			>
-				<!-- autoria no topo esquerdo: quem escreveu e se alguém conferiu -->
 				<span
 					class="flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold {resolucao.auditado
 						? 'bg-ok-bg text-ok-fg'
@@ -627,7 +686,7 @@
 					{/if}
 					{rotuloAutoria(resolucao)}
 				</span>
-				<span class="text-sm font-bold">Como resolver</span>
+				<span class="font-display text-sm font-bold text-ink">Como resolver</span>
 				<CaretDown
 					size={16}
 					weight="bold"
@@ -637,7 +696,7 @@
 			</button>
 			{#if resolucaoVisivel}
 				<div class="px-4 pb-4">
-					<p class="enunciado max-w-[56ch] text-sm leading-relaxed"><TextoRico texto={resolucao.texto} /></p>
+					<p class="enunciado max-w-[60ch] text-sm leading-relaxed text-ink"><TextoRico texto={resolucao.texto} /></p>
 					{#if !resolucao.auditado}
 						<p class="mt-3 text-xs text-ink-soft">
 							Escrita por {resolucao.autor || 'IA'} e ainda não conferida por uma pessoa: pode ter erro.
@@ -648,8 +707,9 @@
 			{/if}
 		</section>
 	{/if}
+
 	{#if nuvemLigada && !prova}
-		<div class="mt-4 border-t border-line pt-2" data-sem-gesto>
+		<div class="mt-5 border-t border-line pt-2" data-sem-gesto>
 			{#if reporte === 'ok'}
 				<p class="flex min-h-11 items-center gap-2 text-sm font-semibold text-ok-fg" role="status">
 					<CheckCircle size={18} weight="bold" aria-hidden="true" /> Obrigado! Vamos conferir esta questão.
@@ -658,17 +718,17 @@
 				<button
 					type="button"
 					onclick={() => (reporteAberto = true)}
-					class="flex min-h-11 items-center gap-1.5 text-sm font-bold text-ink-soft hover:text-ink"
+					class="flex min-h-11 items-center gap-1.5 text-xs font-semibold text-ink-soft hover:text-ink"
 				>
-					<WarningCircle size={18} weight="bold" aria-hidden="true" /> Achou um erro nesta questão?
+					<WarningCircle size={16} weight="bold" aria-hidden="true" /> Achou um erro nesta questão?
 				</button>
 			{:else}
 				<form class="pt-2" onsubmit={enviarReporte}>
 					<fieldset>
-						<legend class="text-sm font-bold">O que está errado?</legend>
+						<legend class="text-sm font-bold text-ink">O que está errado?</legend>
 						<div class="mt-1.5 space-y-0.5">
 							{#each MOTIVOS_REPORTE as [valor, rotulo] (valor)}
-								<label class="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl px-2 hover:bg-tile">
+								<label class="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl px-2 hover:bg-panel">
 									<input
 										type="radio"
 										name="motivo-{q.id}"
@@ -677,19 +737,19 @@
 										bind:group={motivo}
 										class="h-5 w-5 shrink-0 accent-[var(--accent)]"
 									/>
-									<span class="text-sm">{rotulo}</span>
+									<span class="text-sm text-ink">{rotulo}</span>
 								</label>
 							{/each}
 						</div>
 					</fieldset>
 					<label class="mt-3 block">
-						<span class="text-sm font-bold">Detalhes <span class="font-semibold text-ink-soft">(opcional)</span></span>
+						<span class="text-sm font-bold text-ink">Detalhes <span class="font-semibold text-ink-soft">(opcional)</span></span>
 						<textarea
 							bind:value={detalhe}
 							maxlength="1000"
 							rows="3"
 							placeholder="Ex.: na folha oficial do INEP o gabarito é C."
-							class="mt-1.5 w-full rounded-2xl border-2 border-line bg-card p-3 text-sm leading-relaxed text-ink focus:border-ink focus:outline-none"
+							class="mt-1.5 w-full rounded-2xl border-2 border-line bg-paper p-3 text-sm leading-relaxed text-ink focus:border-accent focus:outline-none"
 						></textarea>
 					</label>
 					{#if erroReporte}
@@ -699,14 +759,14 @@
 						<button
 							type="submit"
 							disabled={!motivo || reporte === 'enviando'}
-							class="btn3d duo-btn min-h-11 rounded-xl px-5 text-sm font-bold disabled:opacity-50"
+							class="btn-escuro min-h-11 rounded-full px-5 text-sm font-bold disabled:opacity-50"
 						>
 							{reporte === 'enviando' ? 'Enviando…' : 'Enviar'}
 						</button>
 						<button
 							type="button"
 							onclick={() => (reporteAberto = false)}
-							class="min-h-11 rounded-xl px-3 text-sm font-bold text-ink-soft hover:text-ink"
+							class="min-h-11 rounded-full px-3 text-sm font-bold text-ink-soft hover:text-ink"
 						>
 							Cancelar
 						</button>

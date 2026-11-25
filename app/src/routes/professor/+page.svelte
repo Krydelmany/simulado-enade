@@ -387,7 +387,7 @@
 			<p class="mt-2 text-sm text-pretty text-ink-soft">Mande este link para a turma (ou passe o código {turma.codigo}):</p>
 			<div class="mt-3 flex flex-col gap-2 sm:flex-row">
 				<code class="min-w-0 flex-1 truncate rounded-xl bg-tile px-3 py-3 text-sm">{link}</code>
-				<button type="button" onclick={copiarLink} class="btn3d duo-btn flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold">
+				<button type="button" onclick={copiarLink} class="btn-escuro flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-bold">
 					{#if copiado}<Check size={17} weight="bold" aria-hidden="true" /> Copiado{:else}<Copy size={17} weight="bold" aria-hidden="true" /> Copiar link{/if}
 				</button>
 			</div>
@@ -514,7 +514,7 @@
 				<button
 					type="submit"
 					disabled={agendando}
-					class="btn3d duo-accent mt-5 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-[14px] px-6 font-display text-base font-bold disabled:opacity-60 sm:w-auto"
+					class="btn-primario mt-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold disabled:opacity-60 sm:w-auto"
 				>
 					{agendando ? 'Agendando…' : 'Sortear a prova e agendar'}
 				</button>

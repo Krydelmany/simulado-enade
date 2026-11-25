@@ -90,7 +90,7 @@
 				type="button"
 				onclick={fechar}
 				aria-label="Dispensar aviso"
-				class="-m-1 shrink-0 rounded-lg p-2 text-ink-soft transition-colors hover:bg-bar/5 active:scale-95"
+				class="-m-1 shrink-0 rounded-full p-2 text-ink-soft transition-colors hover:bg-tile hover:text-ink active:scale-95"
 			>
 				<X size={18} weight="bold" aria-hidden="true" />
 			</button>

@@ -1,6 +1,5 @@
-@import '@fontsource-variable/outfit';
-@import '@fontsource-variable/plus-jakarta-sans';
-@import '@fontsource-variable/archivo';
+@import '@fontsource-variable/sora';
+@import '@fontsource-variable/inter';
 @import '@fontsource-variable/jetbrains-mono';
 @import 'tailwindcss';
 
@@ -12,127 +11,227 @@
 	--color-tile: var(--tile);
 	--color-panel: var(--panel);
 	--color-line: var(--line);
+	--color-line-strong: var(--line-strong);
 	--color-track: var(--track);
 	--color-skel: var(--skel);
 	--color-chip: var(--chip);
 	--color-ink: var(--ink);
 	--color-ink-soft: var(--ink-soft);
-	--color-bar: var(--bar);
-	--color-bar-fg: var(--bar-fg);
 	--color-accent: var(--accent);
+	--color-accent-hover: var(--accent-hover);
+	--color-accent-on: var(--accent-on);
 	--color-accent-ink: var(--accent-ink);
 	--color-accent-soft: var(--accent-soft);
+	--color-accent-border: var(--accent-border);
+	--color-accent-bar: var(--accent-bar);
+	--color-milestone: var(--milestone);
+	--color-milestone-soft: var(--milestone-soft);
+	--color-milestone-ink: var(--milestone-ink);
+	--color-milestone-border: var(--milestone-border);
 	--color-btn: var(--btn);
 	--color-btn-fg: var(--btn-fg);
+	--color-tooltip: var(--tooltip);
+	--color-tooltip-fg: var(--tooltip-fg);
 	--color-ok-bg: var(--ok-bg);
 	--color-ok-fg: var(--ok-fg);
 	--color-ok-solid: var(--ok-solid);
+	--color-ok-border: var(--ok-border);
 	--color-bad-bg: var(--bad-bg);
 	--color-bad-fg: var(--bad-fg);
 	--color-bad-solid: var(--bad-solid);
+	--color-bad-border: var(--bad-border);
 	--color-warn-bg: var(--warn-bg);
 	--color-warn-fg: var(--warn-fg);
 	--color-warn-line: var(--warn-line);
-	/* preenchimento das barras de progresso — separado do acento sólido porque
-	   no escuro o azul do botão (#3a62e0) fica fraco sobre o trilho navy; a
-	   barra usa um azul mais claro e o botão sólido segue com branco por cima. */
-	--color-accent-bar: var(--accent-bar);
-	--color-accent-edge: var(--accent-edge);
 
-	--font-display: 'Archivo Variable', 'Outfit Variable', ui-sans-serif, system-ui, sans-serif;
-	--font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
+	--font-display: 'Sora Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+	--font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+	/* Mono restrito a blocos reais de código (.codeblock) e cronômetro de prova */
 	--font-code: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, monospace;
 
-	/* Escala tipográfica explícita. Antes cada tela inventava um text-[42px]/
-	   tracking-tight; agora há 3 degraus de display + 1 etiqueta.
-	   O hero usa clamp() para valer de 390 px ao desktop sem classes extras. */
-	--text-hero: clamp(2.3rem, 1.65rem + 3vw, 3.25rem);
-	--text-hero--line-height: 0.98;
-	--text-hero--letter-spacing: -0.02em;
-	--text-title: 1.6rem;
-	--text-title--line-height: 1.15;
-	--text-title--letter-spacing: -0.01em;
-	--text-heading: 1.2rem;
-	--text-heading--line-height: 1.25;
-	--text-heading--letter-spacing: -0.005em;
-	/* Etiqueta: sans, caixa normal, sem espaçamento. Era mono em CAIXA ALTA
-	   espaçada (0.16em) — a forma mais difícil de ler para quem tem dislexia,
-	   e justamente nos rótulos que orientam a tela. */
+	/* Escala tipográfica clara, escaneável e confortável em 360 px até desktop */
+	--text-hero: clamp(1.95rem, 1.35rem + 2.4vw, 2.75rem);
+	--text-hero--line-height: 1.08;
+	--text-hero--letter-spacing: -0.025em;
+	--text-title: clamp(1.35rem, 1.15rem + 0.8vw, 1.65rem);
+	--text-title--line-height: 1.18;
+	--text-title--letter-spacing: -0.015em;
+	--text-heading: 1.125rem;
+	--text-heading--line-height: 1.28;
+	--text-heading--letter-spacing: -0.01em;
+	/* Etiqueta legível (caixa normal, sans, sem tracking largo — acessível p/ dislexia) */
 	--text-label: 0.8125rem;
 	--text-label--line-height: 1.3;
 	--text-label--letter-spacing: 0;
 }
 
-/* "Folha de prova": papel, caneta azul de quem responde, caneta vermelha de
-   quem corrige. Cada cor tem UM significado — antes o vermelho era a marca E
-   o erro, e o aluno via a própria linha do ranking e a contagem de dias em
-   vermelho como se tivesse errado. Agora:
-     azul (accent)  = ação e "isto é seu" (botão, marcação, seleção, progresso)
-     vermelho (bad) = errou / alerta
-     verde (ok)     = acertou
-     âmbar (warn)   = atenção, parcial
-   Contraste AA conferido nos dois temas (texto ≥ 4,5:1; borda/barra ≥ 3:1). */
+/* Base visual calma de baixa fadiga + pacote orgânico de Engenharia da Computação:
+     accent     = Cobalto profundo (ação, seleção, trilha ativa, identidade do curso)
+     milestone  = Âmbar quente (ofensiva, XP, contagem regressiva e conquistas)
+     ok         = Verde semântico universal (acerto e conclusão)
+     bad        = Terracota controlado universal (erro educativo e alerta)
+     warn       = Âmbar de atenção (aviso, resposta parcial)
+   Contraste AA/AAA verificado nos dois temas (texto >= 4,5:1; controles >= 3:1). */
 :root {
-	--paper: #f4f2ed;
-	--card: #fdfcf9;
-	--tile: #e8e5dd;
-	--panel: #f9f8f4;
-	--line: #dbd6cb;
-	--track: #d3d8e2;
-	--skel: #e2e5eb;
-	--chip: #e2e5eb;
-	--ink: #1c2434;
-	--ink-soft: #4a5468;
-	--bar: #1a2340;
-	--bar-fg: #cbd5e1;
-	--accent: #3459e0;
-	--accent-ink: #1f3d9f;
-	--accent-soft: #e2e8fa;
-	--accent-bar: var(--accent);
-	--accent-edge: #1e3a9e;
-	--btn: #1c2434;
+	--paper: #f5f7fc;
+	--card: #ffffff;
+	--panel: #eef2fa;
+	--tile: #e8eef9;
+	--line: #dce3f2;
+	--line-strong: #c2cde5;
+	--track: #dde4f4;
+	--skel: #e3e8f5;
+	--chip: #e6ecf8;
+	--ink: #11182b;
+	--ink-soft: #4b5773;
+
+	/* Engenharia da Computação (ativo por padrão) */
+	--accent: #2347b8;
+	--accent-hover: #1b3a9c;
+	--accent-on: #ffffff;
+	--accent-ink: #1d3da1;
+	--accent-soft: #e9effd;
+	--accent-border: #b4c7f7;
+	--accent-bar: #2b53cf;
+
+	--milestone: #d97706;
+	--milestone-soft: #fef4e4;
+	--milestone-ink: #8c4a04;
+	--milestone-border: #f5cfa0;
+
+	--btn: #161f36;
 	--btn-fg: #ffffff;
-	--ok-bg: #e7f7ef;
-	--ok-fg: #065f46;
-	--ok-solid: #047857;
-	--bad-bg: #fcebea;
-	--bad-fg: #a3201f;
-	--bad-solid: #c22a22;
-	--warn-bg: #fffaeb;
-	--warn-fg: #78350f;
+	--tooltip: #161f36;
+	--tooltip-fg: #f5f7fc;
+
+	/* Semântica universal (não muda entre cursos) */
+	--ok-bg: #e7f7ee;
+	--ok-fg: #0d663f;
+	--ok-solid: #15804d;
+	--ok-border: #9ee0be;
+
+	--bad-bg: #fdf0ee;
+	--bad-fg: #a12b22;
+	--bad-solid: #c2362b;
+	--bad-border: #f2b8b3;
+
+	--warn-bg: #fef6e6;
+	--warn-fg: #874705;
 	--warn-line: #d97706;
+
+	--shadow-card: 0 1px 2px rgba(17, 24, 43, 0.04), 0 8px 24px -16px rgba(17, 24, 43, 0.14);
+	--shadow-sheet: 0 2px 4px rgba(17, 24, 43, 0.04), 0 14px 36px -20px rgba(35, 71, 184, 0.16);
+	--shadow-btn: 0 1px 2px rgba(17, 24, 43, 0.08), 0 6px 16px -8px rgba(35, 71, 184, 0.42);
 }
 
 .dark {
-	--paper: #10141c;
-	--card: #192029;
-	--tile: #0c0f15;
-	--panel: #141a23;
-	--line: rgba(255, 255, 255, 0.12);
-	--track: #28324a;
-	--skel: #1e2636;
-	--chip: #243049;
-	--ink: #ecebe6;
-	--ink-soft: #a7adba;
-	/* navy de verdade, não quase-preto: no escuro a faixa do topo sumia no fundo */
-	--bar: #172038;
-	--bar-fg: #cbd5e1;
-	--accent: #3a62e0;
-	--accent-ink: #9fb6ff;
-	--accent-soft: rgba(91, 128, 255, 0.18);
-	--accent-bar: #7092ff;
-	--accent-edge: #1d348a;
-	--btn: #ecebe6;
-	--btn-fg: #1c2434;
-	--ok-bg: rgba(4, 120, 87, 0.2);
-	--ok-fg: #6ee7b7;
-	--ok-solid: #047857;
-	--bad-bg: rgba(209, 44, 44, 0.2);
-	--bad-fg: #fca5a5;
-	--bad-solid: #d12c2c;
-	--warn-bg: rgba(217, 119, 6, 0.14);
-	--warn-fg: #fcd34d;
-	--warn-line: #d97706;
+	--paper: #0f131e;
+	--card: #171d2c;
+	--panel: #131926;
+	--tile: #1e263a;
+	--line: rgba(210, 224, 255, 0.11);
+	--line-strong: rgba(210, 224, 255, 0.22);
+	--track: #263047;
+	--skel: #1d2538;
+	--chip: #222c42;
+	--ink: #eff3fc;
+	--ink-soft: #9ba7c2;
+
+	/* Engenharia da Computação (escuro: cobalto luminoso com texto escuro AA/AAA no botão) */
+	--accent: #6d93ff;
+	--accent-hover: #83a4ff;
+	--accent-on: #0b1226;
+	--accent-ink: #97b4ff;
+	--accent-soft: rgba(109, 147, 255, 0.16);
+	--accent-border: rgba(109, 147, 255, 0.42);
+	--accent-bar: #6d93ff;
+
+	--milestone: #f5a623;
+	--milestone-soft: rgba(245, 166, 35, 0.16);
+	--milestone-ink: #ffca6b;
+	--milestone-border: rgba(245, 166, 35, 0.36);
+
+	--btn: #eff3fc;
+	--btn-fg: #0f131e;
+	--tooltip: #eff3fc;
+	--tooltip-fg: #0f131e;
+
+	/* Semântica universal no escuro */
+	--ok-bg: rgba(34, 197, 123, 0.15);
+	--ok-fg: #6ce5ac;
+	--ok-solid: #117a49;
+	--ok-border: rgba(74, 222, 152, 0.38);
+
+	--bad-bg: rgba(235, 87, 74, 0.16);
+	--bad-fg: #fca8a1;
+	--bad-solid: #c2362b;
+	--bad-border: rgba(248, 128, 118, 0.4);
+
+	--warn-bg: rgba(245, 166, 35, 0.15);
+	--warn-fg: #ffd178;
+	--warn-line: #f5a623;
+
+	--shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 10px 28px -18px rgba(0, 0, 0, 0.65);
+	--shadow-sheet: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 16px 40px -22px rgba(0, 0, 0, 0.78);
+	--shadow-btn: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 20px -10px rgba(109, 147, 255, 0.35);
+}
+
+/* Pacotes prontos para futuros cursos (ativados quando houver banco real via data-curso).
+   As cores semânticas (--ok-*, --bad-*, --warn-*) permanecem inalteradas. */
+:root[data-curso='direito'] {
+	--accent: #7e1d34;
+	--accent-hover: #651629;
+	--accent-on: #ffffff;
+	--accent-ink: #72192e;
+	--accent-soft: #faeaee;
+	--accent-border: #e5b7c2;
+	--accent-bar: #8c233c;
+	--milestone: #b7791f;
+	--milestone-soft: #fdf5e6;
+	--milestone-ink: #7c4e0b;
+	--milestone-border: #ecd09e;
+}
+
+.dark[data-curso='direito'] {
+	--accent: #e5839a;
+	--accent-hover: #ee9bb0;
+	--accent-on: #1e080e;
+	--accent-ink: #f3a6b8;
+	--accent-soft: rgba(229, 131, 154, 0.16);
+	--accent-border: rgba(229, 131, 154, 0.4);
+	--accent-bar: #e5839a;
+	--milestone: #e8b85c;
+	--milestone-soft: rgba(232, 184, 92, 0.16);
+	--milestone-ink: #f7d68d;
+	--milestone-border: rgba(232, 184, 92, 0.36);
+}
+
+:root[data-curso='enfermagem'] {
+	--accent: #0f6b6e;
+	--accent-hover: #0b5659;
+	--accent-on: #ffffff;
+	--accent-ink: #0d5e61;
+	--accent-soft: #e6f5f5;
+	--accent-border: #a6dbdd;
+	--accent-bar: #137c80;
+	--milestone: #c75b40;
+	--milestone-soft: #fdf0ec;
+	--milestone-ink: #8d3722;
+	--milestone-border: #f3c1b3;
+}
+
+.dark[data-curso='enfermagem'] {
+	--accent: #56c9cc;
+	--accent-hover: #71d6d8;
+	--accent-on: #061c1d;
+	--accent-ink: #84dfe1;
+	--accent-soft: rgba(86, 201, 204, 0.16);
+	--accent-border: rgba(86, 201, 204, 0.4);
+	--accent-bar: #56c9cc;
+	--milestone: #f3947a;
+	--milestone-soft: rgba(243, 148, 122, 0.16);
+	--milestone-ink: #fdb7a3;
+	--milestone-border: rgba(243, 148, 122, 0.36);
 }
 
 body {
@@ -144,21 +243,19 @@ body {
 	overflow-wrap: anywhere;
 }
 
-/* Trecho de código do enunciado: mono, com QUEBRA em vez de rolagem própria —
-   o overflow horizontal em 390 px vem justamente de linha de código comprida.
-   `display:block` porque o elemento é <code> (phrasing) para caber no <p> da
-   questão sem o parser fechar o parágrafo. */
+/* Trecho de código do enunciado: mono, com quebra em vez de rolagem própria.
+   `display:block` porque o elemento é <code> (phrasing) para caber no <p>. */
 .codeblock {
 	display: block;
-	margin: 0.5rem 0;
-	padding: 0.7rem 0.85rem;
+	margin: 0.65rem 0;
+	padding: 0.75rem 0.9rem;
 	border: 1px solid var(--line);
-	border-radius: 0.75rem;
+	border-radius: 0.875rem;
 	background: var(--panel);
 	color: var(--ink);
 	font-family: var(--font-code, 'JetBrains Mono Variable', ui-monospace, monospace);
 	font-size: 0.8125rem;
-	line-height: 1.55;
+	line-height: 1.58;
 	white-space: pre-wrap;
 	overflow-wrap: anywhere;
 	word-break: break-word;
@@ -200,71 +297,106 @@ html.dark {
 	color-scheme: dark;
 }
 
-/* Botão 3D estilo Duolingo: borda inferior grossa que afunda no press */
-.btn3d {
-	border-bottom-width: 4px;
-	transition:
-		transform 0.07s ease,
-		border-bottom-width 0.07s ease,
-		filter 0.15s ease;
-}
-.btn3d:active {
-	border-bottom-width: 0;
-	transform: translateY(4px);
-}
-.duo-accent {
-	background: var(--accent);
-	border-color: var(--accent-edge);
-	color: #fff;
-}
-.duo-accent:hover {
-	filter: brightness(1.08);
-}
-.duo-btn {
-	background: var(--btn);
-	border-color: var(--btn-edge, #0a1120);
-	color: var(--btn-fg);
-}
-:root {
-	--btn-edge: #0a1120;
-}
-.dark {
-	--btn-edge: #9aa3b5;
-}
-.duo-btn:hover {
-	filter: brightness(1.06);
-}
-.dark .duo-btn:hover {
-	filter: brightness(1.12);
+/* Superfícies e botões táteis (intuitividade Brilliant, sem peso 3D Duolingo) */
+@layer components {
+	.superficie {
+		background: var(--card);
+		border: 1px solid var(--line);
+		box-shadow: var(--shadow-card);
+	}
+
+	.folha {
+		background: var(--card);
+		border: 1px solid var(--line);
+		box-shadow: var(--shadow-sheet);
+	}
+
+	.btn-primario {
+		background: var(--accent);
+		color: var(--accent-on);
+		box-shadow: var(--shadow-btn);
+		transition:
+			transform 140ms cubic-bezier(0.22, 1, 0.36, 1),
+			background-color 140ms ease,
+			box-shadow 140ms ease,
+			opacity 140ms ease;
+	}
+	.btn-primario:hover:not(:disabled) {
+		background: var(--accent-hover);
+		transform: translateY(-1px);
+	}
+	.btn-primario:active:not(:disabled) {
+		transform: translateY(0) scale(0.985);
+	}
+
+	.btn-suave {
+		background: var(--card);
+		color: var(--ink);
+		border: 1.5px solid var(--line-strong);
+		transition:
+			transform 140ms cubic-bezier(0.22, 1, 0.36, 1),
+			border-color 140ms ease,
+			background-color 140ms ease;
+	}
+	.btn-suave:hover:not(:disabled) {
+		border-color: var(--accent);
+		background: var(--accent-soft);
+	}
+	.btn-suave:active:not(:disabled) {
+		transform: scale(0.985);
+	}
+
+	.btn-escuro {
+		background: var(--btn);
+		color: var(--btn-fg);
+		transition:
+			transform 140ms cubic-bezier(0.22, 1, 0.36, 1),
+			opacity 140ms ease;
+	}
+	.btn-escuro:hover:not(:disabled) {
+		opacity: 0.92;
+		transform: translateY(-1px);
+	}
+	.btn-escuro:active:not(:disabled) {
+		transform: translateY(0) scale(0.985);
+	}
+
+	/* Motivo sutil do curso no canto de cartões de destaque (não é grade blueprint) */
+	.curso-halo {
+		background-image:
+			radial-gradient(260px 180px at 100% 0%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 72%),
+			radial-gradient(200px 140px at 0% 100%, color-mix(in srgb, var(--milestone) 8%, transparent), transparent 70%);
+	}
 }
 
+/* Animações espaciais GPU-only (transform + opacity, rápidas < 250 ms) */
 @keyframes rise {
 	from {
 		opacity: 0;
-		transform: translateY(12px);
+		transform: translateY(10px);
 	}
 	to {
 		opacity: 1;
-		transform: none;
+		transform: translateY(0);
 	}
 }
 .rise {
-	animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+	animation: rise 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes pop {
 	0% {
-		transform: scale(1);
+		transform: scale(0.985);
 	}
-	45% {
-		transform: scale(1.025);
+	55% {
+		transform: scale(1.018);
 	}
 	100% {
 		transform: scale(1);
 	}
 }
 .pop {
-	animation: pop 0.32s ease-out;
+	animation: pop 220ms cubic-bezier(0.34, 1.45, 0.64, 1);
 }
 
 @keyframes shake {
@@ -273,48 +405,80 @@ html.dark {
 		transform: translateX(0);
 	}
 	25% {
-		transform: translateX(-6px);
+		transform: translateX(-5px);
 	}
-	55% {
-		transform: translateX(5px);
+	60% {
+		transform: translateX(4px);
 	}
-	80% {
-		transform: translateX(-3px);
+	85% {
+		transform: translateX(-2px);
 	}
 }
 .shake {
-	animation: shake 0.36s ease-out;
+	animation: shake 240ms ease-out;
+}
+
+@keyframes gavetaSubir {
+	from {
+		opacity: 0;
+		transform: translateY(12px) scale(0.99);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+.gaveta-subir {
+	animation: gavetaSubir 210ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes faiscaEstourar {
+	0% {
+		opacity: 0;
+		transform: translate(0, 0) scale(0.4);
+	}
+	30% {
+		opacity: 1;
+		transform: translate(calc(var(--fx, 0px) * 0.55), calc(var(--fy, 0px) * 0.55)) scale(1.1);
+	}
+	100% {
+		opacity: 0;
+		transform: translate(var(--fx, 0px), var(--fy, 0px)) scale(0.2);
+	}
+}
+.faisca {
+	animation: faiscaEstourar 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes floatup {
 	0% {
 		opacity: 0;
-		transform: translateY(8px) scale(0.9);
+		transform: translateY(6px) scale(0.92);
 	}
-	20% {
+	22% {
 		opacity: 1;
-		transform: translateY(0) scale(1.05);
+		transform: translateY(0) scale(1.04);
 	}
 	75% {
 		opacity: 1;
 	}
 	100% {
 		opacity: 0;
-		transform: translateY(-44px) scale(1);
+		transform: translateY(-34px) scale(1);
 	}
 }
 .xp-float {
-	animation: floatup 0.95s ease-out both;
+	animation: floatup 760ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes springin {
 	0% {
 		opacity: 0;
-		transform: scale(0.6);
+		transform: scale(0.86);
 	}
-	60% {
+	65% {
 		opacity: 1;
-		transform: scale(1.08);
+		transform: scale(1.03);
 	}
 	100% {
 		opacity: 1;
@@ -322,55 +486,7 @@ html.dark {
 	}
 }
 .springin {
-	animation: springin 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.dotgrid {
-	background-image: radial-gradient(rgba(28, 36, 52, 0.13) 1px, transparent 1px);
-	background-size: 18px 18px;
-}
-
-/* Faixa navy do topo das telas (hero, topo da sessão, resultado). No celular
-   ela continua o header: colada nele, sem raio em cima. A partir de 640 px vira
-   um cartão solto — colada, era uma aba pendurada no header e mais estreita
-   que ele. Em `@layer components` para utilitários (px-*, pt-*) valerem. */
-@layer components {
-	.faixa {
-		margin: -1.5rem -1rem 0;
-		border-radius: 0 0 26px 26px;
-		background-color: var(--bar);
-	}
-	@media (min-width: 40rem) {
-		.faixa {
-			margin: 0;
-			border-radius: 1.5rem;
-		}
-	}
-}
-
-/* grade de blueprint p/ zonas navy: microdetalhe de engenharia */
-.blueprint {
-	background-image:
-		linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
-	background-size: 22px 22px;
-}
-.pauta {
-	background-image: repeating-linear-gradient(
-		to bottom,
-		transparent 0 30px,
-		rgba(28, 36, 52, 0.07) 30px 31px
-	);
-}
-.dark .pauta {
-	background-image: repeating-linear-gradient(
-		to bottom,
-		transparent 0 30px,
-		rgba(255, 255, 255, 0.05) 30px 31px
-	);
-}
-.dark .dotgrid {
-	background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+	animation: springin 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {

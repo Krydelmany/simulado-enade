@@ -53,7 +53,7 @@
 						{/if}
 					{/if}
 					{#if ativo === k}
-						<span class="pointer-events-none absolute bottom-full z-10 mb-1 w-max max-w-44 rounded-lg bg-bar px-2 py-1 text-xs font-semibold text-white shadow">
+						<span class="pointer-events-none absolute bottom-full z-10 mb-1 w-max max-w-44 rounded-lg bg-tooltip px-2 py-1 text-xs font-semibold text-tooltip-fg shadow">
 							{x.dica}
 						</span>
 					{/if}
