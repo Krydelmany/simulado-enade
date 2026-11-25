@@ -3,14 +3,15 @@
 	import { fly } from 'svelte/transition';
 	import Questao from '$lib/Questao.svelte';
 	import SessaoTopo from '$lib/SessaoTopo.svelte';
-	import BarraAcao from '$lib/BarraAcao.svelte';
-	import Contador from '$lib/Contador.svelte';
+	import BarrasArea from '$lib/BarrasArea.svelte';
+	import PalcoResumo from '$lib/PalcoResumo.svelte';
 	import DicaGestos from '$lib/DicaGestos.svelte';
 	import { DUR } from '$lib/motion.js';
 	import { deslizarQuestoes } from '$lib/gestos.js';
-	import { ligarCamadas } from '$lib/camadas.svelte.js';
+	import { ligarCamadas, sairDaRota } from '$lib/camadas.svelte.js';
 	import { carregarBancoDetalhado, embaralhar, doNivel, NIVEL_ENADE } from '$lib/banco.js';
-	import { remontarSessao } from '$lib/sessao.js';
+	import { itensDoLog, remontarSessao, sequenciaAtual } from '$lib/sessao.js';
+	import { anotarConquista } from '$lib/conquista.js';
 	import { GRUPOS_MATERIA, materiaExiste, nomeMateria } from '$lib/materias.js';
 	import {
 	somarXP,
@@ -25,7 +26,7 @@
 	registrarResposta,
 	registrarSessao
 } from '$lib/stats.js';
-	import { ArrowsClockwise, Info, Lightning, Play, SealCheck, Tag, Target, Timer, Trophy } from 'phosphor-svelte';
+	import { ArrowsClockwise, Info, Play, SealCheck, Tag } from 'phosphor-svelte';
 
 	const TOTAL = 10;
 	// 1–3: questões geradas para revisão, em escada de dificuldade.
@@ -63,8 +64,11 @@
 	let vazioNivel = $state(null);
 	let escolhaE = $state(false);
 	let salvaE = $state(null);
-	let confirmaSaida = $state(false);
 	let zoomAberto = $state(false);
+	let reporteAberto = $state(false);
+	// true quando o aluno marcou uma alternativa mas ainda não clicou em Verificar
+	// (bloqueia avançar em questão pulada para não perder a seleção)
+	let selecaoPendente = $state(false);
 	// o banco chegou inteiro? (decide se a sessão pausada pode ser remontada)
 	let bancoInteiro = $state(false);
 	// sentido da última troca de questão: a nova entra deslizando por ele
@@ -80,11 +84,10 @@
 				? []
 				: fim
 					? ['fim']
-					: ['quiz', confirmaSaida && 'saida', zoomAberto && 'zoom'].filter(Boolean),
+					: ['quiz', zoomAberto && 'zoom'].filter(Boolean),
 		(n) => {
-			if (n === 'quiz') sairAgora();
+			if (n === 'quiz') sair();
 			else if (n === 'fim') nivel = null;
-			else if (n === 'saida') confirmaSaida = false;
 			else if (n === 'zoom') zoomAberto = false;
 		}
 	);
@@ -93,14 +96,18 @@
 	function topo() {
 		window.scrollTo({ top: 0 });
 	}
-	let refSaida = $state(null);
 
 	// contadores derivados do log — navegar para frente/voltar nunca conta duas vezes
 	let feitas = $derived(log.filter((r) => !r.pulada).length);
 	let certas = $derived(log.filter((r) => r.certa).length);
 	let parciais = $derived(log.filter((r) => r.parcial).length);
+	let sequencia = $derived(sequenciaAtual(log));
+	let respondidasSessao = $derived(respostas.filter((r) => r && !r.pulada).length);
 	let ultima = $derived(i + 1 >= sessao.length);
-	let podeAvancar = $derived(!!respostas[i]);
+	let podeAvancar = $derived(!!respostas[i] && !selecaoPendente);
+	let atalhosQuestao = $derived(
+		nivel !== null && !escolhaE && !fim && !zoomAberto && !reporteAberto
+	);
 	// quantas questões cada nível tem de verdade, já com o filtro de matéria
 	// (para não prometer 10 e entregar 3)
 	let contagens = $derived.by(() => {
@@ -161,10 +168,6 @@
 			}
 		}
 	}
-
-	$effect(() => {
-		if (confirmaSaida && refSaida) refSaida.focus();
-	});
 
 	function doFiltro(n) {
 		return banco.filter(
@@ -279,6 +282,8 @@
 				certas,
 				duracaoMs: Date.now() - inicio
 			});
+			// só pular não conclui a etapa na trilha (ver `estudoSessoes` na home)
+			if (feitas > 0) anotarConquista({ etapa: '/estudo/', certas, total: sessao.length });
 			return;
 		}
 		i++;
@@ -295,19 +300,9 @@
 	}
 
 	function sair() {
-		// antes descartava 10 questões em silêncio; agora salva e avisa
-		if (feitas === 0) {
-			nivel = null;
-			// só pulou: a sessão pode ter sido gravada mesmo assim
-			oferecerContinuar();
-			return;
-		}
-		confirmaSaida = true;
-	}
-
-	function sairAgora() {
+		// o progresso já é salvo a cada resposta (inclusive quando só pulou);
+		// sai direto sem modal bloqueante e preserva a retomada no seletor
 		persistir();
-		confirmaSaida = false;
 		nivel = null;
 		oferecerContinuar();
 	}
@@ -383,26 +378,27 @@
 	}
 
 	function aoTecla(e) {
-		if (e.metaKey || e.ctrlKey || e.altKey) return;
+		if (e.defaultPrevented) return;
+		if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
 		if (ehCampo(e.target)) return;
 		if (e.key === 'Escape') {
-			if (confirmaSaida) {
-				confirmaSaida = false;
-				return;
-			}
-			if (zoomAberto) return; // deixa o Esc fechar o zoom da figura
+			if (zoomAberto || reporteAberto) return; // deixa o Esc fechar o zoom ou o reporte antes de sair
 			if (nivel !== null && !fim) sair();
 			return;
 		}
-		if (confirmaSaida || nivel === null || fim || escolhaE || zoomAberto) return;
+		if (nivel === null || fim || escolhaE || zoomAberto || reporteAberto) return;
 		if (e.key === 'ArrowLeft') {
 			e.preventDefault();
 			voltar();
 			return;
 		}
 		if (e.key === 'ArrowRight' || e.key === 'Enter') {
-			// com foco num botão/link, deixa a ativação nativa cuidar (evita avançar 2x)
-			if (e.key === 'Enter' && e.target instanceof HTMLElement && ['BUTTON', 'A'].includes(e.target.tagName))
+			// com foco num elemento interativo, deixa a ativação nativa cuidar (evita sequestrar links ou avançar 2x)
+			if (
+				e.key === 'Enter' &&
+				e.target instanceof Element &&
+				e.target.closest('a, button, summary, [role="button"]')
+			)
 				return;
 			if (!podeAvancar) return;
 			e.preventDefault();
@@ -439,28 +435,28 @@
 		<div class="h-14 animate-pulse rounded-2xl bg-skel"></div>
 	</div>
 {:else if falhou || !banco.length}
-	<div class="rounded-3xl bg-card p-6 text-center shadow-sm" role="alert">
-		<p class="font-display text-lg font-bold">Não deu para carregar as questões</p>
+	<div class="superficie rounded-3xl p-6 text-center" role="alert">
+		<p class="font-display text-lg font-bold text-ink">Não deu para carregar as questões</p>
 		<p class="mt-1 text-sm text-ink-soft">Verifique sua conexão e tente de novo.</p>
-		<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
+		<button type="button" onclick={() => location.reload()} class="btn-primario mt-4 min-h-12 w-full rounded-full px-6 font-display text-base font-bold">
 			Tentar de novo
 		</button>
 	</div>
 {:else if sessaoGuardada}
 	<!-- sem a escolha de nível: começar uma sessão nova apagaria a guardada -->
-	<div class="rounded-3xl bg-card p-6 text-center shadow-sm" role="alert">
-		<p class="font-display text-lg font-bold">Parte das questões não carregou</p>
+	<div class="superficie rounded-3xl p-6 text-center" role="alert">
+		<p class="font-display text-lg font-bold text-ink">Parte das questões não carregou</p>
 		<p class="mt-1 text-sm text-ink-soft">
 			Sua sessão de estudo pausada continua guardada neste aparelho. Verifique a conexão e tente de novo para continuar.
 		</p>
-		<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
+		<button type="button" onclick={() => location.reload()} class="btn-primario mt-4 min-h-12 w-full rounded-full px-6 font-display text-base font-bold">
 			Tentar de novo
 		</button>
 	</div>
 {:else if escolhaE && salvaE}
-	<div class="rise rounded-3xl bg-card p-6 text-center shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)]">
+	<div class="folha rise rounded-3xl p-6 text-center sm:p-7">
 		<p class="text-label font-bold text-ink-soft">Sessão de estudo pausada</p>
-		<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight">Continuar de onde parou?</h2>
+		<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight text-ink">Continuar de onde parou?</h2>
 		<p class="nums mt-2 text-sm text-ink-soft">
 			{NIVEIS[salvaE.nivel]?.nome ?? 'Sessão'}{materiaExiste(salvaE.materia) ? ` · ${nomeMateria(salvaE.materia)}` : ''} · questão {salvaE.i + 1} de {salvaE.sessao.length} · {salvaECertas}/{salvaEfeitas} certas
 		</p>
@@ -469,19 +465,19 @@
 				{salvaE.removidas} {salvaE.removidas === 1 ? 'questão saiu' : 'questões saíram'} do banco desde a pausa.
 			</p>
 		{/if}
-		<button type="button" onclick={continuar} class="btn3d duo-accent mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
-			<Play size={20} weight="fill" aria-hidden="true" /> Continuar sessão
+		<button type="button" onclick={continuar} class="btn-primario mt-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold">
+			<Play size={19} weight="fill" aria-hidden="true" /> Continuar sessão
 		</button>
-		<button type="button" onclick={descartar} class="mt-2 w-full rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
+		<button type="button" onclick={descartar} class="btn-suave mt-2.5 min-h-12 w-full rounded-full px-6 font-display text-base font-bold">
 			Começar outra
 		</button>
 	</div>
 {:else if nivel === null}
-	<div class="mb-4">
-		<h1 class="font-display text-2xl font-extrabold tracking-tight">Sessão de estudo</h1>
-		<p class="mt-1 text-sm text-ink-soft">Até 10 questões por sessão. Escolha a matéria e o nível.</p>
+	<div class="mb-5">
+		<h1 class="font-display text-title font-extrabold tracking-tight text-ink">Sessão de estudo</h1>
+		<p class="mt-1 text-sm text-ink-soft">Até 10 questões por rodada. Escolha o nível e comece.</p>
 	</div>
-	<label class="mb-4 flex items-center gap-2 rounded-2xl border border-line bg-card px-3">
+	<label class="superficie mb-5 flex items-center gap-2 rounded-2xl px-3.5">
 		<Tag size={17} weight="bold" class="shrink-0 text-ink-soft" aria-hidden="true" />
 		<span class="sr-only">Filtrar por matéria</span>
 		<select
@@ -500,7 +496,7 @@
 		</select>
 	</label>
 	{#if vazioNivel}
-		<div class="mb-3 flex items-start gap-2 rounded-2xl bg-warn-bg p-3 text-sm font-semibold text-warn-fg" role="alert">
+		<div class="mb-4 flex items-start gap-2 rounded-2xl border border-warn-line/40 bg-warn-bg p-3.5 text-sm font-semibold text-warn-fg" role="alert">
 			<Info size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 			<span>
 				{NIVEIS[vazioNivel].nome} ainda não tem questões{materiaFiltro !== 'todas' ? ` de ${nomeMateria(materiaFiltro)}` : ''}.
@@ -509,22 +505,22 @@
 			</span>
 		</div>
 	{/if}
-	<p class="mb-2 text-label font-bold text-ink-soft">Revisão por nível</p>
+	<p class="mb-2.5 text-label font-bold text-ink-soft">Revisão por nível</p>
 	<div class="space-y-3">
 		{#each ESCADA as n, k (n)}
 			<button
 				type="button"
 				onclick={() => comecar(n)}
-				class="rise flex w-full items-center gap-4 rounded-3xl bg-card p-5 text-left shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)] transition-transform hover:-translate-y-0.5 active:scale-[0.99]"
-				style="animation-delay: {k * 70}ms"
+				class="cartao-tatil rise flex w-full items-center gap-4 rounded-3xl p-4 text-left sm:p-5"
+				style="animation-delay: {k * 45}ms"
 			>
-				<span class="nums flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-bar font-display text-xl font-extrabold text-white" aria-hidden="true">
+				<span class="nums flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-soft font-display text-lg font-extrabold text-accent-ink" aria-hidden="true">
 					{n}
 				</span>
 				<span class="min-w-0 flex-1">
-					<span class="block font-display text-[17px] font-bold tracking-tight">{NIVEIS[n].nome}</span>
+					<span class="block font-display text-[17px] font-bold tracking-tight text-ink">{NIVEIS[n].nome}</span>
 					<span class="block text-sm text-ink-soft">{NIVEIS[n].desc}</span>
-					<span class="nums block text-xs font-semibold text-ink-soft">{contagens[n]} {contagens[n] === 1 ? 'questão' : 'questões'} disponíveis</span>
+					<span class="nums mt-0.5 block text-xs font-semibold text-ink-soft">{contagens[n]} {contagens[n] === 1 ? 'questão' : 'questões'} disponíveis</span>
 				</span>
 				<span class="flex shrink-0 gap-1" aria-hidden="true">
 					{#each ESCADA as d (d)}
@@ -534,89 +530,89 @@
 			</button>
 		{/each}
 	</div>
-	<p class="mt-6 mb-2 text-label font-bold text-ink-soft">Prova oficial</p>
+	<p class="mt-6 mb-2.5 text-label font-bold text-ink-soft">Prova oficial</p>
 	<button
 		type="button"
 		onclick={() => comecar(NIVEL_ENADE)}
-		class="rise flex w-full items-center gap-4 rounded-3xl bg-card p-5 text-left shadow-[0_10px_30px_-12px_rgba(20,33,61,0.25)] transition-transform hover:-translate-y-0.5 active:scale-[0.99]"
-		style="animation-delay: 210ms"
+		class="cartao-tatil rise flex w-full items-center gap-4 rounded-3xl border-milestone-border/70 p-4 text-left sm:p-5"
+		style="animation-delay: 140ms"
 	>
-		<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-soft" aria-hidden="true">
-			<SealCheck size={26} weight="bold" class="text-accent-ink" />
-		</span>
+		<SealCheck size={28} weight="bold" class="shrink-0 text-milestone" aria-hidden="true" />
 		<span class="min-w-0 flex-1">
-			<span class="block font-display text-[17px] font-bold tracking-tight">{NIVEIS[NIVEL_ENADE].nome}</span>
+			<span class="block font-display text-[17px] font-bold tracking-tight text-ink">{NIVEIS[NIVEL_ENADE].nome}</span>
 			<span class="block text-sm text-ink-soft">{NIVEIS[NIVEL_ENADE].desc}</span>
-			<span class="nums block text-xs font-semibold text-ink-soft">{contagens[NIVEL_ENADE]} {contagens[NIVEL_ENADE] === 1 ? 'questão' : 'questões'} disponíveis</span>
+			<span class="nums mt-0.5 block text-xs font-semibold text-ink-soft">{contagens[NIVEL_ENADE]} {contagens[NIVEL_ENADE] === 1 ? 'questão' : 'questões'} disponíveis</span>
 		</span>
 	</button>
 {:else if fim}
-	<div class="blueprint faixa px-4 pt-8 pb-10 text-center text-white">
-		<p class="text-sm font-medium text-bar-fg">Estudo · {NIVEIS[nivel].nome}{materiaFiltro !== 'todas' ? ` · ${nomeMateria(materiaFiltro)}` : ''}</p>
-		<h2 class="mt-1 font-display text-3xl font-extrabold tracking-tight">Sessão concluída</h2>
-		<p class="springin mx-auto mt-4 flex h-24 w-24 items-center justify-center rounded-full bg-accent-soft">
-			<Trophy size={44} weight="fill" class="text-accent" aria-hidden="true" />
-		</p>
-		<p class="nums mt-3 font-display text-6xl font-extrabold tracking-tight">
-			<Contador valor={certas} />/{sessao.length}
-		</p>
-		<p class="mt-1 text-sm text-bar-fg">acertos nesta sessão</p>
-		{#if parciais > 0}
-			<p class="nums mt-1 text-xs font-semibold text-bar-fg">{parciais} {parciais === 1 ? 'parcial' : 'parciais'} · meio ponto</p>
-		{/if}
-	</div>
-	<div class="mx-auto -mt-0 grid max-w-xs grid-cols-3 gap-2 pt-4 text-center">
-		<div class="rounded-2xl bg-card p-3 shadow-sm">
-			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold"><Target size={17} weight="bold" class="text-accent" aria-hidden="true" />{feitas ? Math.round((certas / feitas) * 100) : 0}%</p>
-			<p class="text-xs font-semibold text-ink-soft">Precisão</p>
-		</div>
-		<div class="rounded-2xl bg-card p-3 shadow-sm">
-			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold"><Timer size={17} weight="bold" class="text-accent" aria-hidden="true" />{mmss()}</p>
-			<p class="text-xs font-semibold text-ink-soft">Tempo</p>
-		</div>
-		<div class="rounded-2xl bg-card p-3 shadow-sm">
-			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold"><Lightning size={17} weight="fill" class="text-accent" aria-hidden="true" />+{xpGanho}</p>
-			<p class="text-xs font-semibold text-ink-soft">XP ganho</p>
-		</div>
-	</div>
+	<PalcoResumo
+		etiqueta="Estudo · {NIVEIS[nivel].nome}{materiaFiltro !== 'todas' ? ` · ${nomeMateria(materiaFiltro)}` : ''}"
+		titulo="Sessão concluída"
+		{certas}
+		total={sessao.length}
+		rotulo="acertos nesta sessão"
+		blocos={[{ itens: itensDoLog(log) }]}
+		sequencias
+		metricas={[
+			{ rotulo: 'Precisão', valor: feitas ? Math.round((certas / feitas) * 100) : 0, sufixo: '%' },
+			{ rotulo: 'Tempo', valor: mmss() },
+			{ rotulo: 'XP ganho', valor: xpGanho, prefixo: '+', xp: true }
+		]}
+		completa={respondidasSessao >= sessao.length}
+	>
+		{#snippet detalhe()}
+			{#if parciais > 0}
+				<p class="nums mt-1 text-xs font-semibold text-ink-soft">{parciais} {parciais === 1 ? 'parcial' : 'parciais'} · meio ponto</p>
+			{/if}
+		{/snippet}
+		{#snippet acoes(faixa)}
+			{@const nRevisar = contarParaRevisar(banco)}
+			{@const revisarAntes = nRevisar > 0 && faixa !== 'excelente'}
+			<!-- o passo óbvio vem primeiro: com erros a revisar, revisar -->
+			{#if revisarAntes}
+				<a href="/treino/?modo=revisao" class="btn-primario flex min-h-12 w-full items-center justify-center rounded-full px-4 text-center font-display text-base font-bold">
+					Revisar erros e marcadas ({nRevisar})
+				</a>
+			{/if}
+			<button
+				type="button"
+				onclick={() => (nivel = null)}
+				class="{revisarAntes ? 'btn-suave' : 'btn-primario'} flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
+			>
+				<ArrowsClockwise size={19} weight="bold" aria-hidden="true" /> Outra sessão
+			</button>
+			{#if nRevisar && !revisarAntes}
+				<a href="/treino/?modo=revisao" class="btn-suave flex min-h-12 w-full items-center justify-center rounded-full px-4 text-center font-display text-base font-bold">
+					Revisar erros e marcadas ({nRevisar})
+				</a>
+			{/if}
+			<button type="button" onclick={() => sairDaRota('/#trilha')} class="min-h-11 w-full rounded-full px-6 text-sm font-bold text-ink-soft hover:text-ink">
+				Voltar à trilha
+			</button>
+		{/snippet}
+	</PalcoResumo>
 	{#if porMateria().length}
-		<div class="mt-3 rounded-3xl bg-card p-5 shadow-sm">
-			<p class="font-display text-lg font-bold">Desempenho por matéria</p>
-			<div class="mt-3 space-y-3">
-				{#each porMateria() as [m, d] (m)}
-					<div>
-						<div class="flex items-baseline justify-between gap-3 text-sm">
-							<p class="truncate font-semibold">{nomeMateria(m)}</p>
-							<p class="nums shrink-0 font-bold">{d.ok}/{d.n}</p>
-						</div>
-						<div class="mt-1 h-2 overflow-hidden rounded-full bg-track">
-							<div class="h-full rounded-full bg-accent" style="width: {(d.ok / d.n) * 100}%"></div>
-						</div>
-					</div>
-				{/each}
-			</div>
+		<div class="superficie mt-3 rounded-3xl p-5">
+			<p class="mb-3 font-display text-lg font-bold text-ink">Desempenho por matéria</p>
+			<BarrasArea
+				linhas={porMateria().map(([m, d]) => ({ id: m, nome: nomeMateria(m), certas: d.ok, total: d.n }))}
+				atraso={460}
+			/>
 		</div>
 	{/if}
-	<div class="mt-4 space-y-2">
-		<button type="button" onclick={() => (nivel = null)} class="btn3d duo-accent flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
-			<ArrowsClockwise size={20} weight="bold" aria-hidden="true" /> Outra sessão
-		</button>
-		{#if contarParaRevisar(banco)}
-			<a href="/treino/?modo=revisao" class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
-				Revisar erros e marcadas ({contarParaRevisar(banco)})
-			</a>
-		{/if}
-	</div>
 {:else}
 	<SessaoTopo
 		titulo={`Questão ${i + 1} de ${sessao.length}`}
+		tituloCurto={`${i + 1} de ${sessao.length}`}
 		detalhe={NIVEIS[nivel].nome}
-		progresso={sessao.length ? (i + 1) / sessao.length : 0}
+		progresso={sessao.length ? respondidasSessao / sessao.length : 0}
+		concluida={sessao.length > 0 && respondidasSessao >= sessao.length}
 		{xp}
+		{sequencia}
 		aoFechar={sair}
 	/>
 	{#if sessao.length < TOTAL}
-		<p class="mt-4 flex items-start gap-2 rounded-2xl bg-warn-bg p-3 text-xs font-semibold text-warn-fg" role="status">
+		<p class="mt-4 flex items-start gap-2 rounded-2xl border border-warn-line/40 bg-warn-bg p-3 text-xs font-semibold text-warn-fg" role="status">
 			<Info size={16} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 			<span>Só há {sessao.length} {sessao.length === 1 ? 'questão' : 'questões'} neste nível{materiaFiltro !== 'todas' ? ' nesta matéria' : ''} — a sessão é mais curta que o normal.</span>
 		</p>
@@ -638,7 +634,7 @@
 				}))}
 			>
 				{#key sessao[i].id + '-' + i}
-					<div in:fly={{ x: 32 * direcao, duration: direcao ? DUR : 0 }}>
+					<div in:fly={{ x: 24 * direcao, duration: direcao ? DUR : 0 }}>
 						<Questao
 							q={sessao[i]}
 							onResponder={aoResponder}
@@ -646,61 +642,23 @@
 							onRevisar={aoRevisar}
 							revisarInicial={getRevisar().includes(sessao[i].id)}
 							inicial={respostas[i]?.pulada ? null : (respostas[i] ?? null)}
+							atalhos={atalhosQuestao}
+							onContinuar={avancar}
+							rotuloContinuar={ultima ? 'Ver resultado' : 'Continuar'}
+							podeContinuarSemResponder={!!respostas[i]?.pulada}
+							onAnterior={voltar}
+							anteriorDesabilitado={i === 0}
+							mostrarXP={xpPing > 0}
+							{xpValor}
+							{sequencia}
+							bind:selecaoPendente
 							bind:zoomAberto
+							bind:reporteAberto
 						/>
 					</div>
 				{/key}
 			</div>
-			<BarraAcao
-				rotulo={ultima ? 'Ver resultado' : 'Próxima'}
-				mostrarXP={xpPing > 0}
-				xpValor={xpValor}
-				desabilitado={!podeAvancar}
-				aviso="Responda (ou pule) para continuar."
-				onClick={avancar}
-				onAnterior={voltar}
-				anteriorDesabilitado={i === 0}
-			/>
 		{/if}
 	</div>
 {/if}
-
-	{#if confirmaSaida}
-		<div class="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
-			<button
-				type="button"
-				onclick={() => (confirmaSaida = false)}
-				aria-label="Fechar e continuar estudando"
-				class="absolute inset-0 cursor-default bg-black/50"
-			></button>
-			<div
-				role="dialog"
-				aria-modal="true"
-				aria-labelledby="estudo-saida-titulo"
-				class="relative w-full max-w-sm rounded-3xl bg-card p-5 shadow"
-			>
-				<h2 id="estudo-saida-titulo" class="font-display text-xl font-extrabold tracking-tight">Sair da sessão?</h2>
-				<p class="mt-1 text-sm text-ink-soft">
-					Seu progresso ({feitas} respondidas) fica salvo para continuar depois.
-				</p>
-				<div class="mt-4 space-y-2">
-					<button
-						type="button"
-						bind:this={refSaida}
-						onclick={sairAgora}
-						class="btn3d duo-accent w-full rounded-[14px] p-3.5 font-display text-base font-bold"
-					>
-						Sair e salvar
-					</button>
-					<button
-						type="button"
-						onclick={() => (confirmaSaida = false)}
-						class="w-full rounded-[14px] border-2 border-line bg-card p-3 font-display text-base font-bold"
-					>
-						Continuar estudando
-					</button>
-				</div>
-			</div>
-		</div>
-	{/if}
 </div>

@@ -3,14 +3,16 @@
 	import { fly } from 'svelte/transition';
 	import Questao from '$lib/Questao.svelte';
 	import BarraAcao from '$lib/BarraAcao.svelte';
-	import Contador from '$lib/Contador.svelte';
+	import BarrasArea from '$lib/BarrasArea.svelte';
+	import PalcoResumo from '$lib/PalcoResumo.svelte';
 	import DicaGestos from '$lib/DicaGestos.svelte';
 	import { DUR } from '$lib/motion.js';
 	import { arrastarParaFechar, deslizarQuestoes } from '$lib/gestos.js';
-	import { ligarCamadas } from '$lib/camadas.svelte.js';
+	import { ligarCamadas, sairDaRota } from '$lib/camadas.svelte.js';
 	import { carregarBancoDetalhado } from '$lib/banco.js';
 	import { nomeMateria } from '$lib/materias.js';
 	import { foco } from '$lib/foco.svelte.js';
+	import { anotarConquista } from '$lib/conquista.js';
 	import {
 		FORMATO,
 		TOTAL_QUESTOES,
@@ -47,7 +49,6 @@
 		ArrowRight,
 		ArrowsClockwise,
 		CheckCircle,
-		Hourglass,
 		Infinity as InfinityIcon,
 		Info,
 		ListChecks,
@@ -58,7 +59,6 @@
 		SquaresFour,
 		Stairs,
 		Timer,
-		Trophy,
 		UsersThree,
 		X,
 		XCircle
@@ -93,6 +93,9 @@
 	let confirmaEntrega = $state(false);
 	let confirmaNova = $state(false);
 	let zoomAberto = $state(false);
+	// resultado recém-entregue: só nessa hora o palco encena. Voltando da revisão
+	// ou reabrindo a correção, ele já vem pronto.
+	let estreia = $state(false);
 	// sentido da última troca de questão: a nova entra deslizando por ele
 	let direcao = $state(0);
 	// simulados agendados pelo professor (só com conta e turma)
@@ -125,6 +128,7 @@
 			else if (n === 'entrega') confirmaEntrega = false;
 			else if (n === 'nova') confirmaNova = false;
 			else if (n === 'resultado') {
+				estreia = false;
 				tela = 'inicio';
 				topo();
 			} else if (n === 'revisao') tela = 'resultado';
@@ -422,8 +426,10 @@
 			feitos = lerFeitosDaTurma(contaLocal());
 		}
 		gravarProva($state.snapshot(prova));
+		anotarConquista({ etapa: '/simulado/', certas: ultimo.certas, total: ultimo.total });
 		confirmaEntrega = false;
 		cartaoAberto = false;
+		estreia = true;
 		tela = 'resultado';
 		topo();
 	}
@@ -431,6 +437,7 @@
 	function revisar(k) {
 		direcao = 0;
 		i = k;
+		estreia = false;
 		tela = 'revisao';
 		topo();
 	}
@@ -505,7 +512,7 @@
 	function corCorrigida(it) {
 		if (it.status === 'certa') return 'border-ok-solid bg-ok-solid text-white';
 		if (it.status === 'errada') return 'border-bad-solid bg-bad-solid text-white';
-		if (it.status === 'parcial') return 'border-amber-600 bg-amber-500 text-white';
+		if (it.status === 'parcial') return 'border-warn-line bg-warn-bg text-warn-fg';
 		if (it.status === 'pendente') return 'border-dashed border-ink-soft bg-card text-ink';
 		return 'border-line bg-track text-ink-soft';
 	}
@@ -544,75 +551,73 @@
 		<div class="h-24 animate-pulse rounded-3xl bg-skel"></div>
 	</div>
 {:else if falhou || !banco.length}
-	<div class="rounded-3xl bg-card p-6 text-center shadow-sm" role="alert">
-		<p class="font-display text-lg font-bold">Não deu para carregar as questões</p>
+	<div class="superficie rounded-3xl p-6 text-center" role="alert">
+		<p class="font-display text-lg font-bold text-ink">Não deu para carregar as questões</p>
 		<p class="mt-1 text-sm text-ink-soft">Verifique sua conexão e tente de novo.</p>
-		<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
+		<button type="button" onclick={() => location.reload()} class="btn-primario mt-4 min-h-12 w-full rounded-full px-6 font-display text-base font-bold">
 			Tentar de novo
 		</button>
 	</div>
 {:else if provaGuardada}
 	<!-- sem o início: "Começar simulado" aqui gravaria por cima da prova guardada -->
-	<div class="rounded-3xl bg-card p-6 text-center shadow-sm" role="alert">
-		<p class="font-display text-lg font-bold">Parte das questões não carregou</p>
+	<div class="superficie rounded-3xl p-6 text-center" role="alert">
+		<p class="font-display text-lg font-bold text-ink">Parte das questões não carregou</p>
 		<p class="mt-1 text-sm text-ink-soft">
 			Sua prova continua guardada neste aparelho. Verifique a conexão e tente de novo para abri-la.
 		</p>
-		<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
+		<button type="button" onclick={() => location.reload()} class="btn-primario mt-4 min-h-12 w-full rounded-full px-6 font-display text-base font-bold">
 			Tentar de novo
 		</button>
 	</div>
 {:else if tela === 'prova' && prova}
 	<!-- ===================== PROVA ===================== -->
-	<div class="blueprint faixa px-4 pt-4 pb-5 text-white">
-		<div class="mx-auto max-w-3xl">
-			<div class="flex items-center gap-3">
-				<button
-					type="button"
-					onclick={pausar}
-					aria-label="Pausar a prova"
-					class="flex h-11 min-w-11 items-center justify-center gap-1.5 rounded-full bg-white/10 px-3 text-sm font-bold transition-transform active:scale-95"
-				>
-					<Pause size={18} weight="fill" aria-hidden="true" /> Pausar
-				</button>
-				<span class="flex-1"></span>
-				<p
-					class="nums flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-code text-sm font-extrabold {restante <=
-					ALERTA_MS
-						? 'bg-bad-solid text-white'
-						: 'bg-white/10 text-white'}"
-					role="timer"
-					aria-label="Tempo restante: {relogio(restante)}"
-				>
-					<Timer size={16} weight="bold" aria-hidden="true" />
-					{relogio(restante)}
-				</p>
-			</div>
-			{#if prova.simulado}
-				<p class="mt-3 flex items-center gap-1.5 text-sm font-semibold text-bar-fg">
-					<UsersThree size={16} weight="bold" aria-hidden="true" />
-					<span class="min-w-0 truncate">{prova.simulado.titulo}</span>
-				</p>
-			{/if}
-			<div class="mt-3 flex items-baseline justify-between gap-3">
-				<p class="font-display text-[17px] font-bold">Questão {i + 1} de {questoes.length}</p>
-				<p class="shrink-0 text-sm font-medium text-bar-fg">{NOME_BLOCO[blocoDe(i)]}</p>
-			</div>
-			<div
-				class="mt-2 h-2.5 overflow-hidden rounded-full bg-white/15"
-				role="progressbar"
-				aria-label="Questões respondidas"
-				aria-valuemin="0"
-				aria-valuemax={questoes.length}
-				aria-valuenow={respondidas}
+	<div class="superficie rounded-3xl px-4 py-3.5 sm:px-5 sm:py-4">
+		<div class="flex items-center gap-3">
+			<button
+				type="button"
+				onclick={pausar}
+				aria-label="Pausar a prova"
+				class="btn-suave flex min-h-11 items-center justify-center gap-1.5 rounded-full px-4 text-sm font-bold"
 			>
-				<div
-					class="h-full rounded-full bg-accent-bar transition-[width] duration-500 ease-out"
-					style="width: {(respondidas / questoes.length) * 100}%"
-				></div>
-			</div>
-			<p class="nums mt-1.5 text-label font-semibold text-white/65">{respondidas} de {questoes.length} respondidas</p>
+				<Pause size={16} weight="fill" aria-hidden="true" /> Pausar
+			</button>
+			<span class="flex-1"></span>
+			<p
+				class="nums flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-code text-sm font-extrabold {restante <=
+				ALERTA_MS
+					? 'bg-bad-solid text-white'
+					: 'border border-line bg-panel text-ink'}"
+				role="timer"
+				aria-label="Tempo restante: {relogio(restante)}"
+			>
+				<Timer size={15} weight="bold" aria-hidden="true" />
+				{relogio(restante)}
+			</p>
 		</div>
+		{#if prova.simulado}
+			<p class="mt-2.5 flex items-center gap-1.5 text-xs font-bold text-accent-ink">
+				<UsersThree size={15} weight="bold" aria-hidden="true" />
+				<span class="min-w-0 truncate">{prova.simulado.titulo}</span>
+			</p>
+		{/if}
+		<div class="mt-2.5 flex items-baseline justify-between gap-3">
+			<p class="font-display text-sm font-bold text-ink sm:text-[15px]">Questão {i + 1} de {questoes.length}</p>
+			<p class="shrink-0 text-xs font-semibold text-ink-soft">{NOME_BLOCO[blocoDe(i)]}</p>
+		</div>
+		<div
+			class="mt-2 h-2.5 overflow-hidden rounded-full bg-track"
+			role="progressbar"
+			aria-label="Questões respondidas"
+			aria-valuemin="0"
+			aria-valuemax={questoes.length}
+			aria-valuenow={respondidas}
+		>
+			<div
+				class="h-full rounded-full bg-accent-bar transition-[width] duration-300 ease-out"
+				style="width: {(respondidas / questoes.length) * 100}%"
+			></div>
+		</div>
+		<p class="nums mt-1.5 text-xs font-medium text-ink-soft">{respondidas} de {questoes.length} respondidas</p>
 	</div>
 
 	<div class="mt-4">
@@ -630,10 +635,11 @@
 			}))}
 		>
 			{#key questoes[i].id}
-				<div in:fly={{ x: 32 * direcao, duration: direcao ? DUR : 0 }}>
+				<div in:fly={{ x: 24 * direcao, duration: direcao ? DUR : 0 }}>
 					<Questao
 						q={questoes[i]}
 						prova
+						atalhos={!cartaoAberto && !confirmaEntrega && !confirmaNova && !zoomAberto}
 						onMarcar={marcar}
 						onRascunho={escrever}
 						rascunhoInicial={prova.rascunho}
@@ -656,14 +662,14 @@
 					onclick={() => irPara(i - 1)}
 					disabled={i === 0}
 					aria-label="Questão anterior"
-					class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line bg-card text-ink transition-transform active:scale-95 disabled:opacity-40"
+					class="btn-suave flex h-11 w-11 shrink-0 items-center justify-center rounded-full disabled:pointer-events-none disabled:opacity-40"
 				>
-					<ArrowLeft size={20} weight="bold" aria-hidden="true" />
+					<ArrowLeft size={19} weight="bold" aria-hidden="true" />
 				</button>
 				<button
 					type="button"
 					onclick={() => (cartaoAberto = true)}
-					class="nums flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full border border-line bg-card text-sm font-bold text-ink transition-transform active:scale-[0.98]"
+					class="btn-suave nums flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full text-sm font-bold"
 				>
 					<SquaresFour size={18} weight="bold" aria-hidden="true" />
 					Cartão-resposta · {respondidas}/{questoes.length}
@@ -672,9 +678,9 @@
 					type="button"
 					onclick={pedirEntrega}
 					aria-label="Entregar a prova"
-					class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line bg-card text-ink transition-transform active:scale-95"
+					class="btn-suave flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
 				>
-					<PaperPlaneTilt size={20} weight="bold" aria-hidden="true" />
+					<PaperPlaneTilt size={19} weight="bold" aria-hidden="true" />
 				</button>
 			</nav>
 		</BarraAcao>
@@ -688,7 +694,7 @@
 				tela = 'resultado';
 				topo();
 			}}
-			class="flex min-h-11 items-center gap-1 rounded-lg px-2 text-sm font-bold text-ink-soft hover:text-ink"
+			class="flex min-h-11 items-center gap-1 rounded-full px-3 text-sm font-bold text-ink-soft hover:bg-tile hover:text-ink"
 		>
 			<ArrowLeft size={18} weight="bold" aria-hidden="true" /> Resultado
 		</button>
@@ -707,9 +713,10 @@
 		}))}
 	>
 		{#key questoes[i].id}
-			<div in:fly={{ x: 32 * direcao, duration: direcao ? DUR : 0 }}>
+			<div in:fly={{ x: 24 * direcao, duration: direcao ? DUR : 0 }}>
 				<Questao
 					q={questoes[i]}
+					atalhos={false}
 					onResponder={avaliarDiscursiva}
 					onRevisar={alternarRevisar}
 					revisarInicial={getRevisar().includes(questoes[i].id)}
@@ -737,9 +744,9 @@
 				onclick={() => irPara(i - 1)}
 				disabled={i === 0}
 				aria-label="Questão anterior"
-				class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line bg-card text-ink transition-transform active:scale-95 disabled:opacity-40"
+				class="btn-suave flex h-11 w-11 shrink-0 items-center justify-center rounded-full disabled:pointer-events-none disabled:opacity-40"
 			>
-				<ArrowLeft size={20} weight="bold" aria-hidden="true" />
+				<ArrowLeft size={19} weight="bold" aria-hidden="true" />
 			</button>
 			<p class="nums flex-1 text-center text-sm font-bold text-ink-soft" role="status" aria-live="polite">
 				Questão {i + 1} de {questoes.length}
@@ -749,106 +756,104 @@
 	</BarraAcao>
 {:else if tela === 'resultado' && prova && res}
 	<!-- ===================== RESULTADO ===================== -->
-	<div class="blueprint faixa px-4 pt-8 pb-10 text-center text-white">
-		<p class="text-sm font-medium text-bar-fg">
-			{prova.simulado ? prova.simulado.titulo : 'Simulado'}, {dataCurta(prova.entregueEm)}
-		</p>
-		<h1 class="mt-1 font-display text-3xl font-extrabold tracking-tight">
-			{prova.tempoEsgotado ? 'Tempo esgotado' : 'Prova entregue'}
-		</h1>
-		<p class="springin mx-auto mt-4 flex h-24 w-24 items-center justify-center rounded-full bg-accent-soft">
-			<Trophy size={44} weight="fill" class="text-accent" aria-hidden="true" />
-		</p>
-		<p class="nums mt-3 font-display text-6xl font-extrabold tracking-tight">
-			<Contador valor={res.objetivas.certas} />/{res.objetivas.total}
-		</p>
-		<p class="nums mt-1 text-sm text-bar-fg">acertos nas objetivas · {pct}%</p>
-	</div>
-
-	<div class="mx-auto grid max-w-md grid-cols-3 gap-2 pt-4 text-center">
-		<div class="rounded-2xl bg-card p-3 shadow-sm">
-			<p class="nums text-xl font-extrabold">{res.fg.certas}/{res.fg.total}</p>
-			<p class="text-xs font-semibold text-ink-soft">Formação Geral</p>
-		</div>
-		<div class="rounded-2xl bg-card p-3 shadow-sm">
-			<p class="nums text-xl font-extrabold">{res.ce.certas}/{res.ce.total}</p>
-			<p class="text-xs font-semibold text-ink-soft">Específico</p>
-		</div>
-		<div class="rounded-2xl bg-card p-3 shadow-sm">
-			<p class="nums flex items-center justify-center gap-1 text-xl font-extrabold">
-				<Hourglass size={16} weight="bold" class="text-accent" aria-hidden="true" />{relogio(prova.gastoMs)}
-			</p>
-			<p class="text-xs font-semibold text-ink-soft">Tempo</p>
-		</div>
-	</div>
-	{#if prova.simulado}
-		<p class="mx-auto mt-3 flex max-w-md items-start gap-2 rounded-2xl bg-accent-soft p-3 text-sm text-accent-ink" role="status">
-			<UsersThree size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
-			<span>O resultado vai para o professor da turma. Sem internet agora, ele sobe sozinho quando ela voltar.</span>
-		</p>
-	{/if}
-	{#if res.objetivas.brancos}
-		<p class="nums mt-2 text-center text-xs font-semibold text-ink-soft">
-			{res.objetivas.brancos} {res.objetivas.brancos === 1 ? 'objetiva ficou' : 'objetivas ficaram'} em branco
-		</p>
-	{/if}
-
-	<!-- discursiva: o site não corrige texto; o aluno compara com o padrão do INEP -->
-	<div class="mt-4 rounded-3xl bg-card p-5 shadow-sm">
-		<p class="font-display text-lg font-bold">Discursiva</p>
-		{#if res.disc === 'pendente'}
-			<p class="mt-1 text-sm text-ink-soft">
-				A discursiva não entra na contagem acima: compare sua resposta com o padrão do INEP e avalie.
-			</p>
-			<button
-				type="button"
-				onclick={() => revisar(questoes.length - 1)}
-				class="btn3d duo-accent mt-3 w-full rounded-2xl p-3 font-bold"
-			>
-				Ver padrão e me avaliar
-			</button>
-		{:else}
-			<p class="mt-1 flex items-center gap-2 text-sm font-semibold">
-				{#if res.disc === 'certa'}
-					<CheckCircle size={18} weight="bold" class="text-ok-fg" aria-hidden="true" /> Você avaliou como certa.
-				{:else if res.disc === 'parcial'}
-					<MinusCircle size={18} weight="bold" class="text-warn-fg" aria-hidden="true" /> Você avaliou como parcial.
+	<PalcoResumo
+		etiqueta="{prova.simulado ? prova.simulado.titulo : 'Simulado'}, {dataCurta(prova.entregueEm)}"
+		titulo={prova.tempoEsgotado ? 'Tempo esgotado' : 'Prova entregue'}
+		nivelTitulo="h1"
+		certas={res.objetivas.certas}
+		total={res.objetivas.total}
+		rotulo="acertos nas objetivas"
+		blocos={[
+			{ itens: res.itens.filter((it) => it.bloco === 'FG') },
+			{ itens: res.itens.filter((it) => it.bloco === 'CE') },
+			{ itens: res.itens.filter((it) => it.bloco === 'DISC'), foraDaNota: true, rotulo: 'discursiva' }
+		]}
+		metricas={[
+			{ rotulo: 'Objetivas', valor: pct, sufixo: '%' },
+			{ rotulo: 'Tempo', valor: relogio(prova.gastoMs) },
+			{ rotulo: 'XP ganho', valor: prova.xp ?? 0, prefixo: '+', xp: true }
+		]}
+		grupos={[
+			{ id: 'FG', nome: NOME_BLOCO.FG, certas: res.fg.certas, total: res.fg.total },
+			{ id: 'CE', nome: NOME_BLOCO.CE, certas: res.ce.certas, total: res.ce.total }
+		]}
+		completa={res.objetivas.brancos === 0}
+		animado={estreia}
+	>
+		{#snippet extra()}
+			{#if prova.simulado}
+				<p class="flex items-start gap-2 rounded-2xl border border-accent-border bg-accent-soft p-3 text-sm text-accent-ink" role="status">
+					<UsersThree size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
+					<span>O resultado vai para o professor da turma. Sem internet agora, ele sobe sozinho quando ela voltar.</span>
+				</p>
+			{/if}
+			<!-- discursiva: o site não corrige texto; o aluno compara com o padrão do INEP -->
+			<div class="pb-1">
+				<p class="font-display text-heading font-bold text-ink">Discursiva</p>
+				{#if res.disc === 'pendente'}
+					<p class="mt-1 text-sm text-pretty text-ink-soft">
+						A discursiva não entra na contagem acima: compare sua resposta com o padrão do INEP e avalie.
+					</p>
 				{:else}
-					<XCircle size={18} weight="bold" class="text-bad-fg" aria-hidden="true" /> Você avaliou como errada.
+					<p class="mt-1 flex items-center gap-2 text-sm font-semibold text-ink">
+						{#if res.disc === 'certa'}
+							<CheckCircle size={18} weight="bold" class="text-ok-fg" aria-hidden="true" /> Você avaliou como certa.
+						{:else if res.disc === 'parcial'}
+							<MinusCircle size={18} weight="bold" class="text-warn-fg" aria-hidden="true" /> Você avaliou como parcial.
+						{:else}
+							<XCircle size={18} weight="bold" class="text-bad-fg" aria-hidden="true" /> Você avaliou como errada.
+						{/if}
+					</p>
+					<button
+						type="button"
+						onclick={() => revisar(questoes.length - 1)}
+						class="min-h-11 text-sm font-bold text-accent-ink underline"
+					>
+						Rever a discursiva
+					</button>
 				{/if}
-			</p>
-			<button
-				type="button"
-				onclick={() => revisar(questoes.length - 1)}
-				class="mt-2 text-sm font-bold text-accent-ink underline"
-			>
-				Rever a discursiva
+			</div>
+		{/snippet}
+		{#snippet acoes()}
+			{@const nRevisar = contarParaRevisar(banco)}
+			{#if res.disc === 'pendente'}
+				<button
+					type="button"
+					onclick={() => revisar(questoes.length - 1)}
+					class="btn-primario min-h-12 w-full rounded-full px-6 font-display text-base font-bold"
+				>
+					Ver padrão e me avaliar
+				</button>
+			{/if}
+			{#if nRevisar}
+				<a
+					href="/treino/?modo=revisao"
+					class="{res.disc === 'pendente' ? 'btn-suave' : 'btn-primario'} flex min-h-12 w-full items-center justify-center rounded-full px-4 text-center font-display text-base font-bold"
+				>
+					Revisar erros e marcadas ({nRevisar})
+				</a>
+			{/if}
+			<button type="button" onclick={() => sairDaRota('/#trilha')} class="min-h-11 w-full rounded-full px-6 text-sm font-bold text-ink-soft hover:text-ink">
+				Voltar à trilha
 			</button>
-		{/if}
-	</div>
+		{/snippet}
+	</PalcoResumo>
 
 	{#if res.porMateria.length}
-		<div class="mt-3 rounded-3xl bg-card p-5 shadow-sm">
-			<p class="font-display text-lg font-bold">Por matéria</p>
+		<div class="superficie mt-3 rounded-3xl p-5">
+			<p class="font-display text-lg font-bold text-ink">Por matéria</p>
 			<p class="mt-0.5 text-xs text-ink-soft">Do pior para o melhor desempenho — comece o estudo pelo topo.</p>
-			<div class="mt-3 space-y-3">
-				{#each res.porMateria as m (m.materia)}
-					<div>
-						<div class="flex items-baseline justify-between gap-3 text-sm">
-							<p class="truncate font-semibold">{nomeMateria(m.materia)}</p>
-							<p class="nums shrink-0 font-bold">{m.certas}/{m.total}</p>
-						</div>
-						<div class="mt-1 h-2 overflow-hidden rounded-full bg-track">
-							<div class="h-full rounded-full bg-accent" style="width: {(m.certas / m.total) * 100}%"></div>
-						</div>
-					</div>
-				{/each}
+			<div class="mt-3">
+				<BarrasArea
+					linhas={res.porMateria.map((m) => ({ id: m.materia, nome: nomeMateria(m.materia), certas: m.certas, total: m.total }))}
+					animado={estreia}
+				/>
 			</div>
 		</div>
 	{/if}
 
-	<div class="mt-3 rounded-3xl bg-card p-5 shadow-sm">
-		<p class="font-display text-lg font-bold">Gabarito corrigido</p>
+	<div class="superficie mt-3 rounded-3xl p-5">
+		<p class="font-display text-lg font-bold text-ink">Gabarito corrigido</p>
 		<p class="mt-0.5 text-xs text-ink-soft">Toque numa questão para ver a correção.</p>
 		{#each BLOCOS as b (b.id)}
 			<p class="mt-4 mb-2 text-label font-bold text-ink-soft">{NOME_BLOCO[b.id]}</p>
@@ -872,7 +877,7 @@
 		</div>
 	</div>
 
-	<p class="mt-3 flex items-start gap-2 rounded-2xl border border-line bg-panel p-3 text-xs leading-relaxed text-ink-soft">
+	<p class="mt-3 flex items-start gap-2 rounded-2xl border border-line bg-panel p-3.5 text-xs leading-relaxed text-ink-soft">
 		<Info size={16} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 		<span>
 			Para comparar: no simulado da turma com a prova de 2019 (35 questões), a média foi 41,5% e a maior
@@ -880,25 +885,22 @@
 		</span>
 	</p>
 
-	<div class="mt-4 space-y-2">
-		<button type="button" onclick={comecar} class="btn3d duo-accent flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
-			<ArrowsClockwise size={20} weight="bold" aria-hidden="true" /> Novo simulado
+	<div class="mt-4 space-y-2.5">
+		<!-- sozinho no fim da página: começa na hora e troca a prova entregue, então
+		     não fica no palco, onde o segundo toque do "Entregar" poderia cair -->
+		<button type="button" onclick={comecar} class="btn-suave flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold">
+			<ArrowsClockwise size={19} weight="bold" aria-hidden="true" /> Novo simulado
 		</button>
-		{#if contarParaRevisar(banco)}
-			<a href="/treino/?modo=revisao" class="flex w-full items-center justify-center rounded-[14px] border-2 border-line bg-card p-3.5 font-display text-lg font-bold">
-				Revisar erros e marcadas ({contarParaRevisar(banco)})
-			</a>
-		{/if}
 	</div>
 {:else}
 	<!-- ===================== INÍCIO ===================== -->
 	<div class="mb-5">
-		<h1 class="font-display text-2xl font-extrabold tracking-tight">Simulado ENADE 2026</h1>
+		<h1 class="font-display text-title font-extrabold tracking-tight text-ink">Simulado ENADE 2026</h1>
 		<p class="mt-1 text-sm text-ink-soft">A prova inteira, cronometrada, com correção só no final.</p>
 	</div>
 
 	{#if bancoParcial}
-		<p class="mb-4 flex items-start gap-2 rounded-2xl bg-warn-bg p-3 text-sm font-semibold text-warn-fg" role="status">
+		<p class="mb-4 flex items-start gap-2 rounded-2xl border border-warn-line/40 bg-warn-bg p-3.5 text-sm font-semibold text-warn-fg" role="status">
 			<Info size={18} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 			<span>
 				Parte das questões não carregou: uma prova nova sairia sorteada só do que chegou.
@@ -908,20 +910,20 @@
 	{/if}
 
 	{#if erroTurma}
-		<p class="mb-4 rounded-2xl border border-bad-fg/30 bg-bad-bg p-3 text-sm font-semibold text-bad-fg" role="alert">{erroTurma}</p>
+		<p class="mb-4 rounded-2xl border border-bad-border bg-bad-bg p-3.5 text-sm font-semibold text-bad-fg" role="alert">{erroTurma}</p>
 	{/if}
 
 	<div class="space-y-4">
 		{#each cartoesTurma as s (s.id)}
-			<section class="rise rounded-3xl border-2 border-accent bg-card p-5 shadow-sm sm:p-6" aria-labelledby="sim-{s.id}">
+			<section class="folha rise rounded-3xl border-accent-border p-5 sm:p-6" aria-labelledby="sim-{s.id}">
 				<p class="flex items-center gap-2 text-label font-bold text-accent-ink">
 					<UsersThree size={16} weight="bold" aria-hidden="true" /> Simulado da turma {s.turma.nome}
 				</p>
-				<h2 id="sim-{s.id}" class="mt-1 font-display text-xl font-extrabold text-pretty">{s.titulo}</h2>
+				<h2 id="sim-{s.id}" class="mt-1 font-display text-xl font-extrabold text-pretty text-ink">{s.titulo}</h2>
 				{#if s.feito?.semPlacar}
-					<p class="mt-2 text-[15px]">Você já entregou este simulado.</p>
+					<p class="mt-2 text-[15px] text-ink">Você já entregou este simulado.</p>
 				{:else if s.feito}
-					<p class="nums mt-2 text-[15px]">
+					<p class="nums mt-2 text-[15px] text-ink">
 						Você entregou: <strong>{s.feito.certas} de {s.feito.total}</strong>
 						({Math.round((s.feito.certas / s.feito.total) * 100)}%).
 					</p>
@@ -931,9 +933,9 @@
 					<button
 						type="button"
 						onclick={() => comecarDaTurma(s)}
-						class="btn3d duo-accent mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold"
+						class="btn-primario mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
 					>
-						<Play size={20} weight="fill" aria-hidden="true" /> Fazer o simulado da turma
+						<Play size={19} weight="fill" aria-hidden="true" /> Fazer o simulado da turma
 					</button>
 				{:else if s.estado === 'agendado'}
 					<p class="mt-1 text-sm text-ink-soft">
@@ -943,60 +945,58 @@
 			</section>
 		{/each}
 
-		<section
-			class="blueprint rise rounded-3xl bg-bar p-5 text-white shadow-[0_10px_30px_-12px_rgba(20,33,61,0.45)] sm:p-6"
-		>
-			<p class="flex items-center gap-2 text-label font-bold text-bar-fg">
-				<Timer size={15} weight="bold" aria-hidden="true" /> Formato ENADE 2026
+		<section class="folha curso-halo rise rounded-3xl p-5 sm:p-6">
+			<p class="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-xs font-bold text-accent-ink">
+				<Timer size={14} weight="bold" aria-hidden="true" /> Formato ENADE 2026
 			</p>
-			<dl class="nums mt-4 space-y-2 text-[15px] font-semibold">
+			<dl class="nums mt-4 space-y-2.5 text-[15px] font-semibold text-ink">
 				{#each FORMATO_TELA as f, k (f.label)}
 					<div
 						class="flex items-baseline justify-between gap-3 {k === FORMATO_TELA.length - 1
-							? 'border-t border-white/20 pt-2'
+							? 'border-t border-line pt-2.5'
 							: ''}"
 					>
-						<dt>{f.label}</dt>
-						<dd class="text-right">{f.valor}</dd>
+						<dt class="text-ink-soft">{f.label}</dt>
+						<dd class="text-right font-bold text-ink">{f.valor}</dd>
 					</div>
 				{/each}
 			</dl>
-			<p class="mt-4 text-xs leading-relaxed text-pretty text-bar-fg">
+			<p class="mt-4 text-xs leading-relaxed text-pretty text-ink-soft">
 				Fonte: Portaria INEP nº 161, de 14 de abril de 2026.
 			</p>
 		</section>
 
 		{#if emAndamento}
-			<section class="rise rounded-3xl border-2 border-accent bg-card p-5 shadow-sm sm:p-6" aria-label="Prova em andamento">
+			<section class="folha rise rounded-3xl border-accent-border p-5 sm:p-6" aria-label="Prova em andamento">
 				<p class="text-label font-bold text-accent-ink">
 					{prova.simulado ? `${prova.simulado.titulo} em andamento` : 'Prova em andamento'}
 				</p>
-				<p class="nums mt-1 font-display text-xl font-extrabold">
+				<p class="nums mt-1 font-display text-xl font-extrabold text-ink">
 					{respondidas} de {questoes.length} respondidas · {relogio(restante)} restantes
 				</p>
 				<p class="mt-1 text-sm text-ink-soft">O relógio parou quando você pausou e volta a correr ao continuar.</p>
-				<button type="button" onclick={continuar} class="btn3d duo-accent mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
-					<Play size={20} weight="fill" aria-hidden="true" /> Continuar a prova
+				<button type="button" onclick={continuar} class="btn-primario mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold">
+					<Play size={19} weight="fill" aria-hidden="true" /> Continuar a prova
 				</button>
-				<button type="button" onclick={novaProva} class="mt-2 w-full rounded-[14px] border-2 border-line bg-card p-3 font-display text-base font-bold">
+				<button type="button" onclick={novaProva} class="btn-suave mt-2.5 min-h-12 w-full rounded-full px-6 font-display text-base font-bold">
 					Descartar e começar outra
 				</button>
 			</section>
 		{:else}
-			<section class="rise rounded-3xl border border-line bg-card p-5 shadow-sm sm:p-6" style="animation-delay: 80ms" aria-label="Como funciona">
+			<section class="superficie rise rounded-3xl p-5 sm:p-6" style="animation-delay: 60ms" aria-label="Como funciona">
 				<div class="flex items-center gap-2">
 					<ListChecks size={18} weight="bold" class="text-accent-ink" aria-hidden="true" />
-					<h2 class="font-display text-heading font-bold">Como funciona</h2>
+					<h2 class="font-display text-heading font-bold text-ink">Como funciona</h2>
 				</div>
-				<ul class="mt-3 space-y-2 text-sm leading-relaxed text-pretty">
+				<ul class="mt-3 space-y-2 text-sm leading-relaxed text-pretty text-ink-soft">
 					<li>• {TOTAL_QUESTOES} questões sorteadas das provas de 2014 a 2023, espalhadas pelas matérias da Portaria.</li>
 					<li>• Marque, troque e volte quando quiser — o cartão-resposta mostra o que falta.</li>
 					<li>• O relógio de 4 horas só corre com a prova aberta: dá para pausar e continuar depois.</li>
 					<li>• A correção aparece só quando você entregar. Na discursiva, você compara com o padrão do INEP.</li>
 				</ul>
 				{#if completo}
-					<button type="button" onclick={novaProva} class="btn3d duo-accent mt-5 flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
-						<Play size={20} weight="fill" aria-hidden="true" /> Começar simulado
+					<button type="button" onclick={novaProva} class="btn-primario mt-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold">
+						<Play size={19} weight="fill" aria-hidden="true" /> Começar simulado
 					</button>
 				{:else}
 					<p class="nums mt-4 rounded-2xl border border-dashed border-warn-line bg-warn-bg p-3 text-xs leading-relaxed text-warn-fg" role="status">
@@ -1008,9 +1008,9 @@
 		{/if}
 
 		{#if ultimo}
-			<section class="rise rounded-3xl border border-line bg-card p-5 shadow-sm" style="animation-delay: 120ms" aria-label="Último simulado">
+			<section class="superficie rise rounded-3xl p-5" style="animation-delay: 100ms" aria-label="Último simulado">
 				<p class="text-label font-bold text-ink-soft">Último simulado · {dataCurta(ultimo.em)}</p>
-				<p class="nums mt-1 font-display text-xl font-extrabold">
+				<p class="nums mt-1 font-display text-xl font-extrabold text-ink">
 					{ultimo.certas}/{ultimo.total} · {Math.round((ultimo.certas / ultimo.total) * 100)}%
 				</p>
 				<p class="nums text-sm text-ink-soft">
@@ -1032,32 +1032,28 @@
 		{/if}
 
 		<section aria-label="Outras formas de treinar" class="space-y-3 pt-2">
-			<h2 class="font-display text-heading font-bold">Sem tempo para a prova inteira?</h2>
+			<h2 class="font-display text-heading font-bold text-ink">Sem tempo para a prova inteira?</h2>
 			<a
 				href="/treino/"
-				class="rise group flex items-center gap-4 rounded-3xl border border-line bg-card p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-ink/25 active:scale-[0.99]"
+				class="superficie rise group flex items-center gap-4 rounded-3xl p-4 transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-accent active:scale-[0.99]"
 			>
-				<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-soft" aria-hidden="true">
-					<InfinityIcon size={24} weight="bold" class="text-accent-ink" aria-hidden="true" />
-				</span>
+				<InfinityIcon size={24} weight="bold" class="shrink-0 text-accent-ink" aria-hidden="true" />
 				<span class="min-w-0 flex-1">
-					<span class="block font-display text-base font-bold">Treino livre</span>
+					<span class="block font-display text-base font-bold text-ink">Treino livre</span>
 					<span class="block text-sm text-ink-soft">Questões em sequência, com correção na hora.</span>
 				</span>
-				<ArrowRight size={20} weight="bold" class="shrink-0 text-ink-soft opacity-60 transition-transform group-hover:translate-x-1 group-hover:text-accent-ink group-hover:opacity-100" aria-hidden="true" />
+				<ArrowRight size={18} weight="bold" class="shrink-0 text-ink-soft transition-transform group-hover:translate-x-0.5 group-hover:text-accent-ink" aria-hidden="true" />
 			</a>
 			<a
 				href="/estudo/"
-				class="rise group flex items-center gap-4 rounded-3xl border border-line bg-card p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-ink/25 active:scale-[0.99]"
+				class="superficie rise group flex items-center gap-4 rounded-3xl p-4 transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-accent active:scale-[0.99]"
 			>
-				<span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-soft" aria-hidden="true">
-					<Stairs size={24} weight="bold" class="text-accent-ink" aria-hidden="true" />
-				</span>
+				<Stairs size={24} weight="bold" class="shrink-0 text-accent-ink" aria-hidden="true" />
 				<span class="min-w-0 flex-1">
-					<span class="block font-display text-base font-bold">Estudo por níveis</span>
+					<span class="block font-display text-base font-bold text-ink">Estudo por níveis</span>
 					<span class="block text-sm text-ink-soft">Sessões de 10 por matéria.</span>
 				</span>
-				<ArrowRight size={20} weight="bold" class="shrink-0 text-ink-soft opacity-60 transition-transform group-hover:translate-x-1 group-hover:text-accent-ink group-hover:opacity-100" aria-hidden="true" />
+				<ArrowRight size={18} weight="bold" class="shrink-0 text-ink-soft transition-transform group-hover:translate-x-0.5 group-hover:text-accent-ink" aria-hidden="true" />
 			</a>
 		</section>
 	</div>
@@ -1066,21 +1062,21 @@
 	<!-- cartão-resposta -->
 	{#if cartaoAberto && prova && tela === 'prova'}
 		<div class="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4">
-			<button type="button" onclick={() => (cartaoAberto = false)} aria-label="Fechar o cartão-resposta" class="absolute inset-0 cursor-default bg-black/50"></button>
+			<button type="button" onclick={() => (cartaoAberto = false)} aria-label="Fechar o cartão-resposta" class="absolute inset-0 cursor-default bg-black/50 backdrop-blur-[2px]"></button>
 			<div
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="cartao-titulo"
-				class="relative max-h-[88vh] w-full max-w-lg overflow-y-auto overscroll-none rounded-t-3xl bg-card p-5 shadow sm:rounded-3xl"
+				class="folha relative max-h-[88vh] w-full max-w-lg overflow-y-auto overscroll-none rounded-t-3xl p-5 sm:rounded-3xl"
 				style="padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));"
-				in:fly={{ y: 40, duration: DUR }}
+				in:fly={{ y: 32, duration: DUR }}
 				{@attach arrastarParaFechar(() => (cartaoAberto = false))}
 			>
 				<span aria-hidden="true" class="mx-auto mb-3 block h-1 w-9 rounded-full bg-line sm:hidden"></span>
 				<div class="flex items-center gap-2">
-					<h2 id="cartao-titulo" class="font-display text-xl font-extrabold tracking-tight">Cartão-resposta</h2>
+					<h2 id="cartao-titulo" class="font-display text-xl font-extrabold tracking-tight text-ink">Cartão-resposta</h2>
 					<span class="flex-1"></span>
-					<button type="button" onclick={() => (cartaoAberto = false)} aria-label="Fechar" class="flex h-11 w-11 items-center justify-center rounded-full border border-line">
+					<button type="button" onclick={() => (cartaoAberto = false)} aria-label="Fechar" class="flex h-11 w-11 items-center justify-center rounded-full border border-line bg-paper text-ink-soft hover:text-ink">
 						<X size={18} weight="bold" aria-hidden="true" />
 					</button>
 				</div>
@@ -1105,8 +1101,8 @@
 						{/each}
 					</div>
 				{/each}
-				<button type="button" onclick={pedirEntrega} class="btn3d duo-accent mt-5 flex w-full items-center justify-center gap-2 rounded-[14px] p-3.5 font-display text-lg font-bold">
-					<PaperPlaneTilt size={20} weight="bold" aria-hidden="true" /> Entregar a prova
+				<button type="button" onclick={pedirEntrega} class="btn-primario mt-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold">
+					<PaperPlaneTilt size={19} weight="bold" aria-hidden="true" /> Entregar a prova
 				</button>
 			</div>
 		</div>
@@ -1115,10 +1111,10 @@
 	<!-- confirmação da entrega -->
 	{#if confirmaEntrega}
 		<div class="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
-			<button type="button" onclick={() => (confirmaEntrega = false)} aria-label="Voltar à prova" class="absolute inset-0 cursor-default bg-black/50"></button>
-			<div role="dialog" aria-modal="true" aria-labelledby="entrega-titulo" class="relative w-full max-w-sm rounded-3xl bg-card p-5 shadow">
-				<h2 id="entrega-titulo" class="font-display text-xl font-extrabold tracking-tight">Entregar a prova?</h2>
-				<p class="nums mt-1 text-sm text-ink-soft">
+			<button type="button" onclick={() => (confirmaEntrega = false)} aria-label="Voltar à prova" class="absolute inset-0 cursor-default bg-black/50 backdrop-blur-[2px]"></button>
+			<div role="dialog" aria-modal="true" aria-labelledby="entrega-titulo" class="folha relative w-full max-w-sm rounded-3xl p-6">
+				<h2 id="entrega-titulo" class="font-display text-xl font-extrabold tracking-tight text-ink">Entregar a prova?</h2>
+				<p class="nums mt-1.5 text-sm text-ink-soft">
 					{#if brancos}
 						{brancos} {brancos === 1 ? 'questão está' : 'questões estão'} em branco.
 					{:else}
@@ -1126,12 +1122,12 @@
 					{/if}
 					Depois de entregar, as respostas não mudam mais e a correção aparece.
 				</p>
-				<div class="mt-4 space-y-2">
-					<button type="button" onclick={() => entregar(false)} class="btn3d duo-accent w-full rounded-[14px] p-3.5 font-display text-base font-bold">
+				<div class="mt-5 space-y-2.5">
+					<button type="button" onclick={() => entregar(false)} class="btn-primario min-h-12 w-full rounded-full px-5 font-display text-base font-bold">
 						Entregar
 					</button>
 					<!-- o foco abre aqui: entregar não tem volta, e um Enter distraído não pode decidir isso -->
-					<button type="button" bind:this={refEntrega} onclick={() => (confirmaEntrega = false)} class="w-full rounded-[14px] border-2 border-line bg-card p-3 font-display text-base font-bold">
+					<button type="button" bind:this={refEntrega} onclick={() => (confirmaEntrega = false)} class="btn-suave min-h-12 w-full rounded-full px-5 font-display text-base font-bold">
 						Voltar à prova
 					</button>
 				</div>
@@ -1142,18 +1138,18 @@
 	<!-- descartar prova em andamento -->
 	{#if confirmaNova}
 		<div class="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
-			<button type="button" onclick={() => (confirmaNova = false)} aria-label="Manter a prova em andamento" class="absolute inset-0 cursor-default bg-black/50"></button>
-			<div role="dialog" aria-modal="true" aria-labelledby="nova-titulo" class="relative w-full max-w-sm rounded-3xl bg-card p-5 shadow">
-				<h2 id="nova-titulo" class="font-display text-xl font-extrabold tracking-tight">Descartar a prova em andamento?</h2>
-				<p class="nums mt-1 text-sm text-ink-soft">
+			<button type="button" onclick={() => (confirmaNova = false)} aria-label="Manter a prova em andamento" class="absolute inset-0 cursor-default bg-black/50 backdrop-blur-[2px]"></button>
+			<div role="dialog" aria-modal="true" aria-labelledby="nova-titulo" class="folha relative w-full max-w-sm rounded-3xl p-6">
+				<h2 id="nova-titulo" class="font-display text-xl font-extrabold tracking-tight text-ink">Descartar a prova em andamento?</h2>
+				<p class="nums mt-1.5 text-sm text-ink-soft">
 					As {respondidas} respostas dela se perdem e
 					{pendenteTurma ? `começa o simulado da turma, ${pendenteTurma.titulo}.` : 'uma prova nova é sorteada.'}
 				</p>
-				<div class="mt-4 space-y-2">
-					<button type="button" onclick={comecar} class="w-full rounded-[14px] border-2 border-bad-solid bg-bad-solid p-3.5 font-display text-base font-bold text-white">
+				<div class="mt-5 space-y-2.5">
+					<button type="button" onclick={comecar} class="min-h-12 w-full rounded-full bg-bad-solid px-5 font-display text-base font-bold text-white transition-transform active:scale-[0.985]">
 						Descartar e começar outra
 					</button>
-					<button type="button" onclick={() => (confirmaNova = false)} class="w-full rounded-[14px] border-2 border-line bg-card p-3 font-display text-base font-bold">
+					<button type="button" onclick={() => (confirmaNova = false)} class="btn-suave min-h-12 w-full rounded-full px-5 font-display text-base font-bold">
 						Manter a prova
 					</button>
 				</div>

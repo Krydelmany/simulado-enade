@@ -19,7 +19,7 @@
 	import { rotuloQuestao } from './banco.js';
 	import { MagnifyingGlass, X } from 'phosphor-svelte';
 
-	let { banco, aoPular } = $props();
+	let { banco, aoPular, aberta = $bindable(false) } = $props();
 
 	let query = $state('');
 	let campo = $state('tudo');
@@ -30,6 +30,15 @@
 	// o banco chega assíncrono (carregarBanco). Buscar antes disso devolvia
 	// "nada encontrado" — que é mentira: o banco é que não tinha chegado.
 	let vazio = $derived(!banco || banco.length === 0);
+
+	// expõe para a rota quando os resultados/filtros estão abertos, para o Esc
+	// fechar a busca antes de sair da sessão
+	$effect(() => {
+		aberta = Boolean(query.trim());
+		return () => {
+			aberta = false;
+		};
+	});
 
 	// palavras da busca, do jeito que `destacar` espera (normalizadas)
 	let palavras = $derived(
@@ -47,7 +56,17 @@
 	function fechar() {
 		query = '';
 	}
+
+	function aoTecla(e) {
+		if (e.defaultPrevented || e.key !== 'Escape' || !query.trim()) return;
+		// dentro do campo de busca, deixa o comportamento nativo do input search
+		if (e.target instanceof HTMLElement && e.target.tagName === 'INPUT') return;
+		e.preventDefault();
+		fechar();
+	}
 </script>
+
+<svelte:window onkeydown={aoTecla} />
 
 <div class="relative">
 	<div class="flex items-center gap-2">
@@ -100,7 +119,7 @@
 
 	{#if query.trim()}
 		<div
-			class="absolute inset-x-0 top-full z-30 mt-2 max-h-[62vh] overflow-y-auto rounded-3xl border border-line bg-card p-2 shadow-[0_18px_50px_-16px_rgba(20,33,61,0.45)]"
+			class="folha absolute inset-x-0 top-full z-30 mt-2 max-h-[62vh] overflow-y-auto rounded-3xl p-2 shadow-xl"
 			role="listbox"
 			aria-label="Resultados da busca"
 		>
@@ -162,7 +181,7 @@
 								</p>
 
 								<p class="enunciado mt-1 text-[13px] leading-relaxed text-ink-soft">
-									{#each destacar(resumo(r.q.enunciado, palavras), palavras) as p (p.t + p.m)}
+									{#each destacar(resumo(r.q.enunciado, palavras), palavras) as p, idx (idx)}
 										{#if p.m}
 											<mark
 												class="rounded-[3px] bg-accent-soft px-0.5 font-bold text-accent-ink"

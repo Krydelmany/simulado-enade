@@ -55,13 +55,16 @@ app/                       o site: SvelteKit 2 + Svelte 5 + Tailwind 4 + Vite 6
                            simulado/, conta/, professor/, desempenho/, poo/, privacidade/
   src/lib/                 banco.js, stats.js, simulado.js, materias.js(.json),
                            resumo.js, tema.js, motion.js, foco.svelte.js,
-                           sessao.js, gestos.js, camadas.svelte.js,
+                           sessao.js, conquista.js (bilhete resumo → trilha),
+                           gestos.js, camadas.svelte.js,
                            copiar.js (botão de copiar a questão),
                            resolucoes.js ("como resolver"), enade.js (data da
                            prova), csv.js (planilha do painel) e os
                            componentes (Questao, TextoRico, SessaoTopo,
                            BarraAcao, Contador, VigiaDevTools, BordaVoltar,
-                           DicaGestos, Marca, CodigoTurma)
+                           DicaGestos, Marca, CenaHero, CodigoTurma; resumo:
+                           PalcoResumo, EscadaMarco, BarrasArea;
+                           SeloSequencia)
   static/banco/            O BANCO que o site carrega: enadeAAAA-{fg,ce}.json,
                            geradas.json, resolucoes.json e img/   ← SAÍDA de scripts
                            + poo-2026-10-28.json (questionário do professor,
@@ -97,8 +100,8 @@ README.md · PLANO.md · ROADMAP.md · INVENTARIO.md   docs de produto e de font
   `onMount`.
 - Tela nova = `routes/<nome>/+page.svelte`. Para ela aparecer, inclua-a em
   três listas escritas à mão: o array `tabs` do `+layout.svelte` (alimenta a
-  nav do topo e a tab bar do celular), os links do rodapé (no mesmo arquivo)
-  e, se for um modo, o array `modos` da home.
+  nav do topo e o menu do celular), os links do rodapé (no mesmo arquivo)
+  e, se for um modo, a trilha (`etapasTrilha`) da home.
 - **Não use rota com parâmetro** (`[id]`): com tudo pré-renderizado, o build
   falha. Passe o parâmetro pela query, como em `?modo=revisao`.
 - Na Vercel, o Root Directory `app` é configurado **no painel**, não no
@@ -146,6 +149,7 @@ Todas as chaves têm o prefixo `enade-`:
 | localStorage | `enade-convite` | `{codigo, em}` do link `?turma=`, guardado até entrar na turma (vale 24 h; `nuvem.js`) |
 | localStorage | `enade-aparelho` | uuid sorteado no navegador, só para contar visitas (D14); sem ligação com a conta |
 | sessionStorage | `enade-banco` | cache do banco |
+| sessionStorage | `enade-conquista` | `{etapa, certas, total, em}` da sessão recém-concluída; a home lê, apaga e anima a trilha (`conquista.js`). Não é progresso |
 
 Não existe servidor para migrar dados. **Qualquer mudança no formato gravado
 precisa continuar lendo o formato antigo, ou descartá-lo sem quebrar.** Como
@@ -764,9 +768,10 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
 14. **Tela de quiz fora de `/treino/` e `/estudo/`** precisa ligar
     `foco.quiz` num `$effect` e desligar no cleanup (`foco` é estado de módulo
     e sobrevive à troca de rota). Sem isso, o rodapé fica visível no meio do
-    quiz e a `BordaVoltar` não é ativada. A `BarraAcao` agora é **INLINE**
-    (não fixa): não existe mais `pb-32` reservado nem tab bar inferior; o
-    `<main>` usa `pb-10`.
+    quiz e a `BordaVoltar` não é ativada. No Treino e no Estudo a ação
+    principal fica **inline** no `<Questao>` (a `BarraAcao`, também inline,
+    fica no Simulado): não existe mais barra fixa, `pb-32` reservado nem tab
+    bar inferior; o `<main>` usa `pb-10`.
 15. **Toda camada nova** (modal, overlay, tela montada dentro da página)
     entra no `abertas()` do `ligarCamadas` da rota, com o `fechar`
     correspondente. Sem isso, o voltar do sistema sai da rota com ela aberta.
@@ -835,46 +840,45 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
 
 - **Mobile-first, com referência de 390 px.** No desktop, a nav fica no topo
   e a home tem 2 colunas; o quiz continua em uma coluna de leitura.
-- **Navegação:** header `sticky`; no desktop, abas com ícone + rótulo; no
-  celular, **menu hambúrguer** (fecha no toque fora, Escape e navegação) e
-  **sem tab bar inferior**. A ação do quiz é a `BarraAcao` **inline** no fim
-  da questão (Anterior + CTA), não uma barra fixa. O menu é um disclosure
-  global: não entra no `ligarCamadas`; fecha no `afterNavigate`.
+- **Navegação:** header `sticky` claro/escuro (`bg-paper/88` com borda `border-line/80`), sem seletor de curso no topo; em `lg+`, dock em pílula tátil com ícone + rótulo; abaixo de `lg`, **menu hambúrguer** em folha flutuante (fecha no toque fora, Escape — consumindo o evento antes da rota — e navegação) e **sem tab bar inferior**. No Treino e no Estudo, o botão principal único (Verificar → gaveta de feedback → Continuar) fica **inline** no `<Questao>`, logo acima de "Como resolver"; no Simulado, a `BarraAcao` continua **inline** no fim da questão (com o gesto de puxar para o cartão-resposta). O menu é um disclosure global: não entra no `ligarCamadas`; fecha no `afterNavigate`.
 - **Só design tokens de `app.css`:**
-  - Os principais: `bg-paper`, `bg-card`, `bg-tile`, `bg-panel`,
-    `border-line`, `bg-bar`, `text-ink`, `text-ink-soft`, `accent*`, `ok-*`,
-    `bad-*`, `warn-*`. Para botões, `btn3d` + `duo-accent`/`duo-btn`.
+  - Os principais: `bg-paper`, `bg-card`, `bg-tile`, `bg-panel`, `border-line`, `border-line-strong`, `text-ink`, `text-ink-soft`, `accent*`, `milestone*`, `ok-*`, `bad-*`, `warn-*`, `tooltip*`. Para superfícies e botões: `.superficie`, `.folha`, `.palco-vivo`, `.cartao-tatil`, `.curso-halo`, `.btn-primario`, `.btn-suave`, `.btn-escuro` e `.btn-icone`.
   - **Nunca use `dark:` nas telas:** o `.dark` troca os tokens sozinho.
-  - Exceções que já estão em uso: `text-white` e `bg-white/N` sobre as faixas
-    `bg-bar` e o botão azul, `bg-black/50` no backdrop de modal e âmbar
-    no estado "parcial".
-  - Faixa navy do topo (hero, topo da sessão, resultado): classe `faixa` +
-    `blueprint`. No celular ela continua o header; a partir de 640 px vira
-    cartão solto. Não volte a usar `-mx-4 -mt-6` + `border-radius` inline.
+  - Exceções que já estão em uso: `text-white` sobre fundos semânticos sólidos (`ok-solid`, `bad-solid`) e `bg-black/50` no backdrop de modal. Sobre `bg-accent`, use sempre `text-accent-on` (no escuro o azul luminoso pede texto escuro para manter AA/AAA).
+  - Telas de abertura, topo de sessão e resumo usam `.folha` / `.superficie` (com `.curso-halo` nos destaques), sem faixa escura nem grade blueprint.
 - **Token novo entra em três lugares de `app.css`:** `--color-<nome>:
   var(--<nome>)` em `@theme inline`, o valor claro em `:root` e o escuro em
   `.dark`.
   - Não há script de contraste no repo: calcule a razão AA (≥ 4,5:1 para
     texto) nos dois temas.
-  - Uma troca de paleta também precisa alcançar o que está fora dos tokens:
-    o `theme-color` do `app.html`, as sombras `rgba(20,33,61,…)` (estão nas
-    rotas e no `Questao.svelte`: procure em todo o `src/`) e as texturas
-    `.dotgrid`/`.pauta`/`.blueprint`.
-- **Direção visual:** "folha de prova": papel, **caneta azul** de quem
-  responde e **caneta vermelha** de quem corrige. Cada cor tem um significado
-  só, e não se mistura:
-  - `accent` (azul): ação e "isto é seu" (botão principal, marcação na
-    prova, seleção, aba ativa, progresso, a sua linha no ranking);
-  - `bad-*` (vermelho): errou, alerta, tempo acabando, ação destrutiva;
-  - `ok-*` (verde): acertou; `warn-*` (âmbar): atenção, parcial.
+  - Uma troca de paleta também precisa alcançar `meta[name="theme-color"]`
+    em `app.html` e `tema.js`, além das sombras derivadas de `--accent` em
+    `app.css`.
+- **Direção visual e pacote por curso (`lib/curso.js` + `[data-curso]` em `app.css`):**
+  base calma de baixa fadiga (`#F5F7FC` / `#0F131E`) com pacote orgânico por
+  curso (fonte única de cores, sombras e tipografia de destaque em `app.css`).
+  O curso ativo é **Engenharia de Computação** (`Cobalto` + `Âmbar`); pacotes
+  de Direito e Enfermagem ficam prontos em `[data-curso]` para quando houver
+  banco real. Cada cor semântica tem um significado só e não muda entre cursos:
+  - `accent` (cor do curso — Cobalto em Eng. de Computação): ação, seleção,
+    marcação na prova, aba ativa, progresso e linha do aluno no ranking;
+  - `milestone` (Âmbar em Eng. de Computação): contagem regressiva, XP e
+    marcos de estudo;
+  - `ok-*` (verde): acertou / concluído;
+  - `bad-*` (terracota): errou, alerta, tempo acabando, ação destrutiva;
+  - `warn-*` (âmbar semântico): atenção e resposta parcial.
   Até out/2026 o acento era vermelho, e o aluno lia a própria linha do
-  ranking e a contagem de dias como erro. Não use `accent` para alerta.
+  ranking e a contagem de dias como erro. Não use `accent` nem `milestone`
+  para alerta ou estado parcial.
   - A marca (`lib/Marca.svelte`) e o `static/favicon.svg` são o mesmo
-    desenho, uma linha de cartão-resposta com a bolha marcada em azul.
-    Mudou um, mude o outro.
-  - Fontes: Archivo (`font-display`, títulos e números), Plus Jakarta Sans
-    (padrão do `body`) e JetBrains Mono (`font-code`). Outfit continua
-    importada como fallback do display: não a remova sem tirar o fallback.
+    desenho livre (sem caixa, quadrado ou círculo ao redor): um prisma âmbar
+    facetado flutuando sobre base isométrica na cor do curso (com a mesma
+    família geométrica em `lib/CenaHero.svelte`). Mudou um, mude o outro.
+    Fora dos nós da trilha e das bolhas A–E, evite molduras/círculos
+    decorativos em volta de ícones.
+  - Fontes: Sora (`--font-curso-display` padrão em Eng. de Computação,
+    títulos e números), Inter (padrão do `body`) e JetBrains Mono
+    (`font-code`, restrita a blocos de código e relógio).
   - Títulos usam `text-hero/title/heading`, e etiquetas usam `text-label`
     (sans, caixa normal, sem espaçamento). **Nada de etiqueta em CAIXA ALTA,
     mono ou com `tracking-[…]`**: é a forma mais difícil de ler para quem
@@ -882,13 +886,38 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
     corrido usa as classes do Tailwind; o menor tamanho é `text-xs` (12 px),
     e evite criar `text-[NNpx]` novo.
   - Ícones `phosphor-svelte` com `weight="bold"` e `aria-hidden="true"`. O
-    `weight="fill"` fica para Play/Pause, troféu, raio do XP e estados ligados.
+    `weight="fill"` fica para Play/Pause, raio do XP e estados ligados.
     Zero emoji.
 - **Motion respeita `prefers-reduced-motion`:**
   - O CSS é zerado por uma media query global em `app.css`.
   - Transições Svelte e scroll suave **não** passam por ela. Use as
     constantes de `motion.js`: `DUR` (duração de `in:fly` etc.), `REDUCED`
     (`scrollIntoView`) e `reduzirMovimento()` (lê a preferência ao vivo).
+  - Animação por JS passa por `animar()` (com `mola()` quando pede física): o
+    **estado final mora no markup** e a animação só descreve a chegada
+    (`fill: 'backwards'`, nunca `forwards` nem estilo inicial escondido). É o
+    que garante que nada fica preso em `opacity: 0`, barra vazia ou traço
+    invisível. Sem biblioteca de animação: a Web Animations API com a mola em
+    `linear()` faz o mesmo sem os ~6 kB.
+- **Resumo (`PalcoResumo`), igual nos quatro modos:** a escada da marca é
+  desenhada e o marco âmbar sobe até o desempenho da sessão; o placar conta
+  enquanto a linha da sessão acende questão a questão (a ALTURA repete a cor,
+  para quem não distingue verde de vermelho); o marco pulsa e os botões entram.
+  - O palco só desenha: placar, métricas e o que entra na nota vêm da rota. A
+    discursiva do simulado entra na linha como bloco `foraDaNota`.
+  - Parcial vale meio degrau. As três faixas (`faixaDesempenho`) falam de obra,
+    nunca de reprovação. Sem confete, troféu, caixa ou círculo em volta.
+  - `animado={false}` ao reabrir (voltar da revisão do simulado): a cena não se
+    repete. Tocar no palco pula para o fim.
+  - Botão só aceita toque com a cena terminada, ou 350 ms depois de pulada:
+    antes, ele aparecia embaixo do dedo que pulava. O foco abre no título.
+  - Acima de 46 questões a linha agrupa por coluna, e placar e métricas reduzem
+    a fonte com números longos: 117/156 invadia a escada em 360 px.
+  - Botão que descarta o resultado não fica onde o duplo toque do "Entregar"
+    cairia: por isso "Novo simulado" mora no fim da página.
+- **Sequência (3+ acertos seguidos, Treino e Estudo):** `sequenciaAtual(log)`;
+  pulada e anulada não contam nem quebram. O selo fica pendurado na gaveta de
+  feedback, fora do fluxo, e nunca perto do enunciado. Não grava nada.
 - **Acessibilidade:**
   - Alvos de toque com no mínimo 44 px (`min-h-11`, ou `h-11 w-11` em botão
     só de ícone).
@@ -969,8 +998,9 @@ O que quebra em silêncio, ou longe de onde a mudança foi feita:
   O código recorta a 200 dpi e o banco só usa PNG (`img/2019-FG-Q05.jpg` está
   órfão).
 - **`PLANO.md` e `ROADMAP.md`:**
-  - Falam em Outfit, "navy + laranja" e streak. Hoje é Archivo + Plus
-    Jakarta, o acento é azul (veja "Direção visual") e o streak foi removido.
+  - Falam em Outfit, "navy + laranja" e streak. Hoje é Sora + Inter (com
+    JetBrains Mono só em código/relógio), o pacote do curso ativo é Cobalto
+    + Âmbar (veja "Direção visual") e o streak foi removido.
   - "Anulada = ponto para todos" não vale mais: as anuladas saíram do site
     (`banco/anuladas.json`).
   - O `ROADMAP.md` cita um "preview LAN :8123" que não existe e deixa o

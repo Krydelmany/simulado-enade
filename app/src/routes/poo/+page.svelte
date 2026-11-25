@@ -9,6 +9,7 @@
 	import { ArrowLeft, ArrowRight, ArrowSquareOut, CheckCircle, XCircle } from 'phosphor-svelte';
 	import { foco } from '$lib/foco.svelte.js';
 	import { DUR } from '$lib/motion.js';
+	import PalcoResumo from '$lib/PalcoResumo.svelte';
 	import TextoRico from '$lib/TextoRico.svelte';
 
 	const LETRAS = ['A', 'B', 'C', 'D', 'E'];
@@ -151,30 +152,57 @@
 		</a>
 	</section>
 {:else if fim}
-	<section class="blueprint faixa px-4 pt-7 pb-8 text-white sm:p-8">
-		<p class="text-sm font-semibold text-bar-fg">POO · questionário do professor</p>
-		<h1 class="mt-1 font-display text-3xl font-extrabold tracking-tight">Resultado</h1>
-		<p class="springin nums mt-4 font-display text-6xl leading-none font-black tracking-tight">
-			{certas}<span class="text-2xl font-bold text-bar-fg">/{questoes.length}</span>
-		</p>
-		<p class="mt-2 text-sm font-semibold text-bar-fg">
-			{questoes.length ? Math.round((certas / questoes.length) * 100) : 0}% de acerto
-			{#if emBranco > 0}· {emBranco} em branco{/if}
-		</p>
-		<p class="mt-3 text-xs text-bar-fg">{dados?.nota}</p>
-	</section>
+	<PalcoResumo
+		etiqueta="POO · questionário do professor"
+		titulo="Resultado"
+		nivelTitulo="h1"
+		{certas}
+		total={questoes.length}
+		rotulo="acertos no questionário"
+		blocos={[
+			{
+				itens: questoes.map((q, k) => ({
+					status: !marcadas[k] ? 'branco' : marcadas[k] === q.gabarito ? 'certa' : 'errada'
+				}))
+			}
+		]}
+		metricas={[
+			{ rotulo: 'Acerto', valor: questoes.length ? Math.round((certas / questoes.length) * 100) : 0, sufixo: '%' },
+			{ rotulo: 'Em branco', valor: emBranco }
+		]}
+		completa={emBranco === 0}
+	>
+		{#snippet extra()}
+			<p class="text-xs leading-relaxed text-pretty text-ink-soft">{dados?.nota}</p>
+		{/snippet}
+		{#snippet acoes()}
+			<button
+				type="button"
+				onclick={refazer}
+				class="btn-primario flex min-h-12 w-full items-center justify-center rounded-full px-6 font-display text-base font-bold"
+			>
+				Refazer o questionário
+			</button>
+			<a
+				href="/"
+				class="btn-suave flex min-h-12 w-full items-center justify-center rounded-full px-6 font-display text-base font-bold"
+			>
+				Voltar ao início
+			</a>
+		{/snippet}
+	</PalcoResumo>
 
 	<section class="mt-4 space-y-2" aria-label="Correção das questões">
 		{#each questoes as q, k (q.id)}
 			{@const resposta = marcadas[k]}
-			<div class="flex items-start gap-3 rounded-2xl border border-line bg-card p-3">
+			<div class="superficie flex items-start gap-3 rounded-2xl p-3.5">
 				{#if resposta === q.gabarito}
 					<CheckCircle size={20} weight="bold" class="mt-0.5 shrink-0 text-ok-fg" aria-hidden="true" />
 				{:else}
 					<XCircle size={20} weight="bold" class="mt-0.5 shrink-0 text-bad-fg" aria-hidden="true" />
 				{/if}
 				<div class="min-w-0 flex-1">
-					<p class="text-sm font-bold text-pretty">{k + 1}. {q.tema}</p>
+					<p class="text-sm font-bold text-pretty text-ink">{k + 1}. {q.tema}</p>
 					<p class="mt-0.5 text-xs text-ink-soft">
 						Sua resposta: <strong>{resposta ?? '—'}</strong> · Correta: <strong>{q.gabarito}</strong>
 					</p>
@@ -183,47 +211,32 @@
 		{/each}
 	</section>
 
-	<div class="mt-4 flex flex-col gap-2 sm:flex-row">
-		<button
-			type="button"
-			onclick={refazer}
-			class="btn3d duo-accent flex min-h-[52px] flex-1 items-center justify-center rounded-[14px] px-6 font-display text-base font-bold"
-		>
-			Refazer o questionário
-		</button>
-		<a
-			href="/"
-			class="flex min-h-[52px] flex-1 items-center justify-center rounded-[14px] border-2 border-line px-6 font-display text-base font-bold"
-		>
-			Voltar ao início
-		</a>
-	</div>
 	<p class="mt-3 text-xs leading-relaxed text-pretty text-ink-soft">
 		{dados?.fonte} {dados?.nota}
 	</p>
 {:else if !comecou}
-	<section class="blueprint faixa px-4 pt-7 pb-8 text-white sm:p-8">
-		<a href="/" class="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-bar-fg hover:text-white">
-			<ArrowLeft size={17} weight="bold" aria-hidden="true" /> Início
+	<section class="folha curso-halo rounded-3xl px-5 pt-6 pb-8 sm:p-8">
+		<a href="/" class="inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-ink-soft hover:text-ink">
+			<ArrowLeft size={16} weight="bold" aria-hidden="true" /> Início
 		</a>
 		<div class="mt-3 flex flex-wrap items-center gap-2">
-			<span class="rounded-full bg-accent px-2.5 py-1 text-xs font-extrabold text-white">Novo</span>
-			<span class="text-xs font-semibold text-bar-fg">Lançado hoje · {dia(dados?.lancado_em)}</span>
+			<span class="rounded-full border border-milestone-border bg-milestone-soft px-2.5 py-0.5 text-xs font-extrabold text-milestone-ink">Novo</span>
+			<span class="text-xs font-semibold text-ink-soft">Lançado em {dia(dados?.lancado_em)}</span>
 		</div>
-		<h1 class="mt-2 font-display text-3xl font-extrabold tracking-tight text-pretty">{dados?.titulo}</h1>
-		<p class="mt-2 max-w-[46ch] text-sm leading-relaxed text-pretty text-bar-fg">
-			{questoes.length} questões que o professor passou hoje. Responda no seu ritmo: sem cronômetro, e
+		<h1 class="mt-2 font-display text-title font-extrabold tracking-tight text-pretty text-ink">{dados?.titulo}</h1>
+		<p class="mt-2 max-w-[48ch] text-sm leading-relaxed text-pretty text-ink-soft">
+			{questoes.length} questões que o professor passou em aula. Responda no seu ritmo: sem cronômetro, e
 			a correção aparece só no fim.
 		</p>
-		<p class="mt-2 text-xs text-bar-fg">{dados?.fonte}</p>
+		<p class="mt-2 text-xs text-ink-soft">{dados?.fonte}</p>
 		<button
 			type="button"
 			onclick={comecar}
-			class="btn3d duo-accent mt-5 flex min-h-[52px] items-center justify-center gap-2 rounded-[14px] px-6 font-display text-base font-bold"
+			class="btn-primario mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-7 font-display text-base font-bold"
 		>
-			Começar <ArrowRight size={18} weight="bold" aria-hidden="true" />
+			Começar <ArrowRight size={17} weight="bold" aria-hidden="true" />
 		</button>
-		<p class="mt-3 text-xs leading-relaxed text-pretty text-bar-fg">{dados?.nota}</p>
+		<p class="mt-3 text-xs leading-relaxed text-pretty text-ink-soft">{dados?.nota}</p>
 	</section>
 {:else if revisando}
 	<div class="mx-auto max-w-2xl">
@@ -231,11 +244,11 @@
 			<a href="/" class="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-ink-soft hover:text-ink">
 				<ArrowLeft size={17} weight="bold" aria-hidden="true" /> Sair
 			</a>
-			<p class="nums text-sm font-bold">{respondidas} de {questoes.length} respondidas</p>
+			<p class="nums text-sm font-bold text-ink">{respondidas} de {questoes.length} respondidas</p>
 		</header>
 
-		<section class="mt-4 rounded-3xl border border-line bg-card p-4 sm:p-6" aria-labelledby="t-revisar">
-			<h1 id="t-revisar" class="font-display text-title font-extrabold">Revisar respostas</h1>
+		<section class="folha mt-4 rounded-3xl p-5 sm:p-6" aria-labelledby="t-revisar">
+			<h1 id="t-revisar" class="font-display text-title font-extrabold text-ink">Revisar respostas</h1>
 			<p class="mt-2 text-[15px] leading-relaxed text-pretty text-ink-soft">
 				Você ainda pode trocar qualquer resposta. A correção só aparece depois de entregar.
 			</p>
@@ -245,10 +258,10 @@
 						<button
 							type="button"
 							onclick={() => editar(k)}
-							class="flex min-h-12 w-full items-center gap-3 rounded-2xl border border-line bg-tile px-3 py-2 text-left transition-colors hover:border-accent"
+							class="flex min-h-12 w-full items-center gap-3 rounded-2xl border border-line bg-panel px-3.5 py-2.5 text-left transition-colors hover:border-accent"
 						>
-							<span class="nums w-6 shrink-0 text-center font-display text-sm font-black">{k + 1}</span>
-							<span class="min-w-0 flex-1 text-sm font-semibold text-pretty">{q.tema}</span>
+							<span class="nums w-6 shrink-0 text-center font-display text-sm font-black text-ink">{k + 1}</span>
+							<span class="min-w-0 flex-1 text-sm font-semibold text-pretty text-ink">{q.tema}</span>
 							<span class="nums w-7 shrink-0 text-center font-display text-lg font-extrabold {marcadas[k] ? 'text-accent-ink' : 'text-ink-soft'}">
 								{marcadas[k] ?? '—'}
 							</span>
@@ -258,21 +271,21 @@
 				{/each}
 			</ul>
 			{#if emBranco > 0}
-				<p role="status" class="mt-3 rounded-2xl bg-warn-bg p-3 text-sm font-semibold text-warn-fg">
+				<p role="status" class="mt-3 rounded-2xl border border-warn-line/40 bg-warn-bg p-3 text-sm font-semibold text-warn-fg">
 					{emBranco} {emBranco === 1 ? 'questão está em branco' : 'questões estão em branco'}. Toque nela para responder antes de entregar.
 				</p>
 			{/if}
 			<button
 				type="button"
 				onclick={entregar}
-				class="btn3d duo-accent mt-4 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-[14px] px-6 font-display text-base font-bold"
+				class="btn-primario mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
 			>
-				Entregar e corrigir <ArrowRight size={18} weight="bold" aria-hidden="true" />
+				Entregar e corrigir <ArrowRight size={17} weight="bold" aria-hidden="true" />
 			</button>
 			<button
 				type="button"
 				onclick={() => editar(questoes.length - 1)}
-				class="mt-2 flex min-h-11 w-full items-center justify-center rounded-[14px] text-sm font-bold text-ink-soft hover:text-ink"
+				class="mt-2 flex min-h-11 w-full items-center justify-center rounded-full text-sm font-bold text-ink-soft hover:text-ink"
 			>
 				Voltar à última questão
 			</button>
@@ -284,23 +297,23 @@
 			<a href="/" class="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-ink-soft hover:text-ink">
 				<ArrowLeft size={17} weight="bold" aria-hidden="true" /> Sair
 			</a>
-			<p class="nums text-sm font-bold">{i + 1} de {questoes.length}</p>
+			<p class="nums text-sm font-bold text-ink">{i + 1} de {questoes.length}</p>
 		</header>
-		<div class="mt-2 h-2 overflow-hidden rounded-full bg-track" aria-hidden="true">
+		<div class="mt-2 h-2.5 overflow-hidden rounded-full bg-track" aria-hidden="true">
 			<div class="h-full rounded-full bg-accent-bar transition-[width] duration-300" style="width: {((i + 1) / questoes.length) * 100}%"></div>
 		</div>
 
 		{#key atual.id}
-			<div in:fly={{ y: 10, duration: DUR }} out:fade={{ duration: DUR }}>
-				<section class="mt-4 rounded-3xl border border-line bg-card p-4 sm:p-6" aria-labelledby="t-questao">
-			<h1 id="t-questao" class="font-display text-title font-extrabold text-pretty">{atual.tema}</h1>
-			<div class="mt-3 max-w-[60ch] text-[17px] leading-8 text-pretty">
+			<div in:fly={{ y: 8, duration: DUR }} out:fade={{ duration: DUR }}>
+				<section class="folha mt-4 rounded-3xl p-5 sm:p-7" aria-labelledby="t-questao">
+			<h1 id="t-questao" class="font-display text-title font-extrabold text-pretty text-ink">{atual.tema}</h1>
+			<div class="mt-3 max-w-[60ch] text-[16.5px] leading-8 text-pretty text-ink">
 				<TextoRico texto={atual.enunciado} />
 			</div>
 
 			{#if atual.imagem}
 				<figure class="mt-4 overflow-hidden rounded-2xl border border-line bg-white">
-					<a href={atual.imagem.src} target="_blank" rel="noopener" class="block">
+					<a href={atual.imagem.src} target="_blank" rel="noopener" class="block p-2">
 						<img
 							src={atual.imagem.src}
 							alt={atual.imagem.alt}
@@ -308,7 +321,7 @@
 							class="mx-auto h-auto max-h-[54vh] w-auto max-w-full"
 						/>
 					</a>
-					<figcaption class="flex items-start gap-2 px-3 py-2 text-xs text-ink-soft">
+					<figcaption class="flex items-start gap-2 border-t border-line bg-panel px-3 py-2 text-xs text-ink-soft">
 						<ArrowSquareOut size={14} weight="bold" class="mt-0.5 shrink-0" aria-hidden="true" />
 						<span>Abrir a figura em tamanho maior{#if atual.imagem.legenda} · {atual.imagem.legenda}{/if}</span>
 					</figcaption>
@@ -322,14 +335,14 @@
 						type="button"
 						onclick={() => marcar(letra)}
 						aria-pressed={selecionada}
-						class="flex min-h-12 w-full items-start gap-3 rounded-2xl border-2 px-4 py-3.5 text-left text-[16px] leading-relaxed transition-colors {selecionada
-							? 'border-accent bg-accent-soft'
-							: 'border-line bg-card hover:border-accent'}"
+						class="flex min-h-12 w-full items-start gap-3.5 rounded-2xl border-2 px-4 py-3.5 text-left text-[15.5px] leading-relaxed transition-colors {selecionada
+							? 'border-accent bg-accent-soft text-ink'
+							: 'border-line bg-card text-ink hover:border-line-strong hover:bg-panel/60'}"
 					>
 						<span
-							class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line font-display text-sm font-extrabold {selecionada
-								? 'bg-accent text-white'
-								: 'bg-tile text-ink-soft'}"
+							class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 font-display text-sm font-bold {selecionada
+								? 'border-accent bg-accent text-accent-on'
+								: 'border-line-strong bg-panel text-ink-soft'}"
 						>
 							{letra}
 						</span>
@@ -342,24 +355,24 @@
 				A correção aparece só no fim. Você pode trocar a resposta ou voltar depois.
 			</p>
 
-			<div class="mt-4 flex flex-col gap-2 sm:flex-row">
+			<div class="mt-4 flex flex-col gap-2.5 sm:flex-row">
 				<button
 					type="button"
 					onclick={anterior}
 					disabled={i === 0}
-					class="min-h-[52px] rounded-[14px] border-2 border-line px-5 font-display text-base font-bold transition-transform active:scale-[0.98] disabled:opacity-40"
+					class="btn-suave min-h-12 rounded-full px-5 font-display text-base font-bold disabled:pointer-events-none disabled:opacity-40"
 				>
 					Anterior
 				</button>
 				<button
 					type="button"
 					onclick={proxima}
-					class="btn3d duo-accent flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-[14px] px-6 font-display text-base font-bold transition-transform active:scale-[0.99]"
+					class="btn-primario flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
 				>
-					{ultima ? 'Revisar e entregar' : 'Próxima'} <ArrowRight size={18} weight="bold" aria-hidden="true" />
+					{ultima ? 'Revisar e entregar' : 'Próxima'} <ArrowRight size={17} weight="bold" aria-hidden="true" />
 				</button>
 			</div>
-			<p class="mt-2 text-xs text-ink-soft" aria-live="polite">
+			<p class="mt-2.5 text-xs text-ink-soft" aria-live="polite">
 				{respondidas} de {questoes.length} respondidas · sem cronômetro
 			</p>
 				</section>

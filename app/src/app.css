@@ -1,6 +1,5 @@
-@import '@fontsource-variable/outfit';
-@import '@fontsource-variable/plus-jakarta-sans';
-@import '@fontsource-variable/archivo';
+@import '@fontsource-variable/sora';
+@import '@fontsource-variable/inter';
 @import '@fontsource-variable/jetbrains-mono';
 @import 'tailwindcss';
 
@@ -12,127 +11,293 @@
 	--color-tile: var(--tile);
 	--color-panel: var(--panel);
 	--color-line: var(--line);
+	--color-line-strong: var(--line-strong);
+	--color-surface-lip: var(--surface-lip);
 	--color-track: var(--track);
 	--color-skel: var(--skel);
 	--color-chip: var(--chip);
 	--color-ink: var(--ink);
 	--color-ink-soft: var(--ink-soft);
-	--color-bar: var(--bar);
-	--color-bar-fg: var(--bar-fg);
 	--color-accent: var(--accent);
+	--color-accent-hover: var(--accent-hover);
+	--color-accent-lip: var(--accent-lip);
+	--color-accent-on: var(--accent-on);
 	--color-accent-ink: var(--accent-ink);
 	--color-accent-soft: var(--accent-soft);
+	--color-accent-border: var(--accent-border);
+	--color-accent-bar: var(--accent-bar);
+	--color-milestone: var(--milestone);
+	--color-milestone-lip: var(--milestone-lip);
+	--color-milestone-soft: var(--milestone-soft);
+	--color-milestone-ink: var(--milestone-ink);
+	--color-milestone-border: var(--milestone-border);
 	--color-btn: var(--btn);
 	--color-btn-fg: var(--btn-fg);
+	--color-btn-lip: var(--btn-lip);
+	--color-tooltip: var(--tooltip);
+	--color-tooltip-fg: var(--tooltip-fg);
 	--color-ok-bg: var(--ok-bg);
 	--color-ok-fg: var(--ok-fg);
 	--color-ok-solid: var(--ok-solid);
+	--color-ok-border: var(--ok-border);
 	--color-bad-bg: var(--bad-bg);
 	--color-bad-fg: var(--bad-fg);
 	--color-bad-solid: var(--bad-solid);
+	--color-bad-border: var(--bad-border);
 	--color-warn-bg: var(--warn-bg);
 	--color-warn-fg: var(--warn-fg);
 	--color-warn-line: var(--warn-line);
-	/* preenchimento das barras de progresso — separado do acento sólido porque
-	   no escuro o azul do botão (#3a62e0) fica fraco sobre o trilho navy; a
-	   barra usa um azul mais claro e o botão sólido segue com branco por cima. */
-	--color-accent-bar: var(--accent-bar);
-	--color-accent-edge: var(--accent-edge);
 
-	--font-display: 'Archivo Variable', 'Outfit Variable', ui-sans-serif, system-ui, sans-serif;
-	--font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
+	/* Tipografia de destaque controlada pelo token do curso (--font-curso-display) */
+	--font-display: var(--font-curso-display);
+	--font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+	/* Mono restrito a blocos reais de código (.codeblock) e cronômetro de prova */
 	--font-code: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, monospace;
 
-	/* Escala tipográfica explícita. Antes cada tela inventava um text-[42px]/
-	   tracking-tight; agora há 3 degraus de display + 1 etiqueta.
-	   O hero usa clamp() para valer de 390 px ao desktop sem classes extras. */
-	--text-hero: clamp(2.3rem, 1.65rem + 3vw, 3.25rem);
-	--text-hero--line-height: 0.98;
-	--text-hero--letter-spacing: -0.02em;
-	--text-title: 1.6rem;
-	--text-title--line-height: 1.15;
-	--text-title--letter-spacing: -0.01em;
-	--text-heading: 1.2rem;
-	--text-heading--line-height: 1.25;
-	--text-heading--letter-spacing: -0.005em;
-	/* Etiqueta: sans, caixa normal, sem espaçamento. Era mono em CAIXA ALTA
-	   espaçada (0.16em) — a forma mais difícil de ler para quem tem dislexia,
-	   e justamente nos rótulos que orientam a tela. */
+	/* Escala tipográfica clara, escaneável e confortável de 360 px ao desktop */
+	--text-hero: clamp(1.95rem, 1.35rem + 2.4vw, 2.75rem);
+	--text-hero--line-height: 1.06;
+	--text-hero--letter-spacing: -0.028em;
+	--text-title: clamp(1.35rem, 1.15rem + 0.8vw, 1.65rem);
+	--text-title--line-height: 1.18;
+	--text-title--letter-spacing: -0.015em;
+	--text-heading: 1.125rem;
+	--text-heading--line-height: 1.28;
+	--text-heading--letter-spacing: -0.01em;
+	/* Etiqueta legível (caixa normal, sans, sem tracking largo — acessível p/ dislexia) */
 	--text-label: 0.8125rem;
 	--text-label--line-height: 1.3;
 	--text-label--letter-spacing: 0;
 }
 
-/* "Folha de prova": papel, caneta azul de quem responde, caneta vermelha de
-   quem corrige. Cada cor tem UM significado — antes o vermelho era a marca E
-   o erro, e o aluno via a própria linha do ranking e a contagem de dias em
-   vermelho como se tivesse errado. Agora:
-     azul (accent)  = ação e "isto é seu" (botão, marcação, seleção, progresso)
-     vermelho (bad) = errou / alerta
-     verde (ok)     = acertou
-     âmbar (warn)   = atenção, parcial
-   Contraste AA conferido nos dois temas (texto ≥ 4,5:1; borda/barra ≥ 3:1). */
+/* Base visual tátil de baixa fadiga + pacote orgânico de Engenharia de Computação:
+     accent     = Cobalto profundo (ação, seleção, trilha ativa, identidade do curso)
+     milestone  = Âmbar quente (XP, contagem regressiva e conquistas)
+     ok         = Verde semântico universal (acerto e conclusão)
+     bad        = Terracota controlado universal (erro educativo e alerta)
+     warn       = Âmbar semântico universal (aviso, resposta parcial)
+   Contraste AA/AAA conferido para os pares de texto (>= 4,5:1 nos dois temas).
+   Tokens `*-lip` dão o relevo físico inferior dos botões e cartões táteis e
+   derivam automaticamente de `--accent` / `--milestone` em cada curso. */
 :root {
-	--paper: #f4f2ed;
-	--card: #fdfcf9;
-	--tile: #e8e5dd;
-	--panel: #f9f8f4;
-	--line: #dbd6cb;
-	--track: #d3d8e2;
-	--skel: #e2e5eb;
-	--chip: #e2e5eb;
-	--ink: #1c2434;
-	--ink-soft: #4a5468;
-	--bar: #1a2340;
-	--bar-fg: #cbd5e1;
-	--accent: #3459e0;
-	--accent-ink: #1f3d9f;
-	--accent-soft: #e2e8fa;
-	--accent-bar: var(--accent);
-	--accent-edge: #1e3a9e;
-	--btn: #1c2434;
+	--paper: #f5f7fc;
+	--card: #ffffff;
+	--panel: #ebf0fa;
+	--tile: #e4ecfa;
+	--line: #d2dcef;
+	--line-strong: #8090b2;
+	--surface-lip: #c1cfe8;
+	--card-top: rgba(255, 255, 255, 0.92);
+	--track: #d9e2f4;
+	--skel: #e1e8f6;
+	--chip: #e4ebf9;
+	--ink: #101729;
+	--ink-soft: #485470;
+
+	/* Engenharia de Computação (ativo por padrão) */
+	--font-curso-display: 'Sora Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+	--accent: #2347b8;
+	--accent-hover: #1d3ea6;
+	--accent-lip: color-mix(in oklab, var(--accent) 60%, #07102a);
+	--accent-top: rgba(255, 255, 255, 0.28);
+	--accent-on: #ffffff;
+	--accent-ink: #1b3b9f;
+	--accent-soft: #e7eefc;
+	--accent-border: #8aa8ef;
+	--accent-bar: #2d56d6;
+
+	--milestone: #d97706;
+	--milestone-lip: color-mix(in oklab, var(--milestone) 60%, #3d1800);
+	--milestone-soft: #fef3e0;
+	--milestone-ink: #8a4804;
+	--milestone-border: #e7b16a;
+
+	--btn: #161f36;
 	--btn-fg: #ffffff;
-	--ok-bg: #e7f7ef;
-	--ok-fg: #065f46;
-	--ok-solid: #047857;
-	--bad-bg: #fcebea;
-	--bad-fg: #a3201f;
-	--bad-solid: #c22a22;
-	--warn-bg: #fffaeb;
-	--warn-fg: #78350f;
+	--btn-lip: #050812;
+	--tooltip: #161f36;
+	--tooltip-fg: #f5f7fc;
+
+	/* Semântica universal (não muda entre cursos) */
+	--ok-bg: #e5f7ed;
+	--ok-fg: #0d663f;
+	--ok-solid: #15804d;
+	--ok-border: #76d1a4;
+
+	--bad-bg: #fdf0ee;
+	--bad-fg: #a12b22;
+	--bad-solid: #c2362b;
+	--bad-border: #eba39c;
+
+	--warn-bg: #fef6e6;
+	--warn-fg: #874705;
 	--warn-line: #d97706;
+
+	/* Curva elástica tátil (< 250 ms); fallback cubic-bezier para browsers sem linear() */
+	--mola-curva: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+	/* Sombras com relevo real derivadas do acento do curso ativo */
+	--shadow-card:
+		inset 0 1px 0 var(--card-top),
+		0 2px 0 0 var(--surface-lip),
+		0 10px 26px -18px rgba(16, 23, 41, 0.18);
+	--shadow-sheet:
+		inset 0 1px 0 var(--card-top),
+		0 4px 0 0 var(--surface-lip),
+		0 18px 40px -22px color-mix(in srgb, var(--accent) 24%, rgba(16, 23, 41, 0.2));
+	--shadow-btn:
+		inset 0 1px 0 var(--accent-top),
+		0 4px 0 0 var(--accent-lip),
+		0 10px 22px -10px color-mix(in srgb, var(--accent) 52%, transparent);
+	--shadow-btn-hover:
+		inset 0 1px 0 var(--accent-top),
+		0 5.5px 0 0 var(--accent-lip),
+		0 14px 26px -10px color-mix(in srgb, var(--accent) 60%, transparent);
+	--shadow-btn-press:
+		inset 0 1px 0 var(--accent-top),
+		0 1px 0 0 var(--accent-lip),
+		0 2px 6px -2px color-mix(in srgb, var(--accent) 36%, transparent);
+}
+
+@supports (transition-timing-function: linear(0, 1)) {
+	:root {
+		--mola-curva: linear(0, 0.43, 0.89, 1.07, 1.04, 0.99, 1);
+	}
 }
 
 .dark {
-	--paper: #10141c;
-	--card: #192029;
-	--tile: #0c0f15;
-	--panel: #141a23;
-	--line: rgba(255, 255, 255, 0.12);
-	--track: #28324a;
-	--skel: #1e2636;
-	--chip: #243049;
-	--ink: #ecebe6;
-	--ink-soft: #a7adba;
-	/* navy de verdade, não quase-preto: no escuro a faixa do topo sumia no fundo */
-	--bar: #172038;
-	--bar-fg: #cbd5e1;
-	--accent: #3a62e0;
-	--accent-ink: #9fb6ff;
-	--accent-soft: rgba(91, 128, 255, 0.18);
-	--accent-bar: #7092ff;
-	--accent-edge: #1d348a;
-	--btn: #ecebe6;
-	--btn-fg: #1c2434;
-	--ok-bg: rgba(4, 120, 87, 0.2);
-	--ok-fg: #6ee7b7;
-	--ok-solid: #047857;
-	--bad-bg: rgba(209, 44, 44, 0.2);
-	--bad-fg: #fca5a5;
-	--bad-solid: #d12c2c;
-	--warn-bg: rgba(217, 119, 6, 0.14);
-	--warn-fg: #fcd34d;
-	--warn-line: #d97706;
+	--paper: #0f131e;
+	--card: #171e2f;
+	--panel: #121826;
+	--tile: #1e273d;
+	--line: rgba(206, 222, 255, 0.14);
+	--line-strong: rgba(206, 222, 255, 0.34);
+	--surface-lip: #060912;
+	--card-top: rgba(255, 255, 255, 0.08);
+	--track: #25304a;
+	--skel: #1d263b;
+	--chip: #212c45;
+	--ink: #eff3fc;
+	--ink-soft: #9ba8c4;
+
+	/* Engenharia de Computação (escuro: cobalto luminoso com texto escuro AA/AAA no botão) */
+	--accent: #6d93ff;
+	--accent-hover: #80a2ff;
+	--accent-lip: color-mix(in oklab, var(--accent) 54%, #091229);
+	--accent-top: rgba(255, 255, 255, 0.42);
+	--accent-on: #0b1226;
+	--accent-ink: #9bb8ff;
+	--accent-soft: rgba(109, 147, 255, 0.16);
+	--accent-border: rgba(109, 147, 255, 0.46);
+	--accent-bar: #6d93ff;
+
+	--milestone: #f5a623;
+	--milestone-lip: color-mix(in oklab, var(--milestone) 52%, #291000);
+	--milestone-soft: rgba(245, 166, 35, 0.16);
+	--milestone-ink: #ffce73;
+	--milestone-border: rgba(245, 166, 35, 0.42);
+
+	--btn: #eff3fc;
+	--btn-fg: #0e121e;
+	--btn-lip: #9aa8c7;
+	--tooltip: #eff3fc;
+	--tooltip-fg: #0e121e;
+
+	/* Semântica universal no escuro */
+	--ok-bg: rgba(34, 197, 123, 0.16);
+	--ok-fg: #6ce5ac;
+	--ok-solid: #117a49;
+	--ok-border: rgba(74, 222, 152, 0.42);
+
+	--bad-bg: rgba(235, 87, 74, 0.16);
+	--bad-fg: #fca8a1;
+	--bad-solid: #c2362b;
+	--bad-border: rgba(248, 128, 118, 0.44);
+
+	--warn-bg: rgba(245, 166, 35, 0.15);
+	--warn-fg: #ffd178;
+	--warn-line: #f5a623;
+
+	--shadow-card:
+		inset 0 1px 0 var(--card-top),
+		0 3px 0 0 var(--surface-lip),
+		0 14px 32px -18px rgba(0, 0, 0, 0.72);
+	--shadow-sheet:
+		inset 0 1px 0 var(--card-top),
+		0 4px 0 0 var(--surface-lip),
+		0 20px 44px -22px color-mix(in srgb, var(--accent) 22%, rgba(0, 0, 0, 0.85));
+	--shadow-btn:
+		inset 0 1px 0 var(--accent-top),
+		0 4px 0 0 var(--accent-lip),
+		0 12px 24px -10px color-mix(in srgb, var(--accent) 44%, transparent);
+	--shadow-btn-hover:
+		inset 0 1px 0 var(--accent-top),
+		0 5.5px 0 0 var(--accent-lip),
+		0 16px 28px -10px color-mix(in srgb, var(--accent) 56%, transparent);
+	--shadow-btn-press:
+		inset 0 1px 0 var(--accent-top),
+		0 1px 0 0 var(--accent-lip),
+		0 2px 8px -2px color-mix(in srgb, var(--accent) 32%, transparent);
+}
+
+/* Pacotes prontos para futuros cursos (ativados via data-curso quando houver banco real).
+   Cores semânticas (--ok-*, --bad-*, --warn-*) permanecem inalteradas. */
+:root[data-curso='direito'] {
+	--font-curso-display: 'Lora Variable', Georgia, 'Times New Roman', serif;
+	--accent: #7e1d34;
+	--accent-hover: #651629;
+	--accent-on: #ffffff;
+	--accent-ink: #72192e;
+	--accent-soft: #faeaee;
+	--accent-border: #d99aa9;
+	--accent-bar: #8c233c;
+	--milestone: #b7791f;
+	--milestone-soft: #fdf5e6;
+	--milestone-ink: #7c4e0b;
+	--milestone-border: #e1ba78;
+}
+
+.dark[data-curso='direito'] {
+	--accent: #e5839a;
+	--accent-hover: #ee9bb0;
+	--accent-on: #1e080e;
+	--accent-ink: #f3a6b8;
+	--accent-soft: rgba(229, 131, 154, 0.16);
+	--accent-border: rgba(229, 131, 154, 0.44);
+	--accent-bar: #e5839a;
+	--milestone: #e8b85c;
+	--milestone-soft: rgba(232, 184, 92, 0.16);
+	--milestone-ink: #f7d68d;
+	--milestone-border: rgba(232, 184, 92, 0.4);
+}
+
+:root[data-curso='enfermagem'] {
+	--font-curso-display: 'DM Sans Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+	--accent: #0f6b6e;
+	--accent-hover: #0b5659;
+	--accent-on: #ffffff;
+	--accent-ink: #0d5e61;
+	--accent-soft: #e6f5f5;
+	--accent-border: #87cccf;
+	--accent-bar: #137c80;
+	--milestone: #c75b40;
+	--milestone-soft: #fdf0ec;
+	--milestone-ink: #8d3722;
+	--milestone-border: #e9a693;
+}
+
+.dark[data-curso='enfermagem'] {
+	--accent: #56c9cc;
+	--accent-hover: #71d6d8;
+	--accent-on: #061c1d;
+	--accent-ink: #84dfe1;
+	--accent-soft: rgba(86, 201, 204, 0.16);
+	--accent-border: rgba(86, 201, 204, 0.44);
+	--accent-bar: #56c9cc;
+	--milestone: #f3947a;
+	--milestone-soft: rgba(243, 148, 122, 0.16);
+	--milestone-ink: #fdb7a3;
+	--milestone-border: rgba(243, 148, 122, 0.4);
 }
 
 body {
@@ -144,21 +309,21 @@ body {
 	overflow-wrap: anywhere;
 }
 
-/* Trecho de código do enunciado: mono, com QUEBRA em vez de rolagem própria —
+/* Trecho de código do enunciado: mono, com quebra em vez de rolagem própria —
    o overflow horizontal em 390 px vem justamente de linha de código comprida.
    `display:block` porque o elemento é <code> (phrasing) para caber no <p> da
    questão sem o parser fechar o parágrafo. */
 .codeblock {
 	display: block;
-	margin: 0.5rem 0;
-	padding: 0.7rem 0.85rem;
+	margin: 0.65rem 0;
+	padding: 0.75rem 0.9rem;
 	border: 1px solid var(--line);
-	border-radius: 0.75rem;
+	border-radius: 0.875rem;
 	background: var(--panel);
 	color: var(--ink);
 	font-family: var(--font-code, 'JetBrains Mono Variable', ui-monospace, monospace);
 	font-size: 0.8125rem;
-	line-height: 1.55;
+	line-height: 1.58;
 	white-space: pre-wrap;
 	overflow-wrap: anywhere;
 	word-break: break-word;
@@ -200,71 +365,271 @@ html.dark {
 	color-scheme: dark;
 }
 
-/* Botão 3D estilo Duolingo: borda inferior grossa que afunda no press */
-.btn3d {
-	border-bottom-width: 4px;
-	transition:
-		transform 0.07s ease,
-		border-bottom-width 0.07s ease,
-		filter 0.15s ease;
-}
-.btn3d:active {
-	border-bottom-width: 0;
-	transform: translateY(4px);
-}
-.duo-accent {
-	background: var(--accent);
-	border-color: var(--accent-edge);
-	color: #fff;
-}
-.duo-accent:hover {
-	filter: brightness(1.08);
-}
-.duo-btn {
-	background: var(--btn);
-	border-color: var(--btn-edge, #0a1120);
-	color: var(--btn-fg);
-}
-:root {
-	--btn-edge: #0a1120;
-}
-.dark {
-	--btn-edge: #9aa3b5;
-}
-.duo-btn:hover {
-	filter: brightness(1.06);
-}
-.dark .duo-btn:hover {
-	filter: brightness(1.12);
+/* Superfícies elevadas e base de botões táteis (afundam no clique e voltam com mola) */
+@layer components {
+	.superficie {
+		background: var(--card);
+		border: 1.5px solid var(--line);
+		box-shadow: var(--shadow-card);
+	}
+
+	.folha {
+		background: var(--card);
+		border: 1.5px solid var(--line);
+		box-shadow: var(--shadow-sheet);
+	}
+
+	/* Palco vivo da Home: profundidade tátil + atmosfera geométrica do curso */
+	.palco-vivo {
+		position: relative;
+		background-color: var(--card);
+		background-image:
+			radial-gradient(380px 260px at 94% 6%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 72%),
+			radial-gradient(280px 220px at 8% 100%, color-mix(in srgb, var(--milestone) 13%, transparent), transparent 70%);
+		border: 1.5px solid color-mix(in srgb, var(--accent-border) 55%, var(--line));
+		box-shadow:
+			inset 0 1px 0 var(--card-top),
+			0 5px 0 0 color-mix(in srgb, var(--accent) 16%, var(--surface-lip)),
+			0 22px 48px -26px color-mix(in srgb, var(--accent) 32%, rgba(16, 23, 41, 0.22));
+	}
+
+	/* Cartão/estação clicável: usa `translate` (independente de `transform`) para
+	   não colidir com animações de entrada como `.rise` (`fill: both`). */
+	.cartao-tatil {
+		background: var(--card);
+		border: 1.5px solid var(--line);
+		box-shadow:
+			inset 0 1px 0 var(--card-top),
+			0 3px 0 0 var(--surface-lip),
+			0 10px 22px -16px rgba(16, 23, 41, 0.16);
+		transition:
+			translate 210ms var(--mola-curva),
+			border-color 140ms ease,
+			box-shadow 180ms ease,
+			background-color 140ms ease;
+	}
+	.cartao-tatil:hover {
+		border-color: var(--accent-border);
+		box-shadow:
+			inset 0 1px 0 var(--card-top),
+			0 5.5px 0 0 color-mix(in srgb, var(--accent) 28%, var(--surface-lip)),
+			0 16px 30px -18px color-mix(in srgb, var(--accent) 28%, rgba(16, 23, 41, 0.22));
+	}
+	.cartao-tatil:active {
+		box-shadow:
+			inset 0 1px 0 var(--card-top),
+			0 0.5px 0 0 var(--surface-lip),
+			0 3px 8px -4px rgba(16, 23, 41, 0.14);
+		transition-duration: 75ms;
+	}
+
+	.cartao-tatil-ativo {
+		border-color: var(--accent-border);
+		background-image: linear-gradient(
+			180deg,
+			color-mix(in srgb, var(--accent-soft) 52%, var(--card)) 0%,
+			var(--card) 58%
+		);
+		box-shadow:
+			inset 0 1px 0 var(--card-top),
+			0 4px 0 0 color-mix(in srgb, var(--accent) 34%, var(--surface-lip)),
+			0 14px 30px -18px color-mix(in srgb, var(--accent) 32%, rgba(16, 23, 41, 0.2));
+	}
+
+	/* Botão principal tátil: volume limpo, brilho sutil no hover e retorno com mola */
+	.btn-primario {
+		position: relative;
+		overflow: clip;
+		isolation: isolate;
+		background: linear-gradient(
+			180deg,
+			color-mix(in oklab, var(--accent) 90%, white) 0%,
+			var(--accent) 100%
+		);
+		color: var(--accent-on);
+		box-shadow: var(--shadow-btn);
+		transition:
+			translate 210ms var(--mola-curva),
+			background-color 140ms ease,
+			box-shadow 170ms ease,
+			filter 140ms ease,
+			opacity 140ms ease;
+	}
+	.btn-primario::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background: linear-gradient(
+			115deg,
+			transparent 22%,
+			rgba(255, 255, 255, 0.26) 48%,
+			transparent 74%
+		);
+		transform: translateX(-115%);
+		transition: transform 340ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+	.btn-primario:hover:not(:disabled) {
+		background: linear-gradient(
+			180deg,
+			color-mix(in oklab, var(--accent-hover) 86%, white) 0%,
+			var(--accent-hover) 100%
+		);
+		box-shadow: var(--shadow-btn-hover);
+	}
+	.btn-primario:hover:not(:disabled)::before {
+		transform: translateX(115%);
+	}
+	.btn-primario:active:not(:disabled) {
+		box-shadow: var(--shadow-btn-press);
+		transition-duration: 70ms;
+	}
+
+	/* Botão secundário tátil: superfície firme com base física que afunda no clique */
+	.btn-suave {
+		background: var(--card);
+		color: var(--ink);
+		border: 1.5px solid var(--line-strong);
+		box-shadow:
+			inset 0 1px 0 var(--card-top),
+			0 3px 0 0 var(--surface-lip),
+			0 6px 14px -10px rgba(16, 23, 41, 0.14);
+		transition:
+			translate 210ms var(--mola-curva),
+			border-color 140ms ease,
+			background-color 140ms ease,
+			box-shadow 170ms ease;
+	}
+	.btn-suave:hover:not(:disabled) {
+		border-color: var(--accent);
+		background: color-mix(in srgb, var(--accent-soft) 55%, var(--card));
+		box-shadow:
+			inset 0 1px 0 var(--card-top),
+			0 4.5px 0 0 color-mix(in srgb, var(--accent) 36%, var(--surface-lip)),
+			0 10px 18px -12px color-mix(in srgb, var(--accent) 30%, transparent);
+	}
+	.btn-suave:active:not(:disabled) {
+		box-shadow:
+			inset 0 1px 0 var(--card-top),
+			0 0.5px 0 0 var(--surface-lip);
+		transition-duration: 70ms;
+	}
+
+	.btn-escuro {
+		background: var(--btn);
+		color: var(--btn-fg);
+		box-shadow:
+			0 3.5px 0 0 var(--btn-lip),
+			0 8px 18px -12px rgba(16, 23, 41, 0.35);
+		transition:
+			translate 210ms var(--mola-curva),
+			box-shadow 170ms ease,
+			opacity 140ms ease;
+	}
+	.btn-escuro:hover:not(:disabled) {
+		opacity: 0.96;
+		box-shadow:
+			0 5px 0 0 var(--btn-lip),
+			0 12px 22px -12px rgba(16, 23, 41, 0.42);
+	}
+	.btn-escuro:active:not(:disabled) {
+		box-shadow: 0 1px 0 0 var(--btn-lip);
+		transition-duration: 70ms;
+	}
+
+	/* Botão tátil compacto só de ícone (header, fechar, tema) */
+	.btn-icone {
+		background: var(--card);
+		border: 1.5px solid var(--line);
+		color: var(--ink-soft);
+		box-shadow:
+			inset 0 1px 0 var(--card-top),
+			0 2.5px 0 0 var(--surface-lip);
+		transition:
+			translate 200ms var(--mola-curva),
+			border-color 140ms ease,
+			background-color 140ms ease,
+			color 140ms ease,
+			box-shadow 160ms ease;
+	}
+	.btn-icone:hover:not(:disabled) {
+		border-color: var(--accent-border);
+		background: color-mix(in srgb, var(--accent-soft) 50%, var(--card));
+		color: var(--ink);
+		box-shadow:
+			inset 0 1px 0 var(--card-top),
+			0 3.5px 0 0 color-mix(in srgb, var(--accent) 26%, var(--surface-lip));
+	}
+	.btn-icone:active:not(:disabled) {
+		box-shadow: 0 0.5px 0 0 var(--surface-lip);
+		transition-duration: 70ms;
+	}
+
+	/* Deslocamento físico de hover/clique só sem redução de movimento: garante
+	   zero movimento em `prefers-reduced-motion` mesmo após minificação CSS. */
+	@media (prefers-reduced-motion: no-preference) {
+		.cartao-tatil:hover {
+			translate: 0 -2.5px;
+		}
+		.cartao-tatil:active {
+			translate: 0 2.5px;
+		}
+		.btn-primario:hover:not(:disabled),
+		.btn-suave:hover:not(:disabled),
+		.btn-escuro:hover:not(:disabled) {
+			translate: 0 -1.5px;
+		}
+		.btn-primario:active:not(:disabled) {
+			translate: 0 3px;
+		}
+		.btn-suave:active:not(:disabled),
+		.btn-escuro:active:not(:disabled) {
+			translate: 0 2.5px;
+		}
+		.btn-icone:hover:not(:disabled) {
+			translate: 0 -1px;
+		}
+		.btn-icone:active:not(:disabled) {
+			translate: 0 2px;
+		}
+	}
+
+	/* Halo atmosférico sutil derivado do acento e marco do curso ativo */
+	.curso-halo {
+		background-image:
+			radial-gradient(280px 190px at 100% 0%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 72%),
+			radial-gradient(210px 150px at 0% 100%, color-mix(in srgb, var(--milestone) 9%, transparent), transparent 70%);
+	}
 }
 
+/* Animações espaciais GPU-only (transform + opacity, rápidas < 250 ms) */
 @keyframes rise {
 	from {
 		opacity: 0;
-		transform: translateY(12px);
+		transform: translateY(10px);
 	}
 	to {
 		opacity: 1;
-		transform: none;
+		transform: translateY(0);
 	}
 }
 .rise {
-	animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+	animation: rise 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes pop {
 	0% {
-		transform: scale(1);
+		transform: scale(0.985);
 	}
-	45% {
-		transform: scale(1.025);
+	55% {
+		transform: scale(1.018);
 	}
 	100% {
 		transform: scale(1);
 	}
 }
 .pop {
-	animation: pop 0.32s ease-out;
+	animation: pop 220ms cubic-bezier(0.34, 1.45, 0.64, 1);
 }
 
 @keyframes shake {
@@ -273,48 +638,80 @@ html.dark {
 		transform: translateX(0);
 	}
 	25% {
-		transform: translateX(-6px);
+		transform: translateX(-5px);
 	}
-	55% {
-		transform: translateX(5px);
+	60% {
+		transform: translateX(4px);
 	}
-	80% {
-		transform: translateX(-3px);
+	85% {
+		transform: translateX(-2px);
 	}
 }
 .shake {
-	animation: shake 0.36s ease-out;
+	animation: shake 240ms ease-out;
+}
+
+@keyframes gavetaSubir {
+	from {
+		opacity: 0;
+		transform: translateY(12px) scale(0.99);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+.gaveta-subir {
+	animation: gavetaSubir 210ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes faiscaEstourar {
+	0% {
+		opacity: 0;
+		transform: translate(0, 0) scale(0.4);
+	}
+	30% {
+		opacity: 1;
+		transform: translate(calc(var(--fx, 0px) * 0.55), calc(var(--fy, 0px) * 0.55)) scale(1.1);
+	}
+	100% {
+		opacity: 0;
+		transform: translate(var(--fx, 0px), var(--fy, 0px)) scale(0.2);
+	}
+}
+.faisca {
+	animation: faiscaEstourar 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes floatup {
 	0% {
 		opacity: 0;
-		transform: translateY(8px) scale(0.9);
+		transform: translateY(6px) scale(0.92);
 	}
-	20% {
+	22% {
 		opacity: 1;
-		transform: translateY(0) scale(1.05);
+		transform: translateY(0) scale(1.04);
 	}
 	75% {
 		opacity: 1;
 	}
 	100% {
 		opacity: 0;
-		transform: translateY(-44px) scale(1);
+		transform: translateY(-34px) scale(1);
 	}
 }
 .xp-float {
-	animation: floatup 0.95s ease-out both;
+	animation: floatup 760ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes springin {
 	0% {
 		opacity: 0;
-		transform: scale(0.6);
+		transform: scale(0.86);
 	}
-	60% {
+	65% {
 		opacity: 1;
-		transform: scale(1.08);
+		transform: scale(1.03);
 	}
 	100% {
 		opacity: 1;
@@ -322,55 +719,35 @@ html.dark {
 	}
 }
 .springin {
-	animation: springin 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+	animation: springin 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.dotgrid {
-	background-image: radial-gradient(rgba(28, 36, 52, 0.13) 1px, transparent 1px);
-	background-size: 18px 18px;
-}
-
-/* Faixa navy do topo das telas (hero, topo da sessão, resultado). No celular
-   ela continua o header: colada nele, sem raio em cima. A partir de 640 px vira
-   um cartão solto — colada, era uma aba pendurada no header e mais estreita
-   que ele. Em `@layer components` para utilitários (px-*, pt-*) valerem. */
-@layer components {
-	.faixa {
-		margin: -1.5rem -1rem 0;
-		border-radius: 0 0 26px 26px;
-		background-color: var(--bar);
+@keyframes flutuarCristal {
+	0%,
+	100% {
+		transform: translateY(0);
 	}
-	@media (min-width: 40rem) {
-		.faixa {
-			margin: 0;
-			border-radius: 1.5rem;
-		}
+	50% {
+		transform: translateY(-5px);
 	}
 }
+.flutuar-cristal {
+	animation: flutuarCristal 3.6s ease-in-out infinite;
+}
 
-/* grade de blueprint p/ zonas navy: microdetalhe de engenharia */
-.blueprint {
-	background-image:
-		linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
-	background-size: 22px 22px;
+@keyframes pulsarHalo {
+	0%,
+	100% {
+		opacity: 0.45;
+		transform: scale(1);
+	}
+	50% {
+		opacity: 0.14;
+		transform: scale(1.16);
+	}
 }
-.pauta {
-	background-image: repeating-linear-gradient(
-		to bottom,
-		transparent 0 30px,
-		rgba(28, 36, 52, 0.07) 30px 31px
-	);
-}
-.dark .pauta {
-	background-image: repeating-linear-gradient(
-		to bottom,
-		transparent 0 30px,
-		rgba(255, 255, 255, 0.05) 30px 31px
-	);
-}
-.dark .dotgrid {
-	background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+.pulsar-halo {
+	animation: pulsarHalo 2.6s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -381,5 +758,17 @@ html.dark {
 		animation-delay: 0ms !important;
 		transition-duration: 0.01ms !important;
 		transition-delay: 0ms !important;
+	}
+	/* Entradas que começam em opacidade 0 e loops decorativos: desligados por
+	   completo para o conteúdo aparecer pronto e estático. */
+	.rise,
+	.springin,
+	.gaveta-subir,
+	.flutuar-cristal,
+	.pulsar-halo {
+		animation: none !important;
+	}
+	.btn-primario::before {
+		display: none !important;
 	}
 }

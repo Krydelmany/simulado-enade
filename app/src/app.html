@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-curso="engenharia-computacao">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="theme-color" content="#1a2340" />
+		<meta name="theme-color" content="#F5F7FC" />
 		<meta
 			name="description"
 			content="Simulado ENADE Engenharia de Computação — treino livre, estudo por níveis e simulado no formato real da prova, com questões oficiais do INEP"
@@ -19,8 +19,11 @@
 		<script>
 			try {
 				var t = localStorage.getItem('enade-tema');
-				if (t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)) {
+				var d = t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+				if (d) {
 					document.documentElement.classList.add('dark');
+					var m = document.querySelector('meta[name="theme-color"]');
+					if (m) m.setAttribute('content', '#0F131E');
 				}
 			} catch (e) {}
 		</script>

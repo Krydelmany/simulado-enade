@@ -46,21 +46,21 @@
 			<div class="h-20 animate-pulse rounded-3xl bg-skel"></div>
 		</div>
 	{:else if erro}
-		<div class="rounded-3xl bg-card p-6 text-center shadow-sm" role="alert">
-			<p class="font-display text-lg font-bold">{erro}</p>
+		<div class="superficie rounded-3xl p-6 text-center" role="alert">
+			<p class="font-display text-lg font-bold text-ink">{erro}</p>
 			<p class="mt-1 text-sm text-ink-soft">Verifique sua conexão e tente de novo.</p>
-			<button type="button" onclick={() => location.reload()} class="btn3d duo-accent mt-4 w-full rounded-2xl p-3.5 font-bold">
+			<button type="button" onclick={() => location.reload()} class="btn-primario mt-4 min-h-12 w-full rounded-full px-6 font-display text-base font-bold">
 				Tentar de novo
 			</button>
 		</div>
 	{:else}
-		<header class="blueprint faixa px-4 pt-7 pb-8 text-white sm:p-8">
-			<p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-semibold text-bar-fg">
-				<BookOpen size={16} weight="bold" aria-hidden="true" />
+		<header class="folha curso-halo rounded-3xl px-5 pt-6 pb-7 sm:p-8">
+			<p class="inline-flex items-center gap-2 rounded-full border border-milestone-border bg-milestone-soft px-3 py-1 text-xs font-bold text-milestone-ink">
+				<BookOpen size={15} weight="bold" aria-hidden="true" />
 				Conteúdo do Matheus · autoral
 			</p>
-			<h1 class="mt-4 font-display text-hero font-black text-balance">Guia de estudo</h1>
-			<p class="mt-3 max-w-[52ch] text-base leading-relaxed text-pretty text-bar-fg">
+			<h1 class="mt-4 font-display text-hero font-extrabold text-balance text-ink">Guia de estudo</h1>
+			<p class="mt-3 max-w-[54ch] text-[15px] leading-relaxed text-pretty text-ink-soft sm:text-base">
 				Resumo das disciplinas do boletim, com exemplos resolvidos, folha de fórmulas, perguntas de
 				memória e um simulado de 24 objetivas + 2 discursivas.
 			</p>
@@ -68,9 +68,9 @@
 				href={dados.pdf}
 				target="_blank"
 				rel="noopener"
-				class="mt-5 inline-flex min-h-11 items-center gap-2 rounded-[14px] border-2 border-white/25 px-4 text-sm font-bold transition-colors hover:bg-white/10"
+				class="btn-suave mt-5 inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-sm font-bold"
 			>
-				<FileText size={18} weight="bold" aria-hidden="true" />
+				<FileText size={17} weight="bold" aria-hidden="true" />
 				Abrir o PDF original (41 páginas)
 				<ArrowSquareOut size={15} weight="bold" aria-hidden="true" />
 			</a>
@@ -203,7 +203,7 @@
 			<div class="mt-4 space-y-4">
 				{#each objetivas as q (q.id)}
 					<div>
-						<Questao {q} onResponder={(r) => aoResponder(q, r)} />
+						<Questao {q} atalhos="foco" onResponder={(r) => aoResponder(q, r)} />
 						{#if respostas[q.id] && q.comentario}
 							<div class="mx-1 rounded-b-2xl border border-t-0 border-line bg-panel p-4">
 								<p class="text-label font-bold text-ink-soft">
@@ -227,7 +227,7 @@
 			</p>
 			<div class="mt-4 space-y-4">
 				{#each dados.discursivas as q (q.id)}
-					<Questao {q} onResponder={(r) => aoResponder(q, r)} />
+					<Questao {q} atalhos="foco" onResponder={(r) => aoResponder(q, r)} />
 				{/each}
 			</div>
 		{/if}

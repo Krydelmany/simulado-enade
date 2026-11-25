@@ -53,3 +53,42 @@ export function remontarSessao(ids, banco, { respostas = [], log = [], i = 0 } =
 		removidas: (Array.isArray(ids) ? ids.length : 0) - fila.length
 	};
 }
+
+/**
+ * Acertos seguidos até agora, na ordem em que o aluno respondeu. Pulada e
+ * anulada não contam nem quebram: pular não é erro, e o ponto da anulada é de
+ * todos. Parcial e errada quebram.
+ * @param {{certa?: boolean, pulada?: boolean, anulada?: boolean}[]} log
+ * @returns {number}
+ */
+export function sequenciaAtual(log) {
+	let n = 0;
+	for (let k = (log?.length ?? 0) - 1; k >= 0; k--) {
+		const r = log[k];
+		if (r.pulada || r.anulada) continue;
+		if (!r.certa) break;
+		n++;
+	}
+	return n;
+}
+
+/**
+ * Faixa de desempenho que o resumo acende. Os nomes são de obra, não de nota:
+ * quem foi mal está com a escada em construção, não reprovado.
+ * @param {number} pct 0 a 100
+ * @returns {'excelente' | 'solido' | 'construcao'}
+ */
+export function faixaDesempenho(pct) {
+	return pct >= 70 ? 'excelente' : pct >= 40 ? 'solido' : 'construcao';
+}
+
+/**
+ * Registros do log na forma que a linha da sessão desenha.
+ * @param {{certa?: boolean, parcial?: boolean, pulada?: boolean}[]} log
+ * @returns {{status: string}[]}
+ */
+export function itensDoLog(log) {
+	return (log ?? []).map((r) => ({
+		status: r.pulada ? 'pulada' : r.certa ? 'certa' : r.parcial ? 'parcial' : 'errada'
+	}));
+}

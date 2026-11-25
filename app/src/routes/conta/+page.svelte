@@ -320,7 +320,7 @@
 					type="button"
 					onclick={google}
 					disabled={ocupado}
-					class="btn3d duo-accent mt-5 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-[14px] px-6 font-display text-base font-bold disabled:opacity-60"
+					class="btn-primario mt-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold disabled:opacity-60"
 				>
 					<GoogleLogo size={20} weight="bold" aria-hidden="true" /> Entrar com Google
 				</button>
@@ -340,7 +340,7 @@
 						<button
 							type="submit"
 							disabled={ocupado}
-							class="btn3d duo-btn min-h-11 rounded-xl px-4 text-sm font-bold disabled:opacity-60"
+							class="btn-escuro min-h-11 rounded-full px-5 text-sm font-bold disabled:opacity-60"
 						>
 							Mandar link
 						</button>
@@ -416,7 +416,7 @@
 					<button
 						type="submit"
 						disabled={ocupado}
-						class="btn3d duo-accent flex min-h-[52px] flex-1 items-center justify-center rounded-[14px] px-6 font-display text-base font-bold disabled:opacity-60"
+						class="btn-primario flex min-h-12 flex-1 items-center justify-center rounded-full px-6 font-display text-base font-bold disabled:opacity-60"
 					>
 						Entrar na turma
 					</button>
@@ -458,7 +458,7 @@
 						bind:value={novoNome}
 						class="min-h-12 flex-1 rounded-xl border-2 border-line bg-paper px-3 text-base"
 					/>
-					<button type="submit" disabled={ocupado} class="btn3d duo-accent min-h-12 rounded-xl px-5 font-display text-base font-bold disabled:opacity-60">
+					<button type="submit" disabled={ocupado} class="btn-primario min-h-12 rounded-full px-5 font-display text-base font-bold disabled:opacity-60">
 						Salvar nome
 					</button>
 				</div>
@@ -472,9 +472,9 @@
 						role="tab"
 						aria-selected={turmaAberta?.id === m.turma.id}
 						onclick={() => abrirTurma(m.turma)}
-						class="min-h-11 shrink-0 rounded-xl px-4 text-sm font-bold {turmaAberta?.id === m.turma.id
-							? 'bg-bar text-white'
-							: 'bg-tile text-ink-soft'}"
+						class="min-h-11 shrink-0 rounded-full px-4 text-sm font-bold transition-colors {turmaAberta?.id === m.turma.id
+							? 'bg-accent text-accent-on'
+							: 'bg-tile text-ink-soft hover:text-ink'}"
 					>
 						{m.turma.nome}
 					</button>
@@ -485,24 +485,24 @@
 		{#if turmaAberta}
 			{@const m = turmas.find((x) => x.turma.id === turmaAberta.id)}
 			{@const dias = diasAte(turmaAberta.data_prova)}
-			<section class="mt-6 rounded-3xl bg-bar p-5 text-white sm:p-6" aria-labelledby="t-nome">
-				<p class="flex items-center gap-2 text-sm font-semibold text-bar-fg">
-					<UsersThree size={18} weight="bold" aria-hidden="true" />
+			<section class="folha curso-halo mt-6 rounded-3xl p-5 sm:p-6" aria-labelledby="t-nome">
+				<p class="flex items-center gap-2 text-label font-bold text-accent-ink">
+					<UsersThree size={17} weight="bold" aria-hidden="true" />
 					{turmaAberta.instituicao}
 				</p>
-				<h2 id="t-nome" class="mt-1 font-display text-title font-extrabold">{turmaAberta.nome}</h2>
+				<h2 id="t-nome" class="mt-1 font-display text-title font-extrabold text-ink">{turmaAberta.nome}</h2>
 				{#if dias !== null}
 					<p class="mt-4 flex items-baseline gap-2 font-display">
-						<span class="nums text-5xl leading-none font-black">{dias}</span>
-						<span class="text-base font-bold text-bar-fg">{dias === 1 ? 'dia' : 'dias'} até o ENADE</span>
+						<span class="nums text-5xl leading-none font-black text-ink">{dias}</span>
+						<span class="text-base font-bold text-ink-soft">{dias === 1 ? 'dia' : 'dias'} até o ENADE</span>
 					</p>
 				{/if}
 				{#if m?.papel === 'professor'}
 					<a
 						href="/professor/?turma={turmaAberta.id}"
-						class="btn3d duo-accent mt-5 flex min-h-[52px] items-center justify-center gap-2 rounded-[14px] px-6 font-display text-base font-bold"
+						class="btn-primario mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
 					>
-						<ChartBar size={20} weight="bold" aria-hidden="true" /> Abrir painel da turma
+						<ChartBar size={19} weight="bold" aria-hidden="true" /> Abrir painel da turma
 					</a>
 				{/if}
 			</section>
@@ -510,10 +510,10 @@
 			<!-- RA e resultado do simulado em papel: o RA fica na matrícula, então
 			     dá para informar/trocar depois de entrar sem sair da turma. -->
 			{#if m?.papel !== 'professor'}
-				<section class="mt-6 rounded-3xl border border-line bg-card p-5 sm:p-6" aria-labelledby="t-papel">
-					<h2 id="t-papel" class="font-display text-heading font-extrabold">Simulado em papel</h2>
+				<section class="superficie mt-6 rounded-3xl p-5 sm:p-6" aria-labelledby="t-papel">
+					<h2 id="t-papel" class="font-display text-heading font-extrabold text-ink">Simulado em papel</h2>
 					{#if m?.ra && !editandoRa}
-						<p class="mt-2 text-sm">Seu RA é <strong class="nums">{m.ra}</strong>.</p>
+						<p class="mt-2 text-sm text-ink">Seu RA é <strong class="nums">{m.ra}</strong>.</p>
 						<p class="mt-1 text-sm leading-relaxed text-pretty text-ink-soft">
 							O resultado do simulado em papel, importado do site do professor, fica disponível para você
 							e para o professor.
@@ -521,7 +521,7 @@
 						<div class="mt-3 flex flex-wrap items-center gap-3">
 							<a
 								href="/desempenho/"
-								class="btn3d duo-accent flex min-h-11 items-center gap-2 rounded-xl px-4 text-sm font-bold"
+								class="btn-primario flex min-h-11 items-center gap-2 rounded-full px-5 text-sm font-bold"
 							>
 								Ver meu resultado <ArrowRight size={16} weight="bold" aria-hidden="true" />
 							</a>
@@ -542,7 +542,7 @@
 							para você e para o professor.
 						</p>
 						<form class="mt-3" onsubmit={guardarRa}>
-							<label for="ra-conta" class="text-sm font-bold">Seu RA</label>
+							<label for="ra-conta" class="text-sm font-bold text-ink">Seu RA</label>
 							<div class="mt-1.5 flex flex-col gap-2 sm:flex-row">
 								<input
 									id="ra-conta"
@@ -555,7 +555,7 @@
 								<button
 									type="submit"
 									disabled={ocupado}
-									class="btn3d duo-accent min-h-12 rounded-xl px-5 font-display text-base font-bold disabled:opacity-60"
+									class="btn-primario min-h-12 rounded-full px-5 font-display text-base font-bold disabled:opacity-60"
 								>
 									Salvar RA
 								</button>
@@ -572,12 +572,12 @@
 			{/if}
 
 			{#if proximoSimulado && m?.papel !== 'professor'}
-				<section class="mt-6 rounded-3xl border-2 border-accent bg-card p-5 sm:p-6" aria-labelledby="t-proximo">
+				<section class="folha mt-6 rounded-3xl border-accent-border p-5 sm:p-6" aria-labelledby="t-proximo">
 					<p class="flex items-center gap-2 text-label font-bold text-accent-ink">
 						<Timer size={16} weight="bold" aria-hidden="true" />
 						{proximoSimulado.aberto ? 'Simulado aberto agora' : 'Próximo simulado da turma'}
 					</p>
-					<h2 id="t-proximo" class="mt-1 font-display text-heading font-extrabold text-pretty">{proximoSimulado.titulo}</h2>
+					<h2 id="t-proximo" class="mt-1 font-display text-heading font-extrabold text-pretty text-ink">{proximoSimulado.titulo}</h2>
 					<p class="mt-1 text-sm text-ink-soft">
 						{proximoSimulado.aberto
 							? `Faça até ${diaHora(proximoSimulado.fecha_em)}.`
@@ -586,7 +586,7 @@
 					{#if proximoSimulado.aberto}
 						<a
 							href="/simulado/"
-							class="btn3d duo-accent mt-4 flex min-h-[52px] items-center justify-center gap-2 rounded-[14px] px-6 font-display text-base font-bold"
+							class="btn-primario mt-4 flex min-h-12 items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
 						>
 							Ir para o simulado
 						</a>
@@ -686,7 +686,7 @@
 						class="min-h-11 flex-1 rounded-xl border-2 border-line bg-paper px-3 text-base"
 					/>
 					<div class="flex gap-2">
-						<button type="submit" disabled={ocupado} class="btn3d duo-btn min-h-11 rounded-xl px-4 text-sm font-bold disabled:opacity-60">Salvar</button>
+						<button type="submit" disabled={ocupado} class="btn-escuro min-h-11 rounded-full px-5 text-sm font-bold disabled:opacity-60">Salvar</button>
 						<button type="button" onclick={() => (editandoNome = false)} class="min-h-11 px-3 text-sm font-bold text-ink-soft">Cancelar</button>
 					</div>
 				</form>

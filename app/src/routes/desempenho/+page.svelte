@@ -116,28 +116,28 @@
 		</p>
 		<a
 			href="/conta/"
-			class="btn3d duo-accent mt-5 flex min-h-[52px] items-center justify-center gap-2 rounded-[14px] px-6 font-display text-base font-bold"
+			class="btn-primario mt-5 flex min-h-12 items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
 		>
 			Entrar na conta
 		</a>
 	</section>
 {:else if !temRa}
-	<section class="rounded-3xl border border-line bg-card p-5 sm:p-6">
-		<h1 class="font-display text-title font-extrabold">Simulado em papel</h1>
+	<section class="superficie rounded-3xl p-5 sm:p-6">
+		<h1 class="font-display text-title font-extrabold text-ink">Simulado em papel</h1>
 		<p class="mt-2 text-[15px] leading-relaxed text-pretty text-ink-soft">
 			Para ver o seu resultado, informe o seu RA em <strong class="text-ink">Conta e turma</strong>. Só
 			quem fez o simulado em papel tem resultado para mostrar.
 		</p>
 		<a
 			href="/conta/"
-			class="btn3d duo-accent mt-5 flex min-h-[52px] items-center justify-center gap-2 rounded-[14px] px-6 font-display text-base font-bold"
+			class="btn-primario mt-5 flex min-h-12 items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
 		>
 			Informar o RA
 		</a>
 	</section>
 {:else if !atual}
-	<section class="rounded-3xl border border-line bg-card p-5 sm:p-6">
-		<h1 class="font-display text-title font-extrabold">Simulado em papel</h1>
+	<section class="superficie rounded-3xl p-5 sm:p-6">
+		<h1 class="font-display text-title font-extrabold text-ink">Simulado em papel</h1>
 		<p class="mt-2 text-[15px] leading-relaxed text-pretty text-ink-soft">
 			Ainda não há resultado importado para o seu RA. O professor importa a lista de quem fez a prova;
 			se você informou o RA agora, pode levar um tempo até aparecer.
@@ -148,42 +148,42 @@
 		</div>
 	</section>
 {:else}
-	<section class="blueprint faixa px-4 pt-7 pb-8 text-white sm:p-8">
-		<a href="/conta/" class="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-bar-fg hover:text-white">
-			<ArrowLeft size={17} weight="bold" aria-hidden="true" /> Conta e turma
+	<section class="folha curso-halo rounded-3xl px-5 pt-6 pb-8 sm:p-8">
+		<a href="/conta/" class="inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-ink-soft hover:text-ink">
+			<ArrowLeft size={16} weight="bold" aria-hidden="true" /> Conta e turma
 		</a>
-		<p class="mt-2 text-sm font-semibold text-bar-fg">{atual.rotulo} · simulado em papel</p>
-		<h1 class="mt-1 font-display text-3xl font-extrabold tracking-tight text-pretty">Seu resultado</h1>
-		<p class="nums mt-4 font-display text-6xl leading-none font-black tracking-tight">
-			{atual.acertos}<span class="text-2xl font-bold text-bar-fg">/{totalQuestoes || atual.total}</span>
+		<p class="mt-2 text-label font-bold text-accent-ink">{atual.rotulo} · simulado em papel</p>
+		<h1 class="mt-1 font-display text-3xl font-extrabold tracking-tight text-pretty text-ink">Seu resultado</h1>
+		<p class="nums mt-4 font-display text-5xl leading-none font-black tracking-tight text-ink sm:text-6xl">
+			{atual.acertos}<span class="text-2xl font-bold text-ink-soft">/{totalQuestoes || atual.total}</span>
 		</p>
-		<p class="mt-2 text-sm font-semibold text-bar-fg">{pctAtual}% de acerto</p>
+		<p class="mt-2 text-sm font-semibold text-ink">{pctAtual}% de acerto</p>
 		{#if media !== null || mediana !== null}
-			<p class="mt-0.5 text-xs text-bar-fg">
+			<p class="mt-0.5 text-xs text-ink-soft">
 				Turma{#if totalProva} (de {totalProva}){/if}:
 				{#if media !== null}média {media.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}{/if}
 				{#if mediana !== null}· mediana {mediana.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}{/if}
 			</p>
 		{/if}
 		{#if foraAreas > 0}
-			<p class="mt-1 text-xs text-bar-fg">
+			<p class="mt-1 text-xs text-ink-soft">
 				{foraAreas} {foraAreas === 1
 					? 'questão ficou fora das áreas e não conta no percentual'
 					: 'questões ficaram fora das áreas e não contam no percentual'}.
 			</p>
 		{/if}
 		{#if notas.length}
-			<p class="mt-1 text-sm text-bar-fg">
+			<p class="mt-1 text-sm text-ink-soft">
 				Dissertativas: {notas.map((n) => Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })).join(' · ')}
 			</p>
 		{/if}
-		<p class="mt-4 text-xs text-bar-fg">Importado do site do professor em {dia(atual.importado_em)}.</p>
+		<p class="mt-4 text-xs text-ink-soft">Importado do site do professor em {dia(atual.importado_em)}.</p>
 		{#if foco[0]?.id}
 			<a
 				href="/treino/?materia={foco[0].id}"
-				class="btn3d duo-accent mt-5 flex min-h-[52px] items-center justify-center gap-2 rounded-[14px] px-6 font-display text-base font-bold"
+				class="btn-primario mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 font-display text-base font-bold"
 			>
-				<Target size={20} weight="bold" aria-hidden="true" /> Treinar {foco[0].rotulo}
+				<Target size={19} weight="bold" aria-hidden="true" /> Treinar {foco[0].rotulo}
 			</a>
 		{/if}
 	</section>
