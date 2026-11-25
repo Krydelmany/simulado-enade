@@ -13,6 +13,7 @@
 		Code,
 		Infinity as InfinityIcon,
 		Lightning,
+		NotePencil,
 		Stairs,
 		Timer,
 		UsersThree
@@ -70,6 +71,13 @@
 			titulo: 'Estudo',
 			desc: 'Sessões de 10 por matéria: Fácil, Médio, Difícil ou ENADE.',
 			cta: 'Escolher sessão'
+		},
+		{
+			href: '/treino/?modo=discursivas',
+			icone: NotePencil,
+			titulo: 'Discursivas do CE',
+			desc: 'As 10 discursivas do componente específico, com o padrão do INEP para comparar.',
+			cta: 'Escrever'
 		},
 		{
 			href: '/simulado/',
@@ -323,7 +331,7 @@
 <section class="mt-10 lg:mt-12" aria-labelledby="titulo-modos">
 	<h2 id="titulo-modos" class="font-display text-title font-extrabold">Como você quer estudar?</h2>
 
-	<nav class="mt-4 grid gap-3 lg:grid-cols-3 lg:gap-4" aria-label="Modos de estudo">
+	<nav class="mt-4 grid gap-3 lg:grid-cols-2 lg:gap-4" aria-label="Modos de estudo">
 		{#each modos as m, k (m.href)}
 			<a
 				href={m.href}

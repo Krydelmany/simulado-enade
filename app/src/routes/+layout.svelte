@@ -1,6 +1,7 @@
 <script>
 	import '../app.css';
 	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { fade, fly } from 'svelte/transition';
@@ -10,6 +11,7 @@
 		List,
 		Lock,
 		Moon,
+		NotePencil,
 		Stairs,
 		Sun,
 		Timer,
@@ -27,8 +29,25 @@
 	const tabs = [
 		{ href: '/treino/', label: 'Treino', icone: InfinityIcon },
 		{ href: '/estudo/', label: 'Estudo', icone: Stairs },
+		{ href: '/treino/?modo=discursivas', label: 'Discursivas', icone: NotePencil },
 		{ href: '/simulado/', label: 'Simulado', icone: Timer }
 	];
+
+	// "Discursivas" é um modo dentro de /treino/ — a aba precisa saber qual
+	// dos dois está ativo (antes, as duas ficariam apagadas ou acesas juntas).
+	let rotaAtual = $derived($page.url.pathname);
+	// A query lança no prerender (o build não conhece a busca); no servidor a
+	// aba fica sem destaque e o navegador corrige ao hidratar.
+	let modoTreino = $derived(
+		browser && rotaAtual === '/treino/'
+			? (new URLSearchParams($page.url.search).get('modo') ?? '')
+			: null
+	);
+	function abaAtiva(t) {
+		if (t.href === '/treino/?modo=discursivas') return modoTreino === 'discursivas';
+		if (t.href === '/treino/') return modoTreino !== null && modoTreino !== 'discursivas';
+		return rotaAtual === t.href;
+	}
 
 	// No quiz, o rodapé e a borda de voltar são a tela; a ação é inline, então
 	// não existe mais barra fixa nem pb-32 reservado para ela.
@@ -96,9 +115,10 @@
 		{#each tabs as t (t.href)}
 			<a
 				href={t.href}
-				aria-current={$page.url.pathname === t.href ? 'page' : undefined}
-				class="hidden items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-colors hover:bg-white/10 active:scale-[0.97] sm:flex {$page.url.pathname ===
-				t.href
+				aria-current={abaAtiva(t) ? 'page' : undefined}
+				class="hidden items-center gap-1 rounded-lg px-2 py-2 text-sm font-semibold transition-colors hover:bg-white/10 active:scale-[0.97] md:flex lg:gap-1.5 lg:px-3 {abaAtiva(
+					t
+				)
 					? 'bg-white/15 text-white'
 					: 'text-bar-fg'}"
 			>
@@ -135,7 +155,7 @@
 			aria-expanded={menuAberto}
 			aria-controls="menu-mobile"
 			aria-label={menuAberto ? 'Fechar menu' : 'Abrir menu'}
-			class="flex h-11 min-h-11 min-w-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10 active:scale-95 sm:hidden"
+			class="flex h-11 min-h-11 min-w-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10 active:scale-95 md:hidden"
 		>
 			{#if menuAberto}
 				<X size={22} weight="bold" aria-hidden="true" />
@@ -148,7 +168,7 @@
 	{#if menuAberto}
 		<div
 			id="menu-mobile"
-			class="absolute inset-x-0 top-full z-50 border-t border-white/10 bg-bar text-white shadow-[0_18px_30px_-18px_rgba(0,0,0,0.75)] sm:hidden"
+			class="absolute inset-x-0 top-full z-50 border-t border-white/10 bg-bar text-white shadow-[0_18px_30px_-18px_rgba(0,0,0,0.75)] md:hidden"
 			in:fly={{ y: -8, duration: DUR }}
 			out:fade={{ duration: DUR }}
 		>
@@ -156,9 +176,10 @@
 				{#each tabs as t (t.href)}
 					<a
 						href={t.href}
-						aria-current={$page.url.pathname === t.href ? 'page' : undefined}
-						class="flex min-h-12 items-center gap-3 rounded-xl px-3 text-base font-bold transition-colors active:scale-[0.99] {$page.url.pathname ===
-						t.href
+						aria-current={abaAtiva(t) ? 'page' : undefined}
+						class="flex min-h-12 items-center gap-3 rounded-xl px-3 text-base font-bold transition-colors active:scale-[0.99] {abaAtiva(
+							t
+						)
 							? 'bg-white/15'
 							: 'text-bar-fg hover:bg-white/10 hover:text-white'}"
 					>
@@ -228,6 +249,7 @@
 				<ul class="mt-2 space-y-1 text-sm font-semibold">
 					<li><a href="/treino/" class="hover:text-accent-ink">Treino livre</a></li>
 					<li><a href="/estudo/" class="hover:text-accent-ink">Estudo por níveis</a></li>
+					<li><a href="/treino/?modo=discursivas" class="hover:text-accent-ink">Discursivas do CE</a></li>
 					<li><a href="/simulado/" class="hover:text-accent-ink">Simulado real</a></li>
 					{#if nuvemLigada}
 						<li><a href="/conta/" class="hover:text-accent-ink">Conta e turma</a></li>

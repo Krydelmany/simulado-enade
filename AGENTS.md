@@ -132,7 +132,8 @@ Todas as chaves têm o prefixo `enade-`:
 | localStorage | `enade-tema` | `'dark'` ou `'light'` (sem a chave, segue o sistema) |
 | localStorage | `enade-xp`, `enade-erros`, `enade-revisar` | XP; ids errados; ids marcados para revisar |
 | localStorage | `enade-historico` | agregado por **id de questão**, por dia e por sessão (`stats.js`) |
-| localStorage | `enade-sessao` | treino pausado (`v: 2`) |
+| localStorage | `enade-sessao` | treino pausado (`v: 2`), com `modo: 'treino'` |
+| localStorage | `enade-sessao-discursivas` | seção de discursivas do CE pausada (`v: 2`, `modo: 'discursivas'`) — chave própria para não apagar o treino livre |
 | localStorage | `enade-sessao-estudo` | estudo pausado (`v: 2`), gravado direto pela rota, fora do `stats.js` |
 | localStorage | `enade-simulado` | prova em andamento ou entregue (`v: 1`) |
 | localStorage | `enade-simulado-ultimo` | resumo da última prova entregue |
@@ -150,7 +151,7 @@ Não existe servidor para migrar dados. **Qualquer mudança no formato gravado
 precisa continuar lendo o formato antigo, ou descartá-lo sem quebrar.** Como
 cada chave lida com isso hoje:
 
-- **Estados de sessão** (`enade-sessao`, `enade-sessao-estudo`,
+- **Estados de sessão** (`enade-sessao`, `enade-sessao-discursivas`, `enade-sessao-estudo`,
   `enade-simulado`): têm um `v`. Ao mudar a forma, suba o número e trate o
   formato antigo na leitura.
   - o estudo migra o `v: 1`;

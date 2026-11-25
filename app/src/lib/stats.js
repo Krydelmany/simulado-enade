@@ -224,17 +224,22 @@ export function contarParaRevisar(banco) {
 // Sessão de treino pausada (contrato antigo)
 // ---------------------------------------------------------------------------
 
-/** Sessão de treino pausada (para continuar depois). */
-export function salvarSessao(s) {
-	gravar(CHAVE_SESSAO, s);
+/**
+ * Sessão de treino pausada (para continuar depois).
+ *
+ * `chave` opcional: o Treino guarda a sessão da seção de discursivas numa
+ * chave própria, para abrir a seção não apagar o treino livre pausado.
+ */
+export function salvarSessao(s, chave = CHAVE_SESSAO) {
+	gravar(chave, s);
 }
 
-export function carregarSessao() {
-	return ler(CHAVE_SESSAO, null);
+export function carregarSessao(chave = CHAVE_SESSAO) {
+	return ler(chave, null);
 }
 
-export function limparSessao() {
-	remover(CHAVE_SESSAO);
+export function limparSessao(chave = CHAVE_SESSAO) {
+	remover(chave);
 }
 
 // ---------------------------------------------------------------------------

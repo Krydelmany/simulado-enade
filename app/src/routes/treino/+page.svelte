@@ -92,7 +92,7 @@
 
 	$effect(() => {
 		if (!carregou || !banco.length) return;
-		const m = revisao ? 'rev' : 'nor';
+		const m = modoAtual;
 		if (prontoModo === m) return;
 		const primeira = prontoModo === null;
 		prontoModo = m;
@@ -113,6 +113,19 @@
 	});
 
 	let revisao = $derived($page.url.searchParams.get('modo') === 'revisao');
+	// Seção "Discursivas": só as discursivas do componente específico. É um
+	// modo do Treino, não uma rota nova — mesmo cartão, mesmas estatísticas.
+	let discursivas = $derived($page.url.searchParams.get('modo') === 'discursivas');
+	let modoAtual = $derived(revisao ? 'revisao' : discursivas ? 'discursivas' : 'treino');
+	// Sessão própria: abrir as discursivas não pode apagar o treino livre pausado.
+	const CHAVE_SESSAO_DISC = 'enade-sessao-discursivas';
+	let chaveSessao = $derived(discursivas ? CHAVE_SESSAO_DISC : undefined);
+
+	/** Discursiva do componente específico — a prova tem 10 (2014–2023). */
+	function ehDiscursivaCE(q) {
+		return q.parte === 'CE' && q.tipo === 'discursiva';
+	}
+
 	// O filtro é por MATÉRIA, não por tema. No banco cada questão tem um tema
 	// próprio, então filtrar por tema devolvia sempre UMA questão — o controle
 	// mais visível da tela não filtrava nada. As matérias são as 20 áreas da
@@ -156,7 +169,7 @@
 		// A sessão pausada continua tendo prioridade: se a pessoa escolher
 		// continuar, o `montar(false)` restaura o filtro da sessão salva.
 		const daUrl = $page.url.searchParams.get('materia');
-		if (materiaExiste(daUrl)) {
+		if (!discursivas && materiaExiste(daUrl)) {
 			filtro = daUrl;
 			filtroAnterior = daUrl;
 		}
@@ -167,8 +180,10 @@
 	// Serve ao carregar a página e ao trocar entre treino e revisão.
 	function iniciar() {
 		sessaoGuardada = false;
-		const s = carregarSessao();
-		if (!revisao && s?.ids?.length) {
+		const s = carregarSessao(chaveSessao);
+		// Sessão de outro modo não volta aqui (o normal e o das discursivas
+		// moram em chaves diferentes; o `modo` cobre sessões antigas sem ele).
+		if (modoAtual !== 'revisao' && (s?.modo ?? 'treino') === modoAtual && s?.ids?.length) {
 			const achadas = s.ids.map((id) => banco.find((q) => q.id === id));
 			// Banco pela metade: a questão que falta pode estar no JSON que não
 			// chegou. Antes a sessão voltava encurtada em silêncio, e a primeira
@@ -208,7 +223,11 @@
 	}
 
 	function base() {
-		let lista = revisao ? banco.filter((q) => getParaRevisar().includes(q.id)) : banco;
+		let lista = discursivas
+			? banco.filter(ehDiscursivaCE)
+			: revisao
+				? banco.filter((q) => getParaRevisar().includes(q.id))
+				: banco;
 		if (filtro !== 'todos') lista = lista.filter((q) => materia(q) === filtro);
 		return lista;
 	}
@@ -249,7 +268,7 @@
 	function montar(nova = true) {
 		if (nova) {
 			// a revisão não grava sessão — e não pode apagar o treino pausado
-			if (!revisao) limparSessao();
+			if (!revisao) limparSessao(chaveSessao);
 			fila = embaralhar(base());
 			i = 0;
 			volta = 0;
@@ -284,6 +303,7 @@
 		if (revisao || !fila.length) return;
 		salvarSessao({
 			v: 2,
+			modo: modoAtual,
 			i,
 			volta,
 			certas,
@@ -294,7 +314,7 @@
 			log,
 			inicio,
 			xpGanho
-		});
+		}, chaveSessao);
 	}
 
 	function sair() {
@@ -424,7 +444,7 @@
 
 	function encerrar() {
 		// encerrar a revisão não encerra o treino pausado
-		if (!revisao) limparSessao();
+		if (!revisao) limparSessao(chaveSessao);
 		encerrada = true;
 		// fecha a sessão no histórico: sem isso a home nunca sabe que a
 		// pessoa estudou, mesmo tendo respondido 40 questões
@@ -552,7 +572,7 @@
 		<p class="text-label font-bold text-ink-soft">Sessão pausada</p>
 		<h2 class="mt-1 font-display text-2xl font-extrabold tracking-tight">Continuar de onde parou?</h2>
 		<p class="nums mt-2 text-sm text-ink-soft">
-			Questão {salva.i + 1} · {salva.certas}/{salva.feitas} certas{salva.filtro && salva.filtro !== 'todos' ? ` · ${nomeMateria(salva.filtro)}` : ''}
+			{discursivas ? 'Discursiva' : 'Questão'} {salva.i + 1} · {salva.certas}/{salva.feitas} certas{salva.filtro && salva.filtro !== 'todos' ? ` · ${nomeMateria(salva.filtro)}` : ''}
 		</p>
 		{#if salva.removidas}
 			<p class="nums mt-1 text-xs font-semibold text-ink-soft">
@@ -568,7 +588,9 @@
 	</div>
 {:else if encerrada}
 	<div class="blueprint faixa px-4 pt-8 pb-10 text-center text-white">
-		<p class="text-sm font-medium text-bar-fg">{revisao ? 'Revisão de erros' : 'Treino livre'}</p>
+		<p class="text-sm font-medium text-bar-fg">
+			{revisao ? 'Revisão de erros' : discursivas ? 'Discursivas · Componente Específico' : 'Treino livre'}
+		</p>
 		<h2 class="mt-1 font-display text-3xl font-extrabold tracking-tight">Sessão concluída</h2>
 		<p class="springin mx-auto mt-4 flex h-24 w-24 items-center justify-center rounded-full bg-accent-soft">
 			<Trophy size={44} weight="fill" class="text-accent" aria-hidden="true" />
@@ -622,10 +644,16 @@
 	</div>
 {:else}
 	<SessaoTopo
-		titulo={revisao ? 'Revisar erros' : `${i + 1}ª questão`}
+		titulo={revisao
+			? 'Revisar erros'
+			: discursivas
+				? `Discursiva ${i + 1} de ${fila.length || '…'}`
+				: `${i + 1}ª questão`}
 		detalhe={revisao
 			? `${certas}/${feitas}`
-			: `${certas}/${feitas} certas${volta > 0 ? ` · volta ${volta + 1}` : ''}`}
+			: discursivas
+				? 'Componente Específico'
+				: `${certas}/${feitas} certas${volta > 0 ? ` · volta ${volta + 1}` : ''}`}
 		progresso={fila.length ? (i + 1) / fila.length : 0}
 		{xp}
 		aoFechar={sair}
@@ -634,10 +662,14 @@
 		<div class="mt-6 rounded-3xl bg-card p-6 text-center shadow-sm">
 			<p class="font-display text-lg font-bold">Nada por aqui</p>
 			<p class="mt-1 text-sm text-ink-soft">
-				{revisao ? 'Sem erros acumulados — quando errar, a questão aparece aqui.' : 'Nenhuma questão nesta matéria.'}
+				{revisao
+					? 'Sem erros acumulados — quando errar, a questão aparece aqui.'
+					: discursivas
+						? 'Nenhuma discursiva do componente específico no banco.'
+						: 'Nenhuma questão nesta matéria.'}
 			</p>
 			<div class="mt-4 flex w-full flex-col gap-2">
-				{#if revisao}
+				{#if revisao || discursivas}
 					<a href="/treino/" class="btn3d duo-accent flex w-full items-center justify-center rounded-[14px] p-3.5 font-display text-lg font-bold">
 						Treinar tudo
 					</a>
@@ -661,31 +693,38 @@
 		</div>
 	{:else}
 		<!-- Busca: campo fixo no topo, acima do filtro de materia. Some quando a
-		     sessao acabou ou esta pausada — nesses estados nao ha fila para pular. -->
-		<div class="relative mt-4 mb-3">
-			<BuscaQuestoes {banco} aoPular={pularPara} />
-		</div>
+		     sessao acabou ou esta pausada — nesses estados nao ha fila para pular.
+		     Nas discursivas também: são 10, e a lista misturava objetivas. -->
+		{#if !discursivas}
+			<div class="relative mt-4 mb-3">
+				<BuscaQuestoes {banco} aoPular={pularPara} />
+			</div>
+		{/if}
 		<div class="mt-4 mb-3 flex items-center gap-2">
-			<label class="flex flex-1 items-center gap-2 rounded-2xl border border-line bg-card px-3">
-				<Tag size={17} weight="bold" class="shrink-0 text-ink-soft" aria-hidden="true" />
-				<span class="sr-only">Filtrar por matéria</span>
-				<select bind:value={filtro} onchange={aoTrocarFiltro} class="w-full bg-transparent py-3 text-sm font-semibold text-ink">
-					<option value="todos">Todas as matérias</option>
-					{#each gruposFiltro as g (g.rotulo)}
-						<optgroup label={g.rotulo}>
-							{#each g.materias as m (m.id)}
-								<option value={m.id}>{m.nome} ({m.n})</option>
-							{/each}
-						</optgroup>
-					{/each}
-				</select>
-			</label>
+			{#if !discursivas}
+				<label class="flex flex-1 items-center gap-2 rounded-2xl border border-line bg-card px-3">
+					<Tag size={17} weight="bold" class="shrink-0 text-ink-soft" aria-hidden="true" />
+					<span class="sr-only">Filtrar por matéria</span>
+					<select bind:value={filtro} onchange={aoTrocarFiltro} class="w-full bg-transparent py-3 text-sm font-semibold text-ink">
+						<option value="todos">Todas as matérias</option>
+						{#each gruposFiltro as g (g.rotulo)}
+							<optgroup label={g.rotulo}>
+								{#each g.materias as m (m.id)}
+									<option value={m.id}>{m.nome} ({m.n})</option>
+								{/each}
+							</optgroup>
+						{/each}
+					</select>
+				</label>
+			{/if}
 			<button
 				type="button"
 				onclick={encerrar}
 				title="Encerrar sessão e ver o resumo"
 				aria-label="Encerrar sessão e ver o resumo"
-				class="nums flex min-h-11 items-center gap-1.5 rounded-2xl bg-card px-3 py-3 text-sm font-bold transition-transform active:scale-95"
+				class="nums flex min-h-11 items-center gap-1.5 rounded-2xl bg-card px-3 py-3 text-sm font-bold transition-transform active:scale-95 {discursivas
+					? 'w-full justify-center'
+					: ''}"
 			>
 				<Flag size={16} weight="bold" class="text-accent" aria-hidden="true" />{certas}/{feitas}
 			</button>
@@ -753,7 +792,9 @@
 				mostrarXP={xpPing > 0}
 				xpValor={xpValor}
 				desabilitado={!podeAvancar}
-				aviso="Escolha uma alternativa para continuar — ou use Pular questão."
+				aviso={discursivas
+					? 'Escreva sua resposta no papel e compare com o padrão para continuar — ou use Pular questão.'
+					: 'Escolha uma alternativa para continuar — ou use Pular questão.'}
 				onClick={avancar}
 				onAnterior={voltar}
 				anteriorDesabilitado={i === 0}
